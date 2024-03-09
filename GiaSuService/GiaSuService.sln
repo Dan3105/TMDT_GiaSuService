@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiaSuService", "GiaSuService.csproj", "{FE0FDFDA-AB30-418E-BF13-68240D9BC38A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE0FDFDA-AB30-418E-BF13-68240D9BC38A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE0FDFDA-AB30-418E-BF13-68240D9BC38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE0FDFDA-AB30-418E-BF13-68240D9BC38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE0FDFDA-AB30-418E-BF13-68240D9BC38A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DD447B2-539D-4E8D-9891-F94A18DE66F7}
+	EndGlobalSection
+EndGlobal
