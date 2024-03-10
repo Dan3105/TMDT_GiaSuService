@@ -17,5 +17,20 @@
             APPROVAL,
             DENY,
         }
+
+        public enum PaymentMethod
+        {
+            OFFLINE, 
+            ONLINE
+        }
+
+        public enum ClassTutorQueue
+        {
+            PENDING,
+            APPROVAL,
+            DENY,
+            REVIEWING,
+            HANDED
+        }
     }
 }

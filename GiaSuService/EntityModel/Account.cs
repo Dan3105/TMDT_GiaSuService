@@ -21,17 +21,15 @@ public partial class Account
 
     public string Gender { get; set; } = null!;
 
-    public bool Lockenable { get; set; }
+    public bool Lockenable { get; set; } = false;
 
     public string Logoaccount { get; set; } = null!;
 
-    public int Addressid { get; set; }
-
     public int Roleid { get; set; }
 
-    public virtual Address Address { get; set; } = null!;
+    public int Addressid { get; set; }
 
-    public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+    public virtual Address Address { get; set; } = null!;
 
     public virtual Role Role { get; set; } = null!;
 

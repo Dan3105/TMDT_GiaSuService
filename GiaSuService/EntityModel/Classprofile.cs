@@ -26,15 +26,17 @@ public partial class Classprofile
 
     public DateTime? Refreshdate { get; set; }
 
-    public int Addressid { get; set; }
-
     public int Sessionid { get; set; }
 
     public int Gradeid { get; set; }
 
     public int Subjectid { get; set; }
 
+    public int Addressid { get; set; }
+
     public virtual Address Address { get; set; } = null!;
+
+    public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
 
     public virtual Grade Grade { get; set; } = null!;
 

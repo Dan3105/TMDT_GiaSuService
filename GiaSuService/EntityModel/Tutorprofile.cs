@@ -21,6 +21,8 @@ public partial class Tutorprofile
 
     public virtual Account Account { get; set; } = null!;
 
+    public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
+
     public virtual ICollection<District> Districts { get; set; } = new List<District>();
 
     public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();

@@ -32,5 +32,5 @@ public partial class Formregistertutor
 
     public string Passwordregister { get; set; } = null!;
 
-    public AppConfig.RegisterStatus FormStatus { get; set; } = AppConfig.RegisterStatus.PENDING;
+    public AppConfig.RegisterStatus registerStatus = AppConfig.RegisterStatus.PENDING;
 }
