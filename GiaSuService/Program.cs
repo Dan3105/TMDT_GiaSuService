@@ -1,7 +1,9 @@
 ﻿using GiaSuService.AppDbContext;
-using Microsoft.AspNetCore.Http.HttpResults;
+using GiaSuService.Repository;
+using GiaSuService.Repository.Interface;
+using GiaSuService.Services;
+using GiaSuService.Services.Interface;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<TmdtDvgsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found.")));
 
+builder.Services.AddSession(o => o.IdleTimeout = TimeSpan.FromMinutes(10));
+
+//Add Repository
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+
+
+//Add Services
+builder.Services.AddTransient<IAuthService, AuthService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,7 +31,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 app.UseAuthorization();
 
@@ -54,7 +65,7 @@ static async Task GenSuperAdmin(TmdtDvgsContext context)
             Identitycard = "123456789",
             Phone = "0869696969",
             Roleid = 1,
-            Passwordhash = "superadmin",
+            Passwordhash = BCrypt.Net.BCrypt.HashPassword("superadmin"),
             Logoaccount = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png"
         }
         );

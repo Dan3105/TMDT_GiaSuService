@@ -32,5 +32,7 @@
             REVIEWING,
             HANDED
         }
+
+        public static readonly string SESSION_USER = "User";
     }
 }
