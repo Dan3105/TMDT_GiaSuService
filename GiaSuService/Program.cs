@@ -1,4 +1,6 @@
 ﻿using GiaSuService.AppDbContext;
+using GiaSuService.Configs;
+using GiaSuService.Handler;
 using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services;
@@ -13,8 +15,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<TmdtDvgsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found.")));
-
-builder.Services.AddSession(o => o.IdleTimeout = TimeSpan.FromMinutes(10));
+builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
+{
+    o.Cookie.Expiration = TimeSpan.FromMinutes(15);
+});
 
 //Add Repository
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
@@ -31,8 +35,9 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
-app.UseSession();
+
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

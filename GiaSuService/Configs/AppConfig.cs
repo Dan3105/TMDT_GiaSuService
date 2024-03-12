@@ -33,6 +33,7 @@
             HANDED
         }
 
-        public static readonly string SESSION_USER = "User";
+        public static readonly string CLAIM_USER = "User";
+        public static readonly string AUTHSCHEME = "MyAuthScheme";
     }
 }

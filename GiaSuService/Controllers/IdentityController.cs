@@ -1,10 +1,11 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.Models;
 using GiaSuService.Services.Interface;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-
+using System.Security.Claims;
 
 namespace GiaSuService.Controllers
 {
@@ -18,12 +19,11 @@ namespace GiaSuService.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Login()
-        {
+            if(HttpContext.User.Identity != null && HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
             return View();
         }
 
@@ -33,32 +33,42 @@ namespace GiaSuService.Controllers
         {
             if(!ModelState.IsValid)
             {
-                /*foreach (var key in ModelState.Keys)
-                {
-                    foreach (var error in ModelState[key].Errors)
-                    {
-                        Console.WriteLine(error.ErrorMessage); // Log or display errors to the user
-                    }
-                }*/
                 return View("Index", model);
             }
 
             var user = await _authService.ValidateAccount(model.Email!, model.Password!);
             if(user != null)
             {
-                //HttpContext.User.
-                UserAuthenticationModel userLogin = new UserAuthenticationModel
+                List<Claim> claims = new List<Claim>()
                 {
-                    IdUser = user.Id,
-                    FullName = user.Fullname,
-                    Role = user.Role.Rolename
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Fullname),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.MobilePhone, user.Phone),
+                    new Claim(ClaimTypes.Role, user.Role.Rolename)
                 };
-                string serializer = JsonConvert.SerializeObject(userLogin);
-                HttpContext.Session.SetString(AppConfig.SESSION_USER ,serializer);
+
+                ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
+                //HttpContext.User = principal;
+
                 return RedirectToAction("", "Home");
             }
 
             return View("Index", model);    
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout(string returnUrl = "")
+        {
+            await HttpContext.SignOutAsync();
+            if(returnUrl != null && returnUrl.Length > 0)
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }
