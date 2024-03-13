@@ -1,4 +1,5 @@
 ﻿using GiaSuService.Configs;
+using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -12,9 +13,11 @@ namespace GiaSuService.Controllers
     public class IdentityController : Controller
     {
         private readonly IAuthService _authService;
-        public IdentityController(IAuthService authService)
+        private readonly IAddressService _addressService;
+        public IdentityController(IAuthService authService, IAddressService addressService)
         {
             _authService = authService;
+            _addressService = addressService;
         }
 
         public IActionResult Index()
@@ -62,6 +65,7 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout(string returnUrl = "")
         {
             await HttpContext.SignOutAsync();
@@ -70,6 +74,14 @@ namespace GiaSuService.Controllers
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Districts(int provinceId)
+        {
+            var result = await _addressService.GetDistricts(provinceId);
+            return Ok(result);
         }
     }
 }

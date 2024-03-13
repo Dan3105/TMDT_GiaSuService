@@ -18,8 +18,6 @@ public partial class TmdtDvgsContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<Address> Addresses { get; set; }
-
     public virtual DbSet<Classprofile> Classprofiles { get; set; }
 
     public virtual DbSet<Classtutorqueue> Classtutorqueues { get; set; }
@@ -42,9 +40,6 @@ public partial class TmdtDvgsContext : DbContext
 
     public virtual DbSet<Tutorprofile> Tutorprofiles { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=ConnectionStrings:TutorConnection");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -59,8 +54,6 @@ public partial class TmdtDvgsContext : DbContext
 
             entity.ToTable("account");
 
-            entity.HasIndex(e => e.Addressid, "account_addressid_key").IsUnique();
-
             entity.HasIndex(e => e.Email, "account_email_key").IsUnique();
 
             entity.HasIndex(e => e.Identitycard, "account_identitycard_key").IsUnique();
@@ -68,8 +61,11 @@ public partial class TmdtDvgsContext : DbContext
             entity.HasIndex(e => e.Phone, "account_phone_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Addressid).HasColumnName("addressid");
+            entity.Property(e => e.Addressdetail)
+                .HasMaxLength(255)
+                .HasColumnName("addressdetail");
             entity.Property(e => e.Birth).HasColumnName("birth");
+            entity.Property(e => e.Districtid).HasColumnName("districtid");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
@@ -97,32 +93,15 @@ public partial class TmdtDvgsContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("roleid");
 
-            entity.HasOne(d => d.Address).WithOne(p => p.Account)
-                .HasForeignKey<Account>(d => d.Addressid)
+            entity.HasOne(d => d.District).WithMany(p => p.Accounts)
+                .HasForeignKey(d => d.Districtid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("account_addressid_fkey");
+                .HasConstraintName("account_districtid_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.Roleid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("account_roleid_fkey");
-        });
-
-        modelBuilder.Entity<Address>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("address_pkey");
-
-            entity.ToTable("address");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Addressname)
-                .HasMaxLength(255)
-                .HasColumnName("addressname");
-            entity.Property(e => e.Districtid).HasColumnName("districtid");
-
-            entity.HasOne(d => d.District).WithMany(p => p.Addresses)
-                .HasForeignKey(d => d.Districtid)
-                .HasConstraintName("address_districtid_fkey");
         });
 
         modelBuilder.Entity<Classprofile>(entity =>
@@ -131,11 +110,11 @@ public partial class TmdtDvgsContext : DbContext
 
             entity.ToTable("classprofile");
 
-            entity.HasIndex(e => e.Addressid, "classprofile_addressid_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Additionaldetail).HasColumnName("additionaldetail");
-            entity.Property(e => e.Addressid).HasColumnName("addressid");
+            entity.Property(e => e.Addressdetail)
+                .HasMaxLength(255)
+                .HasColumnName("addressdetail");
             entity.Property(e => e.Commission)
                 .HasDefaultValueSql("30")
                 .HasColumnName("commission");
@@ -143,6 +122,7 @@ public partial class TmdtDvgsContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createddate");
+            entity.Property(e => e.Districtid).HasColumnName("districtid");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
@@ -167,10 +147,10 @@ public partial class TmdtDvgsContext : DbContext
                 .HasColumnName("sessionid");
             entity.Property(e => e.Subjectid).HasColumnName("subjectid");
 
-            entity.HasOne(d => d.Address).WithOne(p => p.Classprofile)
-                .HasForeignKey<Classprofile>(d => d.Addressid)
+            entity.HasOne(d => d.District).WithMany(p => p.Classprofiles)
+                .HasForeignKey(d => d.Districtid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("classprofile_addressid_fkey");
+                .HasConstraintName("classprofile_districtid_fkey");
 
             entity.HasOne(d => d.Grade).WithMany(p => p.Classprofiles)
                 .HasForeignKey(d => d.Gradeid)
@@ -236,18 +216,10 @@ public partial class TmdtDvgsContext : DbContext
 
             entity.ToTable("formregistertutor");
 
+            entity.HasIndex(e => e.Tutorid, "formregistertutor_tutorid_key").IsUnique();
+
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Additionaldetail).HasColumnName("additionaldetail");
-            entity.Property(e => e.Area)
-                .HasMaxLength(255)
-                .HasColumnName("area");
             entity.Property(e => e.Birth).HasColumnName("birth");
-            entity.Property(e => e.College)
-                .HasMaxLength(255)
-                .HasColumnName("college");
-            entity.Property(e => e.Currentstatus)
-                .HasMaxLength(255)
-                .HasColumnName("currentstatus");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
@@ -266,7 +238,12 @@ public partial class TmdtDvgsContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
-            entity.Property(e => e.Yeargraduate).HasColumnName("yeargraduate");
+            entity.Property(e => e.Tutorid).HasColumnName("tutorid");
+
+            entity.HasOne(d => d.Tutor).WithOne(p => p.Formregistertutor)
+                .HasForeignKey<Formregistertutor>(d => d.Tutorid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("formregistertutor_tutorid_fkey");
         });
 
         modelBuilder.Entity<Grade>(entity =>
@@ -365,7 +342,13 @@ public partial class TmdtDvgsContext : DbContext
 
             entity.ToTable("tutorprofile");
 
+            entity.HasIndex(e => e.Formid, "tutorprofile_formid_key").IsUnique();
+
+            entity.HasIndex(e => e.Accountid, "uk_tutor_account").IsUnique();
+
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Academicyearfrom).HasColumnName("academicyearfrom");
+            entity.Property(e => e.Academicyearto).HasColumnName("academicyearto");
             entity.Property(e => e.Accountid)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("accountid");
@@ -379,11 +362,16 @@ public partial class TmdtDvgsContext : DbContext
             entity.Property(e => e.Currentstatus)
                 .HasMaxLength(255)
                 .HasColumnName("currentstatus");
-            entity.Property(e => e.Yeargraduate).HasColumnName("yeargraduate");
+            entity.Property(e => e.Formid).HasColumnName("formid");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.Tutorprofiles)
-                .HasForeignKey(d => d.Accountid)
+            entity.HasOne(d => d.Account).WithOne(p => p.Tutorprofile)
+                .HasForeignKey<Tutorprofile>(d => d.Accountid)
                 .HasConstraintName("tutorprofile_accountid_fkey");
+
+            entity.HasOne(d => d.Form).WithOne(p => p.Tutorprofile)
+                .HasForeignKey<Tutorprofile>(d => d.Formid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("tutorprofile_formid_fkey");
 
             entity.HasMany(d => d.Districts).WithMany(p => p.Tutors)
                 .UsingEntity<Dictionary<string, object>>(
@@ -474,6 +462,4 @@ public partial class TmdtDvgsContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-    
 }

@@ -13,9 +13,10 @@ namespace GiaSuService.Services
             _accountRepo = accountRepo;
         }
 
-        public Account CreateAccount(Account account)
+        public async Task<bool> CreateAccount(Account account)
         {
-            throw new NotImplementedException();
+            var isSucced = await _accountRepo.Create(account);
+            return isSucced;
         }
 
         public Account GetAccountByEmail(string email)
@@ -31,6 +32,11 @@ namespace GiaSuService.Services
         public IEnumerable<Account> GetAllAccountsByRole(string role)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int?> GetRoleId(string roleName)
+        {
+            return await _accountRepo.GetRoleId(roleName);
         }
 
         public Account UpdateAccount(Account account)

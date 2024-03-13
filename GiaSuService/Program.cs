@@ -37,10 +37,12 @@ builder.Services.AddAuthorization(o =>
 
 //Add Repository
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IAddressRepository, AddressRepository>();
 
 
 //Add Services
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IAddressService, AddressService>();
 builder.Services.AddSingleton<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 
@@ -77,7 +79,8 @@ static async Task GenSuperAdmin(TmdtDvgsContext context)
         context.Accounts.Add(new
             GiaSuService.EntityModel.Account
         {
-            Address = new GiaSuService.EntityModel.Address() { Addressname = "Nowhere", Districtid = 1 },
+            Districtid = 1,
+            Addressdetail = "Nowhere",
             Birth = new DateOnly(2002, 05, 31),
             Email = "superadmin@gmail.com",
             Fullname = "SuperAdmin Nguyen",

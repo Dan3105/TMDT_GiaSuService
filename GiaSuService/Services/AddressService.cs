@@ -13,11 +13,6 @@ namespace GiaSuService.Services
             _addressRepository = addressRepository;
         }
 
-        public Task<bool> CreateAddress(AddressViewModel address)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<DistrictViewModel>> GetDistricts(int idProvince)
         {
             IEnumerable<District> districts = await _addressRepository.GetAllDistricts(idProvince);
@@ -51,9 +46,16 @@ namespace GiaSuService.Services
             return result;
         }
 
-        public Task<bool> UpdateAddress(AddressViewModel address)
+        public async Task<bool> UpdateAddress(int accountId, string addressName, int districtId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _addressRepository.UpdateAddress(accountId, addressName, districtId);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
     }
 }

@@ -6,8 +6,7 @@ namespace GiaSuService.Services.Interface
     {
         public Task<List<DistrictViewModel>> GetDistricts(int idProvince);  
         public Task<List<ProvinceViewModel>> GetProvinces();
-        public Task<bool> CreateAddress(AddressViewModel address);
-        public Task<bool> UpdateAddress(AddressViewModel address);
+        public Task<bool> UpdateAddress(int accountId, string addressName, int districtId);
 
     }
 }

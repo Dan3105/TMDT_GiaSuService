@@ -11,7 +11,9 @@ public partial class District
 
     public int Provinceid { get; set; }
 
-    public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+
+    public virtual ICollection<Classprofile> Classprofiles { get; set; } = new List<Classprofile>();
 
     public virtual Province Province { get; set; } = null!;
 

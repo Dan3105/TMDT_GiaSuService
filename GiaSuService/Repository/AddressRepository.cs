@@ -13,24 +13,6 @@ namespace GiaSuService.Repository
             _context = context;
         }
 
-        public IQueryable<Address> All()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> Create(Address entity)
-        {
-            try
-            {
-                _context.Addresses.Add(entity);
-                return await SaveChanges();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         public async Task<IEnumerable<District>> GetAllDistricts(int idProvince)
         {
             return (await _context.Districts.Where(p => p.Provinceid == idProvince).ToListAsync());
@@ -41,14 +23,24 @@ namespace GiaSuService.Repository
             return await _context.Provinces.ToListAsync();
         }
 
+        public async Task<bool> UpdateAddress(int accountId, string addressDetail, int districtId)
+        {
+            Account? account = await _context.Accounts.FirstOrDefaultAsync(p => p.Id == accountId);
+            if(account != null)
+            {
+                account.Addressdetail = addressDetail;
+                account.Districtid = districtId;
+
+                _context.Accounts.Update(account);
+                return await SaveChanges();
+            }
+
+            return false;
+        }
+
         public async Task<bool> SaveChanges()
         {
             return (await _context.SaveChangesAsync()) > 0;
-        }
-
-        public Task<bool> Update(Address entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

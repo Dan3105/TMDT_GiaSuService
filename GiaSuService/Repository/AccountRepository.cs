@@ -38,6 +38,12 @@ namespace GiaSuService.Repository
                 .FirstOrDefaultAsync(p => p.Email.ToLower() == email.ToLower()))!;
         }
 
+        public async Task<int?> GetRoleId(string roleName)
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(p => p.Rolename.ToLower() == roleName.ToLower());
+            return role?.Id;
+        }
+
         public async Task<bool> SaveChanges()
         {
             return (await _context.SaveChangesAsync()) > 0;

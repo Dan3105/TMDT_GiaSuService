@@ -20,17 +20,13 @@ public partial class Formregistertutor
 
     public string Phone { get; set; } = null!;
 
-    public string College { get; set; } = null!;
-
-    public string Area { get; set; } = null!;
-
-    public string Currentstatus { get; set; } = null!;
-
-    public short Yeargraduate { get; set; }
-
-    public string? Additionaldetail { get; set; }
-
     public string Passwordregister { get; set; } = null!;
+
+    public int Tutorid { get; set; }
+
+    public virtual Tutorprofile Tutor { get; set; } = null!;
+
+    public virtual Tutorprofile? Tutorprofile { get; set; }
 
     public AppConfig.RegisterStatus registerStatus = AppConfig.RegisterStatus.PENDING;
 }

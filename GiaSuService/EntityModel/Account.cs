@@ -21,17 +21,19 @@ public partial class Account
 
     public string Gender { get; set; } = null!;
 
-    public bool Lockenable { get; set; } = false;
+    public bool Lockenable { get; set; }
 
     public string Logoaccount { get; set; } = null!;
 
     public int Roleid { get; set; }
 
-    public int Addressid { get; set; }
+    public string Addressdetail { get; set; } = null!;
 
-    public virtual Address Address { get; set; } = null!;
+    public int Districtid { get; set; }
+
+    public virtual District District { get; set; } = null!;
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual ICollection<Tutorprofile> Tutorprofiles { get; set; } = new List<Tutorprofile>();
+    public virtual Tutorprofile? Tutorprofile { get; set; }
 }

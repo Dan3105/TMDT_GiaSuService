@@ -32,11 +32,13 @@ public partial class Classprofile
 
     public int Subjectid { get; set; }
 
-    public int Addressid { get; set; }
+    public string Addressdetail { get; set; } = null!;
 
-    public virtual Address Address { get; set; } = null!;
+    public int Districtid { get; set; }
 
     public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
+
+    public virtual District District { get; set; } = null!;
 
     public virtual Grade Grade { get; set; } = null!;
 

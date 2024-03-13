@@ -11,17 +11,25 @@ public partial class Tutorprofile
 
     public string Area { get; set; } = null!;
 
-    public short Yeargraduate { get; set; }
-
     public string Currentstatus { get; set; } = null!;
 
     public string? Additionalinfo { get; set; }
 
     public int Accountid { get; set; }
 
+    public int Formid { get; set; }
+
+    public short Academicyearfrom { get; set; }
+
+    public short Academicyearto { get; set; }
+
     public virtual Account Account { get; set; } = null!;
 
     public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
+
+    public virtual Formregistertutor Form { get; set; } = null!;
+
+    public virtual Formregistertutor? Formregistertutor { get; set; }
 
     public virtual ICollection<District> Districts { get; set; } = new List<District>();
 
