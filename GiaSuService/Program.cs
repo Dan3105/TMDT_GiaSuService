@@ -1,10 +1,12 @@
 ﻿using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
 using GiaSuService.Handler;
+using GiaSuService.Handler.MyCustomAuthorize;
 using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services;
 using GiaSuService.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -17,7 +19,19 @@ builder.Services.AddDbContext<TmdtDvgsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found.")));
 builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
 {
-    o.Cookie.Expiration = TimeSpan.FromMinutes(15);
+    o.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    o.LoginPath = "/Identity/Index";
+    o.LogoutPath = "/Identity/Logout";
+    o.AccessDeniedPath = "/";
+});
+builder.Services.AddAuthorization(o =>
+{
+    o.AddPolicy(AppConfig.ADMINPOLICY, policy =>
+    {
+        policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.ADMINROLENAME));
+    });
 });
 
 //Add Repository
@@ -26,7 +40,7 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 //Add Services
 builder.Services.AddTransient<IAuthService, AuthService>();
-
+builder.Services.AddSingleton<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

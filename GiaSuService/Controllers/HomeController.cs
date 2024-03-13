@@ -1,4 +1,6 @@
-﻿using GiaSuService.Models;
+﻿using GiaSuService.Configs;
+using GiaSuService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -18,6 +20,8 @@ namespace GiaSuService.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Authorize(Policy = AppConfig.ADMINPOLICY)]
         public IActionResult Privacy()
         {
             return View();

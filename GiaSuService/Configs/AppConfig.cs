@@ -4,10 +4,10 @@
     {
         public enum ClassStatus
         {
-            PENDING, 
+            PENDING,
             APPROVAL,
-            DENIED, 
-            HANDED, 
+            DENIED,
+            HANDED,
             OUTDATED
         }
 
@@ -20,7 +20,7 @@
 
         public enum PaymentMethod
         {
-            OFFLINE, 
+            OFFLINE,
             ONLINE
         }
 
@@ -33,7 +33,16 @@
             HANDED
         }
 
-        public static readonly string CLAIM_USER = "User";
-        public static readonly string AUTHSCHEME = "MyAuthScheme";
+        public const string CLAIM_USER = "User";
+        public const string AUTHSCHEME = "MyAuthScheme";
+
+        public const string ADMINROLENAME = "admin";
+        public const string ADMINPOLICY = "admin_policy";
+
+        public const string EMPLOYEEROLENAME = "employee";
+        public const string EMPLOYEEPOLICY = "employee_policy";
+
+        public const string TUTORROLENAME = "tutor";
+        public const string TUTORPOLICY = "tutor_policy";
     }
 }
