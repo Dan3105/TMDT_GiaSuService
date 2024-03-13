@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims;
+@using GiaSuService.Configs;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,54 +9,237 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GiaSuService.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/bar.css" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GiaSuService</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    @{
+        bool isAuth = User.Identity?.IsAuthenticated ?? false;
+        var roleName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value : "";
+    }
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#">pro sidebar</a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
                 </div>
-
-                @if (User.Identity!.IsAuthenticated)
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png"
+                             alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">
+                            Jhon
+                            <strong>Smith</strong>
+                        </span>
+                        <span class="user-role">Administrator</span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>Online</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- sidebar-header  -->
+                @if (roleName != AppConfig.EMPLOYEEROLENAME)
                 {
-                    var emailClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
-                    if (emailClaim != null)
-                    {
-                        <div>
-                            <p>Hell @emailClaim.Value </p>
-                        </div>
-                    }
+                    <div class="sidebar-menu">
+
+                        <ul>
+                            <li class="header-menu">
+                                <span>Phụ Huynh</span>
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Đăng ký tìm gia sư</span>
+                                </a>
+
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Học phí tham khảo</span>
+                                </a>
+
+                            </li>
+                            <li class="header-menu">
+                                <span>Gia sư</span>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-book"></i>
+                                    <span>Đăng ký làm gia sư</span>
+                                    @* <span class="badge badge-pill badge-primary">Beta</span> *@
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>Lớp Mới cần gia sư</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
                 }
+                @if(roleName == AppConfig.EMPLOYEEROLENAME)
+                {
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li class="header-menu">
+                                <span>Nhân viên</span>
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Danh sách gia sư</span>
+                                </a>
+
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Đơn đăng ký gia sư</span>
+                                    <span class="badge badge-pill badge-danger">10</span>
+                                </a>
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Đơn đăng ký lớp học</span>
+                                    <span class="badge badge-pill badge-danger">10</span>
+                                </a>
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Tình trạng kiến nghị lớp học</span>
+                                    <span class="badge badge-pill badge-danger">10</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                }
+                
+                @if(roleName == AppConfig.ADMINROLENAME)
+                {
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li class="header-menu">
+                                <span>Admin</span>
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Danh sách nhân viên</span>
+                                </a>
+
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Tạo nhân viên</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                
+                @if(isAuth)
+                {
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li class="header-menu">
+                                <span>Tài khoản</span>
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Thông tin tài khoản</span>
+                                </a>
+
+                            </li>
+                            <li class="sidebar">
+                                <a href="@Url.Action("Logout", "Identity")">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Đăng xuất</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li class="header-menu">
+                                <span>Tài khoản</span>
+                            </li>
+                            <li class="sidebar">
+                                <a href="@Url.Action("Index", "Identity")">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Đăng nhập tài khoản</span>
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+                }
+
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="#">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-pill badge-warning notification">3</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="badge badge-pill badge-success notification">7</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="badge-sonar"></span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-power-off"></i>
+                </a>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+            <div class="container-fluid">
+                <div class="container">
+                    <main role="main" class="pb-3">
+                        @RenderBody()
+                    </main>
+                </div>
+            </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - GiaSuService - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+            <!-- page-wrapper -->
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2024 - GiaSuService - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+        </main>
+        <!-- page-content" -->
+        
+    </div>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/bar.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

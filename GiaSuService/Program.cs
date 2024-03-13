@@ -19,6 +19,7 @@ builder.Services.AddDbContext<TmdtDvgsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found.")));
 builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
 {
+    o.Cookie.Expiration = TimeSpan.FromMinutes(15);
     o.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     o.LoginPath = "/Identity/Index";
     o.LogoutPath = "/Identity/Logout";

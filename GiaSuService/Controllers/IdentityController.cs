@@ -45,7 +45,8 @@ namespace GiaSuService.Controllers
                     new Claim(ClaimTypes.Name, user.Fullname),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.MobilePhone, user.Phone),
-                    new Claim(ClaimTypes.Role, user.Role.Rolename)
+                    new Claim(ClaimTypes.Role, user.Role.Rolename),
+                    
                 };
 
                 ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
