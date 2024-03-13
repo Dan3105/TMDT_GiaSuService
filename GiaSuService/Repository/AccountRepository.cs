@@ -31,11 +31,6 @@ namespace GiaSuService.Repository
             }
         }
 
-        public IQueryable<Account> FindAllBased(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Account> GetByEmail(string email)
         {
             return (await _context.Accounts

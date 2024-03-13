@@ -16,6 +16,8 @@
     @{
         bool isAuth = User.Identity?.IsAuthenticated ?? false;
         var roleName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value : "";
+        var avatar = isAuth ? User.Claims.FirstOrDefault(p => p.Type == AppConfig.CLAIM_TYPE_AVATAR)?.Value : "";
+        var fullName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name)?.Value : "";
     }
     <div class="page-wrapper chiller-theme toggled">
         <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
@@ -29,23 +31,26 @@
                         <i class="fas fa-times"></i>
                     </div>
                 </div>
-                <div class="sidebar-header">
-                    <div class="user-pic">
-                        <img class="img-responsive img-rounded" src="https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png"
-                             alt="User picture">
+                @if(isAuth)
+                {
+                    <div class="sidebar-header">
+                        <div class="user-pic">
+                            <img class="img-responsive img-rounded" src="@avatar"
+                                 alt="User picture">
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name">
+                                @fullName
+                            </span>
+                            <span class="user-role">@roleName</span>
+                            <span class="user-status">
+                                <i class="fa fa-circle"></i>
+                                <span>Online</span>
+                            </span>
+                        </div>
                     </div>
-                    <div class="user-info">
-                        <span class="user-name">
-                            Jhon
-                            <strong>Smith</strong>
-                        </span>
-                        <span class="user-role">Administrator</span>
-                        <span class="user-status">
-                            <i class="fa fa-circle"></i>
-                            <span>Online</span>
-                        </span>
-                    </div>
-                </div>
+                }
+
                 <!-- sidebar-header  -->
                 @if (roleName != AppConfig.EMPLOYEEROLENAME)
                 {
@@ -66,6 +71,13 @@
                                 <a href="#">
                                     <i class="fa fa-tachometer-alt"></i>
                                     <span>Học phí tham khảo</span>
+                                </a>
+
+                            </li>
+                            <li class="sidebar">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Danh sách gia sư</span>
                                 </a>
 
                             </li>

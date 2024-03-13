@@ -1,5 +1,5 @@
 ﻿using GiaSuService.Configs;
-using GiaSuService.Models;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -46,12 +46,12 @@ namespace GiaSuService.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.MobilePhone, user.Phone),
                     new Claim(ClaimTypes.Role, user.Role.Rolename),
-                    
+                    new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Logoaccount)
                 };
 
                 ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-
+                
                 await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
                 //HttpContext.User = principal;
 

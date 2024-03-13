@@ -33,6 +33,8 @@
             HANDED
         }
 
+        public const string CLAIM_TYPE_AVATAR = "Avatar";
+
         public const string CLAIM_USER = "User";
         public const string AUTHSCHEME = "MyAuthScheme";
 
