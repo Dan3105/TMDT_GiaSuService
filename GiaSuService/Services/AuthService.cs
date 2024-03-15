@@ -19,19 +19,21 @@ namespace GiaSuService.Services
             return isSucced;
         }
 
-        public Account GetAccountByEmail(string email)
+        public async Task<Account> GetAccountById(int id)
         {
-            throw new NotImplementedException();
+            Account account = await _accountRepo.GetById(id);
+            return account;
         }
 
-        public IEnumerable<Account> GetAllAccounts()
+        public async Task<IEnumerable<Account>> GetAccountsByRole(string role)
         {
-            throw new NotImplementedException();
-        }
+            int? roleId = await _accountRepo.GetRoleId(role);
+            if(roleId == null)
+            {
+                return null!;
+            }
 
-        public IEnumerable<Account> GetAllAccountsByRole(string role)
-        {
-            throw new NotImplementedException();
+            return await _accountRepo.GetAccountsByRoleId((int)roleId);
         }
 
         public async Task<int?> GetRoleId(string roleName)
@@ -39,9 +41,10 @@ namespace GiaSuService.Services
             return await _accountRepo.GetRoleId(roleName);
         }
 
-        public Account UpdateAccount(Account account)
+        public async Task<bool> UpdateAccount(Account account)
         {
-            throw new NotImplementedException();
+            var isSucced = await _accountRepo.Update(account);
+            return isSucced;
         }
 
         public async Task<Account> ValidateAccount(string email, string password)

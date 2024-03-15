@@ -38,6 +38,15 @@ namespace GiaSuService.Repository
                 .FirstOrDefaultAsync(p => p.Email.ToLower() == email.ToLower()))!;
         }
 
+        public async Task<IEnumerable<Account>> GetAccountsByRoleId(int roleId)
+        {
+            var result = await _context.Accounts
+                .Where(p => p.Roleid == roleId)
+                .ToListAsync();
+
+            return result;
+        }
+
         public async Task<int?> GetRoleId(string roleName)
         {
             var role = await _context.Roles.FirstOrDefaultAsync(p => p.Rolename.ToLower() == roleName.ToLower());
@@ -60,6 +69,12 @@ namespace GiaSuService.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<Account> GetById(int id)
+        {
+            Account acc = (await _context.Accounts.FirstOrDefaultAsync(p => p.Id == id))!;
+            return acc;
         }
     }
 }

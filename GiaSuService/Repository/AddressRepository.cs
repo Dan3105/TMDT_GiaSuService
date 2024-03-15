@@ -42,5 +42,14 @@ namespace GiaSuService.Repository
         {
             return (await _context.SaveChangesAsync()) > 0;
         }
+
+        public async Task<District> GetDistrict(int districtId)
+        {
+            District district = (await _context.Districts
+                .Include(p => p.Province)
+                .FirstOrDefaultAsync(p => p.Id == districtId))!;
+
+            return district;
+        }
     }
 }

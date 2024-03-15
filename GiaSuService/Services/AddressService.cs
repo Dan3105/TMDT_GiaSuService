@@ -13,38 +13,24 @@ namespace GiaSuService.Services
             _addressRepository = addressRepository;
         }
 
-        public async Task<List<DistrictViewModel>> GetDistricts(int idProvince)
+        public async Task<District> GetDistrictData(int districtId)
         {
-            IEnumerable<District> districts = await _addressRepository.GetAllDistricts(idProvince);
-            List<DistrictViewModel> result = new List<DistrictViewModel>();
-            foreach(District district in districts)
-            {
-                result.Add(new DistrictViewModel
-                {
-                    DistrictId = district.Id,
-                    DistrictName = district.Districtname,
-                    ProvinceId = district.Provinceid,
-                });
-            }
-
-            return result;
+            District district = await _addressRepository.GetDistrict(districtId);
+            return district;
         }
 
-        public async Task<List<ProvinceViewModel>> GetProvinces()
+        public async Task<List<District>> GetDistricts(int idProvince)
         {
-            IEnumerable<Province> provinces = await _addressRepository.GetAllProvinces();
-            List<ProvinceViewModel> result = new List<ProvinceViewModel>();
-            foreach (Province province in provinces)
-            {
-                result.Add(new ProvinceViewModel
-                {
-                    ProvinceId= province.Id,
-                    ProvinceName = province.Provincename,
-                });
-            }
-
-            return result;
+            List<District> districts = (await _addressRepository.GetAllDistricts(idProvince)).ToList();
+            return districts;
         }
+
+        public async Task<List<Province>> GetProvinces()
+        {
+            List<Province> provinces = (await _addressRepository.GetAllProvinces()).ToList();
+            return provinces;
+        }
+
 
         public async Task<bool> UpdateAddress(int accountId, string addressName, int districtId)
         {

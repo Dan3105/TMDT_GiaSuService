@@ -9,16 +9,6 @@ namespace GiaSuService.Models.IdentityViewModel
         public required string AddressName { get; set; }
 
         public AddressViewModel() { }
-        //public AddressViewModel(Account account)
-        //{
-        //    this.AddressName = account.Addressdetail;
-        //    this.District = new DistrictViewModel()
-        //    {
-        //        DistrictName = account.District.Districtname,
-        //        DistrictId = account.Districtid,
-        //        ProvinceId = account.District.Id
-        //    };
-        //}
     }
 
     public class DistrictViewModel

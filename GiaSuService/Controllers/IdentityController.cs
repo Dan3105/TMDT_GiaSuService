@@ -58,6 +58,10 @@ namespace GiaSuService.Controllers
                 await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
                 //HttpContext.User = principal;
 
+                if(returnUrl.Length > 0)
+                {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("", "Home");
             }
 
@@ -80,7 +84,17 @@ namespace GiaSuService.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Districts(int provinceId)
         {
-            var result = await _addressService.GetDistricts(provinceId);
+            var districts = await _addressService.GetDistricts(provinceId);
+            List<DistrictViewModel> result = new List<DistrictViewModel>();
+            foreach (District district in districts)
+            {
+                result.Add(new DistrictViewModel
+                {
+                    DistrictId = district.Id,
+                    DistrictName = district.Districtname,
+                    ProvinceId = district.Provinceid,
+                });
+            }
             return Ok(result);
         }
     }

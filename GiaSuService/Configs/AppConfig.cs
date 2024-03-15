@@ -46,5 +46,11 @@
 
         public const string TUTORROLENAME = "tutor";
         public const string TUTORPOLICY = "tutor_policy";
+
+        public const string CUSTOMERROLENAME = "customer";
+        public const string CUSTOMERPOLICY = "customer_policy";
+
+        public const string MESSAGE_SUCCESS = "message_success";
+        public const string MESSAGE_FAIL = "message_failed";
     }
 }
