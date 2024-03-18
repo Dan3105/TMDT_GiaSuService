@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GiaSuService.Configs;
+using System;
 using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
@@ -17,19 +18,15 @@ public partial class Tutorprofile
 
     public int Accountid { get; set; }
 
-    public int Formid { get; set; }
-
     public short Academicyearfrom { get; set; }
 
     public short Academicyearto { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 
+    public AppConfig.RegisterStatus RegisterStatus = AppConfig.RegisterStatus.PENDING;
+
     public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
-
-    public virtual Formregistertutor Form { get; set; } = null!;
-
-    public virtual Formregistertutor? Formregistertutor { get; set; }
 
     public virtual ICollection<District> Districts { get; set; } = new List<District>();
 

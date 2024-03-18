@@ -2,9 +2,9 @@
 {
     public interface IRepository<T> where T : class
     {
-        Task<bool> Create(T entity);
-        Task<bool> Update(T entity);
-
+        void Create(T entity);
+        void Update(T entity);
+        void Delete(T entity);
         Task<bool> SaveChanges();
     }
 }

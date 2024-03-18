@@ -18,17 +18,9 @@ namespace GiaSuService.Repository
             return _context.Accounts;
         }
 
-        public async Task<bool> Create(Account entity)
+        public void Create(Account entity)
         {
-            try
-            {
-                _context.Accounts.Add(entity);
-                return await SaveChanges();
-            }
-            catch(Exception)
-            {
-                return false;
-            }
+            _context.Accounts.Add(entity);
         }
 
         public async Task<Account> GetByEmail(string email)
@@ -58,17 +50,10 @@ namespace GiaSuService.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public async Task<bool> Update(Account entity)
+        public void Update(Account entity)
         {
-            try
-            {
-                _context.Accounts.Update(entity);
-                return await SaveChanges();
-            }
-            catch(Exception)
-            {
-                return false;
-            }
+            _context.Accounts.Update(entity);
+
         }
 
         public async Task<Account> GetById(int id)
@@ -76,5 +61,11 @@ namespace GiaSuService.Repository
             Account acc = (await _context.Accounts.FirstOrDefaultAsync(p => p.Id == id))!;
             return acc;
         }
+
+        public void Delete(Account entity)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

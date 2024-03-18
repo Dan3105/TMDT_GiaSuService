@@ -2,6 +2,7 @@
 using GiaSuService.EntityModel;
 using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.IdentityViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -105,31 +106,24 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register(RegisterFormViewModel view)
+        public async Task<IActionResult> Register(RegisterAccountProfileViewModel view)
         {
             var provinces = await _addressService.GetProvinces();
-            List<ProvinceViewModel> result = new List<ProvinceViewModel>();
-            foreach (Province province in provinces)
-            {
-                result.Add(new ProvinceViewModel
-                {
-                    ProvinceId = province.Id,
-                    ProvinceName = province.Provincename,
-                });
-            }
+            List<ProvinceViewModel> result = Utility.ConvertToProvinceViewList(provinces);
 
             RegisterEmployeeViewModel registerFormViewModel = new RegisterEmployeeViewModel()
-            { 
-                ProvinceList = result 
+            {
+                ProvinceList = result,
             };
 
-            if(view != null)
+            if (view != null)
             {
                 registerFormViewModel.RegisterForm = view;
             }
-           
+
             return View(registerFormViewModel);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterEmployeeViewModel model)
@@ -160,8 +154,8 @@ namespace GiaSuService.Controllers
                 Lockenable = false,
                 Logoaccount = accountProfile.LogoAccount,
                 Roleid = (int)roleId,
-                Districtid = accountProfile.AddressVM!.District!.DistrictId,
-                Addressdetail = accountProfile.AddressVM!.AddressName,
+                Addressdetail = accountProfile.AddressName,
+                Districtid = accountProfile.SelectedDistrictId,
 
                 
             };

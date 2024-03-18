@@ -38,11 +38,16 @@ builder.Services.AddAuthorization(o =>
 //Add Repository
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
+builder.Services.AddTransient<IGradeRepository, GradeRepository>();
+builder.Services.AddTransient<ISessionRepository, SessionRepository>();
+builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
+builder.Services.AddTransient<ITutorRepository, TutorRepository>();
 
 
 //Add Services
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IAddressService, AddressService>();
+builder.Services.AddTransient<ICatalogService, CatalogService>();
 builder.Services.AddSingleton<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 

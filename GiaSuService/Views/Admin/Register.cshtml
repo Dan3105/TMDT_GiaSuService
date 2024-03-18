@@ -58,12 +58,12 @@ For more information on enabling MVC for empty projects, visit https://go.micros
         @Html.ValidationMessageFor(model => model.RegisterForm!.LogoAccount, "", new { @class = "text-danger" })
     </div>
 
-    <div class="form-select">
+    <div class="form-group">
         <label for="province">Province:</label>
-        <select id="province" onchange="getDistricts()">
+        <select class="form-select" id="province" onchange="getDistricts()">
             @if (Model.ProvinceList != null)
             {
-                <option>-- Select Province --</option>
+                <option id="provincedefault">-- Select Province --</option>
                 @foreach (var province in Model.ProvinceList)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -72,19 +72,39 @@ For more information on enabling MVC for empty projects, visit https://go.micros
         </select>
     </div>
 
-    <div class="form-select">
+    <div class="form-group">
         <label for="district">District:</label>
-        <select id="district" disabled asp-for="RegisterForm!.AddressVM!.District!.DistrictId">
-            <option value="">-- Select District --</option>
+        <select class="form-select" id="districtSelectionContainer" asp-for="RegisterForm!.SelectedDistrictId">
+            <option>--Select District--</option>
         </select>
     </div>
 
     <div class="form-group m-2">
         <label for="addressName">Address Name:</label>
-        <input type="text" class="form-control" id="addressName" placeholder="Enter logo account (text only)" asp-for="RegisterForm!.AddressVM!.AddressName">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.AddressVM!.AddressName, "", new { @class = "text-danger" })
+        <input type="text" class="form-control" id="addressName" placeholder="Enter logo account (text only)" asp-for="RegisterForm!.AddressName">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.AddressName, "", new { @class = "text-danger" })
     </div>
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 
-<script src="~/js/address.js" asp-append-version="true"></script>
+<script>
+    function getDistricts() {
+        $("#provincedefault").remove();
+
+        var selectedIdProvince = $("#province").val();
+        $.ajax({
+            url: `/Identity/Districts`,
+            type: 'GET',
+            data: { 'provinceId': selectedIdProvince },
+            success: function(data){
+                $("#districtSelectionContainer").empty(); // Replace the content with updated data
+                for (var i = 0; i < data.length; i++) {
+                    $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching districts:", textStatus, errorThrown);
+            }
+        });
+    }
+</script>

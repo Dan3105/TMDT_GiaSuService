@@ -1,0 +1,9 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+@model DistrictViewModel
+<div class="checkbox">
+    <label>
+        <input type="hidden" asp-for="@Model.DistrictId" />
+        <input type="checkbox" name="Classes" asp-for="@Model.IsChecked" />
+        @Html.DisplayFor(x => x.DistrictName)
+    </label>
+</div>

@@ -1,0 +1,17 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+@model IEnumerable<DistrictViewModel>
+
+<div>
+    <label for="district">District:</label>
+        @if (Model != null && Model.Count() != 0)
+        {
+            @foreach (var district in Model)
+            {
+                <option value="@district.DistrictId">@district.DistrictName</option>
+            }
+        }
+        else
+        {
+            <option value="">---Select District---</option>
+        }
+</div>

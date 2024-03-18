@@ -7,16 +7,87 @@ namespace GiaSuService.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly TmdtDvgsContext _context;
         private readonly IAccountRepository _accountRepo;
-        public AuthService(IAccountRepository accountRepo)
+        private readonly ITutorRepository _tutorRepo;
+        private readonly ISubjectRepository _subjectRepository;
+        private readonly IGradeRepository _gradeRepository;
+        private readonly ISessionRepository _sessionRepository;
+        private readonly IAddressRepository _addressRepository;
+
+        public AuthService(TmdtDvgsContext context, IAccountRepository accountRepo, ITutorRepository tutorRepo, ISubjectRepository subjectRepository, IGradeRepository gradeRepository, ISessionRepository sessionRepository, IAddressRepository addressRepository)
         {
+            _context = context;
             _accountRepo = accountRepo;
+            _tutorRepo = tutorRepo;
+            _subjectRepository = subjectRepository;
+            _gradeRepository = gradeRepository;
+            _sessionRepository = sessionRepository;
+            _addressRepository = addressRepository;
         }
 
         public async Task<bool> CreateAccount(Account account)
         {
-            var isSucced = await _accountRepo.Create(account);
-            return isSucced;
+            try
+            {
+                _accountRepo.Create(account);
+                var isSucced = await _accountRepo.SaveChanges();
+                return isSucced;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+        }
+
+
+        public async Task<bool> CreateTutorRegisterRequest(Account account, Tutorprofile tutorprofile, IEnumerable<int> districtId, IEnumerable<int> gradeId, 
+            IEnumerable<int> subjectId, IEnumerable<int> sessionId)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach(var id in districtId)
+                    {
+                        var district =await _addressRepository.GetDistrict(id);
+                        tutorprofile.Districts.Add(district);
+                    }
+
+                    foreach (var id in gradeId)
+                    {
+                        var grade = await _gradeRepository.GetGradeById(id);
+                        tutorprofile.Grades.Add(grade);
+                    }
+
+                    foreach (var id in subjectId)
+                    {
+                        var subject = await _subjectRepository.GetSubjectById(id);
+                        tutorprofile.Subjects.Add(subject);
+                    }
+
+                    foreach (var id in sessionId)
+                    {
+                        var session = await _sessionRepository.GetSessionById(id);
+                        tutorprofile.Sessions.Add(session);
+                    }
+
+                    _accountRepo.Create(account);
+                    _tutorRepo.Create(tutorprofile);
+
+                    await _context.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+
+                    return false;
+                }
+            }
         }
 
         public async Task<Account> GetAccountById(int id)
@@ -43,8 +114,17 @@ namespace GiaSuService.Services
 
         public async Task<bool> UpdateAccount(Account account)
         {
-            var isSucced = await _accountRepo.Update(account);
-            return isSucced;
+            try
+            {
+                _accountRepo.Update(account);
+                var isSucced = await _accountRepo.SaveChanges();
+                return isSucced;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
 
         public async Task<Account> ValidateAccount(string email, string password)

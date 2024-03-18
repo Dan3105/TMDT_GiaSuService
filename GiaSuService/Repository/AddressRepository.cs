@@ -46,8 +46,7 @@ namespace GiaSuService.Repository
         public async Task<District> GetDistrict(int districtId)
         {
             District district = (await _context.Districts
-                .Include(p => p.Province)
-                .FirstOrDefaultAsync(p => p.Id == districtId))!;
+                .FindAsync(districtId))!;
 
             return district;
         }
