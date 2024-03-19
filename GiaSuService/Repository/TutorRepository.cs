@@ -1,6 +1,9 @@
 ﻿using GiaSuService.AppDbContext;
+using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
+using static GiaSuService.Configs.AppConfig;
 
 namespace GiaSuService.Repository
 {
@@ -30,5 +33,58 @@ namespace GiaSuService.Repository
         {
             _context.Tutorprofiles.Update(entity);
         }
+        public async Task<IEnumerable<Tutorprofile>> GetTutorprofilesByFilter(
+            string subjectName, string districtName, string gradeName)
+        {
+            var filteredTutors = await _context.Tutorprofiles
+            .Where(tp => (subjectName == "" || tp.Subjects.Any(s => s.Subjectname == subjectName))
+                      && (districtName == "" || tp.Districts.Any(d => d.Districtname == districtName))
+                      && (gradeName == "" || tp.Grades.Any(g => g.Gradename == gradeName)))
+            .ToListAsync();
+
+            return filteredTutors;
+        }
+
+        public async Task<IEnumerable<Tutorprofile>> GetTutorprofilesByClassId(int classId)
+        {
+            //Get list tutorId by classId
+            var tutorIds = await _context.Classtutorqueues
+                                .Where(p => p.Classid == classId)
+                                .Select(p => p.Tutorid)
+                                .ToListAsync();
+
+            // Get list Tutorprofile by tutorId
+            var tutorProfilesForClass = await _context.Tutorprofiles
+                .Where(p => tutorIds.Contains(p.Id))
+                .ToListAsync();
+
+            return tutorProfilesForClass;
+        }
+
+        public async Task<bool> UpdateProfile(Tutorprofile tutor)
+        {
+            if(tutor != null)
+            {
+                _context.Tutorprofiles.Update(tutor);
+                return await SaveChanges();
+            }
+
+            return false;
+        }
+
+        public async Task<bool> UpdateRegisterStatus(int tutorProfileId, AppConfig.RegisterStatus status)
+        {
+            Tutorprofile? tutorProfile = await _context.Tutorprofiles
+                                    .FirstOrDefaultAsync(p => p.Id == tutorProfileId);
+            if (tutorProfile != null)
+            {
+                tutorProfile.RegisterStatus = status;
+                return await UpdateProfile(tutorProfile);
+            }
+
+            return false;
+        }
+
+        
     }
 }
