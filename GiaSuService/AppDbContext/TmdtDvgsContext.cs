@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GiaSuService.EntityModel;
+﻿using GiaSuService.EntityModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace GiaSuService.AppDbContext;
@@ -319,6 +317,9 @@ public partial class TmdtDvgsContext : DbContext
             entity.Property(e => e.College)
                 .HasMaxLength(255)
                 .HasColumnName("college");
+            entity.Property(e => e.Createddate)
+                .HasDefaultValueSql("CURRENT_DATE")
+                .HasColumnName("createddate");
             entity.Property(e => e.Currentstatus)
                 .HasMaxLength(255)
                 .HasColumnName("currentstatus");

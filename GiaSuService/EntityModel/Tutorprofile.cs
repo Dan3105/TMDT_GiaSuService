@@ -24,6 +24,8 @@ public partial class Tutorprofile
 
     public virtual Account Account { get; set; } = null!;
 
+    public DateOnly Createddate { get; set; }
+
     public AppConfig.RegisterStatus RegisterStatus = AppConfig.RegisterStatus.PENDING;
 
     public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
