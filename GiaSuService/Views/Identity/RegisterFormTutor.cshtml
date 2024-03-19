@@ -4,12 +4,24 @@
 @model FormRegisterTutorRequestViewModel
 <form asp-action="RegisterFormTutorPost" asp-controller="Identity" method="post">
 
+ 
+
+    <div class="form-group">
+        <label for="fullName">Họ và tên:</label>
+        <input type="text" class="form-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="AccountProfile!.FullName">
+        @Html.ValidationMessageFor(model => model.AccountProfile!.FullName, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="birthDate">Ngày sinh:</label>
+        <input type="date" class="form-control" id="birthDate" asp-for="AccountProfile!.BirthDate">
+        @Html.ValidationMessageFor(model => model.AccountProfile!.BirthDate, "", new { @class = "text-danger" })
+    </div>
     <div class="form-select">
-        <label for="province">Province:</label>
+        <label for="province">Tỉnh:</label>
         <select class="form-select" id="province" onchange="getDistricts()">
             @if (Model.ListProvince != null)
             {
-                <option id="provincedefault">-- Select Province --</option>
+                <option id="provincedefault">-- Chọn tỉnh --</option>
                 @foreach (var province in Model.ListProvince)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -17,44 +29,33 @@
             }
         </select>
     </div>
-
-    <div class="form-group">
-        <label for="fullName">Full Name:</label>
-        <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" asp-for="AccountProfile!.FullName">
-        @Html.ValidationMessageFor(model => model.AccountProfile!.FullName, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="birthDate">Birth Date:</label>
-        <input type="date" class="form-control" id="birthDate" asp-for="AccountProfile!.BirthDate">
-        @Html.ValidationMessageFor(model => model.AccountProfile!.BirthDate, "", new { @class = "text-danger" })
-    </div>
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter your email" asp-for="AccountProfile!.Email">
+        <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Email, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="phone">Phone Number:</label>
-        <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" asp-for="AccountProfile!.Phone">
+        <label for="phone">Số điện thoại:</label>
+        <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Phone, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" placeholder="Enter your password" asp-for="AccountProfile!.Password">
+        <label for="password">Mật khẩu:</label>
+        <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu của bạn" asp-for="AccountProfile!.Password">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Password, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" asp-for="AccountProfile!.ConfirmPassword">
+        <label for="confirmPassword">Xác nhận lại mật khẩu:</label>
+        <input type="password" class="form-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" asp-for="AccountProfile!.ConfirmPassword">
         @Html.ValidationMessageFor(model => model.AccountProfile!.ConfirmPassword, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="identityCard">Identity Card:</label>
-        <input type="text" class="form-control" id="identityCard" placeholder="Enter your identity card number" asp-for="AccountProfile!.IdentityCard">
+        <label for="identityCard">CCCD/CMND:</label>
+        <input type="text" class="form-control" id="identityCard" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
         @Html.ValidationMessageFor(model => model.AccountProfile!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="gender">Gender:</label>
+        <label for="gender">Giới tính:</label>
         <select class="form-control" id="gender" asp-for="AccountProfile!.Gender">
             <option value="Nam">Nam</option>
             <option value="Nữ">Nữ</option>
@@ -68,7 +69,7 @@
     </div>
 
     <div class="form-select">
-        <label for="districtSelectionContainer">District:</label>
+        <label for="districtSelectionContainer">Quận:</label>
         <select id="districtSelectionContainer" asp-for="AccountProfile!.SelectedDistrictId">
             <option value="">-- Select District --</option>
         </select>
