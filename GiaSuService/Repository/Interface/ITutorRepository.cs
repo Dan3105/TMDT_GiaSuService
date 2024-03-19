@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using static GiaSuService.Configs.AppConfig;
 
 namespace GiaSuService.Repository.Interface
 {
@@ -9,6 +10,7 @@ namespace GiaSuService.Repository.Interface
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByFilter(
             string subject, string district, string grade);
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByClassId(int classId);
+        public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status);
         public Task<bool> UpdateProfile(Tutorprofile tutor);
         public Task<bool> UpdateRegisterStatus(int tutorProfileId, AppConfig.RegisterStatus status);
         

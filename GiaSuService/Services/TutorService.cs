@@ -26,6 +26,12 @@ namespace GiaSuService.Services
             return tutorprofiles;
         }
 
+        public async Task<List<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status)
+        {
+            List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByRegisterStatus(status)).ToList();
+            return tutorprofiles;
+        }
+
         public async Task<bool> UpdateTutorprofile(Tutorprofile tutor)
         {
             try

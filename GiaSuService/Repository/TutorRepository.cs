@@ -54,11 +54,22 @@ namespace GiaSuService.Repository
                                 .ToListAsync();
 
             // Get list Tutorprofile by tutorId
-            var tutorProfilesForClass = await _context.Tutorprofiles
+            var tutorProfiles = await _context.Tutorprofiles
                 .Where(p => tutorIds.Contains(p.Id))
                 .ToListAsync();
 
-            return tutorProfilesForClass;
+            return tutorProfiles;
+        }
+
+        public async Task<IEnumerable<Tutorprofile>> GetTutorprofilesByRegisterStatus(RegisterStatus status)
+        {
+            // Get list Tutorprofile by tutorId
+            var tutorProfiles = await _context.Tutorprofiles
+                .Where(p => p.RegisterStatus == status)
+                .OrderBy(p => p.Createddate)
+                .ToListAsync();
+
+            return tutorProfiles;
         }
 
         public async Task<bool> UpdateProfile(Tutorprofile tutor)
