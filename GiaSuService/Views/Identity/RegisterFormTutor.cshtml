@@ -93,26 +93,26 @@
     </div>
 
     <div class="form-group m-2">
-        <label for="addressName">CurrentStatus Name:</label>
-        <input type="text" class="form-control" id="statusName" placeholder="Enter logo account (text only)" asp-for="RegisterTutorProfile!.CurrentStatus">
+        <label for="addressName">Nghề nghiệp hiện tại:</label>
+        <input type="text" class="form-control" id="statusName" placeholder="Công việc hiện tại" asp-for="RegisterTutorProfile!.CurrentStatus">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.CurrentStatus, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group m-2">
-        <label for="addressName">AdditionalInfo Name:</label>
-        <input type="text" class="form-control" id="additionalName" placeholder="Enter logo account (text only)" asp-for="RegisterTutorProfile!.AdditionalInfo">
+        <label for="addressName">Thông tin thêm:</label>
+        <input type="text" class="form-control" id="additionalName" placeholder="Ghi chú" asp-for="RegisterTutorProfile!.AdditionalInfo">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.AdditionalInfo, "", new { @class = "text-danger" })
     </div>
 
     <div>
-        <label>Academic Year:</label>
+        <label>Niên khóa:</label>
         <div>
-            <label asp-for="RegisterTutorProfile!.AcademicYearFrom">From:</label>
+            <label asp-for="RegisterTutorProfile!.AcademicYearFrom">Từ năm:</label>
             <input type="number" asp-for="RegisterTutorProfile!.AcademicYearFrom" class="form-control" required>
             <span asp-validation-for="RegisterTutorProfile!.AcademicYearFrom" class="text-danger"></span>
         </div>
         <div>
-            <label asp-for="RegisterTutorProfile!.AcademicYearto">To:</label>
+            <label asp-for="RegisterTutorProfile!.AcademicYearto">Đến năm:</label>
             <input type="number" asp-for="RegisterTutorProfile!.AcademicYearto" class="form-control" required>
             <span class="error-message"></span>
         </div>
