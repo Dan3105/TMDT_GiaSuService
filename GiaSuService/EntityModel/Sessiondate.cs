@@ -9,7 +9,7 @@ public partial class Sessiondate
 
     public string Sessiondate1 { get; set; } = null!;
 
-    public virtual ICollection<Classprofile> Classprofiles { get; set; } = new List<Classprofile>();
+    public short Value { get; set; }
 
     public virtual ICollection<Tutorprofile> Tutors { get; set; } = new List<Tutorprofile>();
 }

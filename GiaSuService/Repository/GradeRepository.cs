@@ -25,7 +25,7 @@ namespace GiaSuService.Repository
 
         public async Task<List<Grade>> GetAllGrades()
         {
-            return await _context.Grades.OrderBy(p => p.Id).ToListAsync();
+            return await _context.Grades.OrderBy(p => p.Value).ToListAsync();
         }
 
         public async Task<Grade> GetGradeById(int gradeId)

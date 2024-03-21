@@ -26,7 +26,7 @@ namespace GiaSuService.Repository
 
         public async Task<List<Sessiondate>> GetAllSessions()
         {
-            return await _context.Sessiondates.OrderBy(p => p.Id).ToListAsync();
+            return await _context.Sessiondates.OrderBy(p => p.Value).ToListAsync();
         }
 
         public async Task<Sessiondate> GetSessionById(int sessionId)

@@ -48,8 +48,8 @@ namespace GiaSuService.Repository
         public async Task<IEnumerable<Tutorprofile>> GetTutorprofilesByClassId(int classId)
         {
             //Get list tutorId by classId
-            var tutorIds = await _context.Classtutorqueues
-                                .Where(p => p.Classid == classId)
+            var tutorIds = await _context.Tutormatchrequestqueues
+                                .Where(p => p.Formid == classId)
                                 .Select(p => p.Tutorid)
                                 .ToListAsync();
 
@@ -65,8 +65,9 @@ namespace GiaSuService.Repository
         {
             // Get list Tutorprofile by tutorId
             var tutorProfiles = await _context.Tutorprofiles
-                .Where(p => p.RegisterStatus == status)
-                .OrderBy(p => p.Createddate)
+                .Include(p => p.Account)
+                .Where(p => p.Formstatus == status)
+                .OrderBy(p => p.Account.Createdate)
                 .ToListAsync();
 
             return tutorProfiles;
@@ -89,13 +90,18 @@ namespace GiaSuService.Repository
                                     .FirstOrDefaultAsync(p => p.Id == tutorProfileId);
             if (tutorProfile != null)
             {
-                tutorProfile.RegisterStatus = status;
+                tutorProfile.Formstatus = status;
                 return await UpdateProfile(tutorProfile);
             }
 
             return false;
         }
 
-        
+        public async Task<Tutorprofile?> GetTutorprofile(int id)
+        {
+            Tutorprofile? tutorProfile = await _context.Tutorprofiles
+                                    .FindAsync(id);
+            return tutorProfile;
+        }
     }
 }

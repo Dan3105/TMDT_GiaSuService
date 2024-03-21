@@ -42,6 +42,14 @@
                     <input type="text" asp-for="IdentityCard" class="form-control" />
                     <span asp-validation-for="IdentityCard" class="text-danger"></span>
                 </div>
+                <div class="row form-group">
+                    <div class="col">
+                        <img src="@Model.FrontIdentiyCard" alt="Front identity card"/>
+                    </div>
+                    <div class=col>
+                        <img src="@Model.BackIdentityCard" alt="Back identity card"/>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label asp-for="LockStatus">Lock Status:</label>
                     <div class="form-check form-switch">

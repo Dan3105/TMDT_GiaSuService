@@ -45,6 +45,16 @@ For more information on enabling MVC for empty projects, visit https://go.micros
         @Html.ValidationMessageFor(model => model.RegisterForm!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
+        <label for="identityCard">Identity Card:</label>
+        <input type="text" class="form-control" id="frontidentityCard" placeholder="Enter your link front card number" asp-for="RegisterForm!.FrontIdentityCard">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.FrontIdentityCard, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="identityCard">Identity Card:</label>
+        <input type="text" class="form-control" id="backidentityCard" placeholder="Enter your link back card number" asp-for="RegisterForm!.BackIdentityCard">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.BackIdentityCard, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
         <label for="gender">Gender:</label>
         <select class="form-control" id="gender" asp-for="RegisterForm!.Gender">
             <option value="Nam">Nam</option>

@@ -1,14 +1,16 @@
-﻿namespace GiaSuService.Configs
+﻿using NpgsqlTypes;
+
+namespace GiaSuService.Configs
 {
     public class AppConfig
     {
-        public enum ClassStatus
+        public enum TutorRequestStatus
         {
             PENDING,
             APPROVAL,
             DENIED,
             HANDED,
-            OUTDATED
+            EXPIRED
         }
 
         public enum RegisterStatus
@@ -24,13 +26,26 @@
             ONLINE
         }
 
-        public enum ClassTutorQueue
+        public enum QueueStatus
         {
             PENDING,
             APPROVAL,
             DENY,
-            REVIEWING,
+            REVEWING,
             HANDED
+        }
+
+        public enum TransactionType
+        {
+            DEPOSIT,
+            PAYROLL,
+            TUTION
+        }
+
+        public enum TypeTutor
+        {
+            TEACHER,
+            STUDENT
         }
 
         public const string CLAIM_TYPE_AVATAR = "Avatar";

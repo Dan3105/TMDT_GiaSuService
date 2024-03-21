@@ -15,8 +15,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+var datasourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found."));
+datasourceBuilder.MapEnum<AppConfig.RegisterStatus>("registerstatus")
+    .MapEnum<AppConfig.PaymentMethod>("paymentmethod")
+    .MapEnum<AppConfig.QueueStatus>("queuestatus")
+    .MapEnum<AppConfig.TransactionType>("transactiontype")
+    .MapEnum<AppConfig.TutorRequestStatus>("tutorrequeststatus")
+    .MapEnum<AppConfig.TypeTutor>("typetutor");
+
 builder.Services.AddDbContext<TmdtDvgsContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found.")));
+    options.UseNpgsql(datasourceBuilder.Build()));
 builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
 {
     o.ExpireTimeSpan = TimeSpan.FromMinutes(15);
@@ -95,7 +103,10 @@ static async Task GenSuperAdmin(TmdtDvgsContext context)
             Phone = "0869696969",
             Roleid = 1,
             Passwordhash = BCrypt.Net.BCrypt.HashPassword("superadmin"),
-            Logoaccount = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png"
+            Avatar = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+            Frontidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+            Backidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+            Createdate = DateOnly.FromDateTime(DateTime.Now)
         }
         );
 

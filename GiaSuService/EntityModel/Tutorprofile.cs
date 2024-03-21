@@ -12,8 +12,6 @@ public partial class Tutorprofile
 
     public string Area { get; set; } = null!;
 
-    public string Currentstatus { get; set; } = null!;
-
     public string? Additionalinfo { get; set; }
 
     public int Accountid { get; set; }
@@ -24,11 +22,13 @@ public partial class Tutorprofile
 
     public virtual Account Account { get; set; } = null!;
 
-    public DateOnly Createddate { get; set; }
+    public AppConfig.TypeTutor Currentstatus;
 
-    public AppConfig.RegisterStatus RegisterStatus = AppConfig.RegisterStatus.PENDING;
+    public AppConfig.RegisterStatus Formstatus { get; set; } = AppConfig.RegisterStatus.PENDING;
 
-    public virtual ICollection<Classtutorqueue> Classtutorqueues { get; set; } = new List<Classtutorqueue>();
+    public virtual ICollection<Tutormatchrequestqueue> Tutormatchrequestqueues { get; set; } = new List<Tutormatchrequestqueue>();
+
+    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
 
     public virtual ICollection<District> Districts { get; set; } = new List<District>();
 

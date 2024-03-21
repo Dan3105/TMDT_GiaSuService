@@ -25,7 +25,7 @@ namespace GiaSuService.Repository
 
         public async Task<List<Subject>> GetAllSubjects()
         {
-            return await _context.Subjects.OrderBy(p => p.Id).ToListAsync();
+            return await _context.Subjects.OrderBy(p => p.Value).ToListAsync();
         }
 
         public async Task<Subject> GetSubjectById(int subjectId)

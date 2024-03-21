@@ -9,7 +9,9 @@ public partial class Subject
 
     public string Subjectname { get; set; } = null!;
 
-    public virtual ICollection<Classprofile> Classprofiles { get; set; } = new List<Classprofile>();
+    public short Value { get; set; }
+
+    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
 
     public virtual ICollection<Tutorprofile> Tutors { get; set; } = new List<Tutorprofile>();
 }

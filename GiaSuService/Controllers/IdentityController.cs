@@ -18,12 +18,14 @@ namespace GiaSuService.Controllers
         private readonly IAuthService _authService;
         private readonly IAddressService _addressService;
         private readonly ICatalogService _catalogService;
+        private readonly ITutorService _tutorService;
 
-        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService)
+        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, ITutorService tutorService)
         {
             _authService = authService;
             _addressService = addressService;
             _catalogService = catalogService;
+            _tutorService = tutorService;
         }
 
         public IActionResult Index()
@@ -45,7 +47,7 @@ namespace GiaSuService.Controllers
             }
 
             var user = await _authService.ValidateAccount(model.Email!, model.Password!);
-            if (user != null)
+            if (user != null && !user.Lockenable)
             {
                 List<Claim> claims = new List<Claim>()
                 {
@@ -54,8 +56,14 @@ namespace GiaSuService.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.MobilePhone, user.Phone),
                     new Claim(ClaimTypes.Role, user.Role.Rolename),
-                    new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Logoaccount)
+                    new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Avatar)
                 };
+
+                if(user.Role.Rolename == AppConfig.EMPLOYEEROLENAME)
+                {
+                    int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count();
+                    TempData["Count"] = count_querying_register.ToString();
+                }
 
                 ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
@@ -63,13 +71,14 @@ namespace GiaSuService.Controllers
                 await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
                 //HttpContext.User = principal;
 
+                TempData[AppConfig.MESSAGE_SUCCESS] = $"Hello {user.Fullname}";
                 if (returnUrl.Length > 0)
                 {
                     return Redirect(returnUrl);
                 }
                 return RedirectToAction("", "Home");
             }
-
+            TempData[AppConfig.MESSAGE_FAIL] = "Incorrect Login";
             return View("Index", model);
         }
 
@@ -160,7 +169,7 @@ namespace GiaSuService.Controllers
                 Additionalinfo = model.RegisterTutorProfile.AdditionalInfo,
                 College = model.RegisterTutorProfile.College,
                 Area = model.RegisterTutorProfile.Area,
-                Currentstatus = model.RegisterTutorProfile.CurrentStatus,
+                //Currentstatus = model.RegisterTutorProfile.CurrentStatus,
             };
 
             Account form = new Account()
@@ -174,7 +183,7 @@ namespace GiaSuService.Controllers
                 Phone = model.AccountProfile.Phone,
                 Districtid = model.AccountProfile.SelectedDistrictId,
                 Addressdetail = model.AccountProfile.AddressName,
-                Logoaccount = model.AccountProfile.LogoAccount,
+                Avatar = model.AccountProfile.LogoAccount,
                 Lockenable = true,
                 Roleid = (int)roleId,
                 Tutorprofile = tutorprofile

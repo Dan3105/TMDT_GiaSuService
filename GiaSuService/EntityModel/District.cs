@@ -13,9 +13,9 @@ public partial class District
 
     public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
 
-    public virtual ICollection<Classprofile> Classprofiles { get; set; } = new List<Classprofile>();
-
     public virtual Province Province { get; set; } = null!;
+
+    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
 
     public virtual ICollection<Tutorprofile> Tutors { get; set; } = new List<Tutorprofile>();
 }

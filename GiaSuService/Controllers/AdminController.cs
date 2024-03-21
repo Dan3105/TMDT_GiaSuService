@@ -45,7 +45,7 @@ namespace GiaSuService.Controllers
                     Email = account.Email,
                     FullName = account.Fullname,
                     LockStatus = account.Lockenable,
-                    ImageUrl = account.Logoaccount
+                    ImageUrl = account.Avatar
                 });
 
             }
@@ -66,9 +66,11 @@ namespace GiaSuService.Controllers
             District district = await _addressService.GetDistrictData(account.Districtid);
             EmployeeProfileViewModel employeeProfileViewModel = new EmployeeProfileViewModel()
             {
-                LogoAccount = account.Logoaccount,
+                LogoAccount = account.Avatar,
                 Phone = account.Phone,
                 IdentityCard = account.Identitycard,
+                FrontIdentiyCard = account.Frontidentitycard,
+                BackIdentityCard = account.Backidentitycard,
                 Gender = account.Gender,
                 Email = account.Email,
                 AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
@@ -150,14 +152,15 @@ namespace GiaSuService.Controllers
                 Phone = accountProfile.Phone,
                 Passwordhash = Utility.HashPassword(accountProfile.Password),
                 Identitycard = accountProfile.IdentityCard,
+                Frontidentitycard = accountProfile.FrontIdentityCard,
+                Backidentitycard = accountProfile.BackIdentityCard,
                 Gender = accountProfile.Gender,
                 Lockenable = false,
-                Logoaccount = accountProfile.LogoAccount,
+                Avatar = accountProfile.LogoAccount,
                 Roleid = (int)roleId,
                 Addressdetail = accountProfile.AddressName,
                 Districtid = accountProfile.SelectedDistrictId,
-
-                
+                Createdate = DateOnly.FromDateTime(DateTime.Now)
             };
             bool isSuccess = await _authService.CreateAccount(account);
             if (isSuccess)

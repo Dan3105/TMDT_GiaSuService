@@ -9,7 +9,11 @@ public partial class Grade
 
     public string Gradename { get; set; } = null!;
 
-    public virtual ICollection<Classprofile> Classprofiles { get; set; } = new List<Classprofile>();
+    public short Value { get; set; }
+
+    public virtual ICollection<Configpricehistory> Configpricehistories { get; set; } = new List<Configpricehistory>();
+
+    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
 
     public virtual ICollection<Tutorprofile> Tutors { get; set; } = new List<Tutorprofile>();
 }

@@ -19,6 +19,7 @@
         var roleName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value : "";
         var avatar = isAuth ? User.Claims.FirstOrDefault(p => p.Type == AppConfig.CLAIM_TYPE_AVATAR)?.Value : "";
         var fullName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name)?.Value : "";
+        string count_query = (TempData["Count"] as string)!;
     }
     <div class="page-wrapper chiller-theme toggled">
         <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
@@ -112,15 +113,15 @@
                             <li class="sidebar">
                                 <a href="#">
                                     <i class="fa fa-tachometer-alt"></i>
-                                    <span>Danh sách gia sư</span>
+                                    <span>Danh sách quản lý gia sư</span>
                                 </a>
 
                             </li>
                             <li class="sidebar">
-                                <a href="#">
+                                <a href="@Url.Action("TutorRegisterQueue", "Employee")">
                                     <i class="fa fa-tachometer-alt"></i>
                                     <span>Đơn đăng ký gia sư</span>
-                                    <span class="badge badge-pill badge-danger">10</span>
+                                    <span class="badge badge-pill badge-danger">@count_query</span>
                                 </a>
                             </li>
                             <li class="sidebar">

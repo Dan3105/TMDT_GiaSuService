@@ -23,7 +23,7 @@ public partial class Account
 
     public bool Lockenable { get; set; }
 
-    public string Logoaccount { get; set; } = null!;
+    public string Avatar { get; set; } = null!;
 
     public int Roleid { get; set; }
 
@@ -31,9 +31,21 @@ public partial class Account
 
     public int Districtid { get; set; }
 
+    public string Frontidentitycard { get; set; } = null!;
+
+    public string Backidentitycard { get; set; } = null!;
+
+    public DateOnly? Createdate { get; set; }
+
+    public virtual ICollection<Configpricehistory> Configpricehistories { get; set; } = new List<Configpricehistory>();
+
     public virtual District District { get; set; } = null!;
 
     public virtual Role Role { get; set; } = null!;
+
+    public virtual ICollection<Transaction> TransactionAccountpays { get; set; } = new List<Transaction>();
+
+    public virtual ICollection<Transaction> TransactionAccountwrites { get; set; } = new List<Transaction>();
 
     public virtual Tutorprofile? Tutorprofile { get; set; }
 }
