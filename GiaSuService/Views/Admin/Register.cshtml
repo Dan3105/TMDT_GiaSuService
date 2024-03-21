@@ -10,52 +10,17 @@ For more information on enabling MVC for empty projects, visit https://go.micros
 <h1>Registration Form</h1>
 <form asp-action="Register" asp-controller="Admin" method="post" >
     <div class="form-group">
-        <label for="fullName">Full Name:</label>
+        <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" asp-for="RegisterForm!.FullName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.FullName, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="birthDate">Birth Date:</label>
+        <label for="birthDate">Ngày sinh:</label>
         <input type="date" class="form-control" id="birthDate" asp-for="RegisterForm!.BirthDate">
         @Html.ValidationMessageFor(model => model.RegisterForm!.BirthDate, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter your email" asp-for="RegisterForm!.Email">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.Email, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="phone">Phone Number:</label>
-        <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" asp-for="RegisterForm!.Phone">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.Phone, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" placeholder="Enter your password" asp-for="RegisterForm!.Password">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.Password, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" asp-for="RegisterForm!.ConfirmPassword">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.ConfirmPassword, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="identityCard">Identity Card:</label>
-        <input type="text" class="form-control" id="identityCard" placeholder="Enter your identity card number" asp-for="RegisterForm!.IdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.IdentityCard, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="identityCard">Identity Card:</label>
-        <input type="text" class="form-control" id="frontidentityCard" placeholder="Enter your link front card number" asp-for="RegisterForm!.FrontIdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.FrontIdentityCard, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="identityCard">Identity Card:</label>
-        <input type="text" class="form-control" id="backidentityCard" placeholder="Enter your link back card number" asp-for="RegisterForm!.BackIdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.BackIdentityCard, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <label for="gender">Gender:</label>
+        <label for="gender">Giới tính:</label>
         <select class="form-control" id="gender" asp-for="RegisterForm!.Gender">
             <option value="Nam">Nam</option>
             <option value="Nữ">Nữ</option>
@@ -63,17 +28,42 @@ For more information on enabling MVC for empty projects, visit https://go.micros
         @Html.ValidationMessageFor(model => model.RegisterForm!.Gender, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="logoAccount">Logo Account:</label>
-        <input type="text" class="form-control" id="logoAccount" placeholder="Enter logo account (text only)" asp-for="RegisterForm!.LogoAccount">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" placeholder="Nhập email" asp-for="RegisterForm!.Email">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.Email, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="phone">Số điện thoại:</label>
+        <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại" asp-for="RegisterForm!.Phone">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.Phone, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="identityCard">Số CMND/ CCCD:</label>
+        <input type="text" class="form-control" id="identityCard" placeholder="Nhập số CCCD của bạn" asp-for="RegisterForm!.IdentityCard">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.IdentityCard, "", new { @class = "text-danger" })
+    </div>
+   
+    <div class="form-group">
+        <label for="logoAccount">Logo:</label>
+        <input type="text" class="form-control" id="logoAccount" placeholder="Nhập logo" asp-for="RegisterForm!.LogoAccount">
         @Html.ValidationMessageFor(model => model.RegisterForm!.LogoAccount, "", new { @class = "text-danger" })
     </div>
-
     <div class="form-group">
-        <label for="province">Province:</label>
+        <label for="password">Mật khẩu:</label>
+        <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu đăng ký" asp-for="RegisterForm!.Password">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.Password, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Xác nhận mật khẩu:</label>
+        <input type="password" class="form-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" asp-for="RegisterForm!.ConfirmPassword">
+        @Html.ValidationMessageFor(model => model.RegisterForm!.ConfirmPassword, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="province">Tỉnh/ Thành phố:</label>
         <select class="form-select" id="province" onchange="getDistricts()">
             @if (Model.ProvinceList != null)
             {
-                <option id="provincedefault">-- Select Province --</option>
+                <option id="provincedefault">-- Chọn tỉnh --</option>
                 @foreach (var province in Model.ProvinceList)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -83,18 +73,18 @@ For more information on enabling MVC for empty projects, visit https://go.micros
     </div>
 
     <div class="form-group">
-        <label for="district">District:</label>
+        <label for="district">Quận/ Huyện:</label>
         <select class="form-select" id="districtSelectionContainer" asp-for="RegisterForm!.SelectedDistrictId">
-            <option>--Select District--</option>
+            <option>--Chọn quận--</option>
         </select>
     </div>
 
     <div class="form-group m-2">
-        <label for="addressName">Address Name:</label>
-        <input type="text" class="form-control" id="addressName" placeholder="Enter logo account (text only)" asp-for="RegisterForm!.AddressName">
+        <label for="addressName">Địa chỉ:</label>
+        <input type="text" class="form-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="RegisterForm!.AddressName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.AddressName, "", new { @class = "text-danger" })
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn btn-primary">Đăng ký</button>
 </form>
 
 <script>
