@@ -35,7 +35,7 @@ public partial class Account
 
     public string Backidentitycard { get; set; } = null!;
 
-    public DateOnly? Createdate { get; set; }
+    public DateOnly Createdate { get; set; }
 
     public virtual ICollection<Configpricehistory> Configpricehistories { get; set; } = new List<Configpricehistory>();
 

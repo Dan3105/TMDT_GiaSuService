@@ -1,0 +1,34 @@
+﻿@using GiaSuService.Models.EmployeeViewModel
+@model IEnumerable<TutorRegisterViewModel>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>College</th>
+            <th>Area</th>
+            <th>Current Status</th>
+            <th>Status Query</th>
+            <th>Create Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FullName</td>
+                <td>@item.College</td>
+                <td>@item.Area</td>
+                <td>@item.CurrentStatus</td>
+                <td>@item.StatusQuery</td>
+                <td>@item.CreateDate</td>
+                <td>
+                    <a href="@Url.Action("Tutorprofile", "Employee", new {id = item.Id})" class="btn btn-primary">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

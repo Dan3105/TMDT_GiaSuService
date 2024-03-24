@@ -24,7 +24,7 @@ public partial class Tutorprofile
 
     public bool Activeenable { get; set; }
 
-    public AppConfig.TypeTutor Currentstatus;
+    public AppConfig.TypeTutor Currentstatus { get; set; }
 
     public AppConfig.RegisterStatus Formstatus { get; set; } = AppConfig.RegisterStatus.PENDING;
 

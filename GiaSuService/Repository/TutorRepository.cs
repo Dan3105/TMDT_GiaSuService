@@ -100,7 +100,8 @@ namespace GiaSuService.Repository
         public async Task<Tutorprofile?> GetTutorprofile(int id)
         {
             Tutorprofile? tutorProfile = await _context.Tutorprofiles
-                                    .FindAsync(id);
+                                .Include (p => p.Account)
+                               .FirstOrDefaultAsync(p=> p.Id == id);
             return tutorProfile;
         }
     }
