@@ -22,6 +22,8 @@ public partial class Tutorprofile
 
     public virtual Account Account { get; set; } = null!;
 
+    public bool Activeenable { get; set; }
+
     public AppConfig.TypeTutor Currentstatus;
 
     public AppConfig.RegisterStatus Formstatus { get; set; } = AppConfig.RegisterStatus.PENDING;
