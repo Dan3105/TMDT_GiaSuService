@@ -56,5 +56,11 @@ namespace GiaSuService.Services
             }
         }
 
+        public async Task<Tutorprofile> GetTutorprofileById(int id)
+        {
+            Tutorprofile? tutorprofile = await _tutorRepository.GetTutorprofile(id);
+            return tutorprofile!;
+        }
+
     }
 }

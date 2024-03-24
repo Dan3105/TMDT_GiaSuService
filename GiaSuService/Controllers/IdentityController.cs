@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GiaSuService.Controllers
 {
@@ -219,6 +221,72 @@ namespace GiaSuService.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> RegisterFormCustomer(RegisterAccountProfileViewModel view) 
+        {
+            var provinces = await _addressService.GetProvinces();
+            List<ProvinceViewModel> result = Utility.ConvertToProvinceViewList(provinces);
 
+            RegisterFormViewModel registerFormViewModel = new RegisterFormViewModel()
+            {
+                ProvinceList = result,
+                RegisterForm = new RegisterAccountProfileViewModel() { }
+            };
+
+            if (view != null)
+            {
+                registerFormViewModel.RegisterForm = view;
+            }
+            return View(registerFormViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterFormCustomer(RegisterFormViewModel form)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi form nhập";
+                return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
+            }
+
+            var roleId = await _authService.GetRoleId(AppConfig.CUSTOMERROLENAME);
+            if (roleId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???";
+                Console.WriteLine("wtf did i change the name role?");
+                return RedirectToAction("Index", "Home");
+            }
+
+            var accountProfile = form.RegisterForm!;
+            Account account = new Account()
+            {
+                Fullname = accountProfile.FullName,
+                Birth = accountProfile.BirthDate,
+                Email = accountProfile.Email,
+                Phone = accountProfile.Phone,
+                Passwordhash = Utility.HashPassword(accountProfile.Password),
+                Identitycard = accountProfile.IdentityCard,
+                Frontidentitycard = accountProfile.FrontIdentityCard,
+                Backidentitycard = accountProfile.BackIdentityCard,
+                Gender = accountProfile.Gender,
+                Lockenable = false,
+                Avatar = accountProfile.LogoAccount,
+                Roleid = (int)roleId,
+                Addressdetail = accountProfile.AddressName,
+                Districtid = accountProfile.SelectedDistrictId,
+                Createdate = DateOnly.FromDateTime(DateTime.Now)
+            };
+            bool isSuccess = await _authService.CreateAccount(account);
+            if (isSuccess)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Tạo tài khoản thành công";
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Tạo tài khoản thất bại";
+                return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
+            }
+            return RedirectToAction("", "Identity");
+        }
     }
 }

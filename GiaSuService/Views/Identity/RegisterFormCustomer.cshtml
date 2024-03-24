@@ -1,14 +1,10 @@
 ﻿@using GiaSuService.Models.UtilityViewModel;
-@*
-For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @model RegisterFormViewModel
 @{
 }
 
-
 <h1>Registration Form</h1>
-<form asp-action="Register" asp-controller="Admin" method="post" >
+<form asp-action="RegisterFormCustomer" asp-controller="Identity" method="post">
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" asp-for="RegisterForm!.FullName">
@@ -93,6 +89,11 @@ For more information on enabling MVC for empty projects, visit https://go.micros
         <input type="text" class="form-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="RegisterForm!.AddressName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.AddressName, "", new { @class = "text-danger" })
     </div>
+    <div class="form-group">
+        <label for="confirm-box">Đã đọc các <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">điều khoản</a> trước khi đăng ký</label>
+        <input id="confirm-box" type="checkbox" id="ConfirmBox" asp-for="ConfirmBox" required />
+        <span asp-validation-for="ConfirmBox" class="text-danger"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Đăng ký</button>
 </form>
 
@@ -105,7 +106,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
             url: `/Identity/Districts`,
             type: 'GET',
             data: { 'provinceId': selectedIdProvince },
-            success: function(data){
+            success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
                 for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));

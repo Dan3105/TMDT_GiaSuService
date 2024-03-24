@@ -9,8 +9,6 @@ namespace GiaSuService.Models.IdentityViewModel
         public string FullName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Please enter your birth date.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateOnly BirthDate { get; set; }
 
         [Required(ErrorMessage = "Please enter your email address.")]

@@ -87,13 +87,7 @@
                             <li class="header-menu">
                                 <span>Gia sư</span>
                             </li>
-                            <li>
-                                <a href="@Url.Action("RegisterFormTutor", "Identity")">
-                                    <i class="fa fa-book"></i>
-                                    <span>Đăng ký làm gia sư</span>
-                                    @* <span class="badge badge-pill badge-primary">Beta</span> *@
-                                </a>
-                            </li>
+
                             <li>
                                 <a href="#">
                                     <i class="fa fa-calendar"></i>
@@ -198,12 +192,23 @@
                             <li class="header-menu">
                                 <span>Tài khoản</span>
                             </li>
+                            <li>
+                                <a href="@Url.Action("RegisterFormTutor", "Identity")">
+                                    <i class="fa fa-book"></i>
+                                    <span>Đăng ký làm gia sư</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("RegisterFormCustomer", "Identity")">
+                                    <i class="fa fa-book"></i>
+                                    <span>Đăng ký tài khoản</span>
+                                </a>
+                            </li>
                             <li class="sidebar">
                                 <a href="@Url.Action("Index", "Identity")">
                                     <i class="fa fa-tachometer-alt"></i>
                                     <span>Đăng nhập tài khoản</span>
                                 </a>
-
                             </li>
                         </ul>
                     </div>

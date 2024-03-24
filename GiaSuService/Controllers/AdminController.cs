@@ -113,7 +113,7 @@ namespace GiaSuService.Controllers
             var provinces = await _addressService.GetProvinces();
             List<ProvinceViewModel> result = Utility.ConvertToProvinceViewList(provinces);
 
-            RegisterEmployeeViewModel registerFormViewModel = new RegisterEmployeeViewModel()
+            RegisterFormViewModel registerFormViewModel = new RegisterFormViewModel()
             {
                 ProvinceList = result,
             };
@@ -128,7 +128,7 @@ namespace GiaSuService.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterEmployeeViewModel model)
+        public async Task<IActionResult> Register(RegisterFormViewModel model)
         {
             if(!ModelState.IsValid) {
                 TempData[AppConfig.MESSAGE_FAIL] = "Lỗi form nhập";
