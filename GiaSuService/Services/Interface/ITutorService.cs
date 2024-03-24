@@ -5,9 +5,9 @@ namespace GiaSuService.Services.Interface
 {
     public interface ITutorService
     {
-        //if param is an empty string it will get all TutorProfiles
+        //if all id in param equal to 0 it will get all TutorProfiles
         public Task<List<Tutorprofile>> GetTutorprofilesByFilter(
-            string subject, string district, string grade);
+            int subjectId, int districtId, int gradeId);
         public Task<List<Tutorprofile>> GetTutorprofilesByClassId(int classId);
         public Task<List<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status);
         public Task<bool> UpdateTutorprofile(Tutorprofile tutor);
