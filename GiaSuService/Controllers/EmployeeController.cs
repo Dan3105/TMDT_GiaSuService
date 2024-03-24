@@ -10,12 +10,12 @@ namespace GiaSuService.Controllers
     public class EmployeeController : Controller
     {
         private readonly ITutorService _tutorService;
-        private readonly IAuthService authService;
+        private readonly IAuthService _authService;
 
         public EmployeeController(ITutorService tutorService, IAuthService authService)
         {
             _tutorService = tutorService;
-            this.authService = authService;
+            _authService = authService;
         }
 
         public IActionResult Index()
@@ -27,10 +27,10 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> TutorRegisterQueue()
         {
             List<Tutorprofile> queries = await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING);
-            IEnumerable<TutorRegisterViewModel> registers = new List<TutorRegisterViewModel>();
+            List<TutorRegisterViewModel> registers = new List<TutorRegisterViewModel>();
             foreach(var query in queries)
             {
-                registers.Append(new TutorRegisterViewModel
+                registers.Add(new TutorRegisterViewModel()
                 {
                     Area = query.Area,
                     College = query.College,
