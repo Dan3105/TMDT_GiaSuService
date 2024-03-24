@@ -155,6 +155,18 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
             }
 
+            if (model.ListDistrict.Count == 0 || model.ListSessionDate.Count == 0 || model.ListGrade.Count == 0 || model.ListSubject.Count==0)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Thông tin lựa chọn bị thiếu";
+                return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
+            }
+
+            if (model.RegisterTutorProfile.AcademicYearto >= model.RegisterTutorProfile.AcademicYearFrom)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Thông tin chọn năm tốt nghiệp không chính xác";
+                return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
+            }
+
             int? roleId = await _authService.GetRoleId(AppConfig.TUTORROLENAME);
             if (roleId == null)
             {
@@ -169,7 +181,7 @@ namespace GiaSuService.Controllers
                 Additionalinfo = model.RegisterTutorProfile.AdditionalInfo,
                 College = model.RegisterTutorProfile.College,
                 Area = model.RegisterTutorProfile.Area,
-                //Currentstatus = model.RegisterTutorProfile.CurrentStatus,
+                Currentstatus = model.RegisterTutorProfile.TypeTutor,
             };
 
             Account form = new Account()
@@ -180,6 +192,8 @@ namespace GiaSuService.Controllers
                 Gender = model.AccountProfile.Gender,
                 Identitycard = model.AccountProfile.IdentityCard,
                 Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
+                Frontidentitycard = model.AccountProfile.FrontIdentityCard,
+                Backidentitycard = model.AccountProfile.BackIdentityCard,
                 Phone = model.AccountProfile.Phone,
                 Districtid = model.AccountProfile.SelectedDistrictId,
                 Addressdetail = model.AccountProfile.AddressName,

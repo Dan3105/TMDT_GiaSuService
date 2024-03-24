@@ -24,7 +24,8 @@ datasourceBuilder.MapEnum<AppConfig.RegisterStatus>("registerstatus")
     .MapEnum<AppConfig.TypeTutor>("typetutor");
 
 builder.Services.AddDbContext<TmdtDvgsContext>(options =>
-    options.UseNpgsql(datasourceBuilder.Build()));
+    options.UseNpgsql(datasourceBuilder.Build())
+        .EnableServiceProviderCaching(false));
 builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
 {
     o.ExpireTimeSpan = TimeSpan.FromMinutes(15);
@@ -53,11 +54,11 @@ builder.Services.AddTransient<ITutorRepository, TutorRepository>();
 
 
 //Add Services
-builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddTransient<IAddressService, AddressService>();
-builder.Services.AddTransient<ICatalogService, CatalogService>();
-builder.Services.AddTransient<ITutorService, TutorService>();
-builder.Services.AddSingleton<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<ITutorService, TutorService>();
+builder.Services.AddScoped<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
