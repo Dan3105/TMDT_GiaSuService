@@ -14,9 +14,9 @@ namespace GiaSuService.Services
             _tutorRepository = tutorRepository;
         }
         public async Task<List<Tutorprofile>> GetTutorprofilesByFilter(
-            string subject, string district, string grade)
+            int subjectId, int districtId, int gradeId)
         {
-            List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByFilter(subject, district, grade)).ToList();
+            List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByFilter(subjectId, districtId, gradeId)).ToList();
             return tutorprofiles;
         }
 

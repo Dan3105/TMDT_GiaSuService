@@ -34,7 +34,7 @@ namespace GiaSuService.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Tutorrequesthistorystatus>> GetByTutorFormRequestId(int formId)
+        public async Task<IEnumerable<Tutorrequesthistorystatus>> GetByTutorRequestFormId(int formId)
         {
             return (await _context.Tutorrequesthistorystatuses
                 .Where(p => p.Tutorrequestformid == formId)

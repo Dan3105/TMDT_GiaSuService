@@ -34,12 +34,12 @@ namespace GiaSuService.Repository
             _context.Tutorprofiles.Update(entity);
         }
         public async Task<IEnumerable<Tutorprofile>> GetTutorprofilesByFilter(
-            string subjectName, string districtName, string gradeName)
+            int subjectId, int districtId, int gradeId)
         {
             var filteredTutors = await _context.Tutorprofiles
-            .Where(tp => (subjectName == "" || tp.Subjects.Any(s => s.Subjectname == subjectName))
-                      && (districtName == "" || tp.Districts.Any(d => d.Districtname == districtName))
-                      && (gradeName == "" || tp.Grades.Any(g => g.Gradename == gradeName)))
+            .Where(tp => (subjectId == 0 || tp.Subjects.Any(s => s.Id == subjectId))
+                      && (districtId == 0 || tp.Districts.Any(d => d.Id == districtId))
+                      && (gradeId == 0 || tp.Grades.Any(g => g.Id == gradeId)))
             .ToListAsync();
 
             return filteredTutors;

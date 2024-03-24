@@ -26,9 +26,9 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<List<Tutorrequesthistorystatus>> GetByTutorFormRequestId(int reqFormId)
+        public async Task<List<Tutorrequesthistorystatus>> GetByTutorRequestFormId(int reqFormId)
         {
-            List<Tutorrequesthistorystatus> forms = (await _repo.GetByTutorFormRequestId(reqFormId)).ToList();
+            List<Tutorrequesthistorystatus> forms = (await _repo.GetByTutorRequestFormId(reqFormId)).ToList();
             return forms;
         }
 

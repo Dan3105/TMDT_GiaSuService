@@ -8,7 +8,7 @@ namespace GiaSuService.Repository.Interface
     {
         //if param is an empty string it will get all TutorProfiles
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByFilter(
-            string subject, string district, string grade);
+            int subjectId, int districtId, int gradeId);
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByClassId(int classId);
         public Task<Tutorprofile?> GetTutorprofile(int id);
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status);
