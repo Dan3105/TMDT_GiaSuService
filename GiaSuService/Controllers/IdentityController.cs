@@ -284,8 +284,9 @@ namespace GiaSuService.Controllers
             else
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Tạo tài khoản thất bại";
+                return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
             }
-            return RedirectToAction("", "Home");
+            return RedirectToAction("", "Identity");
         }
     }
 }
