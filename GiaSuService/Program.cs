@@ -50,6 +50,11 @@ builder.Services.AddTransient<IGradeRepository, GradeRepository>();
 builder.Services.AddTransient<ISessionRepository, SessionRepository>();
 builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
 builder.Services.AddTransient<ITutorRepository, TutorRepository>();
+builder.Services.AddTransient<IConfigpricehistoryRepository, ConfigpricehistoryRepository>();
+builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
+builder.Services.AddTransient<ITutormatchrequestqueueRepository, TutormatchrequestqueueRepository>();
+builder.Services.AddTransient<ITutorRequestFormRepository, TutorRequestFormRepository>();
+
 
 
 //Add Services
@@ -57,6 +62,10 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IAddressService, AddressService>();
 builder.Services.AddTransient<ICatalogService, CatalogService>();
 builder.Services.AddTransient<ITutorService, TutorService>();
+builder.Services.AddTransient<IConfigpricehistoryService, ConfigpricehistoryService>();
+builder.Services.AddTransient<ITransactionService, TransactionService>();
+builder.Services.AddTransient<ITutormatchrequestqueueService, TutormatchrequestqueueService>();
+builder.Services.AddTransient<ITutorRequestFormService, TutorRequestFormService>();
 builder.Services.AddSingleton<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 
