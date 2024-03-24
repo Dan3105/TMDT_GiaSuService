@@ -320,7 +320,8 @@ public partial class TmdtDvgsContext : DbContext
             entity.HasOne(d => d.Account).WithOne(p => p.Tutorprofile)
                 .HasForeignKey<Tutorprofile>(d => d.Accountid)
                 .HasConstraintName("tutorprofile_accountid_fkey");
-
+            entity.Property(d => d.Activeenable)
+                .HasColumnName("activeenable");
             entity.HasMany(d => d.Districts).WithMany(p => p.Tutors)
                 .UsingEntity<Dictionary<string, object>>(
                     "Tutorteachingarea",

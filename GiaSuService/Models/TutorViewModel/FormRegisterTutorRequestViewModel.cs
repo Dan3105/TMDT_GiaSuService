@@ -1,4 +1,5 @@
-﻿using GiaSuService.Models.IdentityViewModel;
+﻿using GiaSuService.Configs;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,12 +13,12 @@ namespace GiaSuService.Models.TutorViewModel
         [Required]
         public RegisterAccountProfileViewModel AccountProfile { get; set; } = new RegisterAccountProfileViewModel();
 
+        public bool ConfirmBox { get; set; }
         public List<ProvinceViewModel> ListProvince { get; set; } = new List<ProvinceViewModel>();
         public List<SessionViewModel> ListSessionDate { get; set; } = new List<SessionViewModel>();
         public List<GradeViewModel> ListGrade { get; set; } = new List<GradeViewModel>();
         public List<SubjectViewModel> ListSubject { get; set; } = new List<SubjectViewModel>();
         public List<int> ListDistrict { get; set; } = new List<int>();
-
 
         public List<SessionViewModel> GetSessionSelected => ListSessionDate.Where(p => p.IsChecked).ToList();
         public List<GradeViewModel> GetGradeSelected => ListGrade.Where(p => p.IsChecked).ToList();
@@ -34,11 +35,10 @@ namespace GiaSuService.Models.TutorViewModel
         [Required(ErrorMessage = "Please")]
         public string Area { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Please")]
-        public string CurrentStatus { get; set; } = string.Empty;
+        [EnumDataType(typeof(AppConfig.TypeTutor))]
+        public AppConfig.TypeTutor TypeTutor { get; set; }
 
-        [Required(ErrorMessage = "Please")]
-        public string AdditionalInfo { get; set; } = string.Empty;
+        public string? AdditionalInfo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Please")]
         public short AcademicYearFrom { get; set; }

@@ -10,7 +10,8 @@ namespace GiaSuService.Configs
             APPROVAL,
             DENIED,
             HANDED,
-            EXPIRED
+            EXPIRED,
+            CANCEL,
         }
 
         public enum RegisterStatus
