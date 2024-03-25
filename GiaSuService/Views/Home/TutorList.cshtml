@@ -1,5 +1,8 @@
 ﻿@using GiaSuService.Models.TutorViewModel
 @model TutorCardListViewModel
+@{
+    ViewData["Title"] = "Tutor List";
+}
 
 <div class="container">
     <div class="row align-items-center">
@@ -7,7 +10,7 @@
             <select id="province" class="form-select" onchange="getDistricts()">
                 @if (Model.ProvinceList != null)
                 {
-                    <option value="0" id="provincedefault">-- Chọn tỉnh --</option>
+                    <option value="0" id="provincedefault">Chọn tỉnh</option>
                     @foreach (var province in Model.ProvinceList)
                     {
                         <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -17,14 +20,14 @@
         </div>
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select class="form-select" id="districtSelectionContainer">
-                <option value="0">--Chọn quận--</option>
+                <option value="0">Chọn quận</option>
             </select>
         </div>
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select class="form-select" id="subject">
                 @if (Model.SubjectList != null)
                 {
-                    <option value="0" id="provincedefault">-- Chọn môn học --</option>
+                    <option value="0" id="provincedefault">Chọn môn học</option>
                     @foreach (var province in Model.SubjectList)
                     {
                         <option value="@province.SubjectId">@province.SubjectName</option>
@@ -36,7 +39,7 @@
             <select class="form-select" id="grade">
                 @if (Model.GradeList != null)
                 {
-                    <option value="0" id="provincedefault">-- Chọn khối lớp --</option>
+                    <option value="0" id="provincedefault">Chọn khối lớp</option>
                     @foreach (var province in Model.GradeList)
                     {
                         <option value="@province.GradeId">@province.GradeName</option>
@@ -45,7 +48,7 @@
             </select>
         </div>
         <div class="col-sm-1 d-flex justify-content-center mb-2">
-            <button type="button" class="btn btn-primary" onclick="updateNewList()">Submit</button>
+            <button type="button" class="btn btn-primary" onclick="updateNewList()">Tìm</button>
         </div>
     </div>
     <hr />
@@ -58,11 +61,11 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <img src="@item.Avatar" alt="Avatar" class="img-fluid" style="width: 200px; height: 200px;">
                             <div class="m-lg-2">
-                                <h5 class="card-text fs-6">Gia Sư: @item.FullName</h5>
-                                <p class="card-text mb-1">Birthdate: @item.Birth</p>
-                                <p class="card-text mb-1">Tutor Type: @item.TutorType</p>
-                                <p class="card-text mb-1">College: @item.College</p>
-                                <p class="card-text mb-1">Area: @item.Area</p>
+                                <h5 class="card-text fs-6">Gia sư: @item.FullName</h5>
+                                <p class="card-text mb-1">Ngày sinh: @item.Birth</p>
+                                <p class="card-text mb-1">Loại gia sư: @item.TutorType</p>
+                                <p class="card-text mb-1">Tên trường học: @item.College</p>
+                                <p class="card-text mb-1">Chuyên ngành: @item.Area</p>
                             </div>
                         </div>
                         <hr>
@@ -93,7 +96,7 @@
             data: { 'provinceId': selectedIdProvince },
             success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
-                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('--Chọn quận--'));
+                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận'));
                 for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
                 }
