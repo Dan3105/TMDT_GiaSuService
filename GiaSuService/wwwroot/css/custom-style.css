@@ -1,57 +1,37 @@
 ﻿:root {
     --bs-font-sans-serif: "Montserrat", sans-serif;
+    --title-font: "MonteCarlo", cursive;
     --box-color: #A85295;
+    --title-font-size: 4em;
 }
 
 body {
     font-family: var(--bs-font-sans-serif);
 }
 
-.btn-primary {
-    background-color: var(--box-color); /* Màu nền */
-    border: none; 
+h1{
+    font-family: var(--title-font);
+    text-align: center;
+    font-size: var(--title-font-size);
+}
+
+.customstyle-button {
+    background-color: var(--box-color);
+    border: none;
     color: white;
 }
 
-.form-check-input {
+.customformcheck-input {
     border-color: var(--box-color);
 }
 
-.form-control {
-    display: block;
+.customform-control {
     width: 80%;
-    padding: .375rem .75rem;
     font-size: 0.9rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
-    background-clip: padding-box;
     border: 1px solid var(--box-color);
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-.form-select {
-    display: block;
+.customform-select {
     width: contain;
-    padding: .375rem 2.25rem .375rem .75rem;
-   -moz-padding-start: calc(0.75rem - 3px);
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
-    background-repeat: no-repeat;
-    background-position: right .75rem center;
-    background-size: 16px 12px;
     border: 1px solid var(--box-color);
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
 }
