@@ -1,0 +1,57 @@
+﻿:root {
+    --bs-font-sans-serif: "Montserrat", sans-serif;
+    --box-color: #A85295;
+}
+
+body {
+    font-family: var(--bs-font-sans-serif);
+}
+
+.btn-primary {
+    background-color: var(--box-color); /* Màu nền */
+    border: none; 
+    color: white;
+}
+
+.form-check-input {
+    border-color: var(--box-color);
+}
+
+.form-control {
+    display: block;
+    width: 80%;
+    padding: .375rem .75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid var(--box-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.form-select {
+    display: block;
+    width: contain;
+    padding: .375rem 2.25rem .375rem .75rem;
+   -moz-padding-start: calc(0.75rem - 3px);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: 1px solid var(--box-color);
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
