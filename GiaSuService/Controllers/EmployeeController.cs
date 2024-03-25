@@ -2,11 +2,12 @@
 using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GiaSuService.Controllers
 {
-
+    [Authorize(Policy = AppConfig.EMPLOYEEPOLICY)]
     public class EmployeeController : Controller
     {
         private readonly ITutorService _tutorService;

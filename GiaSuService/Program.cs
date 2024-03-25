@@ -42,6 +42,27 @@ builder.Services.AddAuthorization(o =>
         policy.RequireAuthenticatedUser();
         policy.Requirements.Add(new ShouldRoleRequire(AppConfig.ADMINROLENAME));
     });
+
+    o.AddPolicy(AppConfig.EMPLOYEEPOLICY, policy =>
+    {
+        policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.EMPLOYEEROLENAME));
+    });
+
+    o.AddPolicy(AppConfig.CUSTOMERPOLICY, policy =>
+    {
+        policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.CUSTOMERROLENAME));
+    });
+
+    o.AddPolicy(AppConfig.TUTORPOLICY, policy =>
+    {
+        policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.TUTORROLENAME));
+    });
 });
 
 //Add Repository
