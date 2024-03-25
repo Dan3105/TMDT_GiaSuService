@@ -93,8 +93,8 @@
             data: { 'provinceId': selectedIdProvince },
             success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
-                for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(0).text('--Chọn quận--'));
+                for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
                 }
             },
