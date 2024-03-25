@@ -163,7 +163,7 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
             }
 
-            if (model.RegisterTutorProfile.AcademicYearto >= model.RegisterTutorProfile.AcademicYearFrom)
+            if (model.RegisterTutorProfile.AcademicYearto <= model.RegisterTutorProfile.AcademicYearFrom)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Thông tin chọn năm tốt nghiệp không chính xác";
                 return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
