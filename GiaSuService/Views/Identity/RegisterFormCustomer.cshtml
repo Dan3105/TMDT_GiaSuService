@@ -3,7 +3,7 @@
 @{
 }
 
-<h1>Registration Form</h1>
+<h1>Đăng ký tài khoản khách hàng</h1>
 <form asp-action="RegisterFormCustomer" asp-controller="Identity" method="post">
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
@@ -68,7 +68,7 @@
         <select class="form-select" id="province" onchange="getDistricts()">
             @if (Model.ProvinceList != null)
             {
-                <option id="provincedefault">-- Chọn tỉnh --</option>
+                <option id="provincedefault">Chọn tỉnh</option>
                 @foreach (var province in Model.ProvinceList)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -94,7 +94,7 @@
         <input id="confirm-box" type="checkbox" id="ConfirmBox" asp-for="ConfirmBox" required />
         <span asp-validation-for="ConfirmBox" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Đăng ký</button>
+    <button type="submit" class="btn btn-primary customstyle-button">Đăng ký</button>
 </form>
 
 <script>

@@ -1,32 +1,35 @@
 ﻿@using GiaSuService.Models.CustomerViewModel;
 
 @model FormTutorRequestViewModel
+@{
+    ViewData["Title"] = "Tutor Request Form";
+}
 
 <h1>Tutor Request Form</h1>
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Profile.NStudents">Number of Students:</label>
-        <input asp-for="Profile.NStudents" type="number" min="1" max="9" class="form-control" required />
+        <label asp-for="Profile.NStudents">Số lượng học sinh:</label>
+        <input asp-for="Profile.NStudents" type="number" min="1" max="9" class="form-control customform-control" required />
         <span asp-validation-for="Profile.NStudents" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Profile.NSessions">Number of Sessions:</label>
-        <input asp-for="Profile.NSessions" type="number" min="2" max="5" class="form-control" required />
+        <label asp-for="Profile.NSessions">Số lượng buổi học:</label>
+        <input asp-for="Profile.NSessions" type="number" min="2" max="5" class="form-control customform-control" required />
         <span asp-validation-for="Profile.NSessions" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Profile.AdditionalDetail">Additional Details (Optional):</label>
-        <textarea asp-for="Profile.AdditionalDetail" rows="5" class="form-control"></textarea>
+        <label asp-for="Profile.AdditionalDetail">Thông tin bổ sung (Nếu có):</label>
+        <textarea asp-for="Profile.AdditionalDetail" rows="5" class="form-control customform-control"></textarea>
     </div>
     <div class="form-group">
         <label for="province">Tỉnh/ Thành phố:</label>
-        <select class="form-select" id="province" onchange="getDistricts()">
+        <select class="form-select customform-select " id="province" onchange="getDistricts()">
             @if (Model.Provinces != null)
             {
-                <option id="provincedefault">-- Chọn tỉnh --</option>
+                <option id="provincedefault">Chọn tỉnh</option>
                 @foreach (var province in Model.Provinces)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -36,35 +39,35 @@
     </div>
     @* Replace these with your specific implementation for displaying and selecting options *@
     <div class="form-group">
-        <label>District:</label>
-        <select asp-for="Profile.DistrictId" class="form-control">
-            <option>--Chọn quận--</option>
+        <label>Quận:</label>
+        <select asp-for="Profile.DistrictId" class="form-control customform-control ">
+            <option>Chọn quận</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label asp-for="Profile.Addressdetail">Address Detail:</label>
-        <input asp-for="Profile.Addressdetail" class="form-control" />
+        <label asp-for="Profile.Addressdetail">Địa chỉ chi tiết:</label>
+        <input asp-for="Profile.Addressdetail" class="form-control customform-control" />
     </div>
 
     <div class="form-group">
-        <label for="sessions">Sessions:</label>
+        <label for="sessions">Buổi học:</label>
         <select id="sessions" asp-for="Sessions" multiple required></select>
         <span asp-validation-for="Sessions" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="subjects">Subjects:</label>
+        <label for="subjects">Môn học:</label>
         <select id="subjects" asp-for="Subjects" multiple required></select>
         <span asp-validation-for="Subjects" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="grades">Grades:</label>
+        <label for="grades">Khối lớp:</label>
         <select id="grades" asp-for="Grades" multiple required></select>
         <span asp-validation-for="Grades" class="text-danger"></span>
     </div>
 
 
-    <button type="submit" class="btn btn-primary">Submit Request</button>
+    <button type="submit" class="btn btn-primary customstyle-button">Gửi</button>
 </form>
 
 <script>
