@@ -37,9 +37,14 @@ namespace GiaSuService.Repository
             int subjectId, int districtId, int gradeId)
         {
             var filteredTutors = await _context.Tutorprofiles
+                .Include(p => p.Account)
+                .Include(p => p.Subjects)
+                .Include(p => p.Districts)
+                .Include(p => p.Grades) 
             .Where(tp => (subjectId == 0 || tp.Subjects.Any(s => s.Id == subjectId))
                       && (districtId == 0 || tp.Districts.Any(d => d.Id == districtId))
-                      && (gradeId == 0 || tp.Grades.Any(g => g.Id == gradeId)))
+                      && (gradeId == 0 || tp.Grades.Any(g => g.Id == gradeId))
+                      && (tp.Formstatus == RegisterStatus.APPROVAL))
             .ToListAsync();
 
             return filteredTutors;

@@ -15,7 +15,9 @@ namespace GiaSuService.Repository
 
         public async Task<IEnumerable<District>> GetAllDistricts(int idProvince)
         {
-            return (await _context.Districts.Where(p => p.Provinceid == idProvince).ToListAsync());
+            return (await _context.Districts.Where(p => p.Provinceid == idProvince)
+                .OrderBy(p => p.Districtname.Length)
+                .ToListAsync());
         }
 
         public async Task<IEnumerable<Province>> GetAllProvinces()
