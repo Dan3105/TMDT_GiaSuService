@@ -74,7 +74,7 @@
                         <p class="card-text"><b>Teaching Area:</b> @item.TeachingArea</p>
                         <p class="card-text"><b>Additional Profile:</b> @item.AdditionalProfile</p>
                         <div class="d-flex justify-content-center">
-                            <a class="btn btn-primary" href="#">Chọn gia sư</a>
+                            <a class="btn btn-primary" href="@Url.Action("TutorRequestForm", "Customer", new{tutorId = item.Id})">Chọn gia sư</a>
                         </div>
                     </div>
                 </div>

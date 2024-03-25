@@ -47,5 +47,7 @@ public partial class Account
 
     public virtual ICollection<Transaction> TransactionAccountwrites { get; set; } = new List<Transaction>();
 
+    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
+
     public virtual Tutorprofile? Tutorprofile { get; set; }
 }

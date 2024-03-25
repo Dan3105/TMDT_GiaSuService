@@ -109,5 +109,13 @@ namespace GiaSuService.Repository
                                .FirstOrDefaultAsync(p=> p.Id == id);
             return tutorProfile;
         }
+
+        public async Task<List<Tutorprofile>> GetSubTutorProfile(List<int> ids)
+        {
+            var tutors = await _context.Tutorprofiles
+                .Include(p => p.Account)
+                .Where(p => ids.Contains(p.Id)).ToListAsync();
+            return tutors;
+        }
     }
 }

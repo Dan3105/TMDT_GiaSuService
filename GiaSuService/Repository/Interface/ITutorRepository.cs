@@ -14,6 +14,7 @@ namespace GiaSuService.Repository.Interface
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status);
         public Task<bool> UpdateProfile(Tutorprofile tutor);
         public Task<bool> UpdateRegisterStatus(int tutorProfileId, AppConfig.RegisterStatus status);
+        public Task<List<Tutorprofile>> GetSubTutorProfile(List<int> ids);
         
     }
 }

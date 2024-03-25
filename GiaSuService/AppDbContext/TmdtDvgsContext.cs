@@ -438,7 +438,7 @@ public partial class TmdtDvgsContext : DbContext
                 .HasColumnName("nstudents");
             entity.Property(e => e.Subjectid).HasColumnName("subjectid");
             entity.Property(e => e.Tutorid).HasColumnName("tutorid");
-
+            entity.Property(e => e.Accountid).HasColumnName("accountid");
             entity.HasOne(d => d.District).WithMany(p => p.Tutorrequestforms)
                 .HasForeignKey(d => d.Districtid)
                 .OnDelete(DeleteBehavior.ClientSetNull)

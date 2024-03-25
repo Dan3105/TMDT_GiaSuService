@@ -68,5 +68,7 @@ namespace GiaSuService.Configs
 
         public const string MESSAGE_SUCCESS = "message_success";
         public const string MESSAGE_FAIL = "message_failed";
+
+        public const string TUTOR_SELECTED_COOKIE = "tutors_cookie";
     }
 }

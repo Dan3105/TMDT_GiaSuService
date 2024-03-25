@@ -26,6 +26,8 @@ public partial class Tutorrequestform
 
     public int Districtid { get; set; }
 
+    public int Accountid { get; set; }
+
     public int? Tutorid { get; set; }
 
     public virtual District District { get; set; } = null!;
@@ -33,6 +35,8 @@ public partial class Tutorrequestform
     public virtual Grade Grade { get; set; } = null!;
 
     public virtual Subject Subject { get; set; } = null!;
+
+    public virtual Account Account { get; set; } = null!;
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 

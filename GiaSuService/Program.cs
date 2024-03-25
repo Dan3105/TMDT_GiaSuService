@@ -72,6 +72,7 @@ builder.Services.AddTransient<IGradeRepository, GradeRepository>();
 builder.Services.AddTransient<ISessionRepository, SessionRepository>();
 builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
 builder.Services.AddTransient<ITutorRepository, TutorRepository>();
+builder.Services.AddTransient<ITutorRequestFormRepository, TutorRequestFormRepository>();
 
 
 //Add Services
@@ -79,6 +80,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<ITutorService, TutorService>();
+builder.Services.AddScoped<ITutorRequestFormService,  TutorRequestFormService>();
 builder.Services.AddScoped<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 
