@@ -27,7 +27,7 @@
     </div>
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
+        <input type="email" class="form-control customform-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Email, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">

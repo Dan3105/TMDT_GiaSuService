@@ -3,16 +3,21 @@
     --title-font: "MonteCarlo", cursive;
     --box-color: #A85295;
     --title-font-size: 4em;
+    --sidebar-background-color: #6AA0E1;
+    --sidebar-text-color: #d0ecef;
+    --sidebar-title-color: #0b0c55;
 }
 
 body {
     font-family: var(--bs-font-sans-serif);
+    
 }
 
 h1{
     font-family: var(--title-font);
     text-align: center;
     font-size: var(--title-font-size);
+    color: var(--box-color);
 }
 
 .customstyle-button {
