@@ -1,4 +1,5 @@
-﻿@using GiaSuService.Models.AdminViewModel
+﻿
+@using GiaSuService.Models.AdminViewModel
 @model IEnumerable<EmployeeListViewModel>
 <table class="table table-striped table-bordered">
     <thead>
@@ -30,11 +31,11 @@
                     <img src="@item.ImageUrl" alt="@item.FullName" style="width: 50px; height: 50px;" />
                 </td>
                 <td>
-                    
+
                     <a href="@Url.Action("TutorProfile", "Employee", new {id = item.Id})">
                         <i class="fas fa-edit"></i>
                     </a>
-                    
+
                 </td>
             </tr>
         }

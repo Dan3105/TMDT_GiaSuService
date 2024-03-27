@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -56,7 +57,7 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Tutorprofile(int id)
+        public async Task<IActionResult> TutorProfileQueue(int id)
         {
             Tutorprofile tutor = await _tutorService.GetTutorprofileById(id);
             if (tutor == null)
@@ -238,6 +239,88 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
             }
             return RedirectToAction("TutorRequestQueue", "Employee");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorList()
+        {
+            List<Tutorprofile> tutors = await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.APPROVAL);
+            if (tutors == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???";
+                Console.WriteLine("wtf did i change the name role?");
+                return RedirectToAction("Index", "Home");
+            }
+
+            List<EmployeeListViewModel> results = new List<EmployeeListViewModel>();
+            foreach (var tutor in tutors)
+            {
+                results.Add(new EmployeeListViewModel()
+                {
+                    Id = tutor.Account.Id,
+                    Email = tutor.Account.Email,
+                    FullName = tutor.Account.Fullname,
+                    LockStatus = tutor.Account.Lockenable,
+                    ImageUrl = tutor.Account.Avatar
+                });
+
+            }
+
+            return View(results);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorProfile(int id)
+        {
+            Account account = await _authService.GetAccountById(id);
+            if (account == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
+                return RedirectToAction("TutorList", "Employee");
+            }
+
+            District district = await _addressService.GetDistrictData(account.Districtid);
+            EmployeeProfileViewModel employeeProfileViewModel = new EmployeeProfileViewModel()
+            {
+                LogoAccount = account.Avatar,
+                Phone = account.Phone,
+                IdentityCard = account.Identitycard,
+                FrontIdentiyCard = account.Frontidentitycard,
+                BackIdentityCard = account.Backidentitycard,
+                Gender = account.Gender,
+                Email = account.Email,
+                AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
+                FullName = account.Fullname,
+                LockStatus = account.Lockenable,
+                BirthDate = account.Birth,
+                EmployeeId = account.Id
+            };
+            return View(employeeProfileViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TutorProfile(EmployeeProfileViewModel employeeProfileViewModel)
+        {
+            Account account = await _authService.GetAccountById(employeeProfileViewModel.EmployeeId);
+            if (account == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
+                return RedirectToAction("TutorList", "Employee");
+            }
+            account.Identitycard = employeeProfileViewModel.IdentityCard;
+            account.Lockenable = employeeProfileViewModel.LockStatus;
+
+            bool result = await _authService.UpdateAccount(account);
+            if (result)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Thay đổi thông tin thành công";
+                return RedirectToAction("TutorList", "Employee");
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Thay đổi không thông tin thành công";
+                return RedirectToAction("TutorList", "Employee");
+            }
         }
     }
 }

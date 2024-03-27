@@ -63,7 +63,7 @@ namespace GiaSuService.Controllers
 
                 if(user.Role.Rolename == AppConfig.EMPLOYEEROLENAME)
                 {
-                    int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count();
+                    int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count;
                     TempData["Count"] = count_querying_register.ToString();
                 }
 
