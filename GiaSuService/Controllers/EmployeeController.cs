@@ -11,14 +11,17 @@ namespace GiaSuService.Controllers
     public class EmployeeController : Controller
     {
         private readonly ITutorService _tutorService;
-        private readonly IAuthService _authService;
+        private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
+        private readonly ITutorRequestFormService _tutorRequestService;
 
-        public EmployeeController(ITutorService tutorService, IAuthService authService, IAddressService addressService)
+        public EmployeeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
+            ITutorRequestFormService tutorRequestService)
         {
             _tutorService = tutorService;
-            _authService = authService;
+            _catalogService = catalogService;
             _addressService = addressService;
+            _tutorRequestService = tutorRequestService;
         }
 
         public IActionResult Index()
@@ -117,6 +120,30 @@ namespace GiaSuService.Controllers
             }
             TempData[AppConfig.MESSAGE_SUCCESS] = "Từ chối đơn tạo gia sư thành công!";
             return RedirectToAction("TutorRegisterQueue", "Employee");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorRequestQueue()
+        {
+            var listTutor = await _tutorRequestService.GetTutorrequestforms(AppConfig.TutorRequestStatus.PENDING);
+            List<TutorRequestListViewModel> results = new List<TutorRequestListViewModel>();
+            foreach(var tutor in listTutor)
+            {
+                string GradeName = (await _catalogService.GetGradeById(tutor.Gradeid))?.Gradename ?? "";
+                var SubjectName = (await _catalogService.GetSubjectById(tutor.Subjectid))?.Subjectname ?? "";
+                var address = await _addressService.GetDistrictData(tutor.Districtid);
+                string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {tutor.Addressdetail}";
+                results.Add(new TutorRequestListViewModel
+                { 
+                    FormId = tutor.Id,
+                    FullNameRequester = tutor.Account.Fullname,
+                    AddressName = AddressName,
+                    CreatedDate = DateOnly.FromDateTime(tutor.Createddate),
+                    GradeName = GradeName,
+                    SubjectName = SubjectName,
+                });
+            }
+            return View(results);
         }
     }
 }

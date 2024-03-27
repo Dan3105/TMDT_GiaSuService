@@ -1,4 +1,5 @@
 ﻿using GiaSuService.AppDbContext;
+using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
@@ -60,6 +61,11 @@ namespace GiaSuService.Services
             {
                 return false;
             }
+        }
+
+        public async Task<List<Tutorrequestform>> GetTutorrequestforms(AppConfig.TutorRequestStatus status)
+        {
+            return await _repo.GetByStatus(status);
         }
     }
 }

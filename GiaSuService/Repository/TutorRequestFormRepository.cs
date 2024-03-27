@@ -1,4 +1,5 @@
 ﻿using GiaSuService.AppDbContext;
+using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -39,12 +40,12 @@ namespace GiaSuService.Repository
             return (await _context.Tutorrequestforms.FirstOrDefaultAsync(p => p.Id == id));
         }
 
-        public async Task<IEnumerable<Tutorrequestform>> GetAll()
+        public async Task<List<Tutorrequestform>> GetAll()
         {
             return (await _context.Tutorrequestforms.ToListAsync());
         }
 
-        public async Task<IEnumerable<Tutorrequestform>> GetByFilter(int subjectId, int gradeId, int districtId)
+        public async Task<List<Tutorrequestform>> GetByFilter(int subjectId, int gradeId, int districtId)
         {
             var filteredForms = await _context.Tutorrequestforms
                 .Where(p => (subjectId == 0 || p.Subjectid == subjectId)
@@ -55,6 +56,13 @@ namespace GiaSuService.Repository
             return filteredForms;
         }
 
-        
+        public async Task<List<Tutorrequestform>> GetByStatus(AppConfig.TutorRequestStatus status)
+        {
+            return await _context.Tutorrequestforms
+                .Include(p => p.Account)
+                .Where(p => p.Status == status)
+                .OrderByDescending(p => p.Createddate)
+                .ToListAsync();
+        }
     }
 }
