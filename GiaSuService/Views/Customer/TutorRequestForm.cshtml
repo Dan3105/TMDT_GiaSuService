@@ -1,113 +1,74 @@
 ﻿@using GiaSuService.Models.CustomerViewModel;
 
 @model FormTutorRequestViewModel
+@{
+    ViewData["Title"] = "Tutor Request Form";
+}
 
-<div class="container">
-    <div id="list-tutor" class="row d-flex justify-content-center">
-        @foreach (var item in Model.TutorCards)
-        {
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <img src="@item.Avatar" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
-                            <div class="m-lg-2">
-                                <h5 class="card-text fs-6">Gia Sư: @item.FullName</h5>
-                                <p class="card-text mb-1">Tutor Type: @item.TutorType</p>
-                                <p class="card-text mb-1">College: @item.College</p>
-                                <p class="card-text mb-1">Area: @item.Area</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex justify-content-center align-items-center mb-3">
-                        <a class="btn btn-primary" href="@Url.Action("DeleteTutorRequest", "Customer", new{id = item.Id})">Hủy chọn</a>
-                    </div>
-                </div>
-            </div>
-        }
+<h1>Tutor Request Form</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Profile.NStudents">Số lượng học sinh:</label>
+        <input asp-for="Profile.NStudents" type="number" min="1" max="9" class="form-control customform-control" required />
+        <span asp-validation-for="Profile.NStudents" class="text-danger"></span>
     </div>
-    <div class="d-flex justify-content-center">
-        <a class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
+
+    <div class="form-group">
+        <label asp-for="Profile.NSessions">Số lượng buổi học:</label>
+        <input asp-for="Profile.NSessions" type="number" min="2" max="5" class="form-control customform-control" required />
+        <span asp-validation-for="Profile.NSessions" class="text-danger"></span>
     </div>
-    <hr />
-    <div>
-        <h1>Tutor Request Form</h1>
 
-        <form asp-action="SubmitTutorRequest" asp-controller="Customer" method="post">
-            <div class="form-group">
-                <label asp-for="Profile.NStudents">Number of Students:</label>
-                <input asp-for="Profile.NStudents" type="number" min="1" max="9" class="form-control" required />
-                <span asp-validation-for="Profile.NStudents" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Profile.NSessions">Number of Sessions:</label>
-                <input asp-for="Profile.NSessions" type="number" min="2" max="5" class="form-control" required />
-                <span asp-validation-for="Profile.NSessions" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Profile.AdditionalDetail">Additional Details (Optional):</label>
-                <textarea data-val="false" asp-for="Profile.AdditionalDetail" rows="5" class="form-control"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="province">Tỉnh/ Thành phố:</label>
-                <select class="form-select" id="province" onchange="getDistricts()">
-                    @if (Model.Provinces != null)
-                    {
-                        <option id="provincedefault">-- Chọn tỉnh --</option>
-                        @foreach (var province in Model.Provinces)
-                        {
-                            <option value="@province.ProvinceId">@province.ProvinceName</option>
-                        }
-                    }
-                </select>
-            </div>
-            @* Replace these with your specific implementation for displaying and selecting options *@
-            <div class="form-group">
-                <label>District:</label>
-                <select asp-for="Profile.DistrictId" id="districtSelectionContainer" class="form-control">
-                    <option>--Chọn quận--</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Profile.Addressdetail">Address Detail:</label>
-                <input asp-for="Profile.Addressdetail" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="subject">Môn học:</label>
-                <select asp-for="Profile.SubjectId" class="form-select" id="subject">
-                    @if (Model.Subjects != null)
-                    {
-                        @foreach (var subject in Model.Subjects)
-                        {
-                            <option value="@subject.SubjectId">@subject.SubjectName</option>
-                        }
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="grade">Khối lớp:</label>
-                <select asp-for="Profile.GradeId" class="form-select" id="grade">
-                    @if (Model.Grades != null)
-                    {
-                        @foreach (var subject in Model.Grades)
-                        {
-                            <option value="@subject.GradeId">@subject.GradeName</option>
-                        }
-                    }
-                </select>
-            </div>
-
-
-            <button type="submit" class="btn btn-primary mt-3">Submit Request</button>
-        </form>
+    <div class="form-group">
+        <label asp-for="Profile.AdditionalDetail">Thông tin bổ sung (Nếu có):</label>
+        <textarea asp-for="Profile.AdditionalDetail" rows="5" class="form-control customform-control"></textarea>
     </div>
-</div>
+    <div class="form-group">
+        <label for="province">Tỉnh/ Thành phố:</label>
+        <select class="form-select customform-select " id="province" onchange="getDistricts()">
+            @if (Model.Provinces != null)
+            {
+                <option id="provincedefault">Chọn tỉnh</option>
+                @foreach (var province in Model.Provinces)
+                {
+                    <option value="@province.ProvinceId">@province.ProvinceName</option>
+                }
+            }
+        </select>
+    </div>
+    @* Replace these with your specific implementation for displaying and selecting options *@
+    <div class="form-group">
+        <label>Quận:</label>
+        <select asp-for="Profile.DistrictId" class="form-control customform-control ">
+            <option>Chọn quận</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Profile.Addressdetail">Địa chỉ chi tiết:</label>
+        <input asp-for="Profile.Addressdetail" class="form-control customform-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="sessions">Buổi học:</label>
+        <select id="sessions" asp-for="Sessions" multiple required></select>
+        <span asp-validation-for="Sessions" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="subjects">Môn học:</label>
+        <select id="subjects" asp-for="Subjects" multiple required></select>
+        <span asp-validation-for="Subjects" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="grades">Khối lớp:</label>
+        <select id="grades" asp-for="Grades" multiple required></select>
+        <span asp-validation-for="Grades" class="text-danger"></span>
+    </div>
 
 
+    <button type="submit" class="btn btn-primary customstyle-button">Gửi</button>
+</form>
 
 <script>
     function getDistricts() {

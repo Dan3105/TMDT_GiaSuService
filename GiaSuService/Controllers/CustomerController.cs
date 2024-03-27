@@ -195,6 +195,7 @@ namespace GiaSuService.Controllers
                 Subjectid = req.Profile.SubjectId,
                 Nsessions = (short)req.Profile.NSessions,
                 Nstudents = (short)req.Profile.NStudents,
+                Status = AppConfig.TutorRequestStatus.PENDING,
                 Accountid = requester
             };
 

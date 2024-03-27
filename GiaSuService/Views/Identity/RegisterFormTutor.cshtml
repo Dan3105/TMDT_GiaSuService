@@ -3,21 +3,23 @@
 
 
 @model FormRegisterTutorRequestViewModel
+<h1>Đăng ký làm gia sư</h1>
+
 <form asp-action="RegisterFormTutorPost" asp-controller="Identity" method="post">
     @* ----------------------------------Account Information------------------------------------------ *@
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
-        <input type="text" class="form-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="AccountProfile!.FullName">
+        <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="AccountProfile!.FullName">
         @Html.ValidationMessageFor(model => model.AccountProfile!.FullName, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="birthDate">Ngày sinh:</label>
-        @Html.TextBoxFor(model => model.AccountProfile!.BirthDate, "{0:yyyy-MM-dd}", new { @type = "date", @class="form-control" })
+        @Html.TextBoxFor(model => model.AccountProfile!.BirthDate, "{0:yyyy-MM-dd}", new { @type = "date", @class="form-control customform-control" })
         @Html.ValidationMessageFor(model => model.AccountProfile!.BirthDate, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="gender">Giới tính:</label>
-        <select class="form-control" id="gender" asp-for="AccountProfile!.Gender">
+        <select class="form-control customform-control" id="gender" asp-for="AccountProfile!.Gender">
             <option value="Nam">Nam</option>
             <option value="Nữ">Nữ</option>
         </select>
@@ -25,47 +27,47 @@
     </div>
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
+        <input type="email" class="form-control customform-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Email, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="phone">Số điện thoại:</label>
-        <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
+        <input type="tel" class="form-control customform-control" id="phone" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Phone, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="identityCard">CCCD/CMND:</label>
-        <input type="text" class="form-control" id="identityCard" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
+        <input type="text" class="form-control customform-control" id="identityCard" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
         @Html.ValidationMessageFor(model => model.AccountProfile!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt trước CMND/ CCCD:</label>
-        <input type="text" class="form-control" id="frontidentityCard" placeholder="Hình mặt trước của CMND" asp-for="AccountProfile!.FrontIdentityCard">
+        <input type="text" class="form-control customform-control" id="frontidentityCard" placeholder="Hình mặt trước của CMND" asp-for="AccountProfile!.FrontIdentityCard">
         @Html.ValidationMessageFor(model => model.AccountProfile!.FrontIdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt sau CMND/ CCCD:</label>
-        <input type="text" class="form-control" id="backidentityCard" placeholder="Hình mặt sau của CMND" asp-for="AccountProfile!.BackIdentityCard">
+        <input type="text" class="form-control customform-control" id="backidentityCard" placeholder="Hình mặt sau của CMND" asp-for="AccountProfile!.BackIdentityCard">
         @Html.ValidationMessageFor(model => model.AccountProfile!.BackIdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="password">Mật khẩu:</label>
-        <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu của bạn" asp-for="AccountProfile!.Password">
+        <input type="password" class="form-control customform-control" id="password" placeholder="Nhập mật khẩu của bạn" asp-for="AccountProfile!.Password">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Password, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="confirmPassword">Xác nhận lại mật khẩu:</label>
-        <input type="password" class="form-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" asp-for="AccountProfile!.ConfirmPassword">
+        <input type="password" class="form-control customform-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" asp-for="AccountProfile!.ConfirmPassword">
         @Html.ValidationMessageFor(model => model.AccountProfile!.ConfirmPassword, "", new { @class = "text-danger" })
     </div>   
     <div class="form-group">
         <label for="logoAccount">Logo:</label>
-        <input type="text" class="form-control" id="logoAccount" placeholder="" asp-for="AccountProfile!.LogoAccount">
+        <input type="text" class="form-control customform-control" id="logoAccount" placeholder="" asp-for="AccountProfile!.LogoAccount">
         @Html.ValidationMessageFor(model => model.AccountProfile!.LogoAccount, "", new { @class = "text-danger" })
     </div>
-    <div class="form-select">
+    <div class="form-select customform-select">
         <label for="province">Tỉnh:</label>
-        <select class="form-select" id="province" onchange="getDistricts()">
+        <select class="form-select customform-select" id="province" onchange="getDistricts()">
             @if (Model.ListProvince != null)
             {
                 <option id="provincedefault">-- Chọn tỉnh --</option>
@@ -76,7 +78,7 @@
             }
         </select>
     </div>
-    <div class="form-select">
+    <div class="form-select customform-select">
         <label for="districtSelectionContainer">Quận:</label>
         <select id="districtSelectionContainer" asp-for="AccountProfile!.SelectedDistrictId">
             <option value="">-- Chọn quận --</option>
@@ -84,20 +86,20 @@
     </div>
     <div class="form-group m-2">
         <label for="addressName">Địa chỉ:</label>
-        <input type="text" class="form-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="AccountProfile!.AddressName">
+        <input type="text" class="form-control customform-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="AccountProfile!.AddressName">
         @Html.ValidationMessageFor(model => model.AccountProfile!.AddressName, "", new { @class = "text-danger" })
     </div>
 
     @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
     <div class="form-group m-2">
         <label for="addressName">Trường đào tạo:</label>
-        <input type="text" class="form-control" id="collegeName" placeholder="Nhập tên trường" asp-for="RegisterTutorProfile!.College">
+        <input type="text" class="form-control customform-control" id="collegeName" placeholder="Nhập tên trường" asp-for="RegisterTutorProfile!.College">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.College, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group m-2">
         <label for="addressName">Chuyên ngành:</label>
-        <input type="text" class="form-control" id="areaName" placeholder="Nhập chuyên ngành bạn học" asp-for="RegisterTutorProfile!.Area">
+        <input type="text" class="form-control customform-control" id="areaName" placeholder="Nhập chuyên ngành bạn học" asp-for="RegisterTutorProfile!.Area">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.Area, "", new { @class = "text-danger" })
     </div>
     <div class="form-group m-2">
@@ -105,13 +107,13 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="RegisterTutorProfile!.AcademicYearFrom">Từ năm:</label>
-                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearFrom" class="form-control" required>
+                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearFrom" class="form-control customform-control" required>
                 <span asp-validation-for="RegisterTutorProfile!.AcademicYearFrom" class="text-danger"></span>
                 @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.AcademicYearFrom, "", new { @class = "text-danger" })
             </div>
             <div class="col-6">
                 <label asp-for="RegisterTutorProfile!.AcademicYearto">Đến năm:</label>
-                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearto" class="form-control" required>
+                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearto" class="form-control customform-control" required>
                 @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.AcademicYearto, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -125,7 +127,7 @@
 
     <div class="form-group m-2">
         <label for="addressName">Thông tin thêm:</label>
-        <input type="text" data-val="false" class="form-control" id="additionalName" placeholder="Ghi chú" asp-for="RegisterTutorProfile.AdditionalInfo">
+        <input type="text" data-val="false" class="form-control customform-control" id="additionalName" placeholder="Ghi chú" asp-for="RegisterTutorProfile.AdditionalInfo">
     </div>
 
     <div class="form-group">
@@ -136,7 +138,7 @@
                 <div class="checkbox">
                     <label>
                         @Html.HiddenFor(m => m.ListSessionDate[i].SessionId)
-                        @Html.CheckBoxFor(m => m.ListSessionDate[i].IsChecked, new {@class = "form-check-input"})
+                        @Html.CheckBoxFor(m => m.ListSessionDate[i].IsChecked, new {@class = "form-check-input customformcheck-input"})
                         @Model.ListSessionDate[i].SessionName
                     </label>
                 </div>
@@ -152,7 +154,7 @@
                 <div class="checkbox">
                     <label>
                         @Html.HiddenFor(m => m.ListSubject[i].SubjectId)
-                        @Html.CheckBoxFor(m => m.ListSubject[i].IsChecked, new {@class = "form-check-input"})
+                        @Html.CheckBoxFor(m => m.ListSubject[i].IsChecked, new {@class = "form-check-input customformcheck-input"})
                         @Model.ListSubject[i].SubjectName
                     </label>
                 </div>
@@ -168,7 +170,7 @@
                 <div class="checkbox">
                     <label>
                         @Html.HiddenFor(m => m.ListGrade[i].GradeId)
-                        @Html.CheckBoxFor(m => m.ListGrade[i].IsChecked, new {@class = "form-check-input"})
+                        @Html.CheckBoxFor(m => m.ListGrade[i].IsChecked, new {@class = "form-check-input customformcheck-input"})
                         @Model.ListGrade[i].GradeName
                     </label>
                 </div>
@@ -189,7 +191,7 @@
         <span asp-validation-for="ConfirmBox" class="text-danger"></span>
     </div>
     
-    <button type="submit" class="btn btn-primary">Đăng ký</button>
+    <button type="submit" class="btn btn-primary customstyle-button">Đăng ký</button>
 </form>
 
 @section scripts {
@@ -211,7 +213,7 @@
                     for (var i = 0; i < data.length; i++) {
                         $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
                         var item = data[i];
-                        var checkbox = `<input class="form-check-input" 
+                        var checkbox = `<input class="form-check-input customformcheck-input" 
                                         type="checkbox"
                                                 name="ListDistrict[]"
                                                 id="checkbox_district_${item.districtId}"
