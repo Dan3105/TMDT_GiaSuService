@@ -8,7 +8,7 @@ namespace GiaSuService.Configs
         {
             PENDING,
             APPROVAL,
-            DENIED,
+            DENY,
             HANDED,
             EXPIRED,
             CANCEL,

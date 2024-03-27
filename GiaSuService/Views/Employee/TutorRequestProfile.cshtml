@@ -1,0 +1,72 @@
+﻿@using GiaSuService.Models.EmployeeViewModel
+
+@model TutorRequestProfileViewModel
+@{
+    ViewData["Title"] = "Request Detail";
+}
+
+<div class="container">
+    <h1>Request Detail</h1>
+    <div class="row">
+        <div class="col-sm-5 border-end">
+            <h6>Thông tin đơn đăng ký</h6>
+            <hr />
+            <dl>
+                <dt>Full Name Requester:</dt>
+                <dd>@Model.FullNameRequester</dd>
+                <dt>Grade Name:</dt>
+                <dd>@Model.GradeName</dd>
+                <dt>Subject Name:</dt>
+                <dd>@Model.SubjectName</dd>
+                <dt>Address Name:</dt>
+                <dd>@Model.AddressName</dd>
+                <dt>Created Date:</dt>
+                <dd>@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+                <dt>Expired Date:</dt>
+                <dd>@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
+                <dt>Current Status:</dt>
+                <dd>@Model.CurrentStatus</dd>
+            </dl>
+        </div>
+        <div class="col-sm-7">
+            <h6>Danh sách gia sư được chỉ định</h6>
+            <hr />
+            @if(Model.TutorCards.Count > 0)
+            {
+                <div id="list-tutor" class="row d-flex justify-content-start overflow-auto">
+                    @foreach (var item in Model.TutorCards)
+                    {
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <img src="@item.Avatar" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
+                                        <div class="m-lg-2">
+                                            <h5 class="card-text fs-6">Gia Sư: @item.FullName</h5>
+                                            <p class="card-text mb-1">Tutor Type: @item.TutorType</p>
+                                            <p class="card-text mb-1">College: @item.College</p>
+                                            <p class="card-text mb-1">Area: @item.Area</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Không có gia sư nào được chỉ định</p>
+            }
+        </div>
+        <hr />
+        
+        
+    </div>
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-primary m-2" href="@Url.Action("ApplyTutorRequest", "Employee", new {id = @Model.FormId})">Chấp nhận</a>
+        <a class="btn btn-danger m-2" href="@Url.Action("DenyTutorRequest", "Employee", new {id = @Model.FormId})">Từ chối duyệt</a>
+    </div>
+
+
+</div>

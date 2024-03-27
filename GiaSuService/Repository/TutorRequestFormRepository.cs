@@ -37,7 +37,9 @@ namespace GiaSuService.Repository
 
         public async Task<Tutorrequestform?> Get(int id)
         {
-            return (await _context.Tutorrequestforms.FirstOrDefaultAsync(p => p.Id == id));
+            return (await _context.Tutorrequestforms
+                .Include(p => p.Account)
+                .FirstOrDefaultAsync(p => p.Id == id));
         }
 
         public async Task<List<Tutorrequestform>> GetAll()

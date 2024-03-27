@@ -55,6 +55,7 @@ namespace GiaSuService.Repository
             //Get list tutorId by classId
             var tutorIds = await _context.Tutormatchrequestqueues
                                 .Where(p => p.Formid == classId)
+                                .Include(p => p.Tutor)
                                 .Select(p => p.Tutorid)
                                 .ToListAsync();
 

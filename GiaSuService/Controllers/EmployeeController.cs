@@ -4,6 +4,7 @@ using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GiaSuService.Controllers
 {
@@ -14,14 +15,17 @@ namespace GiaSuService.Controllers
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
         private readonly ITutorRequestFormService _tutorRequestService;
+        private readonly IAuthService _authService;
+
 
         public EmployeeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
-            ITutorRequestFormService tutorRequestService)
+            ITutorRequestFormService tutorRequestService, IAuthService authService)
         {
             _tutorService = tutorService;
             _catalogService = catalogService;
             _addressService = addressService;
             _tutorRequestService = tutorRequestService;
+            _authService = authService;
         }
 
         public IActionResult Index()
@@ -125,25 +129,115 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorRequestQueue()
         {
-            var listTutor = await _tutorRequestService.GetTutorrequestforms(AppConfig.TutorRequestStatus.PENDING);
-            List<TutorRequestListViewModel> results = new List<TutorRequestListViewModel>();
-            foreach(var tutor in listTutor)
+            var listRequest = await _tutorRequestService.GetTutorrequestforms(AppConfig.TutorRequestStatus.PENDING);
+            List<TutorRequestItemViewModel> results = new List<TutorRequestItemViewModel>();
+            foreach(var request in listRequest)
             {
-                string GradeName = (await _catalogService.GetGradeById(tutor.Gradeid))?.Gradename ?? "";
-                var SubjectName = (await _catalogService.GetSubjectById(tutor.Subjectid))?.Subjectname ?? "";
-                var address = await _addressService.GetDistrictData(tutor.Districtid);
-                string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {tutor.Addressdetail}";
-                results.Add(new TutorRequestListViewModel
+                string GradeName = (await _catalogService.GetGradeById(request.Gradeid))?.Gradename ?? "";
+                var SubjectName = (await _catalogService.GetSubjectById(request.Subjectid))?.Subjectname ?? "";
+                var address = await _addressService.GetDistrictData(request.Districtid);
+                string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {request.Addressdetail}";
+                results.Add(new TutorRequestItemViewModel
                 { 
-                    FormId = tutor.Id,
-                    FullNameRequester = tutor.Account.Fullname,
+                    FormId = request.Id,
+                    FullNameRequester = request.Account.Fullname,
                     AddressName = AddressName,
-                    CreatedDate = DateOnly.FromDateTime(tutor.Createddate),
+                    CreatedDate = DateOnly.FromDateTime(request.Createddate),
                     GradeName = GradeName,
                     SubjectName = SubjectName,
                 });
             }
             return View(results);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorRequestProfile(int id)
+        {
+            var thisForm = await _tutorRequestService.GetTutorRequestFormById(id); 
+            if (thisForm == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
+                return RedirectToAction("TutorRequestQueue", "Employee");
+            }
+            var tutorInQueue = await _tutorService.GetTutorprofilesByClassId(id);
+
+            string GradeName = (await _catalogService.GetGradeById(thisForm.Gradeid))?.Gradename ?? "";
+            var SubjectName = (await _catalogService.GetSubjectById(thisForm.Subjectid))?.Subjectname ?? "";
+            var address = await _addressService.GetDistrictData(thisForm.Districtid);
+            string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {thisForm.Addressdetail}";
+
+            TutorRequestProfileViewModel view = new TutorRequestProfileViewModel()
+            {
+                FormId = id,
+                AddressName = AddressName,
+                CreatedDate = DateOnly.FromDateTime(thisForm.Createddate),
+                CurrentStatus = thisForm.Status.ToString(),
+                ExpiredDate = DateOnly.FromDateTime(thisForm.Expireddate), 
+                GradeName = GradeName,
+                FullNameRequester = thisForm.Account.Fullname,
+                SubjectName = SubjectName,
+            };
+
+            foreach(var tutor in tutorInQueue)
+            {
+                Account account = await _authService.GetAccountById(tutor.Accountid);
+
+                view.TutorCards.Add(new Models.TutorViewModel.TutorCardViewModel()
+                {
+                    Id = tutor.Id,
+                    Avatar = account.Avatar,
+                    FullName = account.Fullname,
+                    Area = tutor.Area,
+                    College = tutor.College,
+                    TutorType = tutor.Currentstatus.ToString()
+                });
+            }
+        
+            return View(view);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ApplyTutorRequest(int id)
+        {
+            var thisForm = await _tutorRequestService.GetTutorRequestFormById(id);
+            if (thisForm == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
+                return RedirectToAction("TutorRequestQueue", "Employee");
+            }
+            thisForm.Status = AppConfig.TutorRequestStatus.APPROVAL;
+            bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
+            if (isSuccess)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Đơn được chấp thuận thành công";
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
+            }
+            return RedirectToAction("TutorRequestQueue", "Employee");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DenyTutorRequest(int id)
+        {
+            var thisForm = await _tutorRequestService.GetTutorRequestFormById(id);
+            if (thisForm == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
+                return RedirectToAction("TutorRequestQueue", "Employee");
+            }
+            thisForm.Status = AppConfig.TutorRequestStatus.DENY;
+            bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
+            if (isSuccess)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Đã từ chối đơn thành công";
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
+            }
+            return RedirectToAction("TutorRequestQueue", "Employee");
         }
     }
 }

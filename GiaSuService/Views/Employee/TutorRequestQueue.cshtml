@@ -1,5 +1,5 @@
 ﻿@using GiaSuService.Models.EmployeeViewModel
-@model IEnumerable<TutorRequestListViewModel>
+@model IEnumerable<TutorRequestItemViewModel>
 
 <table class="table table-striped table-bordered">
     <thead>
@@ -22,7 +22,7 @@
                 <td>@item.AddressName</td>
                 <td>@item.CreatedDate</td>
                 <td>
-                    <a href="@Url.Action("#", "#", new {id = item.FormId})" class="btn btn-primary">
+                    <a href="@Url.Action("TutorRequestProfile", "Employee", new {id = item.FormId})" class="btn btn-primary">
                         Details
                     </a>
                 </td>

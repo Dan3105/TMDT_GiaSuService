@@ -16,7 +16,7 @@ public partial class Tutorrequestform
 
     public DateTime Createddate { get; set; }
 
-    public DateTime? Expireddate { get; set; }
+    public DateTime Expireddate { get; set; }
 
     public int Gradeid { get; set; }
 
