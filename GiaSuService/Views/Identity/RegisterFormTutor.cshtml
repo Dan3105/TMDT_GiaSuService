@@ -65,12 +65,12 @@
         <input type="text" class="form-control customform-control" id="logoAccount" placeholder="" asp-for="AccountProfile!.LogoAccount">
         @Html.ValidationMessageFor(model => model.AccountProfile!.LogoAccount, "", new { @class = "text-danger" })
     </div>
-    <div class="form-select customform-select">
+    <div class="form-group">
         <label for="province">Tỉnh:</label>
-        <select class="form-select customform-select" id="province" onchange="getDistricts()">
+        <select class="form-select customform-control" id="province" onchange="getDistricts()">
             @if (Model.ListProvince != null)
             {
-                <option id="provincedefault">-- Chọn tỉnh --</option>
+                <option id="provincedefault">Chọn tỉnh</option>
                 @foreach (var province in Model.ListProvince)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -78,31 +78,31 @@
             }
         </select>
     </div>
-    <div class="form-select customform-select">
+    <div class="form-group">
         <label for="districtSelectionContainer">Quận:</label>
-        <select id="districtSelectionContainer" asp-for="AccountProfile!.SelectedDistrictId">
-            <option value="">-- Chọn quận --</option>
+        <select class="form-select customform-control" id="districtSelectionContainer" asp-for="AccountProfile!.SelectedDistrictId">
+            <option value="">Chọn quận</option>
         </select>
     </div>
-    <div class="form-group m-2">
+    <div class="form-group">
         <label for="addressName">Địa chỉ:</label>
         <input type="text" class="form-control customform-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="AccountProfile!.AddressName">
         @Html.ValidationMessageFor(model => model.AccountProfile!.AddressName, "", new { @class = "text-danger" })
     </div>
 
     @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
-    <div class="form-group m-2">
+    <div class="form-group">
         <label for="addressName">Trường đào tạo:</label>
         <input type="text" class="form-control customform-control" id="collegeName" placeholder="Nhập tên trường" asp-for="RegisterTutorProfile!.College">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.College, "", new { @class = "text-danger" })
     </div>
 
-    <div class="form-group m-2">
+    <div class="form-group">
         <label for="addressName">Chuyên ngành:</label>
         <input type="text" class="form-control customform-control" id="areaName" placeholder="Nhập chuyên ngành bạn học" asp-for="RegisterTutorProfile!.Area">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.Area, "", new { @class = "text-danger" })
     </div>
-    <div class="form-group m-2">
+    <div class="form-group">
         <label>Niên khóa:</label>
         <div class="row">
             <div class="col-6">
@@ -118,14 +118,14 @@
             </div>
         </div>
     </div>
-    <div class="form-group m-2">
+    <div class="form-group">
         <label for="addressName">Loại gia sư:</label>
         <select asp-for="RegisterTutorProfile.TypeTutor" asp-items="Html.GetEnumSelectList<AppConfig.TypeTutor>()">
         </select>
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.TypeTutor, "", new { @class = "text-danger" })
     </div>
 
-    <div class="form-group m-2">
+    <div class="form-group">
         <label for="addressName">Thông tin thêm:</label>
         <input type="text" data-val="false" class="form-control customform-control" id="additionalName" placeholder="Ghi chú" asp-for="RegisterTutorProfile.AdditionalInfo">
     </div>
