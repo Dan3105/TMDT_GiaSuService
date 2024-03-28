@@ -3,14 +3,16 @@
     --title-font: "MonteCarlo", cursive;
     --box-color: #A85295;
     --title-font-size: 4em;
-    --sidebar-background-color: #6AA0E1;
-    --sidebar-text-color: #d0ecef;
+    --sidebar-background-color: #b9cfe9;
+    --sidebar-text-color: #6c0055;
     --sidebar-title-color: #0b0c55;
+    --sidebar-text-hover-color: #d0ecef;
+    --bs-body-bg: #F3F6F8;
 }
 
 body {
     font-family: var(--bs-font-sans-serif);
-    
+    background-color: var(--bs-body-bg);
 }
 
 h1{
@@ -24,19 +26,23 @@ h1{
     background-color: var(--box-color);
     border: none;
     color: white;
+    
 }
+
 
 .customformcheck-input {
     border-color: var(--box-color);
 }
 
 .customform-control {
-    width: 80%;
+    width: 100%;
     font-size: 0.9rem;
     border: 1px solid var(--box-color);
 }
 
 .customform-select {
     width: contain;
+    font-size: 0.9rem;
     border: 1px solid var(--box-color);
 }
+
