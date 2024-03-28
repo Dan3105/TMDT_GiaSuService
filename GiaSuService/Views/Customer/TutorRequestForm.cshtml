@@ -56,7 +56,7 @@
         </div>
         <div class="form-group">
             <label for="province">Tỉnh/ Thành phố:</label>
-            <select class="form-select customform-select " id="province" onchange="getDistricts()">
+            <select class="form-select customform-control" id="province" onchange="getDistricts()">
                 @if (Model.Provinces != null)
                 {
                     <option id="provincedefault">Chọn tỉnh</option>
@@ -70,7 +70,7 @@
 
         <div class="form-group">
             <label>Quận:</label>
-            <select id="districtSelectionContainer" asp-for="Profile.DistrictId" class="form-control customform-control ">
+            <select id="districtSelectionContainer" asp-for="Profile.DistrictId" class="form-control customform-control">
                 <option>Chọn quận</option>
             </select>
         </div>
