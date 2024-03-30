@@ -1,13 +1,13 @@
 ﻿:root {
     --bs-font-sans-serif: "Montserrat", sans-serif;
     --title-font: "MonteCarlo", cursive;
-    --box-color: #A85295;
+    --box-color: #F3CCF3;
     --title-font-size: 4em;
-    --sidebar-background-color: #b9cfe9;
+    --sidebar-background-color: #decade;
     --sidebar-text-color: #6c0055;
-    --sidebar-title-color: #0b0c55;
-    --sidebar-text-hover-color: #d0ecef;
-    --bs-body-bg: #F3F6F8;
+    --sidebar-title-color: #882a8b;
+    --sidebar-text-hover-color: #6420AA;
+    --bs-body-bg: #F3F8FF;
 }
 
 body {
@@ -15,30 +15,33 @@ body {
     background-color: var(--bs-body-bg);
 }
 
-h1{
+h1 {
     font-family: var(--title-font);
     text-align: center;
     font-size: var(--title-font-size);
-    color: var(--box-color);
+    /*color: #A85295;*/
+    color: var(--sidebar-title-color);
 }
 
 .customstyle-button {
-    background-color: var(--box-color);
+    background-color: #A85295;
     border: none;
     color: white;
-    
 }
-
 
 .customformcheck-input {
-    border-color: var(--box-color);
+    /*border-color: var(--box-color);*/
+    border-color: #F3CCF3
 }
+
+
 
 .customform-control {
     width: 100%;
     font-size: 0.9rem;
     border: 1px solid var(--box-color);
 }
+    
 
 .customform-select {
     width: contain;
