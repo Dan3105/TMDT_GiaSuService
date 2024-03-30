@@ -17,5 +17,7 @@ namespace GiaSuService.Models.AdminViewModel
         public required string LogoAccount { get; set; } = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
         public bool LockStatus { get; set; }
         public required string AddressDetail { get; set; }
+
+        public EmployeeProfileViewModel() { }
     }
 }

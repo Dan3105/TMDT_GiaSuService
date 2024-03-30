@@ -1,7 +1,9 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ namespace GiaSuService.Controllers
 {
     public class CustomerController : Controller
     {
+        private readonly IAuthService _authService;
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
         private readonly ITutorService _tutorService;
@@ -20,12 +23,13 @@ namespace GiaSuService.Controllers
         
         
         public CustomerController(ICatalogService catalogService, IAddressService addressService, ITutorService tutorService
-            ,ITutorRequestFormService tutorRequestFormService)
+            ,ITutorRequestFormService tutorRequestFormService, IAuthService authService)
         {
             _addressService = addressService;
             _catalogService = catalogService;
             _tutorService = tutorService;
             _tutorRequestFormService = tutorRequestFormService;
+            _authService = authService;
         }
 
         public IActionResult Index()
@@ -78,6 +82,35 @@ namespace GiaSuService.Controllers
                 }
             }
             return View(vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CustomerProfile(int id)
+        {
+            Account account = await _authService.GetAccountById(id);
+            if (account == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã khách hàng không tồn tại";
+                return RedirectToAction("Customer", "Index");
+            }
+
+            District district = await _addressService.GetDistrictData(account.Districtid);
+            CustomerProfileViewModel profile = new CustomerProfileViewModel()
+            {
+                LogoAccount = account.Avatar,
+                Phone = account.Phone,
+                IdentityCard = account.Identitycard,
+                FrontIdentiyCard = account.Frontidentitycard,
+                BackIdentityCard = account.Backidentitycard,
+                Gender = account.Gender,
+                Email = account.Email,
+                AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
+                FullName = account.Fullname,
+                LockStatus = account.Lockenable,
+                BirthDate = account.Birth,
+                CustomerId = account.Id
+            };
+            return View(profile);
         }
 
         [HttpGet]

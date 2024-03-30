@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Models.UtilityViewModel;
@@ -8,7 +9,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Reflection;
 using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -85,7 +88,31 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        public IActionResult Profile()
+        {
+            // Retrieve user id
+            var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            //If no user founded
+            if(userId == null || userId == "") return RedirectToAction("Index", "Home");
+
+            //Get role of user
+            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+
+            //If user is admin
+            if (userRole == AppConfig.ADMINROLENAME) return RedirectToAction("EmployeeProfile", "Admin", new { id = int.Parse(userId) });
+
+            //If user is employee
+            if (userRole == AppConfig.EMPLOYEEROLENAME) return RedirectToAction("EmployeeProfile", "Employee", new { id = int.Parse(userId) });
+
+            //If user is tutor
+            if (userRole == AppConfig.TUTORROLENAME) return RedirectToAction("TutorProfile", "Tutor", new { id = int.Parse(userId) });
+
+            //if user is customer
+            return RedirectToAction("CustomerProfile", "Customer", new { id = int.Parse(userId) });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Logout(string returnUrl = "")
         {
             await HttpContext.SignOutAsync();

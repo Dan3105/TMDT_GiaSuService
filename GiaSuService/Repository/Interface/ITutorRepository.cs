@@ -10,7 +10,8 @@ namespace GiaSuService.Repository.Interface
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByFilter(
             int subjectId, int districtId, int gradeId);
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByClassId(int classId);
-        public Task<Tutorprofile?> GetTutorprofile(int id);
+        public Task<Tutorprofile?> GetTutorprofile(int id); //Get by tutorProfileId
+        public Task<Tutorprofile?> GetTutorprofileByAccountId(int accountId);
         public Task<IEnumerable<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status);
         public Task<bool> UpdateProfile(Tutorprofile tutor);
         public Task<bool> UpdateRegisterStatus(int tutorProfileId, AppConfig.RegisterStatus status);

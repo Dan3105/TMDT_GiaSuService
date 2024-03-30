@@ -64,7 +64,7 @@ namespace GiaSuService.Controllers
             }
 
             District district = await _addressService.GetDistrictData(account.Districtid);
-            EmployeeProfileViewModel employeeProfileViewModel = new EmployeeProfileViewModel()
+            EmployeeProfileViewModel profile = new EmployeeProfileViewModel()
             {
                 LogoAccount = account.Avatar,
                 Phone = account.Phone,
@@ -79,7 +79,7 @@ namespace GiaSuService.Controllers
                 BirthDate = account.Birth,
                 EmployeeId = account.Id
             };
-            return View(employeeProfileViewModel);
+            return View(profile);
         }
 
         [HttpPost]
