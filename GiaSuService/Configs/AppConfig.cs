@@ -4,50 +4,50 @@ namespace GiaSuService.Configs
 {
     public class AppConfig
     {
-        public enum TutorRequestStatus
-        {
-            PENDING,
-            APPROVAL,
-            DENY,
-            HANDED,
-            EXPIRED,
-            CANCEL,
-        }
+        //public enum TutorRequestStatus
+        //{
+        //    PENDING,
+        //    APPROVAL,
+        //    DENY,
+        //    HANDED,
+        //    EXPIRED,
+        //    CANCEL,
+        //}
 
-        public enum RegisterStatus
-        {
-            PENDING,
-            APPROVAL,
-            DENY,
-        }
+        //public enum RegisterStatus
+        //{
+        //    PENDING,
+        //    APPROVAL,
+        //    DENY,
+        //}
 
-        public enum PaymentMethod
-        {
-            OFFLINE,
-            ONLINE
-        }
+        //public enum PaymentMethod
+        //{
+        //    OFFLINE,
+        //    ONLINE
+        //}
 
-        public enum QueueStatus
-        {
-            PENDING,
-            APPROVAL,
-            DENY,
-            REVEWING,
-            HANDED
-        }
+        //public enum QueueStatus
+        //{
+        //    PENDING,
+        //    APPROVAL,
+        //    DENY,
+        //    REVEWING,
+        //    HANDED
+        //}
 
-        public enum TransactionType
-        {
-            DEPOSIT,
-            PAYROLL,
-            TUTION
-        }
+        //public enum TransactionhistoryType
+        //{
+        //    DEPOSIT,
+        //    PAYROLL,
+        //    TUTION
+        //}
 
-        public enum TypeTutor
-        {
-            TEACHER,
-            STUDENT
-        }
+        //public enum TypeTutor
+        //{
+        //    TEACHER,
+        //    STUDENT
+        //}
 
         public const string CLAIM_TYPE_AVATAR = "Avatar";
 

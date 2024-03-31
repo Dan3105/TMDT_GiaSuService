@@ -7,12 +7,12 @@ namespace GiaSuService.Services
     public class TutorRequestHistoryStatusService : ITutorRequestHistoryStatusService
     {
         private readonly ITutorRequestHistoryStatusRepository _repo;
-        public TutorRequestHistoryStatusService(ITutorRequestHistoryStatusRepository repo)
-        {
-            _repo = repo;
-        }
+        //public TutorRequestHistoryStatusService(ITutorRequestHistoryStatusRepository repo)
+        //{
+        //    _repo = repo;
+        //}
 
-        public async Task<bool> CreateRequestHistory(Tutorrequesthistorystatus form)
+        public async Task<bool> CreateRequestHistory(Requeststatus form)
         {
             try
             {
@@ -26,13 +26,13 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<List<Tutorrequesthistorystatus>> GetByTutorRequestFormId(int reqFormId)
+        public async Task<List<Requeststatus>> GetByTutorRequestFormId(int reqFormId)
         {
-            List<Tutorrequesthistorystatus> forms = (await _repo.GetByTutorRequestFormId(reqFormId)).ToList();
+            List<Requeststatus> forms = (await _repo.GetByTutorRequestFormId(reqFormId)).ToList();
             return forms;
         }
 
-        public async Task<bool> UpdateRequestHistory(Tutorrequesthistorystatus form)
+        public async Task<bool> UpdateRequestHistory(Requeststatus form)
         {
             try
             {

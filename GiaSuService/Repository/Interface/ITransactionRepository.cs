@@ -2,12 +2,12 @@
 
 namespace GiaSuService.Repository.Interface
 {
-    public interface ITransactionRepository : IRepository<Transaction>
+    public interface ITransactionhistoryRepository : IRepository<Transactionhistory>
     {
-        public Task<Transaction?> GetById(int id);
+        public Task<Transactionhistory?> GetById(int id);
 
-        public Task<IEnumerable<Transaction>> GetByAccountPayId(int accountPayId);
+        public Task<IEnumerable<Transactionhistory>> GetByAccountPayId(int accountPayId);
 
-        public Task<IEnumerable<Transaction>> GetAll();
+        public Task<IEnumerable<Transactionhistory>> GetAll();
     }
 }

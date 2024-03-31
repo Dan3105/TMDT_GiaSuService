@@ -25,13 +25,13 @@ namespace GiaSuService.Controllers
         private readonly ICatalogService _catalogService;
         private readonly ITutorService _tutorService;
 
-        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, ITutorService tutorService)
-        {
-            _authService = authService;
-            _addressService = addressService;
-            _catalogService = catalogService;
-            _tutorService = tutorService;
-        }
+        //public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, ITutorService tutorService)
+        //{
+        //    _authService = authService;
+        //    _addressService = addressService;
+        //    _catalogService = catalogService;
+        //    _tutorService = tutorService;
+        //}
 
         public IActionResult Index()
         {
@@ -52,37 +52,37 @@ namespace GiaSuService.Controllers
             }
 
             var user = await _authService.ValidateAccount(model.Email!, model.Password!);
-            if (user != null && !user.Lockenable)
-            {
-                List<Claim> claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Fullname),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.MobilePhone, user.Phone),
-                    new Claim(ClaimTypes.Role, user.Role.Rolename),
-                    new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Avatar)
-                };
+            //if (user != null && !user.Lockenable)
+            //{
+            //    List<Claim> claims = new List<Claim>()
+            //    {
+            //        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            //        new Claim(ClaimTypes.Name, user.Fullname),
+            //        new Claim(ClaimTypes.Email, user.Email),
+            //        new Claim(ClaimTypes.MobilePhone, user.Phone),
+            //        new Claim(ClaimTypes.Role, user.Role.Rolename),
+            //        new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Avatar)
+            //    };
 
-                if(user.Role.Rolename == AppConfig.EMPLOYEEROLENAME)
-                {
-                    int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count;
-                    TempData["Count"] = count_querying_register.ToString();
-                }
+            //    if(user.Role.Rolename == AppConfig.EMPLOYEEROLENAME)
+            //    {
+            //        int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count;
+            //        TempData["Count"] = count_querying_register.ToString();
+            //    }
 
-                ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            //    ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
+            //    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
-                //HttpContext.User = principal;
+            //    await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
+            //    //HttpContext.User = principal;
 
-                TempData[AppConfig.MESSAGE_SUCCESS] = $"Hello {user.Fullname}";
-                if (returnUrl.Length > 0)
-                {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("", "Home");
-            }
+            //    TempData[AppConfig.MESSAGE_SUCCESS] = $"Hello {user.Fullname}";
+            //    if (returnUrl.Length > 0)
+            //    {
+            //        return Redirect(returnUrl);
+            //    }
+            //    return RedirectToAction("", "Home");
+            //}
             TempData[AppConfig.MESSAGE_FAIL] = "Incorrect Login";
             return View("Index", model);
         }
@@ -203,34 +203,34 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("", "Home");
             }
 
-            Tutorprofile tutorprofile = new Tutorprofile()
+            Tutor tutorprofile = new Tutor()
             {
                 Academicyearfrom = model.RegisterTutorProfile.AcademicYearFrom,
                 Academicyearto = model.RegisterTutorProfile.AcademicYearto,
                 Additionalinfo = model.RegisterTutorProfile.AdditionalInfo,
                 College = model.RegisterTutorProfile.College,
                 Area = model.RegisterTutorProfile.Area,
-                Currentstatus = model.RegisterTutorProfile.TypeTutor,
+                //Currentstatus = model.RegisterTutorProfile.TypeTutor,
             };
 
-            Account form = new Account()
-            {
-                Birth = model.AccountProfile.BirthDate,
-                Email = model.AccountProfile.Email,
-                Fullname = model.AccountProfile.FullName,
-                Gender = model.AccountProfile.Gender,
-                Identitycard = model.AccountProfile.IdentityCard,
-                Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
-                Frontidentitycard = model.AccountProfile.FrontIdentityCard,
-                Backidentitycard = model.AccountProfile.BackIdentityCard,
-                Phone = model.AccountProfile.Phone,
-                Districtid = model.AccountProfile.SelectedDistrictId,
-                Addressdetail = model.AccountProfile.AddressName,
-                Avatar = model.AccountProfile.LogoAccount,
-                Lockenable = true,
-                Roleid = (int)roleId,
-                Tutorprofile = tutorprofile
-            };
+            Account form = new Account();
+            //{
+            //    Birth = model.AccountProfile.BirthDate,
+            //    Email = model.AccountProfile.Email,
+            //    Fullname = model.AccountProfile.FullName,
+            //    Gender = model.AccountProfile.Gender,
+            //    Identitycard = model.AccountProfile.IdentityCard,
+            //    Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
+            //    Frontidentitycard = model.AccountProfile.FrontIdentityCard,
+            //    Backidentitycard = model.AccountProfile.BackIdentityCard,
+            //    Phone = model.AccountProfile.Phone,
+            //    Districtid = model.AccountProfile.SelectedDistrictId,
+            //    Addressdetail = model.AccountProfile.AddressName,
+            //    Avatar = model.AccountProfile.LogoAccount,
+            //    Lockenable = true,
+            //    Roleid = (int)roleId,
+            //    Tutorprofile = tutorprofile
+            //};
             var listGrade = model.GetGradeSelected.Select(p => p.GradeId);
             var listSession = model.GetSessionSelected.Select(p => p.SessionId);
             var listSubject = model.GetSubjectSelected.Select(p => p.SubjectId);
@@ -287,21 +287,21 @@ namespace GiaSuService.Controllers
             var accountProfile = form.RegisterForm!;
             Account account = new Account()
             {
-                Fullname = accountProfile.FullName,
-                Birth = accountProfile.BirthDate,
-                Email = accountProfile.Email,
-                Phone = accountProfile.Phone,
-                Passwordhash = Utility.HashPassword(accountProfile.Password),
-                Identitycard = accountProfile.IdentityCard,
-                Frontidentitycard = accountProfile.FrontIdentityCard,
-                Backidentitycard = accountProfile.BackIdentityCard,
-                Gender = accountProfile.Gender,
-                Lockenable = false,
-                Avatar = accountProfile.LogoAccount,
-                Roleid = (int)roleId,
-                Addressdetail = accountProfile.AddressName,
-                Districtid = accountProfile.SelectedDistrictId,
-                Createdate = DateOnly.FromDateTime(DateTime.Now)
+                //Fullname = accountProfile.FullName,
+                //Birth = accountProfile.BirthDate,
+                //Email = accountProfile.Email,
+                //Phone = accountProfile.Phone,
+                //Passwordhash = Utility.HashPassword(accountProfile.Password),
+                //Identitycard = accountProfile.IdentityCard,
+                //Frontidentitycard = accountProfile.FrontIdentityCard,
+                //Backidentitycard = accountProfile.BackIdentityCard,
+                //Gender = accountProfile.Gender,
+                //Lockenable = false,
+                //Avatar = accountProfile.LogoAccount,
+                //Roleid = (int)roleId,
+                //Addressdetail = accountProfile.AddressName,
+                //Districtid = accountProfile.SelectedDistrictId,
+                //Createdate = DateOnly.FromDateTime(DateTime.Now)
             };
             bool isSuccess = await _authService.CreateAccount(account);
             if (isSuccess)

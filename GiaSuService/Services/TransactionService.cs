@@ -4,33 +4,33 @@ using GiaSuService.Services.Interface;
 
 namespace GiaSuService.Services
 {
-    public class TransactionService : ITransactionService
+    public class TransactionhistoryService : ITransactionhistoryService
     {
-        private readonly ITransactionRepository _transRepository;
-        public TransactionService(ITransactionRepository transRepository)
-        {
-            _transRepository = transRepository;
-        }
+        private readonly ITransactionhistoryRepository _transRepository;
+        //public TransactionhistoryService(ITransactionhistoryRepository transRepository)
+        //{
+        //    _transRepository = transRepository;
+        //}
 
-        public async Task<Transaction?> GetTransactionById(int id)
+        public async Task<Transactionhistory?> GetTransactionhistoryById(int id)
         {
-            Transaction? trans = (await _transRepository.GetById(id));
+            Transactionhistory? trans = (await _transRepository.GetById(id));
             return trans;
         }
 
-        public async Task<List<Transaction>> GetTransactionByAccountPayId(int accountPayId)
+        public async Task<List<Transactionhistory>> GetTransactionhistoryByAccountPayId(int accountPayId)
         {
-            List<Transaction> trans = (await _transRepository.GetByAccountPayId(accountPayId)).ToList();
+            List<Transactionhistory> trans = (await _transRepository.GetByAccountPayId(accountPayId)).ToList();
             return trans;
         }
 
-        public async Task<List<Transaction>> GetTransactions()
+        public async Task<List<Transactionhistory>> GetTransactionhistorys()
         {
-            List<Transaction> trans = (await _transRepository.GetAll()).ToList();
+            List<Transactionhistory> trans = (await _transRepository.GetAll()).ToList();
             return trans;
         }
 
-        public async Task<bool> CreateTransaction(Transaction trans)
+        public async Task<bool> CreateTransactionhistory(Transactionhistory trans)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<bool> UpdateTransaction(Transaction trans)
+        public async Task<bool> UpdateTransactionhistory(Transactionhistory trans)
         {
             try
             {

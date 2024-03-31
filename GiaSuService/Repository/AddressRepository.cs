@@ -7,17 +7,18 @@ namespace GiaSuService.Repository
 {
     public class AddressRepository : IAddressRepository
     {
-        private readonly TmdtDvgsContext _context;
-        public AddressRepository(TmdtDvgsContext context)
+        private readonly DvgsDbContext _context;
+        public AddressRepository(DvgsDbContext context)
         {
             _context = context;
         }
 
         public async Task<IEnumerable<District>> GetAllDistricts(int idProvince)
         {
-            return (await _context.Districts.Where(p => p.Provinceid == idProvince)
-                .OrderBy(p => p.Districtname.Length)
-                .ToListAsync());
+            //return (await _context.Districts.Where(p => p.Provinceid == idProvince)
+            //    .OrderBy(p => p.Districtname.Length)
+            //    .ToListAsync());
+            return null;
         }
 
         public async Task<IEnumerable<Province>> GetAllProvinces()
@@ -30,8 +31,8 @@ namespace GiaSuService.Repository
             Account? account = await _context.Accounts.FirstOrDefaultAsync(p => p.Id == accountId);
             if(account != null)
             {
-                account.Addressdetail = addressDetail;
-                account.Districtid = districtId;
+                //account.Addressdetail = addressDetail;
+                //account.Districtid = districtId;
 
                 _context.Accounts.Update(account);
                 return await SaveChanges();

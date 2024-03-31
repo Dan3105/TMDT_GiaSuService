@@ -7,33 +7,33 @@ using System.Security.Principal;
 
 namespace GiaSuService.Services
 {
-    public class ConfigpricehistoryService : IConfigpricehistoryService
+    public class ConfigpriceService : IConfigpriceService
     {
-        private readonly IConfigpricehistoryRepository _configRepository;
-        public ConfigpricehistoryService(IConfigpricehistoryRepository configRepository)
-        {
-            _configRepository = configRepository;
-        }
+        private readonly IConfigpriceRepository _configRepository;
+        //public ConfigpriceService(IConfigpriceRepository configRepository)
+        //{
+        //    _configRepository = configRepository;
+        //}
 
-        public async Task<Configpricehistory?> GetConfigpricehistoryById(int id)
+        public async Task<Configprice?> GetConfigpriceById(int id)
         {
-            Configpricehistory? config = (await _configRepository.GetById(id));
+            Configprice? config = (await _configRepository.GetById(id));
             return config;
         }
 
-        public async Task<List<Configpricehistory>> GetConfigpricehistories()
+        public async Task<List<Configprice>> GetConfigpricehistories()
         {
-            List<Configpricehistory> configs = (await _configRepository.GetAll()).ToList();
+            List<Configprice> configs = (await _configRepository.GetAll()).ToList();
             return configs;
         }
 
-        public async Task<List<Configpricehistory>> GetConfigpricehistoriesAfterDate(DateTime fromDate)
+        public async Task<List<Configprice>> GetConfigpricehistoriesAfterDate(DateTime fromDate)
         {
-            List<Configpricehistory> configs = (await _configRepository.GetAfterDate(fromDate)).ToList();
+            List<Configprice> configs = (await _configRepository.GetAfterDate(fromDate)).ToList();
             return configs;
         }
 
-        public async Task<bool> CreateConfigpricehistory(Configpricehistory config)
+        public async Task<bool> CreateConfigprice(Configprice config)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<bool> UpdateConfigpricehistory(Configpricehistory config)
+        public async Task<bool> UpdateConfigprice(Configprice config)
         {
             try
             {

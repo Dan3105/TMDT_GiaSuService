@@ -22,15 +22,15 @@ namespace GiaSuService.Controllers
         private readonly ITutorRequestFormService _tutorRequestFormService;
         
         
-        public CustomerController(ICatalogService catalogService, IAddressService addressService, ITutorService tutorService
-            ,ITutorRequestFormService tutorRequestFormService, IAuthService authService)
-        {
-            _addressService = addressService;
-            _catalogService = catalogService;
-            _tutorService = tutorService;
-            _tutorRequestFormService = tutorRequestFormService;
-            _authService = authService;
-        }
+        //public CustomerController(ICatalogService catalogService, IAddressService addressService, ITutorService tutorService
+        //    ,ITutorRequestFormService tutorRequestFormService, IAuthService authService)
+        //{
+        //    _addressService = addressService;
+        //    _catalogService = catalogService;
+        //    _tutorService = tutorService;
+        //    _tutorRequestFormService = tutorRequestFormService;
+        //    _authService = authService;
+        //}
 
         public IActionResult Index()
         {
@@ -67,19 +67,19 @@ namespace GiaSuService.Controllers
                 {
                     tutorSelectedCookie.Add((int)tutorId);
                 }
-                List<Tutorprofile> tutorprofiles = await _tutorService.GetSubTutors(tutorSelectedCookie);
-                foreach (var profile in tutorprofiles)
-                {
-                    vm.TutorCards.Add(new TutorCardViewModel()
-                    {
-                        Id = profile.Id,
-                        Avatar = profile.Account.Avatar,
-                        FullName = profile.Account.Fullname,
-                        Area = profile.Area,
-                        College = profile.College,
-                        TutorType = profile.Currentstatus.ToString()
-                    });
-                }
+                List<Tutor> tutorprofiles = await _tutorService.GetSubTutors(tutorSelectedCookie);
+                //foreach (var profile in tutorprofiles)
+                //{
+                //    vm.TutorCards.Add(new TutorCardViewModel()
+                //    {
+                //        Id = profile.Id,
+                //        Avatar = profile.Account.Avatar,
+                //        FullName = profile.Account.Fullname,
+                //        Area = profile.Area,
+                //        College = profile.College,
+                //        TutorType = profile.Currentstatus.ToString()
+                //    });
+                //}
             }
             return View(vm);
         }
@@ -94,22 +94,23 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("Customer", "Index");
             }
 
-            District district = await _addressService.GetDistrictData(account.Districtid);
-            CustomerProfileViewModel profile = new CustomerProfileViewModel()
-            {
-                LogoAccount = account.Avatar,
-                Phone = account.Phone,
-                IdentityCard = account.Identitycard,
-                FrontIdentiyCard = account.Frontidentitycard,
-                BackIdentityCard = account.Backidentitycard,
-                Gender = account.Gender,
-                Email = account.Email,
-                AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-                FullName = account.Fullname,
-                LockStatus = account.Lockenable,
-                BirthDate = account.Birth,
-                CustomerId = account.Id
-            };
+            //District district = await _addressService.GetDistrictData(account.Districtid);
+            CustomerProfileViewModel profile = null!;
+            //    new CustomerProfileViewModel()
+            //{
+            //    LogoAccount = account.Avatar,
+            //    Phone = account.Phone,
+            //    IdentityCard = account.Identitycard,
+            //    FrontIdentiyCard = account.Frontidentitycard,
+            //    BackIdentityCard = account.Backidentitycard,
+            //    Gender = account.Gender,
+            //    Email = account.Email,
+            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
+            //    FullName = account.Fullname,
+            //    LockStatus = account.Lockenable,
+            //    BirthDate = account.Birth,
+            //    CustomerId = account.Id
+            //};
             return View(profile);
         }
 
@@ -217,20 +218,21 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Hết hạn đăng nhập";
                 return RedirectToAction("Index", "Identity");
             }
-            Tutorrequestform form = new Tutorrequestform()
-            {
-                Additionaldetail = req.Profile.AdditionalDetail,
-                Addressdetail = req.Profile.Addressdetail,
-                Createddate = DateTime.Now,
-                Expireddate = DateTime.Now.AddDays(30),
-                Districtid = req.Profile.DistrictId,
-                Gradeid = req.Profile.GradeId,
-                Subjectid = req.Profile.SubjectId,
-                Nsessions = (short)req.Profile.NSessions,
-                Nstudents = (short)req.Profile.NStudents,
-                Status = AppConfig.TutorRequestStatus.PENDING,
-                Accountid = requester
-            };
+            Tutorrequestform form = null!;
+            //    new Tutorrequestform()
+            //{
+            //    Additionaldetail = req.Profile.AdditionalDetail,
+            //    Addressdetail = req.Profile.Addressdetail,
+            //    Createddate = DateTime.Now,
+            //    Expireddate = DateTime.Now.AddDays(30),
+            //    Districtid = req.Profile.DistrictId,
+            //    Gradeid = req.Profile.GradeId,
+            //    Subjectid = req.Profile.SubjectId,
+            //    Nsessions = (short)req.Profile.NSessions,
+            //    Nstudents = (short)req.Profile.NStudents,
+            //    Status = AppConfig.TutorRequestStatus.PENDING,
+            //    Accountid = requester
+            //};
 
             List<int>? ids = GetTutorsSelected();
             if(ids != null)
@@ -238,9 +240,9 @@ namespace GiaSuService.Controllers
                 var listTutors = await _tutorService.GetSubTutors(ids);
                 foreach(var tutor in listTutors)
                 {
-                    form.Tutormatchrequestqueues.Add(new Tutormatchrequestqueue()
+                    form.Tutorqueues.Add(new Tutorqueue()
                     {
-                        Applydate = DateOnly.FromDateTime(DateTime.Now),
+                        Enterdate = DateOnly.FromDateTime(DateTime.Now),
                         Tutor = tutor
                     });
                 }

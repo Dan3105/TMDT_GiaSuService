@@ -10,12 +10,12 @@ namespace GiaSuService.Services
         private readonly IGradeRepository _gradeRepository;
         private readonly ISubjectRepository _subjectRepository;
 
-        public CatalogService(ISessionRepository sessionRepository, IGradeRepository gradeRepository, ISubjectRepository subjectRepository)
-        {
-            _sessionRepository = sessionRepository;
-            _gradeRepository = gradeRepository;
-            _subjectRepository = subjectRepository;
-        }
+        //public CatalogService(ISessionRepository sessionRepository, IGradeRepository gradeRepository, ISubjectRepository subjectRepository)
+        //{
+        //    _sessionRepository = sessionRepository;
+        //    _gradeRepository = gradeRepository;
+        //    _subjectRepository = subjectRepository;
+        //}
 
         #region CRUD Session
 

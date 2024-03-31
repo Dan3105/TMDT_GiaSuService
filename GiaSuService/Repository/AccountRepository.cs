@@ -7,8 +7,8 @@ namespace GiaSuService.Repository
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly TmdtDvgsContext _context;
-        public AccountRepository(TmdtDvgsContext context)
+        private readonly DvgsDbContext _context;
+        public AccountRepository(DvgsDbContext context)
         {
             _context = context;
         }
@@ -41,8 +41,9 @@ namespace GiaSuService.Repository
 
         public async Task<int?> GetRoleId(string roleName)
         {
-            var role = await _context.Roles.FirstOrDefaultAsync(p => p.Rolename.ToLower() == roleName.ToLower());
-            return role?.Id;
+            //var role = await _context.Roles.FirstOrDefaultAsync(p => p.Rolename.ToLower() == roleName.ToLower());
+            //return role?.Id;
+            return 0;
         }
 
         public async Task<bool> SaveChanges()

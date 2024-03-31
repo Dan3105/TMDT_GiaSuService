@@ -2,12 +2,12 @@
 
 namespace GiaSuService.Services.Interface
 {
-    public interface ITransactionService
+    public interface ITransactionhistoryService
     {
-        public Task<Transaction?> GetTransactionById(int id);
-        public Task<List<Transaction>> GetTransactionByAccountPayId(int accountPayId);
-        public Task<List<Transaction>> GetTransactions();
-        public Task<bool> CreateTransaction(Transaction trans);
-        public Task<bool> UpdateTransaction(Transaction trans);
+        public Task<Transactionhistory?> GetTransactionhistoryById(int id);
+        public Task<List<Transactionhistory>> GetTransactionhistoryByAccountPayId(int accountPayId);
+        public Task<List<Transactionhistory>> GetTransactionhistorys();
+        public Task<bool> CreateTransactionhistory(Transactionhistory trans);
+        public Task<bool> UpdateTransactionhistory(Transactionhistory trans);
     }
 }

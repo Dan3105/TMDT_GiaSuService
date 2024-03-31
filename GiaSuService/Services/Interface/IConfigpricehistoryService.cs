@@ -2,12 +2,12 @@
 
 namespace GiaSuService.Services.Interface
 {
-    public interface IConfigpricehistoryService
+    public interface IConfigpriceService
     {
-        public Task<Configpricehistory?> GetConfigpricehistoryById(int id);
-        public Task<List<Configpricehistory>> GetConfigpricehistories();
-        public Task<List<Configpricehistory>> GetConfigpricehistoriesAfterDate(DateTime datetime);
-        public Task<bool> CreateConfigpricehistory(Configpricehistory config);
-        public Task<bool> UpdateConfigpricehistory(Configpricehistory config);
+        public Task<Configprice?> GetConfigpriceById(int id);
+        public Task<List<Configprice>> GetConfigpricehistories();
+        public Task<List<Configprice>> GetConfigpricehistoriesAfterDate(DateTime datetime);
+        public Task<bool> CreateConfigprice(Configprice config);
+        public Task<bool> UpdateConfigprice(Configprice config);
     }
 }

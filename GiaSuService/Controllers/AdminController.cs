@@ -14,11 +14,11 @@ namespace GiaSuService.Controllers
     {
         private readonly IAddressService _addressService;
         private readonly IAuthService _authService;  
-        public AdminController(IAddressService addressService, IAuthService authService)
-        {
-            _addressService = addressService;
-            _authService = authService;
-        }
+        //public AdminController(IAddressService addressService, IAuthService authService)
+        //{
+        //    _addressService = addressService;
+        //    _authService = authService;
+        //}
 
         public IActionResult Index()
         {
@@ -37,18 +37,18 @@ namespace GiaSuService.Controllers
             }
 
             List<EmployeeListViewModel> results = new List<EmployeeListViewModel>();
-            foreach(var account in accounts)
-            {
-                results.Add(new EmployeeListViewModel()
-                {
-                    Id = account.Id,
-                    Email = account.Email,
-                    FullName = account.Fullname,
-                    LockStatus = account.Lockenable,
-                    ImageUrl = account.Avatar
-                });
+            //foreach(var account in accounts)
+            //{
+            //    results.Add(new EmployeeListViewModel()
+            //    {
+            //        Id = account.Id,
+            //        Email = account.Email,
+            //        FullName = account.Fullname,
+            //        LockStatus = account.Lockenable,
+            //        ImageUrl = account.Avatar
+            //    });
 
-            }
+            //}
 
             return View(results);
         }
@@ -63,22 +63,24 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("EmployeeList", "Admin");
             }
 
-            District district = await _addressService.GetDistrictData(account.Districtid);
-            EmployeeProfileViewModel profile = new EmployeeProfileViewModel()
-            {
-                LogoAccount = account.Avatar,
-                Phone = account.Phone,
-                IdentityCard = account.Identitycard,
-                FrontIdentiyCard = account.Frontidentitycard,
-                BackIdentityCard = account.Backidentitycard,
-                Gender = account.Gender,
-                Email = account.Email,
-                AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-                FullName = account.Fullname,
-                LockStatus = account.Lockenable,
-                BirthDate = account.Birth,
-                EmployeeId = account.Id
-            };
+            //District district = await _addressService.GetDistrictData(account.Districtid);
+            District district = await _addressService.GetDistrictData(0);
+            EmployeeProfileViewModel profile = null!;
+            //    new EmployeeProfileViewModel()
+            //{
+            //    LogoAccount = account.Avatar,
+            //    Phone = account.Phone,
+            //    IdentityCard = account.Identitycard,
+            //    FrontIdentiyCard = account.Frontidentitycard,
+            //    BackIdentityCard = account.Backidentitycard,
+            //    Gender = account.Gender,
+            //    Email = account.Email,
+            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
+            //    FullName = account.Fullname,
+            //    LockStatus = account.Lockenable,
+            //    BirthDate = account.Birth,
+            //    EmployeeId = account.Id
+            //};
             return View(profile);
         }
 
@@ -91,8 +93,8 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
                 return RedirectToAction("EmployeeList", "Admin");
             }
-            account.Identitycard = employeeProfileViewModel.IdentityCard;
-            account.Lockenable = employeeProfileViewModel.LockStatus;
+            //account.Identitycard = employeeProfileViewModel.IdentityCard;
+            //account.Lockenable = employeeProfileViewModel.LockStatus;
 
             bool result = await _authService.UpdateAccount(account);
             if (result)
@@ -146,21 +148,21 @@ namespace GiaSuService.Controllers
             var accountProfile = model.RegisterForm!;
             Account account = new Account()
             {
-                Fullname = accountProfile.FullName,
-                Birth = accountProfile.BirthDate,
-                Email = accountProfile.Email,
-                Phone = accountProfile.Phone,
-                Passwordhash = Utility.HashPassword(accountProfile.Password),
-                Identitycard = accountProfile.IdentityCard,
-                Frontidentitycard = accountProfile.FrontIdentityCard,
-                Backidentitycard = accountProfile.BackIdentityCard,
-                Gender = accountProfile.Gender,
-                Lockenable = false,
-                Avatar = accountProfile.LogoAccount,
-                Roleid = (int)roleId,
-                Addressdetail = accountProfile.AddressName,
-                Districtid = accountProfile.SelectedDistrictId,
-                Createdate = DateOnly.FromDateTime(DateTime.Now)
+                //Fullname = accountProfile.FullName,
+                //Birth = accountProfile.BirthDate,
+                //Email = accountProfile.Email,
+                //Phone = accountProfile.Phone,
+                //Passwordhash = Utility.HashPassword(accountProfile.Password),
+                //Identitycard = accountProfile.IdentityCard,
+                //Frontidentitycard = accountProfile.FrontIdentityCard,
+                //Backidentitycard = accountProfile.BackIdentityCard,
+                //Gender = accountProfile.Gender,
+                //Lockenable = false,
+                //Avatar = accountProfile.LogoAccount,
+                //Roleid = (int)roleId,
+                //Addressdetail = accountProfile.AddressName,
+                //Districtid = accountProfile.SelectedDistrictId,
+                //Createdate = DateOnly.FromDateTime(DateTime.Now)
             };
             bool isSuccess = await _authService.CreateAccount(account);
             if (isSuccess)

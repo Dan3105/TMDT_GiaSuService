@@ -7,11 +7,11 @@ public partial class Subject
 {
     public int Id { get; set; }
 
-    public string Subjectname { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public short Value { get; set; }
+    public int Value { get; set; }
 
     public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
 
-    public virtual ICollection<Tutorprofile> Tutors { get; set; } = new List<Tutorprofile>();
+    public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 }

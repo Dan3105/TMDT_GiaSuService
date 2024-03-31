@@ -7,8 +7,8 @@ namespace GiaSuService.Repository
 {
     public class GradeRepository : IGradeRepository
     {
-        private readonly TmdtDvgsContext _context;
-        public GradeRepository(TmdtDvgsContext context)
+        private readonly DvgsDbContext _context;
+        public GradeRepository(DvgsDbContext context)
         {
             _context = context;
         }

@@ -11,10 +11,10 @@ namespace GiaSuService.Services
     public class TutorRequestFormService : ITutorRequestFormService
     {
         private readonly ITutorRequestFormRepository _repo;
-        public TutorRequestFormService(ITutorRequestFormRepository repo)
-        {
-            _repo = repo;
-        }
+        //public TutorRequestFormService(ITutorRequestFormRepository repo)
+        //{
+        //    _repo = repo;
+        //}
 
         public async Task<List<Tutorrequestform>> GetTutorRequestFormsByFilter(
            int subjectId, int districtId, int gradeId)
@@ -63,9 +63,9 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<List<Tutorrequestform>> GetTutorrequestforms(AppConfig.TutorRequestStatus status)
-        {
-            return await _repo.GetByStatus(status);
-        }
+        //public async Task<List<Tutorrequestform>> GetTutorrequestforms(AppConfig.TutorRequestStatus status)
+        //{
+        //    return await _repo.GetByStatus(status);
+        //}
     }
 }

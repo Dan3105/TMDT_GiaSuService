@@ -7,8 +7,8 @@ namespace GiaSuService.Repository
 {
     public class SessionRepository : ISessionRepository
     {
-        private readonly TmdtDvgsContext _context;
-        public SessionRepository(TmdtDvgsContext context)
+        private readonly DvgsDbContext _context;
+        public SessionRepository(DvgsDbContext context)
         {
             _context = context;
         }

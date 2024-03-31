@@ -9,30 +9,30 @@ namespace GiaSuService.Services
     public class TutorService : ITutorService
     {
         private readonly ITutorRepository _tutorRepository;
-        public TutorService(ITutorRepository tutorRepository)
-        {
-            _tutorRepository = tutorRepository;
-        }
-        public async Task<List<Tutorprofile>> GetTutorprofilesByFilter(
+        //public TutorService(ITutorRepository tutorRepository)
+        //{
+        //    _tutorRepository = tutorRepository;
+        //}
+        public async Task<List<Tutor>> GetTutorprofilesByFilter(
             int subjectId, int districtId, int gradeId)
         {
-            List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByFilter(subjectId, districtId, gradeId)).ToList();
+            List<Tutor> tutorprofiles = (await _tutorRepository.GetTutorprofilesByFilter(subjectId, districtId, gradeId)).ToList();
             return tutorprofiles;
         }
 
-        public async Task<List<Tutorprofile>> GetTutorprofilesByClassId(int classId)
+        public async Task<List<Tutor>> GetTutorprofilesByClassId(int classId)
         {
-            List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByClassId(classId)).ToList();
+            List<Tutor> tutorprofiles = (await _tutorRepository.GetTutorprofilesByClassId(classId)).ToList();
             return tutorprofiles;
         }
 
-        public async Task<List<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status)
-        {
-            List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByRegisterStatus(status)).ToList();
-            return tutorprofiles;
-        }
+        //public async Task<List<Tutorprofile>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status)
+        //{
+        //    List<Tutorprofile> tutorprofiles = (await _tutorRepository.GetTutorprofilesByRegisterStatus(status)).ToList();
+        //    return tutorprofiles;
+        //}
 
-        public async Task<bool> UpdateTutorprofile(Tutorprofile tutor)
+        public async Task<bool> UpdateTutorprofile(Tutor tutor)
         {
             try
             {
@@ -44,11 +44,12 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<bool> UpdateTutorprofileStatus(int tutorId, AppConfig.RegisterStatus status)
+        public async Task<bool> UpdateTutorprofileStatus(int tutorId)
         {
             try
             {
-                return await _tutorRepository.UpdateRegisterStatus(tutorId, status);
+                //return await _tutorRepository.UpdateRegisterStatus(tutorId);
+                return true;
             }
             catch (Exception)
             {
@@ -56,19 +57,19 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<Tutorprofile> GetTutorprofileById(int id)
+        public async Task<Tutor> GetTutorprofileById(int id)
         {
-            Tutorprofile? tutorprofile = await _tutorRepository.GetTutorprofile(id);
+            Tutor? tutorprofile = await _tutorRepository.GetTutorprofile(id);
             return tutorprofile!;
         }
 
-        public async Task<Tutorprofile> GetTutorprofileByAccountId(int accountId)
+        public async Task<Tutor> GetTutorprofileByAccountId(int accountId)
         {
-            Tutorprofile? tutorprofile = await _tutorRepository.GetTutorprofileByAccountId(accountId);
+            Tutor? tutorprofile = await _tutorRepository.GetTutorprofileByAccountId(accountId);
             return tutorprofile!;
         }
 
-        public async Task<List<Tutorprofile>> GetSubTutors(List<int> ids)
+        public async Task<List<Tutor>> GetSubTutors(List<int> ids)
         {
             return await _tutorRepository.GetSubTutorProfile(ids);
         }

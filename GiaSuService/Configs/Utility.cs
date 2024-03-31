@@ -16,15 +16,15 @@ namespace GiaSuService.Configs
         public static List<GradeViewModel> ConvertToGradeViewList(List<Grade> listGrade)
         {
             var listGradeView = new List<GradeViewModel>();
-            foreach (var grade in listGrade)
-            {
-                listGradeView.Add(new GradeViewModel()
-                {
-                    GradeName = grade.Gradename,
-                    GradeId = grade.Id,
-                    IsChecked = false
-                });
-            }
+            //foreach (var grade in listGrade)
+            //{
+            //    listGradeView.Add(new GradeViewModel()
+            //    {
+            //        GradeName = grade.Gradename,
+            //        GradeId = grade.Id,
+            //        IsChecked = false
+            //    });
+            //}
 
             return listGradeView;
         }
@@ -32,15 +32,15 @@ namespace GiaSuService.Configs
         public static List<DistrictViewModel> ConvertToDistrictViewList(List<District> listDistrict)
         {
             var listDistrictView = new List<DistrictViewModel>();
-            foreach (var district in listDistrict)
-            {
-                listDistrictView.Add(new DistrictViewModel()
-                {
-                    DistrictName = district.Districtname,
-                    DistrictId = district.Id,
-                    IsChecked = false
-                });
-            }
+            //foreach (var district in listDistrict)
+            //{
+            //    listDistrictView.Add(new DistrictViewModel()
+            //    {
+            //        DistrictName = district.Districtname,
+            //        DistrictId = district.Id,
+            //        IsChecked = false
+            //    });
+            //}
 
             return listDistrictView;
         }
@@ -48,15 +48,15 @@ namespace GiaSuService.Configs
         public static List<SubjectViewModel> ConvertToSubjectViewList(List<Subject> listSubject)
         {
             var listSubjectView = new List<SubjectViewModel>();
-            foreach (var subject in listSubject)
-            {
-                listSubjectView.Add(new SubjectViewModel()
-                {
-                    SubjectName = subject.Subjectname,
-                    SubjectId = subject.Id,
-                    IsChecked = false
-                });
-            }
+            //foreach (var subject in listSubject)
+            //{
+            //    listSubjectView.Add(new SubjectViewModel()
+            //    {
+            //        SubjectName = subject.Subjectname,
+            //        SubjectId = subject.Id,
+            //        IsChecked = false
+            //    });
+            //}
 
             return listSubjectView;
         }
@@ -68,7 +68,7 @@ namespace GiaSuService.Configs
             {
                 listSessionView.Add(new SessionViewModel()
                 {
-                    SessionName = session.Sessiondate1,
+                    //SessionName = session.Sessiondate1,
                     SessionId = session.Id,
                     IsChecked = false
                 });
@@ -86,7 +86,7 @@ namespace GiaSuService.Configs
                 result.Add(new ProvinceViewModel
                 {
                     ProvinceId = province.Id,
-                    ProvinceName = province.Provincename,
+                    ProvinceName = province.Name,
                 });
             }
 

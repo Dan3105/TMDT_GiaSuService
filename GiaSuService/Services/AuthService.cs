@@ -7,7 +7,7 @@ namespace GiaSuService.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly TmdtDvgsContext _context;
+        private readonly DvgsDbContext _context;
         private readonly IAccountRepository _accountRepo;
         private readonly ITutorRepository _tutorRepo;
         private readonly ISubjectRepository _subjectRepository;
@@ -15,16 +15,16 @@ namespace GiaSuService.Services
         private readonly ISessionRepository _sessionRepository;
         private readonly IAddressRepository _addressRepository;
 
-        public AuthService(TmdtDvgsContext context, IAccountRepository accountRepo, ITutorRepository tutorRepo, ISubjectRepository subjectRepository, IGradeRepository gradeRepository, ISessionRepository sessionRepository, IAddressRepository addressRepository)
-        {
-            _context = context;
-            _accountRepo = accountRepo;
-            _tutorRepo = tutorRepo;
-            _subjectRepository = subjectRepository;
-            _gradeRepository = gradeRepository;
-            _sessionRepository = sessionRepository;
-            _addressRepository = addressRepository;
-        }
+        //public AuthService(DvgsDbContext context, IAccountRepository accountRepo, ITutorRepository tutorRepo, ISubjectRepository subjectRepository, IGradeRepository gradeRepository, ISessionRepository sessionRepository, IAddressRepository addressRepository)
+        //{
+        //    _context = context;
+        //    _accountRepo = accountRepo;
+        //    _tutorRepo = tutorRepo;
+        //    _subjectRepository = subjectRepository;
+        //    _gradeRepository = gradeRepository;
+        //    _sessionRepository = sessionRepository;
+        //    _addressRepository = addressRepository;
+        //}
 
         public async Task<bool> CreateAccount(Account account)
         {
@@ -41,11 +41,11 @@ namespace GiaSuService.Services
         }
 
 
-        public async Task<bool> CreateTutorRegisterRequest(Account account, Tutorprofile tutorprofile, IEnumerable<int> districtId, IEnumerable<int> gradeId, 
+        public async Task<bool> CreateTutorRegisterRequest(Account account, Tutor tutorprofile, IEnumerable<int> districtId, IEnumerable<int> gradeId, 
             IEnumerable<int> subjectId, IEnumerable<int> sessionId)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
+            //using (var transaction = _context.Database.BeginTransactionhistory())
+            //{
                 try
                 {
                     foreach(var id in districtId)
@@ -77,17 +77,17 @@ namespace GiaSuService.Services
 
                     await _context.SaveChangesAsync();
 
-                    transaction.Commit();
+                    //transaction.Commit();
 
                     return true;
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback();
+                    //transaction.Rollback();
 
                     return false;
                 }
-            }
+            //}
         }
 
         public async Task<Account> GetAccountById(int id)

@@ -19,15 +19,15 @@ namespace GiaSuService.Controllers
         private readonly IAuthService _authService;
 
 
-        public EmployeeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
-            ITutorRequestFormService tutorRequestService, IAuthService authService)
-        {
-            _tutorService = tutorService;
-            _catalogService = catalogService;
-            _addressService = addressService;
-            _tutorRequestService = tutorRequestService;
-            _authService = authService;
-        }
+        //public EmployeeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
+        //    ITutorRequestFormService tutorRequestService, IAuthService authService)
+        //{
+        //    _tutorService = tutorService;
+        //    _catalogService = catalogService;
+        //    _addressService = addressService;
+        //    _tutorRequestService = tutorRequestService;
+        //    _authService = authService;
+        //}
 
         public IActionResult Index()
         {
@@ -44,42 +44,45 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("EmployeeList", "Admin");
             }
 
-            District district = await _addressService.GetDistrictData(account.Districtid);
-            EmployeeProfileViewModel profile = new EmployeeProfileViewModel()
-            {
-                LogoAccount = account.Avatar,
-                Phone = account.Phone,
-                IdentityCard = account.Identitycard,
-                FrontIdentiyCard = account.Frontidentitycard,
-                BackIdentityCard = account.Backidentitycard,
-                Gender = account.Gender,
-                Email = account.Email,
-                AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-                FullName = account.Fullname,
-                LockStatus = account.Lockenable,
-                BirthDate = account.Birth,
-                EmployeeId = account.Id
-            };
+            //District district = await _addressService.GetDistrictData(account.Districtid);
+            District district = await _addressService.GetDistrictData(1);
+            EmployeeProfileViewModel profile = null!;
+            //    new EmployeeProfileViewModel()
+            //{
+            //    LogoAccount = account.Avatar,
+            //    Phone = account.Phone,
+            //    IdentityCard = account.Identitycard,
+            //    FrontIdentiyCard = account.Frontidentitycard,
+            //    BackIdentityCard = account.Backidentitycard,
+            //    Gender = account.Gender,
+            //    Email = account.Email,
+            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
+            //    FullName = account.Fullname,
+            //    LockStatus = account.Lockenable,
+            //    BirthDate = account.Birth,
+            //    EmployeeId = account.Id
+            //};
             return View(profile);
         }
 
         [HttpGet]
         public async Task<IActionResult> TutorRegisterQueue()
         {
-            List<Tutorprofile> queries = await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING);
+            List<Tutor> queries = null!;
+                //await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING);
             List<TutorRegisterViewModel> registers = new List<TutorRegisterViewModel>();
             foreach(var query in queries)
             {
-                registers.Add(new TutorRegisterViewModel()
-                {
-                    Area = query.Area,
-                    College = query.College,
-                    CurrentStatus = query.Currentstatus.ToString(),
-                    FullName = query.Account.Fullname,
-                    Id = query.Id,
-                    StatusQuery = query.Formstatus.ToString(),
-                    CreateDate = query.Account.Createdate
-                });
+                //registers.Add(new TutorRegisterViewModel()
+                //{
+                //    Area = query.Area,
+                //    College = query.College,
+                //    CurrentStatus = query.Currentstatus.ToString(),
+                //    FullName = query.Account.Fullname,
+                //    Id = query.Id,
+                //    StatusQuery = query.Formstatus.ToString(),
+                //    CreateDate = query.Account.Createdate
+                //});
             }
 
             return View(registers);
@@ -88,43 +91,46 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorProfileQueue(int id)
         {
-            Tutorprofile tutor = await _tutorService.GetTutorprofileById(id);
+            //Tutorprofile tutor = await _tutorService.GetTutorprofileById(id);
+            Tutor tutor = null!;
             if (tutor == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "User cannot be found";
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
-            District district = await _addressService.GetDistrictData(tutor.Account.Districtid);
-            TutorProfileInEmployeeViewModel view = new TutorProfileInEmployeeViewModel()
-            {
-                Academicyearfrom = tutor.Academicyearfrom,
-                Academicyearto = tutor.Academicyearto,
-                Additionalinfo = tutor.Additionalinfo,
-                Address = $"{district.Province.Provincename}, {district.Districtname}, {tutor.Account.Addressdetail}",
-                Area = tutor.Area,
-                Avatar = tutor.Account.Avatar,
-                Backidentitycard = tutor.Account.Backidentitycard,
-                Birth = tutor.Account.Birth,
-                College = tutor.College,
-                Createdate = tutor.Account.Createdate,  
-                Currentstatus = tutor.Currentstatus.ToString(),
-                Email = tutor.Account.Email,
-                Formstatus = tutor.Formstatus,
-                Frontidentitycard = tutor.Account.Frontidentitycard,
-                Fullname = tutor.Account.Fullname,
-                Gender = tutor.Account.Gender,
-                Identitycard = tutor.Account.Identitycard,
-                Lockenable = tutor.Account.Lockenable,
-                Phone = tutor.Account.Phone,
-                TutorId = tutor.Id,
-            };
+            //District district = await _addressService.GetDistrictData(tutor.Account.Districtid);
+            District district = await _addressService.GetDistrictData(0);
+            TutorProfileInEmployeeViewModel view = null!;
+            //    new TutorProfileInEmployeeViewModel()
+            //{
+            //    Academicyearfrom = tutor.Academicyearfrom,
+            //    Academicyearto = tutor.Academicyearto,
+            //    Additionalinfo = tutor.Additionalinfo,
+            //    Address = $"{district.Province.Provincename}, {district.Districtname}, {tutor.Account.Addressdetail}",
+            //    Area = tutor.Area,
+            //    Avatar = tutor.Account.Avatar,
+            //    Backidentitycard = tutor.Account.Backidentitycard,
+            //    Birth = tutor.Account.Birth,
+            //    College = tutor.College,
+            //    Createdate = tutor.Account.Createdate,  
+            //    Currentstatus = tutor.Currentstatus.ToString(),
+            //    Email = tutor.Account.Email,
+            //    Formstatus = tutor.Formstatus,
+            //    Frontidentitycard = tutor.Account.Frontidentitycard,
+            //    Fullname = tutor.Account.Fullname,
+            //    Gender = tutor.Account.Gender,
+            //    Identitycard = tutor.Account.Identitycard,
+            //    Lockenable = tutor.Account.Lockenable,
+            //    Phone = tutor.Account.Phone,
+            //    TutorId = tutor.Id,
+            //};
             return View(view);
         }
 
         [HttpGet]
         public async Task<IActionResult> ApplyTutor(int id)
         {
-            Tutorprofile tutorprofile = await _tutorService.GetTutorprofileById(id);
+            Tutor tutorprofile = await _tutorService.GetTutorprofileById(id);
             if (tutorprofile == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Sự cố phát sinh vui lòng làm lại";
@@ -132,7 +138,7 @@ namespace GiaSuService.Controllers
             }
 
             tutorprofile.Account.Lockenable = false;
-            tutorprofile.Formstatus = AppConfig.RegisterStatus.APPROVAL;
+            //tutorprofile.Formstatus = AppConfig.RegisterStatus.APPROVAL;
 
             bool isSuccess = await _tutorService.UpdateTutorprofile(tutorprofile);   
             if(!isSuccess) {
@@ -146,7 +152,8 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> DenyTutor(int id)
         {
-            bool isSuccess = await _tutorService.UpdateTutorprofileStatus(id, AppConfig.RegisterStatus.DENY);
+            //bool isSuccess = await _tutorService.UpdateTutorprofileStatus(id, AppConfig.RegisterStatus.DENY);
+            bool isSuccess = true;
             if (!isSuccess)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Sự cố phát sinh vui lòng làm lại";
@@ -159,23 +166,25 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorRequestQueue()
         {
-            var listRequest = await _tutorRequestService.GetTutorrequestforms(AppConfig.TutorRequestStatus.PENDING);
+            //var listRequest = await _tutorRequestService.GetTutorrequestforms(AppConfig.TutorRequestStatus.PENDING);
+            
+            List<TutorRequestItemViewModel> listRequest = new List<TutorRequestItemViewModel>();
             List<TutorRequestItemViewModel> results = new List<TutorRequestItemViewModel>();
-            foreach(var request in listRequest)
+            foreach (var request in listRequest)
             {
-                string GradeName = (await _catalogService.GetGradeById(request.Gradeid))?.Gradename ?? "";
-                var SubjectName = (await _catalogService.GetSubjectById(request.Subjectid))?.Subjectname ?? "";
-                var address = await _addressService.GetDistrictData(request.Districtid);
-                string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {request.Addressdetail}";
-                results.Add(new TutorRequestItemViewModel
-                { 
-                    FormId = request.Id,
-                    FullNameRequester = request.Account.Fullname,
-                    AddressName = AddressName,
-                    CreatedDate = DateOnly.FromDateTime(request.Createddate),
-                    GradeName = GradeName,
-                    SubjectName = SubjectName,
-                });
+                //string GradeName = (await _catalogService.GetGradeById(request.Gradeid))?.Gradename ?? "";
+                //var SubjectName = (await _catalogService.GetSubjectById(request.Subjectid))?.Subjectname ?? "";
+                //var address = await _addressService.GetDistrictData(request.Districtid);
+                //string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {request.Addressdetail}";
+                //results.Add(new TutorRequestItemViewModel
+                //{ 
+                //    FormId = request.Id,
+                //    FullNameRequester = request.Account.Fullname,
+                //    AddressName = AddressName,
+                //    CreatedDate = DateOnly.FromDateTime(request.Createddate),
+                //    GradeName = GradeName,
+                //    SubjectName = SubjectName,
+                //});
             }
             return View(results);
         }
@@ -191,36 +200,38 @@ namespace GiaSuService.Controllers
             }
             var tutorInQueue = await _tutorService.GetTutorprofilesByClassId(id);
 
-            string GradeName = (await _catalogService.GetGradeById(thisForm.Gradeid))?.Gradename ?? "";
-            var SubjectName = (await _catalogService.GetSubjectById(thisForm.Subjectid))?.Subjectname ?? "";
-            var address = await _addressService.GetDistrictData(thisForm.Districtid);
-            string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {thisForm.Addressdetail}";
+            //string GradeName = (await _catalogService.GetGradeById(thisForm.Gradeid))?.Gradename ?? "";
+            //var SubjectName = (await _catalogService.GetSubjectById(thisForm.Subjectid))?.Subjectname ?? "";
+            //var address = await _addressService.GetDistrictData(thisForm.Districtid);
+            //string AddressName = $"{address.Province.Provincename}, {address.Districtname}, {thisForm.Addressdetail}";
 
-            TutorRequestProfileViewModel view = new TutorRequestProfileViewModel()
-            {
-                FormId = id,
-                AddressName = AddressName,
-                CreatedDate = DateOnly.FromDateTime(thisForm.Createddate),
-                CurrentStatus = thisForm.Status.ToString(),
-                ExpiredDate = DateOnly.FromDateTime(thisForm.Expireddate), 
-                GradeName = GradeName,
-                FullNameRequester = thisForm.Account.Fullname,
-                SubjectName = SubjectName,
-            };
+
+            TutorRequestProfileViewModel view = null!;
+            //    new TutorRequestProfileViewModel()
+            //{
+            //    FormId = id,
+            //    AddressName = AddressName,
+            //    CreatedDate = DateOnly.FromDateTime(thisForm.Createddate),
+            //    CurrentStatus = thisForm.Status.ToString(),
+            //    ExpiredDate = DateOnly.FromDateTime(thisForm.Expireddate), 
+            //    GradeName = GradeName,
+            //    FullNameRequester = thisForm.Account.Fullname,
+            //    SubjectName = SubjectName,
+            //};
 
             foreach(var tutor in tutorInQueue)
             {
                 Account account = await _authService.GetAccountById(tutor.Accountid);
 
-                view.TutorCards.Add(new Models.TutorViewModel.TutorCardViewModel()
-                {
-                    Id = tutor.Id,
-                    Avatar = account.Avatar,
-                    FullName = account.Fullname,
-                    Area = tutor.Area,
-                    College = tutor.College,
-                    TutorType = tutor.Currentstatus.ToString()
-                });
+                //view.TutorCards.Add(new Models.TutorViewModel.TutorCardViewModel()
+                //{
+                //    Id = tutor.Id,
+                //    Avatar = account.Avatar,
+                //    FullName = account.Fullname,
+                //    Area = tutor.Area,
+                //    College = tutor.College,
+                //    TutorType = tutor.Currentstatus.ToString()
+                //});
             }
         
             return View(view);
@@ -235,7 +246,7 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
                 return RedirectToAction("TutorRequestQueue", "Employee");
             }
-            thisForm.Status = AppConfig.TutorRequestStatus.APPROVAL;
+            //thisForm.Status = AppConfig.TutorRequestStatus.APPROVAL;
             bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
             if (isSuccess)
             {
@@ -257,7 +268,7 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
                 return RedirectToAction("TutorRequestQueue", "Employee");
             }
-            thisForm.Status = AppConfig.TutorRequestStatus.DENY;
+            //thisForm.Status = AppConfig.TutorRequestStatus.DENY;
             bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
             if (isSuccess)
             {
@@ -273,27 +284,27 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorList()
         {
-            List<Tutorprofile> tutors = await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.APPROVAL);
-            if (tutors == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???";
-                Console.WriteLine("wtf did i change the name role?");
-                return RedirectToAction("Index", "Home");
-            }
+            //List<Tutor> tutors = await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.APPROVAL);
+            //if (tutors == null)
+            //{
+            //    TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???";
+            //    Console.WriteLine("wtf did i change the name role?");
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             List<EmployeeListViewModel> results = new List<EmployeeListViewModel>();
-            foreach (var tutor in tutors)
-            {
-                results.Add(new EmployeeListViewModel()
-                {
-                    Id = tutor.Account.Id,
-                    Email = tutor.Account.Email,
-                    FullName = tutor.Account.Fullname,
-                    LockStatus = tutor.Account.Lockenable,
-                    ImageUrl = tutor.Account.Avatar
-                });
+            //foreach (var tutor in tutors)
+            //{
+            //    results.Add(new EmployeeListViewModel()
+            //    {
+            //        Id = tutor.Account.Id,
+            //        Email = tutor.Account.Email,
+            //        FullName = tutor.Account.Fullname,
+            //        LockStatus = tutor.Account.Lockenable,
+            //        ImageUrl = tutor.Account.Avatar
+            //    });
 
-            }
+            //}
 
             return View(results);
         }
@@ -308,22 +319,24 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("TutorList", "Employee");
             }
 
-            District district = await _addressService.GetDistrictData(account.Districtid);
-            EmployeeProfileViewModel employeeProfileViewModel = new EmployeeProfileViewModel()
-            {
-                LogoAccount = account.Avatar,
-                Phone = account.Phone,
-                IdentityCard = account.Identitycard,
-                FrontIdentiyCard = account.Frontidentitycard,
-                BackIdentityCard = account.Backidentitycard,
-                Gender = account.Gender,
-                Email = account.Email,
-                AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-                FullName = account.Fullname,
-                LockStatus = account.Lockenable,
-                BirthDate = account.Birth,
-                EmployeeId = account.Id
-            };
+            //District district = await _addressService.GetDistrictData(account.Districtid);
+            District district = await _addressService.GetDistrictData(1);
+            EmployeeProfileViewModel employeeProfileViewModel = null!;
+            //new EmployeeProfileViewModel();
+            //{
+            //    LogoAccount = account.Avatar,
+            //    Phone = account.Phone,
+            //    IdentityCard = account.Identitycard,
+            //    FrontIdentiyCard = account.Frontidentitycard,
+            //    BackIdentityCard = account.Backidentitycard,
+            //    Gender = account.Gender,
+            //    Email = account.Email,
+            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
+            //    FullName = account.Fullname,
+            //    LockStatus = account.Lockenable,
+            //    BirthDate = account.Birth,
+            //    EmployeeId = account.Id
+            //};
             return View(employeeProfileViewModel);
         }
 
@@ -336,8 +349,8 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
                 return RedirectToAction("TutorList", "Employee");
             }
-            account.Identitycard = employeeProfileViewModel.IdentityCard;
-            account.Lockenable = employeeProfileViewModel.LockStatus;
+            //account.Identitycard = employeeProfileViewModel.IdentityCard;
+            //account.Lockenable = employeeProfileViewModel.LockStatus;
 
             bool result = await _authService.UpdateAccount(account);
             if (result)

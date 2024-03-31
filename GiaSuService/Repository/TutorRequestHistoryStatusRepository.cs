@@ -7,21 +7,21 @@ namespace GiaSuService.Repository
 {
     public class TutorRequestHistoryStatusRepository : ITutorRequestHistoryStatusRepository
     {
-        private readonly TmdtDvgsContext _context;
+        private readonly DvgsDbContext _context;
 
-        public TutorRequestHistoryStatusRepository(TmdtDvgsContext context)
+        public TutorRequestHistoryStatusRepository(DvgsDbContext context)
         {
             _context = context;
         }
 
-        public void Create(Tutorrequesthistorystatus entity)
+        public void Create(Requeststatus entity)
         {
-            _context.Tutorrequesthistorystatuses.Add(entity);
+            _context.Requeststatuses.Add(entity);
         }
 
-        public void Update(Tutorrequesthistorystatus entity)
+        public void Update(Requeststatus entity)
         {
-            _context.Tutorrequesthistorystatuses.Update(entity);
+            _context.Requeststatuses.Update(entity);
         }
 
         public async Task<bool> SaveChanges()
@@ -29,15 +29,15 @@ namespace GiaSuService.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public void Delete(Tutorrequesthistorystatus entity)
+        public void Delete(Requeststatus entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Tutorrequesthistorystatus>> GetByTutorRequestFormId(int formId)
+        public async Task<IEnumerable<Requeststatus>> GetByTutorRequestFormId(int formId)
         {
-            return (await _context.Tutorrequesthistorystatuses
-                .Where(p => p.Tutorrequestformid == formId)
+            return (await _context.Requeststatuses
+                .Where(p => p.Id == formId)
                 .ToListAsync());
         }
 

@@ -9,6 +9,6 @@ namespace GiaSuService.Repository.Interface
         public Task<List<Tutorrequestform>> GetAll();
         public Task<List<Tutorrequestform>> GetByFilter(int subjectId, 
             int gradeId, int districtId);
-        public Task<List<Tutorrequestform>> GetByStatus(AppConfig.TutorRequestStatus status);
+        //public Task<List<Tutorrequestform>> GetByStatus(AppConfig.TutorRequestStatus status);
     }
 }

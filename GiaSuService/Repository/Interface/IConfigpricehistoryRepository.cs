@@ -2,13 +2,13 @@
 
 namespace GiaSuService.Repository.Interface
 {
-    public interface IConfigpricehistoryRepository : IRepository<Configpricehistory>
+    public interface IConfigpriceRepository : IRepository<Configprice>
     {
-        public Task<Configpricehistory?> GetById(int id);
+        public Task<Configprice?> GetById(int id);
 
-        public Task<IEnumerable<Configpricehistory>> GetAll();
+        public Task<IEnumerable<Configprice>> GetAll();
 
-        public Task<IEnumerable<Configpricehistory>> GetAfterDate(DateTime dateTime);
+        public Task<IEnumerable<Configprice>> GetAfterDate(DateTime dateTime);
 
     }
 }

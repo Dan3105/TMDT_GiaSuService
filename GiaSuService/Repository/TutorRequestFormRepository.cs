@@ -8,9 +8,9 @@ namespace GiaSuService.Repository
 {
     public class TutorRequestFormRepository : ITutorRequestFormRepository
     {
-        private readonly TmdtDvgsContext _context;
+        private readonly DvgsDbContext _context;
 
-        public TutorRequestFormRepository(TmdtDvgsContext context)
+        public TutorRequestFormRepository(DvgsDbContext context)
         {
             _context = context;
         }
@@ -38,7 +38,7 @@ namespace GiaSuService.Repository
         public async Task<Tutorrequestform?> Get(int id)
         {
             return (await _context.Tutorrequestforms
-                .Include(p => p.Account)
+                .Include(p => p.Customer)
                 .FirstOrDefaultAsync(p => p.Id == id));
         }
 
@@ -58,13 +58,13 @@ namespace GiaSuService.Repository
             return filteredForms;
         }
 
-        public async Task<List<Tutorrequestform>> GetByStatus(AppConfig.TutorRequestStatus status)
-        {
-            return await _context.Tutorrequestforms
-                .Include(p => p.Account)
-                .Where(p => p.Status == status)
-                .OrderByDescending(p => p.Createddate)
-                .ToListAsync();
-        }
+        //public async Task<List<Tutorrequestform>> GetByStatus(AppConfig.TutorRequestStatus status)
+        //{
+        //    return await _context.Tutorrequestforms
+        //        .Include(p => p.Account)
+        //        .Where(p => p.Status == status)
+        //        .OrderByDescending(p => p.Createddate)
+        //        .ToListAsync();
+        //}
     }
 }

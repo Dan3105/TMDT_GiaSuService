@@ -7,8 +7,8 @@ namespace GiaSuService.Repository
 {
     public class SubjectRepository : ISubjectRepository
     {
-        private readonly TmdtDvgsContext _context;
-        public SubjectRepository(TmdtDvgsContext context)
+        private readonly DvgsDbContext _context;
+        public SubjectRepository(DvgsDbContext context)
         {
             _context = context;
         }

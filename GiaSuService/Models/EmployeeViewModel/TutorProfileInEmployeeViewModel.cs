@@ -29,7 +29,7 @@ namespace GiaSuService.Models.EmployeeViewModel
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }
         public string? Currentstatus { get; set; }
-        public AppConfig.RegisterStatus Formstatus { get; set; } = AppConfig.RegisterStatus.PENDING;
+        //public AppConfig.RegisterStatus Formstatus { get; set; } = AppConfig.RegisterStatus.PENDING;
         #endregion
 
     }

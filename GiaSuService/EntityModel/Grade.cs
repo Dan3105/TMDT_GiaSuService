@@ -7,13 +7,13 @@ public partial class Grade
 {
     public int Id { get; set; }
 
-    public string Gradename { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public short Value { get; set; }
+    public int Value { get; set; }
 
-    public virtual ICollection<Configpricehistory> Configpricehistories { get; set; } = new List<Configpricehistory>();
+    public virtual ICollection<Configprice> Configprices { get; set; } = new List<Configprice>();
 
     public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
 
-    public virtual ICollection<Tutorprofile> Tutors { get; set; } = new List<Tutorprofile>();
+    public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 }

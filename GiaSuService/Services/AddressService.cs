@@ -8,10 +8,10 @@ namespace GiaSuService.Services
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _addressRepository;
-        public AddressService(IAddressRepository addressRepository)
-        {
-            _addressRepository = addressRepository;
-        }
+        //public AddressService(IAddressRepository addressRepository)
+        //{
+        //    _addressRepository = addressRepository;
+        //}
 
         public async Task<District> GetDistrictData(int districtId)
         {

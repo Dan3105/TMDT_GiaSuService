@@ -16,14 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var datasourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found."));
-datasourceBuilder.MapEnum<AppConfig.RegisterStatus>("registerstatus")
-    .MapEnum<AppConfig.PaymentMethod>("paymentmethod")
-    .MapEnum<AppConfig.QueueStatus>("queuestatus")
-    .MapEnum<AppConfig.TransactionType>("transactiontype")
-    .MapEnum<AppConfig.TutorRequestStatus>("tutorrequeststatus")
-    .MapEnum<AppConfig.TypeTutor>("typetutor");
 
-builder.Services.AddDbContext<TmdtDvgsContext>(options =>
+builder.Services.AddDbContext<DvgsDbContext>(options =>
     options.UseNpgsql(datasourceBuilder.Build())
         .EnableServiceProviderCaching(false));
 builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
@@ -67,21 +61,21 @@ builder.Services.AddAuthorization(o =>
 
 //Add Repository
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-builder.Services.AddTransient<IAddressRepository, AddressRepository>();
-builder.Services.AddTransient<IGradeRepository, GradeRepository>();
-builder.Services.AddTransient<ISessionRepository, SessionRepository>();
-builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
-builder.Services.AddTransient<ITutorRepository, TutorRepository>();
-builder.Services.AddTransient<ITutorRequestFormRepository, TutorRequestFormRepository>();
+//builder.Services.AddTransient<IAddressRepository, AddressRepository>();
+//builder.Services.AddTransient<IGradeRepository, GradeRepository>();
+//builder.Services.AddTransient<ISessionRepository, SessionRepository>();
+//builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
+//builder.Services.AddTransient<ITutorRepository, TutorRepository>();
+//builder.Services.AddTransient<ITutorRequestFormRepository, TutorRequestFormRepository>();
 
 
 //Add Services
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAddressService, AddressService>();
-builder.Services.AddScoped<ICatalogService, CatalogService>();
-builder.Services.AddScoped<ITutorService, TutorService>();
-builder.Services.AddScoped<ITutorRequestFormService,  TutorRequestFormService>();
-builder.Services.AddScoped<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
+//builder.Services.AddScoped<IAddressService, AddressService>();
+//builder.Services.AddScoped<ICatalogService, CatalogService>();
+//builder.Services.AddScoped<ITutorService, TutorService>();
+//builder.Services.AddScoped<ITutorRequestFormService,  TutorRequestFormService>();
+//builder.Services.AddScoped<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -102,7 +96,7 @@ app.MapControllerRoute(
 //Setup
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<TmdtDvgsContext>();
+    var context = scope.ServiceProvider.GetRequiredService<DvgsDbContext>();
     await GenSuperAdmin(context);
 }
 
@@ -110,27 +104,36 @@ app.Run();
 
 
 
-static async Task GenSuperAdmin(TmdtDvgsContext context)
+static async Task GenSuperAdmin(DvgsDbContext context)
 {
     if (!context.Accounts.Any())
     {
         context.Accounts.Add(new
             GiaSuService.EntityModel.Account
         {
-            Districtid = 1,
-            Addressdetail = "Nowhere",
-            Birth = new DateOnly(2002, 05, 31),
             Email = "superadmin@gmail.com",
-            Fullname = "SuperAdmin Nguyen",
-            Gender = "Nam",
-            Identitycard = "123456789",
-            Phone = "0869696969",
-            Roleid = 1,
+            Phone = "0868273914",
             Passwordhash = BCrypt.Net.BCrypt.HashPassword("superadmin"),
+            Lockenable = false,
             Avatar = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
-            Frontidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
-            Backidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
-            Createdate = DateOnly.FromDateTime(DateTime.Now)
+            Createdate = DateTime.Now,
+            Roleid = 1,
+            
+            Employee = new GiaSuService.EntityModel.Employee()
+            {
+                Addressdetail = "Nowhere",
+                Birth = new DateOnly(2002, 05, 31),
+                Fullname = "SuperAdmin Nguyen",
+                Gender = "M",
+                Districtid = 568,
+                Identity = new GiaSuService.EntityModel.Identitycard()
+                {
+                    Identitynumber = "123456789",
+                    Frontidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+                    Backidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+
+                }
+            },
         }
         );
 
