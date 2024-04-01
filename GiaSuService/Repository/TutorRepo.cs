@@ -1,6 +1,7 @@
 ﻿using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using static GiaSuService.Configs.AppConfig;
@@ -14,25 +15,6 @@ namespace GiaSuService.Repository
         {
             _context = context;
         }
-        public void Create(Tutor entity)
-        {
-            _context.Tutors.Add(entity);
-        }
-
-        public void Delete(Tutor entity)
-        {
-            _context.Tutors.Remove(entity);
-        }
-
-        public async Task<bool> SaveChanges()
-        {
-            return (await _context.SaveChangesAsync()) > 0;
-        }
-
-        public void Update(Tutor entity)
-        {
-            _context.Tutors.Update(entity);
-        }
         public async Task<IEnumerable<Tutor>> GetTutorprofilesByFilter(
             int subjectId, int districtId, int gradeId)
         {
@@ -40,7 +22,7 @@ namespace GiaSuService.Repository
                 .Include(p => p.Account)
                 .Include(p => p.Subjects)
                 .Include(p => p.Districts)
-                .Include(p => p.Grades) 
+                .Include(p => p.Grades)
             .Where(tp => (subjectId == 0 || tp.Subjects.Any(s => s.Id == subjectId))
                       && (districtId == 0 || tp.Districts.Any(d => d.Id == districtId))
                       && (gradeId == 0 || tp.Grades.Any(g => g.Id == gradeId))
@@ -67,21 +49,9 @@ namespace GiaSuService.Repository
             return tutorProfiles;
         }
 
-        //public async Task<IEnumerable<Tutor>> GetTutorprofilesByRegisterStatus(RegisterStatus status)
-        //{
-        //    // Get list Tutorprofile by tutorId
-        //    var tutorProfiles = await _context.Tutorprofiles
-        //        .Include(p => p.Account)
-        //        .Where(p => p.Formstatus == status)
-        //        .OrderBy(p => p.Account.Createdate)
-        //        .ToListAsync();
-
-        //    return tutorProfiles;
-        //}
-
         public async Task<bool> UpdateProfile(Tutor tutor)
         {
-            if(tutor != null)
+            if (tutor != null)
             {
                 _context.Tutors.Update(tutor);
                 return await SaveChanges();
@@ -103,28 +73,57 @@ namespace GiaSuService.Repository
             return false;
         }
 
-        public async Task<Tutor?> GetTutorprofile(int id)
-        {
-            Tutor? tutorProfile = await _context.Tutors
-                                .Include (p => p.Account)
-                               .FirstOrDefaultAsync(p=> p.Id == id);
-            return tutorProfile;
-        }
-
-        public async Task<Tutor?> GetTutorprofileByAccountId(int accountId)
-        {
-            Tutor? tutorProfile = await _context.Tutors
-                                .Include(p => p.Account)
-                               .FirstOrDefaultAsync(p => p.Accountid == accountId);
-            return tutorProfile;
-        }
-
         public async Task<List<Tutor>> GetSubTutorProfile(List<int> ids)
         {
             var tutors = await _context.Tutors
                 .Include(p => p.Account)
                 .Where(p => ids.Contains(p.Id)).ToListAsync();
             return tutors;
+        }
+
+        public async Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page)
+        {
+            var tutor_queues = _context.Tutors.AsNoTracking()
+                .Select(p => new TutorRegisterViewModel
+                {
+                    Id = p.Id,
+                    Area = p.Area,
+                    College = p.College,
+                    CreateDate = DateOnly.FromDateTime((DateTime)p.Account.Createdate!),
+                    CurrentStatus = p.Typetutor ? "Gia sư" : "Sinh viên",
+                    FullName = p.Fullname,
+                    IsValid = p.Isvalid,
+                    StatusQuery = "Đang chờ duyệt"
+                })
+                .OrderByDescending(p => p.CreateDate)
+                .Where(p => p.IsValid == false);
+
+
+            tutor_queues = tutor_queues.Skip(page * AppConfig.ROWS_ACCOUNT_LIST).Take(AppConfig.ROWS_ACCOUNT_LIST);
+            return await tutor_queues.ToListAsync(); ;
+        }
+
+        public async Task<Tutor?> GetTutor(int id)
+        {
+            return await _context.Tutors.FindAsync(id);
+        }
+
+        public async Task<bool> SaveChanges()
+        {
+            return (await _context.SaveChangesAsync()) > 0;
+        }
+
+        public async Task<bool> UpdateTutor(Tutor tutor)
+        {
+            try
+            {
+                _context.Tutors.Update(tutor);
+                return await SaveChanges();
+            }   
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

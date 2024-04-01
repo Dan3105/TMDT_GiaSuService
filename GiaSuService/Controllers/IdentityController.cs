@@ -20,7 +20,6 @@ namespace GiaSuService.Controllers
         private readonly IAuthService _authService;
         private readonly IAddressService _addressService;
         private readonly ICatalogService _catalogService;
-        private readonly ITutorService _tutorService;
 
         public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService)
         {
@@ -48,7 +47,7 @@ namespace GiaSuService.Controllers
             }
 
             var user = await _authService.ValidateAccount(model.LoginName!, model.Password!);
-            if (user != null && !user.Lockenable)
+            if (user != null && (bool)!user.Lockenable!)
             {
                 List<Claim> claims = new List<Claim>()
                 {
@@ -58,12 +57,6 @@ namespace GiaSuService.Controllers
                     new Claim(ClaimTypes.Role, user.Role.Name),
                     new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Avatar)
                 };
-
-                //if (user.Role.Name == AppConfig.EMPLOYEEROLENAME)
-                //{
-                //    int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count;
-                //    TempData["Count"] = count_querying_register.ToString();
-                //}
 
                 ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
@@ -285,21 +278,29 @@ namespace GiaSuService.Controllers
             var accountProfile = form.RegisterForm!;
             Account account = new Account()
             {
-                //Fullname = accountProfile.FullName,
-                //Birth = accountProfile.BirthDate,
-                //Email = accountProfile.Email,
-                //Phone = accountProfile.Phone,
-                //Passwordhash = Utility.HashPassword(accountProfile.Password),
-                //Identitycard = accountProfile.IdentityCard,
-                //Frontidentitycard = accountProfile.FrontIdentityCard,
-                //Backidentitycard = accountProfile.BackIdentityCard,
-                //Gender = accountProfile.Gender,
-                //Lockenable = false,
-                //Avatar = accountProfile.LogoAccount,
-                //Roleid = (int)roleId,
-                //Addressdetail = accountProfile.AddressName,
-                //Districtid = accountProfile.SelectedDistrictId,
-                //Createdate = DateOnly.FromDateTime(DateTime.Now)
+                Email = accountProfile.Email,
+                Phone = accountProfile.Phone,
+                Passwordhash = Utility.HashPassword(accountProfile.Password),
+                Avatar = accountProfile.LogoAccount,
+                Createdate = DateTime.Now,
+                Lockenable = false,
+                Roleid = (int)roleId,
+                
+                Customer = new Customer()
+                {
+                    Fullname = accountProfile.FullName,
+                    Birth = accountProfile.BirthDate,
+                    Gender = accountProfile.Gender,
+                    Addressdetail = accountProfile.AddressName,
+                    Districtid = accountProfile.SelectedDistrictId,
+
+                    Identity = new Identitycard()
+                    {
+                        Identitynumber= accountProfile.IdentityCard,
+                        Frontidentitycard = accountProfile.FrontIdentityCard,
+                        Backidentitycard = accountProfile.BackIdentityCard,
+                    }
+                }
             };
             ResponseService result = await _authService.CreateAccount(account);
             if (result.Success)

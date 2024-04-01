@@ -1,13 +1,13 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 
-namespace GiaSuService.Models.EmployeeViewModel
+namespace GiaSuService.Models.IdentityViewModel
 {
-    public class TutorProfileInEmployeeViewModel
+    public class TutorProfileViewModel
     {
         #region Account Profile
         public string Fullname { get; set; } = null!;
-        public DateOnly Birth { get; set; }
+        public DateOnly? Birth { get; set; }
         public string Email { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string Identitycard { get; set; } = null!;
@@ -28,8 +28,8 @@ namespace GiaSuService.Models.EmployeeViewModel
         public string? Additionalinfo { get; set; }
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }
-        public string? Currentstatus { get; set; }
-        //public AppConfig.RegisterStatus Formstatus { get; set; } = AppConfig.RegisterStatus.PENDING;
+        public string? TypeTutor { get; set; }
+        public string? Formstatus { get; set; }
         #endregion
 
     }

@@ -5,6 +5,7 @@ using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GiaSuService.Controllers
@@ -18,7 +19,10 @@ namespace GiaSuService.Controllers
         private readonly ITutorRequestFormService _tutorRequestService;
         private readonly IAuthService _authService;
 
-
+        public EmployeeController(ITutorService tutorService)
+        {
+            _tutorService = tutorService;
+        }
         //public EmployeeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
         //    ITutorRequestFormService tutorRequestService, IAuthService authService)
         //{
@@ -66,100 +70,41 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TutorRegisterQueue()
+        public IActionResult TutorRegisterQueue()
         {
-            List<Tutor> queries = null!;
-                //await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING);
-            List<TutorRegisterViewModel> registers = new List<TutorRegisterViewModel>();
-            foreach(var query in queries)
-            {
-                //registers.Add(new TutorRegisterViewModel()
-                //{
-                //    Area = query.Area,
-                //    College = query.College,
-                //    CurrentStatus = query.Currentstatus.ToString(),
-                //    FullName = query.Account.Fullname,
-                //    Id = query.Id,
-                //    StatusQuery = query.Formstatus.ToString(),
-                //    CreateDate = query.Account.Createdate
-                //});
-            }
+            return View();
+        }
 
-            return View(registers);
+        [HttpGet]
+        public async Task<IActionResult> GetTutorRegisterQueue(int page)
+        {
+            List<TutorRegisterViewModel> queries = await _tutorService.GetRegisterTutorOnPending(page);
+            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries, page, totalPages };
+            return Json(response);
         }
 
         [HttpGet]
         public async Task<IActionResult> TutorProfileQueue(int id)
         {
-            //Tutorprofile tutor = await _tutorService.GetTutorprofileById(id);
-            Tutor tutor = null!;
+            TutorProfileViewModel? tutor = await _tutorService.GetTutorprofileById(id);
             if (tutor == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "User cannot be found";
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
-            //District district = await _addressService.GetDistrictData(tutor.Account.Districtid);
-            //District district = await _addressService.GetDistrictData(0);
-            //TutorProfileInEmployeeViewModel view = null!;
-            //    new TutorProfileInEmployeeViewModel()
-            //{
-            //    Academicyearfrom = tutor.Academicyearfrom,
-            //    Academicyearto = tutor.Academicyearto,
-            //    Additionalinfo = tutor.Additionalinfo,
-            //    Address = $"{district.Province.Provincename}, {district.Districtname}, {tutor.Account.Addressdetail}",
-            //    Area = tutor.Area,
-            //    Avatar = tutor.Account.Avatar,
-            //    Backidentitycard = tutor.Account.Backidentitycard,
-            //    Birth = tutor.Account.Birth,
-            //    College = tutor.College,
-            //    Createdate = tutor.Account.Createdate,  
-            //    Currentstatus = tutor.Currentstatus.ToString(),
-            //    Email = tutor.Account.Email,
-            //    Formstatus = tutor.Formstatus,
-            //    Frontidentitycard = tutor.Account.Frontidentitycard,
-            //    Fullname = tutor.Account.Fullname,
-            //    Gender = tutor.Account.Gender,
-            //    Identitycard = tutor.Account.Identitycard,
-            //    Lockenable = tutor.Account.Lockenable,
-            //    Phone = tutor.Account.Phone,
-            //    TutorId = tutor.Id,
-            //};
-            return View();
+            return View(tutor);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ApplyTutor(int id)
+        public async Task<IActionResult> UpdateStatusTutor(int id, string statusType)
         {
-            Tutor tutorprofile = await _tutorService.GetTutorprofileById(id);
-            if (tutorprofile == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Sự cố phát sinh vui lòng làm lại";
+            var result = await _tutorService.UpdateTutorProfileStatus(id, statusType);
+            if(result.Success) {
+                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
-
-            tutorprofile.Account.Lockenable = false;
-            //tutorprofile.Formstatus = AppConfig.RegisterStatus.APPROVAL;
-
-            bool isSuccess = await _tutorService.UpdateTutorprofile(tutorprofile);   
-            if(!isSuccess) {
-                TempData[AppConfig.MESSAGE_FAIL] = "Chấp thuận gia sư không thành công vui lòng làm lại";
-                return RedirectToAction("TutorRegisterQueue", "Employee");
-            }
-            TempData[AppConfig.MESSAGE_SUCCESS] = "Chấp thuận gia sư thành công!";
-            return RedirectToAction("TutorRegisterQueue", "Employee");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> DenyTutor(int id)
-        {
-            //bool isSuccess = await _tutorService.UpdateTutorprofileStatus(id, AppConfig.RegisterStatus.DENY);
-            bool isSuccess = true;
-            if (!isSuccess)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Sự cố phát sinh vui lòng làm lại";
-                return RedirectToAction("TutorRegisterQueue", "Employee");
-            }
-            TempData[AppConfig.MESSAGE_SUCCESS] = "Từ chối đơn tạo gia sư thành công!";
+            TempData[AppConfig.MESSAGE_FAIL] = result.Message;
             return RedirectToAction("TutorRegisterQueue", "Employee");
         }
 

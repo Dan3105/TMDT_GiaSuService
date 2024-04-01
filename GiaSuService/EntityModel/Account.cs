@@ -13,7 +13,7 @@ public partial class Account
 
     public string Passwordhash { get; set; } = null!;
 
-    public bool Lockenable { get; set; }
+    public bool? Lockenable { get; set; }
 
     public string Avatar { get; set; } = null!;
 

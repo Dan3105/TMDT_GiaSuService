@@ -9,6 +9,7 @@ namespace GiaSuService.Repository.Interface
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int crrPage);
         public Task<ProfileViewModel?> GetEmployeeProfile(int empId);
+        public Task<TutorProfileViewModel?> GetTutorProfile(int tutorId);
         public Task<bool> UpdateEmployeProfile(ProfileViewModel employeeProfile);
 
     }

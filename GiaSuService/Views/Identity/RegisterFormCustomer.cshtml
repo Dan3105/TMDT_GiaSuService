@@ -68,7 +68,6 @@
         <select class="form-select" id="province" onchange="getDistricts()">
             @if (Model.ProvinceList != null)
             {
-                <option id="provincedefault">Chọn tỉnh</option>
                 @foreach (var province in Model.ProvinceList)
                 {
                     <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -80,7 +79,6 @@
     <div class="form-group">
         <label for="district">Quận/ Huyện:</label>
         <select class="form-select" id="districtSelectionContainer" asp-for="RegisterForm!.SelectedDistrictId">
-            <option>--Chọn quận--</option>
         </select>
     </div>
 

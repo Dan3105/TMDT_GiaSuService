@@ -35,7 +35,8 @@ namespace GiaSuService.Controllers
         [Authorize(Policy = AppConfig.TUTORPOLICY)]
         public async Task<IActionResult> TutorProfile(int id)
         {
-            Tutor tutor = await _tutorService.GetTutorprofileByAccountId(id);
+            //Tutor tutor = await _tutorService.GetTutorprofileByAccountId(id);
+            Tutor tutor = null!;
             if (tutor == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "User cannot be found";

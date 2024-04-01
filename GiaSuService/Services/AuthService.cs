@@ -64,8 +64,8 @@ namespace GiaSuService.Services
                     {
                         return new ResponseService { Success = false, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
                     }
-                    var statusId = await _statusRepo.GetStatusId(AppConfig.RegisterStatus.PENDING.ToString().ToLower(), AppConfig.register_status);
-                    if (statusId == null)
+                    var status = await _statusRepo.GetStatus(AppConfig.RegisterStatus.PENDING.ToString().ToLower(), AppConfig.register_status);
+                    if (status == null)
                     {
                         return new ResponseService { Success = false, Message = "Hệ thống không tạo được trạng thái vui lòng làm lại" };
                     }
@@ -74,7 +74,7 @@ namespace GiaSuService.Services
                     {
                         Context = "Tạo tài khoản",
                         Reviewdate = DateOnly.FromDateTime(DateTime.Now),
-                        Statusid = (int)statusId,
+                        Statusid = status.Id,
                     });
 
                     foreach (var id in sessionIds)

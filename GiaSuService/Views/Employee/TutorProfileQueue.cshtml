@@ -1,4 +1,6 @@
-﻿@model GiaSuService.Models.EmployeeViewModel.TutorProfileInEmployeeViewModel
+﻿@using GiaSuService.Models.IdentityViewModel;
+@using GiaSuService.Configs;
+@model TutorProfileViewModel
 
 @{
     ViewData["Title"] = "Profile Details";
@@ -12,7 +14,7 @@
                 <dt class="col-sm-4">Full Name:</dt>
                 <dd class="col-sm-8">@Model.Fullname</dd>
                 <dt class="col-sm-4">Date of Birth:</dt>
-                <dd class="col-sm-8">@Model.Birth.ToString("dd-MM-yyyy")</dd>
+                <dd class="col-sm-8">@Model.Birth?.ToString("dd-MM-yyyy")</dd>
                 <dt class="col-sm-4">Email:</dt>
                 <dd class="col-sm-8">@Model.Email</dd>
                 <dt class="col-sm-4">Phone:</dt>
@@ -76,30 +78,30 @@
             <h2>Tutor Profile</h2>
             <hr />
             <dl class="row">
-                <dt class="col-sm-4">College:</dt>
-                <dd class="col-sm-8">@Model.College</dd>
-                <dt class="col-sm-4">Area:</dt>
-                <dd class="col-sm-8">@Model.Area</dd>
-                <dt class="col-sm-4">Additional Info:</dt>
-                <dd class="col-sm-8">@Model.Additionalinfo</dd>
-                <dt class="col-sm-4">Academic Year (From):</dt>
-                <dd class="col-sm-8">@Model.Academicyearfrom</dd>
-                <dt class="col-sm-4">Academic Year (To):</dt>
-                <dd class="col-sm-8">@Model.Academicyearto</dd>
-                <dt class="col-sm-4">Current Status:</dt>
-                <dd class="col-sm-8">@Model.Currentstatus</dd>
-                <dt class="col-sm-4">Form Status:</dt>
-                @* <dd class="col-sm-8">
-                    <b>@Model.Formstatus.ToString()</b>
-                </dd> *@
+                <dt class="col-sm-5">College:</dt>
+                <dd class="col-sm-7">@Model.College</dd>
+                <dt class="col-sm-5">Area:</dt>
+                <dd class="col-sm-7">@Model.Area</dd>
+                <dt class="col-sm-5">Additional Info:</dt>
+                <dd class="col-sm-7">@Model.Additionalinfo</dd>
+                <dt class="col-sm-5">Academic Year (From):</dt>
+                <dd class="col-sm-7">@Model.Academicyearfrom</dd>
+                <dt class="col-sm-5">Academic Year (To):</dt>
+                <dd class="col-sm-7">@Model.Academicyearto</dd>
+                <dt class="col-sm-5">Type Tutor:</dt>
+                <dd class="col-sm-7">@Model.TypeTutor</dd>
+                <dt class="col-sm-5">Form Status:</dt>
+                <dd class="col-sm-7">
+                    <b>@Model.Formstatus?.ToString()</b>
+                </dd>
             </dl>
         </div>
     </div>
 
     <div class="row mt-4 justify-content-end">
         <div class="col-auto">
-            <a href="@Url.Action("ApplyTutor", "Employee", new {id = @Model.TutorId})" class="btn btn-primary">Apply</a>
-            <a href="@Url.Action("DenyTutor", "Employee", new {id = @Model.TutorId})" class="btn btn-danger">Deny</a>
+            <a href="@Url.Action("UpdateStatusTutor", "Employee", new {id = @Model.TutorId, statusType=AppConfig.RegisterStatus.APPROVAL.ToString()})" class="btn btn-primary">Apply</a>
+            <a href="@Url.Action("UpdateStatusTutor", "Employee", new {id = @Model.TutorId, statusType=AppConfig.RegisterStatus.DENY.ToString()})" class="btn btn-danger">Deny</a>
         </div>
     </div>
 </div>

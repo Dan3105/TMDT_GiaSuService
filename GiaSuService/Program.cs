@@ -65,8 +65,8 @@ builder.Services.AddTransient<IAddressRepo, AddressRepo>();
 builder.Services.AddTransient<IProfileRepo, ProfileRepo>();
 builder.Services.AddTransient<ICategoryRepo, CategoryRepo>();
 builder.Services.AddTransient<IStatusRepo, StatusRepo>();
+builder.Services.AddTransient<ITutorRepo, TutorRepo>();
 //builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
-//builder.Services.AddTransient<ITutorRepository, TutorRepository>();
 //builder.Services.AddTransient<ITutorRequestFormRepository, TutorRequestFormRepository>();
 
 
@@ -75,7 +75,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
-//builder.Services.AddScoped<ITutorService, TutorService>();
+builder.Services.AddScoped<ITutorService, TutorService>();
 //builder.Services.AddScoped<ITutorRequestFormService,  TutorRequestFormService>();
 builder.Services.AddScoped<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();

@@ -1,5 +1,7 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
+using GiaSuService.Models.IdentityViewModel;
 
 namespace GiaSuService.Services.Interface
 {
@@ -9,11 +11,10 @@ namespace GiaSuService.Services.Interface
         public Task<List<Tutor>> GetTutorprofilesByFilter(
             int subjectId, int districtId, int gradeId);
         public Task<List<Tutor>> GetTutorprofilesByClassId(int classId);
-        //public Task<List<Tutor>> GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus status);
-        public Task<bool> UpdateTutorprofile(Tutor tutor);
-        public Task<bool> UpdateTutorprofileStatus(int tutorId);
-        public Task<Tutor> GetTutorprofileById(int id);
-        public Task<Tutor> GetTutorprofileByAccountId(int accountId);
+        public Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page);
+        public Task<TutorProfileViewModel?> GetTutorprofileById(int id);
         public Task<List<Tutor>> GetSubTutors(List<int> ids);
+
+        public Task<ResponseService> UpdateTutorProfileStatus(int tutorId, string status);
     }
 }

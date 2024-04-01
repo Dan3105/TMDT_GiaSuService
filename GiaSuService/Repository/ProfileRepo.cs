@@ -32,7 +32,7 @@ namespace GiaSuService.Repository
                     FullName = p.Fullname,
                     Id = p.Id,
                     ImageUrl = p.Account.Avatar,
-                    LockStatus = p.Account.Lockenable
+                    LockStatus = p.Account.Lockenable ?? false,
                 })
                 .OrderBy(p => p.Id)
                 ;
@@ -56,7 +56,7 @@ namespace GiaSuService.Repository
                     Email = p.Account.Email,
                     BirthDate = p.Birth,
                     FullName = p.Fullname,
-                    LockStatus = p.Account.Lockenable,
+                    LockStatus = p.Account.Lockenable ?? false,
                     Phone = p.Account.Phone,
                     Gender = p.Gender == "M" ? "Nam" : "Nữ",
                     IdentityCard = p.Identity.Identitynumber,
@@ -106,6 +106,40 @@ namespace GiaSuService.Repository
                 }
             }
             return false;
+        }
+
+        public async Task<TutorProfileViewModel?> GetTutorProfile(int tutorId)
+        {
+
+            var result = await _context.Tutors
+                .Select(tutor => new TutorProfileViewModel
+                {
+                    TutorId = tutor.Id,
+                    Email = tutor.Account.Email,
+                    Phone = tutor.Account.Phone,
+                    Lockenable = tutor.Account.Lockenable ?? false,
+                    Createdate = DateOnly.FromDateTime((DateTime)tutor.Account.Createdate!),  
+                    Avatar = tutor.Account.Avatar,
+
+                    Fullname = tutor.Fullname,
+                    Gender = tutor.Gender == "M" ? "Nam" : "Nữ",
+                    Address = $"{tutor.District.Province.Name}, {tutor.District.Name}, {tutor.Addressdetail}",
+                    
+                    Area = tutor.Area,
+                    College = tutor.College,
+                    Academicyearfrom = tutor.Academicyearfrom,
+                    Academicyearto = tutor.Academicyearto,
+                    Additionalinfo = tutor.Additionalinfo,
+                    Birth = tutor.Birth,
+                    
+                    TypeTutor = tutor.Typetutor ? "Giáo viên" : "Phụ huynh",
+
+                    Identitycard = tutor.Identity.Identitynumber,
+                    Frontidentitycard = tutor.Identity.Frontidentitycard,
+                    Backidentitycard = tutor.Identity.Backidentitycard,
+                })
+                .FirstOrDefaultAsync(p => p.TutorId == tutorId);
+            return result;
         }
     }
 }
