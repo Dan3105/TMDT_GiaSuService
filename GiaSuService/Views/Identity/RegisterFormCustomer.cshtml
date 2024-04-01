@@ -18,8 +18,8 @@
     <div class="form-group">
         <label for="gender">Giới tính:</label>
         <select class="form-control customform-control" id="gender" asp-for="RegisterForm!.Gender">
-            <option value="Nam">Nam</option>
-            <option value="Nữ">Nữ</option>
+            <option value="M">Nam</option>
+            <option value="F">Nữ</option>
         </select>
         @Html.ValidationMessageFor(model => model.RegisterForm!.Gender, "", new { @class = "text-danger" })
     </div>

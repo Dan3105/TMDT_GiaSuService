@@ -33,6 +33,10 @@ public partial class Tutor
 
     public int Identityid { get; set; }
 
+    public bool Isactive { get; set; }
+    
+    public bool Isvalid { get; set; }
+
     public virtual Account Account { get; set; } = null!;
 
     public virtual District District { get; set; } = null!;

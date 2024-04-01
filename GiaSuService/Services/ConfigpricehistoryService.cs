@@ -9,7 +9,7 @@ namespace GiaSuService.Services
 {
     public class ConfigpriceService : IConfigpriceService
     {
-        private readonly IConfigpriceRepository _configRepository;
+        private readonly IConfigpriceRepo _configRepository;
         //public ConfigpriceService(IConfigpriceRepository configRepository)
         //{
         //    _configRepository = configRepository;

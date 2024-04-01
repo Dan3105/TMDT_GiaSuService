@@ -7,7 +7,7 @@ namespace GiaSuService.Models.UtilityViewModel
         public string SessionName { get; set; } = string.Empty;
         [Required]
         public int SessionId { get; set; }
-        public bool IsChecked { get; set; }
+        public bool IsChecked { get; set; } = false;
     }
 
     public class GradeViewModel
@@ -15,7 +15,7 @@ namespace GiaSuService.Models.UtilityViewModel
         public string GradeName { get; set; } = string.Empty;
         [Required]
         public int GradeId { get; set; }
-        public bool IsChecked { get; set; }
+        public bool IsChecked { get; set; } = false;
 
     }
 
@@ -24,7 +24,7 @@ namespace GiaSuService.Models.UtilityViewModel
         public string SubjectName { get; set; } = string.Empty;
         [Required]
         public int SubjectId { get; set; }
-        public bool IsChecked { get; set; }
+        public bool IsChecked { get; set; } = false;
 
     }
 
@@ -36,7 +36,7 @@ namespace GiaSuService.Models.UtilityViewModel
         public string DistrictName { get; set; } = "";
 
         [Required]
-        public bool IsChecked { get; set; }
+        public bool IsChecked { get; set; } 
     }
 
     public class ProvinceViewModel

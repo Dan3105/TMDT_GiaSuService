@@ -1,7 +1,7 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
-using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.EmployeeViewModel;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +45,8 @@ namespace GiaSuService.Controllers
             }
 
             //District district = await _addressService.GetDistrictData(account.Districtid);
-            District district = await _addressService.GetDistrictData(1);
-            EmployeeProfileViewModel profile = null!;
+            //DistrictViewModel district = await _addressService.GetDistrictData(1);
+            //ProfileViewModel profile = null!;
             //    new EmployeeProfileViewModel()
             //{
             //    LogoAccount = account.Avatar,
@@ -62,7 +62,7 @@ namespace GiaSuService.Controllers
             //    BirthDate = account.Birth,
             //    EmployeeId = account.Id
             //};
-            return View(profile);
+            return View();
         }
 
         [HttpGet]
@@ -99,8 +99,8 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
             //District district = await _addressService.GetDistrictData(tutor.Account.Districtid);
-            District district = await _addressService.GetDistrictData(0);
-            TutorProfileInEmployeeViewModel view = null!;
+            //District district = await _addressService.GetDistrictData(0);
+            //TutorProfileInEmployeeViewModel view = null!;
             //    new TutorProfileInEmployeeViewModel()
             //{
             //    Academicyearfrom = tutor.Academicyearfrom,
@@ -124,7 +124,7 @@ namespace GiaSuService.Controllers
             //    Phone = tutor.Account.Phone,
             //    TutorId = tutor.Id,
             //};
-            return View(view);
+            return View();
         }
 
         [HttpGet]
@@ -292,7 +292,7 @@ namespace GiaSuService.Controllers
             //    return RedirectToAction("Index", "Home");
             //}
 
-            List<EmployeeListViewModel> results = new List<EmployeeListViewModel>();
+            List<AccountListViewModel> results = new List<AccountListViewModel>();
             //foreach (var tutor in tutors)
             //{
             //    results.Add(new EmployeeListViewModel()
@@ -320,8 +320,8 @@ namespace GiaSuService.Controllers
             }
 
             //District district = await _addressService.GetDistrictData(account.Districtid);
-            District district = await _addressService.GetDistrictData(1);
-            EmployeeProfileViewModel employeeProfileViewModel = null!;
+            //District district = await _addressService.GetDistrictData(1);
+            //ProfileViewModel employeeProfileViewModel = null!;
             //new EmployeeProfileViewModel();
             //{
             //    LogoAccount = account.Avatar,
@@ -337,30 +337,28 @@ namespace GiaSuService.Controllers
             //    BirthDate = account.Birth,
             //    EmployeeId = account.Id
             //};
-            return View(employeeProfileViewModel);
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> TutorProfile(EmployeeProfileViewModel employeeProfileViewModel)
+        public async Task<IActionResult> TutorProfile(ProfileViewModel employeeProfileViewModel)
         {
-            Account account = await _authService.GetAccountById(employeeProfileViewModel.EmployeeId);
+            Account? account = await _authService.GetAccountById(employeeProfileViewModel.EmployeeId);
             if (account == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
                 return RedirectToAction("TutorList", "Employee");
             }
-            //account.Identitycard = employeeProfileViewModel.IdentityCard;
-            //account.Lockenable = employeeProfileViewModel.LockStatus;
 
-            bool result = await _authService.UpdateAccount(account);
-            if (result)
+            ResponseService result = await _authService.UpdateAccount(account);
+            if (result.Success)
             {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Thay đổi thông tin thành công";
+                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
                 return RedirectToAction("TutorList", "Employee");
             }
             else
             {
-                TempData[AppConfig.MESSAGE_FAIL] = "Thay đổi không thông tin thành công";
+                TempData[AppConfig.MESSAGE_FAIL] = result.Message;
                 return RedirectToAction("TutorList", "Employee");
             }
         }

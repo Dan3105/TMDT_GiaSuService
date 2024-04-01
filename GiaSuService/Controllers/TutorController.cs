@@ -42,8 +42,8 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("Index", "Employee");
             }
             //District district = await _addressService.GetDistrictData(tutor.Account.Districtid);
-            District district = await _addressService.GetDistrictData(1);
-            TutorProfileInEmployeeViewModel view = new TutorProfileInEmployeeViewModel();
+            //District district = await _addressService.GetDistrictData(1);
+            //TutorProfileInEmployeeViewModel view = new TutorProfileInEmployeeViewModel();
             //{
             //    Academicyearfrom = tutor.Academicyearfrom,
             //    Academicyearto = tutor.Academicyearto,
@@ -66,7 +66,7 @@ namespace GiaSuService.Controllers
             //    Phone = tutor.Account.Phone,
             //    TutorId = tutor.Id,
             //};
-            return View(view);
+            return View();
         }
     }
 }

@@ -5,36 +5,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GiaSuService.Repository
 {
-    public class TransactionhistoryRepository : ITransactionhistoryRepository
+    public class ConfigpriceRepository : IConfigpriceRepo
     {
         private readonly DvgsDbContext _context;
 
-        public TransactionhistoryRepository(DvgsDbContext context)
+        public ConfigpriceRepository(DvgsDbContext context)
         {
             _context = context;
         }
 
-        public void Create(Transactionhistory entity)
+        public void Create(Configprice entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Transactionhistory entity)
+        public void Delete(Configprice entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Transactionhistory>> GetAll()
+        public Task<IEnumerable<Configprice>> GetAfterDate(DateTime dateTime)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Transactionhistory>> GetByAccountPayId(int accountPayId)
+        public Task<IEnumerable<Configprice>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Transactionhistory?> GetById(int id)
+        public Task<Configprice?> GetById(int id)
         {
             throw new NotImplementedException();
         }
@@ -44,7 +44,7 @@ namespace GiaSuService.Repository
             throw new NotImplementedException();
         }
 
-        public void Update(Transactionhistory entity)
+        public void Update(Configprice entity)
         {
             throw new NotImplementedException();
         }

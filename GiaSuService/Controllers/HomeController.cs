@@ -64,19 +64,19 @@ namespace GiaSuService.Controllers
             //        SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Subjectname))
             //    });
             //}
-            List<Province> provinceList = await _addressService.GetProvinces();
-            List<Subject> subjectList = await _catalogService.GetAllSubjects();
-            List<Grade> gradeList = await _catalogService.GetAllGrades();
+            //List<Province> provinceList = await _addressService.GetProvinces();
+            //List<Subject> subjectList = await _catalogService.GetAllSubjects();
+            //List<Grade> gradeList = await _catalogService.GetAllGrades();
 
-            List<ProvinceViewModel> provinceViews = Utility.ConvertToProvinceViewList(provinceList);
-            List<SubjectViewModel> subjectViews = Utility.ConvertToSubjectViewList(subjectList);
-            List<GradeViewModel> gradeViews = Utility.ConvertToGradeViewList(gradeList);
+            //List<ProvinceViewModel> provinceViews = Utility.ConvertToProvinceViewList(provinceList);
+            //List<SubjectViewModel> subjectViews = Utility.ConvertToSubjectViewList(subjectList);
+            //List<GradeViewModel> gradeViews = Utility.ConvertToGradeViewList(gradeList);
 
             TutorCardListViewModel result = new TutorCardListViewModel() { 
                 TutorList = tutorCards,
-                GradeList = gradeViews,
-                ProvinceList = provinceViews,
-                SubjectList = subjectViews,
+                //GradeList = gradeViews,
+                //ProvinceList = provinceViews,
+                //SubjectList = subjectViews,
             };
 
             return View(result);

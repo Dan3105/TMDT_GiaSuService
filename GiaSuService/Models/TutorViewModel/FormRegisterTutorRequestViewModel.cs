@@ -35,8 +35,7 @@ namespace GiaSuService.Models.TutorViewModel
         [Required(ErrorMessage = "Please")]
         public string Area { get; set; } = string.Empty;
 
-        //[EnumDataType(typeof(AppConfig.TypeTutor))]
-        //public AppConfig.TypeTutor TypeTutor { get; set; }
+        public bool TypeTutor { get; set; }
 
         public string? AdditionalInfo { get; set; } = string.Empty;
 

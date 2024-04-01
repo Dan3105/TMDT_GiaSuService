@@ -1,5 +1,6 @@
 ﻿using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 
@@ -7,28 +8,28 @@ namespace GiaSuService.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly IAddressRepository _addressRepository;
-        //public AddressService(IAddressRepository addressRepository)
-        //{
-        //    _addressRepository = addressRepository;
-        //}
-
-        public async Task<District> GetDistrictData(int districtId)
+        private readonly IAddressRepo _addressRepository;
+        public AddressService(IAddressRepo addressRepository)
         {
-            District district = await _addressRepository.GetDistrict(districtId);
+            _addressRepository = addressRepository;
+        }
+
+        public async Task<DistrictViewModel?> GetDistrictData(int districtId)
+        {
+            DistrictViewModel? district = await _addressRepository.GetDistrict(districtId);
             return district;
         }
 
-        public async Task<List<District>> GetDistricts(int idProvince)
+        public async Task<List<DistrictViewModel>> GetDistricts(int idProvince)
         {
-            List<District> districts = (await _addressRepository.GetAllDistricts(idProvince)).ToList();
+            List<DistrictViewModel> districts = (await _addressRepository.GetAllDistricts(idProvince)).ToList();
             return districts;
         }
 
-        public async Task<List<Province>> GetProvinces()
+        public async Task<List<ProvinceViewModel>> GetProvinces()
         {
-            List<Province> provinces = (await _addressRepository.GetAllProvinces()).ToList();
-            return provinces;
+            var provinces = await _addressRepository.GetAllProvinces();
+            return provinces.ToList();
         }
 
 

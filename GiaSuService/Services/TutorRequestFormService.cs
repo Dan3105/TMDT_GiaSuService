@@ -10,7 +10,7 @@ namespace GiaSuService.Services
 {
     public class TutorRequestFormService : ITutorRequestFormService
     {
-        private readonly ITutorRequestFormRepository _repo;
+        private readonly ITutorRequestRepo _repo;
         //public TutorRequestFormService(ITutorRequestFormRepository repo)
         //{
         //    _repo = repo;

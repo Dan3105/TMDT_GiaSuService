@@ -3,7 +3,7 @@ using GiaSuService.EntityModel;
 
 namespace GiaSuService.Repository.Interface
 {
-    public interface ITutorRequestFormRepository : IRepository<Tutorrequestform>
+    public interface ITutorRequestRepo : IRepository<Tutorrequestform>
     {
         public Task<Tutorrequestform?> Get(int id);
         public Task<List<Tutorrequestform>> GetAll();

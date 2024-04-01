@@ -4,22 +4,33 @@ namespace GiaSuService.Configs
 {
     public class AppConfig
     {
-        //public enum TutorRequestStatus
-        //{
-        //    PENDING,
-        //    APPROVAL,
-        //    DENY,
-        //    HANDED,
-        //    EXPIRED,
-        //    CANCEL,
-        //}
+        public const string register_status = "Register";
+        public enum RegisterStatus
+        {
+            PENDING,
+            APPROVAL,
+            DENY,
+            UPDATE,
+        }
 
-        //public enum RegisterStatus
-        //{
-        //    PENDING,
-        //    APPROVAL,
-        //    DENY,
-        //}
+        public const string form_status = "Form";
+        public enum FormStatus
+        {
+            PENDING,
+            APPROVAL,
+            DENY,
+            HANDOVER,
+            CANCEL,
+        }
+
+        public const string queue_status = "Queue";
+        public enum QueueStatus
+        {
+            PENDING,
+            APPROVAL,
+            DENY,
+            HANDOVER
+        }
 
         //public enum PaymentMethod
         //{
@@ -27,14 +38,6 @@ namespace GiaSuService.Configs
         //    ONLINE
         //}
 
-        //public enum QueueStatus
-        //{
-        //    PENDING,
-        //    APPROVAL,
-        //    DENY,
-        //    REVEWING,
-        //    HANDED
-        //}
 
         //public enum TransactionhistoryType
         //{
@@ -70,5 +73,7 @@ namespace GiaSuService.Configs
         public const string MESSAGE_FAIL = "message_failed";
 
         public const string TUTOR_SELECTED_COOKIE = "tutors_cookie";
+
+        public const int ROWS_ACCOUNT_LIST = 10;
     }
 }

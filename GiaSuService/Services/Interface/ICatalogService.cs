@@ -1,28 +1,20 @@
 ﻿using GiaSuService.EntityModel;
+using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Services.Interface
 {
     public interface ICatalogService
     {
         // CRUD operations for Sessions
-        Task<List<Sessiondate>> GetAllSessions();
-        Task<Sessiondate> GetSessionById(int sessionId);
-        Task<bool> CreateSession(Sessiondate session);
-        Task<bool> UpdateSession(Sessiondate session);
-        Task<bool> DeleteSession(Sessiondate session);
+        Task<List<SessionViewModel>> GetAllSessions();
+        Task<SessionViewModel> GetSessionById(int sessionId);
 
         // CRUD operations for Grades
-        Task<List<Grade>> GetAllGrades();
-        Task<Grade> GetGradeById(int gradeId);
-        Task<bool> CreateGrade(Grade grade);
-        Task<bool> UpdateGrade(Grade grade);
-        Task<bool> DeleteGrade(Grade grade);
+        Task<List<GradeViewModel>> GetAllGrades();
+        Task<GradeViewModel> GetGradeById(int gradeId);
 
         // CRUD operations for Subjects
-        Task<List<Subject>> GetAllSubjects();
-        Task<Subject> GetSubjectById(int subjectId);
-        Task<bool> CreateSubject(Subject subject);
-        Task<bool> UpdateSubject(Subject subject);
-        Task<bool> DeleteSubject(Subject subject);
+        Task<List<SubjectViewModel>> GetAllSubjects();
+        Task<SubjectViewModel> GetSubjectById(int subjectId);
     }
 }

@@ -1,19 +1,16 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
-using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Models.UtilityViewModel;
+using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Reflection;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace GiaSuService.Controllers
 {
@@ -25,13 +22,12 @@ namespace GiaSuService.Controllers
         private readonly ICatalogService _catalogService;
         private readonly ITutorService _tutorService;
 
-        //public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, ITutorService tutorService)
-        //{
-        //    _authService = authService;
-        //    _addressService = addressService;
-        //    _catalogService = catalogService;
-        //    _tutorService = tutorService;
-        //}
+        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService)
+        {
+            _authService = authService;
+            _addressService = addressService;
+            _catalogService = catalogService;
+        }
 
         public IActionResult Index()
         {
@@ -51,43 +47,42 @@ namespace GiaSuService.Controllers
                 return View("Index", model);
             }
 
-            var user = await _authService.ValidateAccount(model.Email!, model.Password!);
-            //if (user != null && !user.Lockenable)
-            //{
-            //    List<Claim> claims = new List<Claim>()
-            //    {
-            //        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            //        new Claim(ClaimTypes.Name, user.Fullname),
-            //        new Claim(ClaimTypes.Email, user.Email),
-            //        new Claim(ClaimTypes.MobilePhone, user.Phone),
-            //        new Claim(ClaimTypes.Role, user.Role.Rolename),
-            //        new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Avatar)
-            //    };
+            var user = await _authService.ValidateAccount(model.LoginName!, model.Password!);
+            if (user != null && !user.Lockenable)
+            {
+                List<Claim> claims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.MobilePhone, user.Phone),
+                    new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim(AppConfig.CLAIM_TYPE_AVATAR, user.Avatar)
+                };
 
-            //    if(user.Role.Rolename == AppConfig.EMPLOYEEROLENAME)
-            //    {
-            //        int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count;
-            //        TempData["Count"] = count_querying_register.ToString();
-            //    }
+                //if (user.Role.Name == AppConfig.EMPLOYEEROLENAME)
+                //{
+                //    int count_querying_register = (await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.PENDING)).Count;
+                //    TempData["Count"] = count_querying_register.ToString();
+                //}
 
-            //    ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
-            //    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                ClaimsIdentity identity = new ClaimsIdentity(claims, AppConfig.CLAIM_USER);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
-            //    await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
-            //    //HttpContext.User = principal;
+                await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, principal);
 
-            //    TempData[AppConfig.MESSAGE_SUCCESS] = $"Hello {user.Fullname}";
-            //    if (returnUrl.Length > 0)
-            //    {
-            //        return Redirect(returnUrl);
-            //    }
-            //    return RedirectToAction("", "Home");
-            //}
+                TempData[AppConfig.MESSAGE_SUCCESS] = $"Hello {user.Email}";
+                if (returnUrl.Length > 0)
+                {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("", "Home");
+            }
             TempData[AppConfig.MESSAGE_FAIL] = "Incorrect Login";
             return View("Index", model);
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Profile()
         {
             // Retrieve user id
@@ -127,9 +122,7 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> Districts(int provinceId)
         {
             var districts = await _addressService.GetDistricts(provinceId);
-            List<DistrictViewModel> list = Utility.ConvertToDistrictViewList(districts);
-
-            return Json(list);
+            return Json(districts);
         }
 
         [HttpGet]
@@ -141,21 +134,16 @@ namespace GiaSuService.Controllers
             var listProvinces = await _addressService.GetProvinces();
             if (listProvinces == null || listSession == null || listSubject == null || listGrade == null)
             {
-                TempData[AppConfig.MESSAGE_FAIL] = "FCK how tf they get wrong???";
+                TempData[AppConfig.MESSAGE_FAIL] = "Hệ thống cập nhật thiếu dữ liệu vui lòng làm lại";
                 return RedirectToAction("Index");
             }
 
-            var listSessionView = Utility.ConvertToSessionViewList(listSession);
-            var listProvinceView = Utility.ConvertToProvinceViewList(listProvinces);
-            var listGradeView = Utility.ConvertToGradeViewList(listGrade);
-            var listSubjectView = Utility.ConvertToSubjectViewList(listSubject);
-
             FormRegisterTutorRequestViewModel form = new FormRegisterTutorRequestViewModel()
             {
-                ListProvince = listProvinceView,
-                ListSessionDate = listSessionView,
-                ListGrade = listGradeView,
-                ListSubject = listSubjectView,
+                ListProvince = listProvinces,
+                ListSessionDate = listSession,
+                ListGrade = listGrade,
+                ListSubject = listSubject,
             };
             if (acvm != null)
             {
@@ -203,47 +191,58 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("", "Home");
             }
 
-            Tutor tutorprofile = new Tutor()
-            {
-                Academicyearfrom = model.RegisterTutorProfile.AcademicYearFrom,
-                Academicyearto = model.RegisterTutorProfile.AcademicYearto,
-                Additionalinfo = model.RegisterTutorProfile.AdditionalInfo,
-                College = model.RegisterTutorProfile.College,
-                Area = model.RegisterTutorProfile.Area,
-                //Currentstatus = model.RegisterTutorProfile.TypeTutor,
-            };
-
-            Account form = new Account();
-            //{
-            //    Birth = model.AccountProfile.BirthDate,
-            //    Email = model.AccountProfile.Email,
-            //    Fullname = model.AccountProfile.FullName,
-            //    Gender = model.AccountProfile.Gender,
-            //    Identitycard = model.AccountProfile.IdentityCard,
-            //    Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
-            //    Frontidentitycard = model.AccountProfile.FrontIdentityCard,
-            //    Backidentitycard = model.AccountProfile.BackIdentityCard,
-            //    Phone = model.AccountProfile.Phone,
-            //    Districtid = model.AccountProfile.SelectedDistrictId,
-            //    Addressdetail = model.AccountProfile.AddressName,
-            //    Avatar = model.AccountProfile.LogoAccount,
-            //    Lockenable = true,
-            //    Roleid = (int)roleId,
-            //    Tutorprofile = tutorprofile
-            //};
             var listGrade = model.GetGradeSelected.Select(p => p.GradeId);
             var listSession = model.GetSessionSelected.Select(p => p.SessionId);
             var listSubject = model.GetSubjectSelected.Select(p => p.SubjectId);
-            tutorprofile.Account = form;
-            bool isSuccess = await _authService.CreateTutorRegisterRequest(form, tutorprofile, model.ListDistrict, listGrade, listSubject, listSession);
-            if (isSuccess)
+            
+            Account account = new Account()
             {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Form has been applied";
+                Email = model.AccountProfile.Email,
+                Phone = model.AccountProfile.Phone,
+                Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
+                Roleid = (int)roleId,
+                Lockenable = false,
+                Avatar = model.AccountProfile.LogoAccount,
+                Createdate = DateTime.Now,
+                Tutor = new Tutor()
+                {
+                    Birth = model.AccountProfile.BirthDate,
+                    Fullname = model.AccountProfile.FullName,
+                    Addressdetail = model.AccountProfile.AddressName,
+                    Districtid = model.AccountProfile.SelectedDistrictId,
+                    Gender = model.AccountProfile.Gender,
+                     
+                    //Hoc van
+                    Academicyearfrom = model.RegisterTutorProfile.AcademicYearFrom,
+                    Academicyearto = model.RegisterTutorProfile.AcademicYearto,
+                    Additionalinfo = model.RegisterTutorProfile.AdditionalInfo,
+                    College = model.RegisterTutorProfile.College,
+                    Area = model.RegisterTutorProfile.Area,
+                    Typetutor = model.RegisterTutorProfile.TypeTutor,
+                
+                    Isactive = true,
+                    Isvalid = false,
+
+                    Identity = new Identitycard()
+                    {
+                        Identitynumber = model.AccountProfile.IdentityCard,
+                        Frontidentitycard = model.AccountProfile.FrontIdentityCard,
+                        Backidentitycard = model.AccountProfile.BackIdentityCard,
+                    }, 
+                }
+                
+            };
+
+            var result = await _authService.CreateTutorRegisterRequest(account, listSession, listSubject, listGrade, 
+                model.ListDistrict);
+            if (result.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                TempData[AppConfig.MESSAGE_FAIL] = "Error in request";
+                TempData[AppConfig.MESSAGE_FAIL] = result.Message;
                 return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
             }
         }
@@ -252,11 +251,10 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> RegisterFormCustomer(RegisterAccountProfileViewModel view) 
         {
             var provinces = await _addressService.GetProvinces();
-            List<ProvinceViewModel> result = Utility.ConvertToProvinceViewList(provinces);
-
+           
             RegisterFormViewModel registerFormViewModel = new RegisterFormViewModel()
             {
-                ProvinceList = result,
+                ProvinceList = provinces,
                 RegisterForm = new RegisterAccountProfileViewModel() { }
             };
 
@@ -303,14 +301,14 @@ namespace GiaSuService.Controllers
                 //Districtid = accountProfile.SelectedDistrictId,
                 //Createdate = DateOnly.FromDateTime(DateTime.Now)
             };
-            bool isSuccess = await _authService.CreateAccount(account);
-            if (isSuccess)
+            ResponseService result = await _authService.CreateAccount(account);
+            if (result.Success)
             {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Tạo tài khoản thành công";
+                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
             }
             else
             {
-                TempData[AppConfig.MESSAGE_FAIL] = "Tạo tài khoản thất bại";
+                TempData[AppConfig.MESSAGE_FAIL] = result.Message;
                 return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
             }
             return RedirectToAction("", "Identity");

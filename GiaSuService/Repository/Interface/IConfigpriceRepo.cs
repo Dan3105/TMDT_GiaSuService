@@ -2,7 +2,7 @@
 
 namespace GiaSuService.Repository.Interface
 {
-    public interface IConfigpriceRepository : IRepository<Configprice>
+    public interface IConfigpriceRepo : IRepository<Configprice>
     {
         public Task<Configprice?> GetById(int id);
 

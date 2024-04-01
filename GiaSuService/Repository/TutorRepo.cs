@@ -7,10 +7,10 @@ using static GiaSuService.Configs.AppConfig;
 
 namespace GiaSuService.Repository
 {
-    public class TutorRepository : ITutorRepository
+    public class TutorRepo : ITutorRepo
     {
         private readonly DvgsDbContext _context;
-        public TutorRepository(DvgsDbContext context)
+        public TutorRepo(DvgsDbContext context)
         {
             _context = context;
         }

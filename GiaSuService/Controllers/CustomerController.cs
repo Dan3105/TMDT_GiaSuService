@@ -1,6 +1,5 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
-using GiaSuService.Models.AdminViewModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Services;
@@ -48,10 +47,10 @@ namespace GiaSuService.Controllers
             FormTutorRequestViewModel vm = new FormTutorRequestViewModel()
             {
                 Profile = new TutorRequestProfile(),
-                Grades = Utility.ConvertToGradeViewList(grades),
-                Subjects = Utility.ConvertToSubjectViewList(subjects),
-                Provinces = Utility.ConvertToProvinceViewList(provinces),
-                TutorCards = new List<TutorCardViewModel>()
+                //Grades = Utility.ConvertToGradeViewList(grades),
+                //Subjects = Utility.ConvertToSubjectViewList(subjects),
+                //Provinces = Utility.ConvertToProvinceViewList(provinces),
+                //TutorCards = new List<TutorCardViewModel>()
             };
 
             if(tutorId != null)

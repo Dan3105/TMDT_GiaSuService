@@ -8,7 +8,7 @@ namespace GiaSuService.Services
 {
     public class TutorService : ITutorService
     {
-        private readonly ITutorRepository _tutorRepository;
+        private readonly ITutorRepo _tutorRepository;
         //public TutorService(ITutorRepository tutorRepository)
         //{
         //    _tutorRepository = tutorRepository;
@@ -36,7 +36,8 @@ namespace GiaSuService.Services
         {
             try
             {
-                return await _tutorRepository.UpdateProfile(tutor);
+                //return await _tutorRepository.UpdateProfile(tutor);
+                return true;
             }
             catch (Exception)
             {
@@ -59,8 +60,9 @@ namespace GiaSuService.Services
 
         public async Task<Tutor> GetTutorprofileById(int id)
         {
-            Tutor? tutorprofile = await _tutorRepository.GetTutorprofile(id);
-            return tutorprofile!;
+            //Tutor? tutorprofile = await _tutorRepository.GetTutorprofile(id);
+            //return tutorprofile!;
+            return null!;
         }
 
         public async Task<Tutor> GetTutorprofileByAccountId(int accountId)

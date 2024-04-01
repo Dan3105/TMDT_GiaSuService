@@ -4,9 +4,8 @@ namespace GiaSuService.Models.IdentityViewModel
 {
     public class LoginViewModel
     {
-        [EmailAddress]
         [Required]
-        public string? Email { get; set; }
+        public string? LoginName { get; set; }
 
         [Required]
         public string? Password { get; set; }

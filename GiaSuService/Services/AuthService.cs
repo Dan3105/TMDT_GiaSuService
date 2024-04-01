@@ -1,5 +1,7 @@
 ﻿using GiaSuService.AppDbContext;
+using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 using System.Security.Cryptography;
@@ -7,13 +9,11 @@ namespace GiaSuService.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly DvgsDbContext _context;
-        private readonly IAccountRepository _accountRepo;
-        private readonly ITutorRepository _tutorRepo;
-        private readonly ISubjectRepository _subjectRepository;
-        private readonly IGradeRepository _gradeRepository;
-        private readonly ISessionRepository _sessionRepository;
-        private readonly IAddressRepository _addressRepository;
+
+        private DvgsDbContext _context;
+        private readonly IAccountRepo _accountRepo;
+        private readonly IProfileRepo _profileRepo;
+        private readonly IStatusRepo _statusRepo;
 
         //public AuthService(DvgsDbContext context, IAccountRepository accountRepo, ITutorRepository tutorRepo, ISubjectRepository subjectRepository, IGradeRepository gradeRepository, ISessionRepository sessionRepository, IAddressRepository addressRepository)
         //{
@@ -26,80 +26,118 @@ namespace GiaSuService.Services
         //    _addressRepository = addressRepository;
         //}
 
-        public async Task<bool> CreateAccount(Account account)
+        public AuthService(DvgsDbContext context, IAccountRepo accountRepo, IProfileRepo profileRepo, IStatusRepo statusRepo)
+        {
+            _context = context;
+            _accountRepo = accountRepo;
+            _profileRepo = profileRepo;
+            _statusRepo = statusRepo;
+        }
+
+        public async Task<ResponseService> CreateAccount(Account account)
         {
             try
             {
                 _accountRepo.Create(account);
-                var isSucced = await _accountRepo.SaveChanges();
-                return isSucced;
+                var isSuccess = await _accountRepo.SaveChanges();
+                if (isSuccess)
+                {
+                    return new ResponseService { Success = isSuccess, Message = "Tạo tài khoản thành công" };
+                }
             }
-            catch(Exception)
-            {
-                return false;
-            }
+            catch (Exception)
+            { }
+            return new ResponseService { Success = false, Message = "Có lỗi trong hệ thống vui lòng làm lại" };
         }
 
 
-        public async Task<bool> CreateTutorRegisterRequest(Account account, Tutor tutorprofile, IEnumerable<int> districtId, IEnumerable<int> gradeId, 
-            IEnumerable<int> subjectId, IEnumerable<int> sessionId)
+        public async Task<ResponseService> CreateTutorRegisterRequest(Account account, IEnumerable<int> sessionIds, IEnumerable<int> subjectIds, IEnumerable<int> gradeIds,
+            IEnumerable<int> districtIds)
         {
-            //using (var transaction = _context.Database.BeginTransactionhistory())
-            //{
+            using (var transaction = _context.Database.BeginTransaction())
+            {
                 try
                 {
-                    foreach(var id in districtId)
+                    //Check
+                    var existsingIdentity = await _profileRepo.GetIdentitycard(account.Tutor!.Identity.Identitynumber);
+                    if (existsingIdentity != null)
                     {
-                        var district =await _addressRepository.GetDistrict(id);
-                        tutorprofile.Districts.Add(district);
+                        return new ResponseService { Success = false, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
+                    }
+                    var statusId = await _statusRepo.GetStatusId(AppConfig.RegisterStatus.PENDING.ToString().ToLower(), AppConfig.register_status);
+                    if (statusId == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Hệ thống không tạo được trạng thái vui lòng làm lại" };
                     }
 
-                    foreach (var id in gradeId)
+                    account.Tutor.Registerstatusdetails.Add(new Registerstatusdetail()
                     {
-                        var grade = await _gradeRepository.GetGradeById(id);
-                        tutorprofile.Grades.Add(grade);
+                        Context = "Tạo tài khoản",
+                        Reviewdate = DateOnly.FromDateTime(DateTime.Now),
+                        Statusid = (int)statusId,
+                    });
+
+                    foreach (var id in sessionIds)
+                    {
+                        var session = await _context.Sessiondates.FindAsync(id);
+                        if (session != null)
+                        {
+                            account.Tutor.Sessions.Add(session);
+                        }
                     }
 
-                    foreach (var id in subjectId)
+                    foreach (var id in gradeIds)
                     {
-                        var subject = await _subjectRepository.GetSubjectById(id);
-                        tutorprofile.Subjects.Add(subject);
+                        var grade = await _context.Grades.FindAsync(id);
+                        if (grade != null)
+                        {
+                            account.Tutor.Grades.Add(grade);
+                        }
                     }
 
-                    foreach (var id in sessionId)
+                    foreach(var id in subjectIds)
                     {
-                        var session = await _sessionRepository.GetSessionById(id);
-                        tutorprofile.Sessions.Add(session);
+                        var subject = await _context.Subjects.FindAsync(id);
+                        if(subject != null)
+                        {
+                            account.Tutor.Subjects.Add(subject);
+                        }
                     }
 
+                    foreach (var id in districtIds)
+                    {
+                        var district = await _context.Districts.FindAsync(id);
+                        if (district != null)
+                        {
+                            account.Tutor.Districts.Add(district);
+                        }
+                    }
                     _accountRepo.Create(account);
-                    _tutorRepo.Create(tutorprofile);
-
-                    await _context.SaveChangesAsync();
-
-                    //transaction.Commit();
-
-                    return true;
+                    bool isSuccess = await _accountRepo.SaveChanges();
+                    if (isSuccess)
+                    {
+                        transaction.Commit();
+                        return new ResponseService { Success = isSuccess, Message = "Tạo tài khoản gia sư thành công" };
+                    }
                 }
                 catch (Exception)
                 {
-                    //transaction.Rollback();
-
-                    return false;
+                    transaction.Rollback();
                 }
-            //}
+            }
+            return new ResponseService { Success = false, Message = "Có lỗi trong hệ thống vui lòng làm lại" };
         }
 
-        public async Task<Account> GetAccountById(int id)
+        public async Task<Account?> GetAccountById(int id)
         {
-            Account account = await _accountRepo.GetById(id);
+            Account? account = await _accountRepo.GetById(id);
             return account;
         }
 
         public async Task<IEnumerable<Account>> GetAccountsByRole(string role)
         {
             int? roleId = await _accountRepo.GetRoleId(role);
-            if(roleId == null)
+            if (roleId == null)
             {
                 return null!;
             }
@@ -112,35 +150,37 @@ namespace GiaSuService.Services
             return await _accountRepo.GetRoleId(roleName);
         }
 
-        public async Task<bool> UpdateAccount(Account account)
+        public async Task<ResponseService> UpdateAccount(Account account)
         {
             try
             {
                 _accountRepo.Update(account);
-                var isSucced = await _accountRepo.SaveChanges();
-                return isSucced;
+                var isSuccess = await _accountRepo.SaveChanges();
+                if (isSuccess)
+                {
+                    return new ResponseService { Success = isSuccess, Message = "Cập nhật tài khoản thành công" };
+                }
             }
             catch (Exception)
-            {
-                return false;
-            }
-            
+            { }
+            return new ResponseService { Success = false, Message = "Có lỗi trong hệ thống vui lòng làm lại" };
+
         }
 
-        public async Task<Account> ValidateAccount(string email, string password)
+        public async Task<Account?> ValidateAccount(string loginmail, string password)
         {
-            Account account = await _accountRepo.GetByEmail(email);
+            Account? account = await _accountRepo.GetByEmailOrPhone(loginmail);
             if (account == null)
             {
-                return null!;
+                return null;
             }
 
-            if(BCrypt.Net.BCrypt.Verify(password, account.Passwordhash))
+            if (BCrypt.Net.BCrypt.Verify(password, account.Passwordhash))
             {
                 return account;
             }
 
-            return null!;
+            return null;
         }
     }
 }
