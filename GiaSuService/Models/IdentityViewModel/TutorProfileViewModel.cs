@@ -6,16 +6,16 @@ namespace GiaSuService.Models.IdentityViewModel
     public class TutorProfileViewModel
     {
         #region Account Profile
-        public string Fullname { get; set; } = null!;
+        public string Fullname { get; set; } = string.Empty;
         public DateOnly? Birth { get; set; }
-        public string Email { get; set; } = null!;
-        public string Phone { get; set; } = null!;
-        public string Identitycard { get; set; } = null!;
-        public string Gender { get; set; } = null!;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Identitycard { get; set; } = string.Empty;
+        public string Gender { get; set; } = string.Empty;
         public bool Lockenable { get; set; }
-        public string Avatar { get; set; } = null!;
-        public string Frontidentitycard { get; set; } = null!;
-        public string Backidentitycard { get; set; } = null!;
+        public string Avatar { get; set; } = string.Empty;
+        public string Frontidentitycard { get; set; } = string.Empty;
+        public string Backidentitycard { get; set; } = string.Empty;
         public DateOnly? Createdate { get; set; }
         public string Address { get; set; } = string.Empty;
         #endregion
@@ -23,8 +23,8 @@ namespace GiaSuService.Models.IdentityViewModel
 
         #region Tutor Profile
         public int TutorId { get; set; }
-        public string College { get; set; } = null!;
-        public string Area { get; set; } = null!;
+        public string College { get; set; } = string.Empty;
+        public string Area { get; set; } = string.Empty;
         public string? Additionalinfo { get; set; }
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }

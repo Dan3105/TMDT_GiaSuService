@@ -14,8 +14,6 @@ namespace GiaSuService.Controllers
     public class EmployeeController : Controller
     {
         private readonly ITutorService _tutorService;
-        private readonly ICatalogService _catalogService;
-        private readonly IAddressService _addressService;
         private readonly ITutorRequestFormService _tutorRequestService;
         private readonly IAuthService _authService;
 
@@ -23,15 +21,6 @@ namespace GiaSuService.Controllers
         {
             _tutorService = tutorService;
         }
-        //public EmployeeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
-        //    ITutorRequestFormService tutorRequestService, IAuthService authService)
-        //{
-        //    _tutorService = tutorService;
-        //    _catalogService = catalogService;
-        //    _addressService = addressService;
-        //    _tutorRequestService = tutorRequestService;
-        //    _authService = authService;
-        //}
 
         public IActionResult Index()
         {
@@ -143,7 +132,7 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
                 return RedirectToAction("TutorRequestQueue", "Employee");
             }
-            var tutorInQueue = await _tutorService.GetTutorprofilesByClassId(id);
+            //var tutorInQueue = await _tutorService.GetTutorprofilesByClassId(id);
 
             //string GradeName = (await _catalogService.GetGradeById(thisForm.Gradeid))?.Gradename ?? "";
             //var SubjectName = (await _catalogService.GetSubjectById(thisForm.Subjectid))?.Subjectname ?? "";
@@ -164,9 +153,9 @@ namespace GiaSuService.Controllers
             //    SubjectName = SubjectName,
             //};
 
-            foreach(var tutor in tutorInQueue)
-            {
-                Account account = await _authService.GetAccountById(tutor.Accountid);
+            //foreach(var tutor in tutorInQueue)
+            //{
+            //    Account account = await _authService.GetAccountById(tutor.Accountid);
 
                 //view.TutorCards.Add(new Models.TutorViewModel.TutorCardViewModel()
                 //{
@@ -177,9 +166,9 @@ namespace GiaSuService.Controllers
                 //    College = tutor.College,
                 //    TutorType = tutor.Currentstatus.ToString()
                 //});
-            }
+            //}
         
-            return View(view);
+            return View();
         }
 
         [HttpGet]
@@ -229,29 +218,16 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorList()
         {
-            //List<Tutor> tutors = await _tutorService.GetTutorprofilesByRegisterStatus(AppConfig.RegisterStatus.APPROVAL);
-            //if (tutors == null)
-            //{
-            //    TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???";
-            //    Console.WriteLine("wtf did i change the name role?");
-            //    return RedirectToAction("Index", "Home");
-            //}
+            return View();
+        }
 
-            List<AccountListViewModel> results = new List<AccountListViewModel>();
-            //foreach (var tutor in tutors)
-            //{
-            //    results.Add(new EmployeeListViewModel()
-            //    {
-            //        Id = tutor.Account.Id,
-            //        Email = tutor.Account.Email,
-            //        FullName = tutor.Account.Fullname,
-            //        LockStatus = tutor.Account.Lockenable,
-            //        ImageUrl = tutor.Account.Avatar
-            //    });
-
-            //}
-
-            return View(results);
+        [HttpGet]
+        public async Task<IActionResult> GetTutorList(int subjectId, int districtId, int gradeId, int page)
+        {
+            var queries = await _tutorService.GetTutorAccountsByFilter(subjectId, districtId, gradeId, page);
+            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries, page, totalPages };
+            return Json(response);
         }
 
         [HttpGet]

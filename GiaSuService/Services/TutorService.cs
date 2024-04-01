@@ -2,6 +2,7 @@
 using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
+using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
@@ -19,17 +20,18 @@ namespace GiaSuService.Services
             _statusRepository = statusRepository;
             _profileRepository = profileRepository;
         }
-        public async Task<List<Tutor>> GetTutorprofilesByFilter(
-            int subjectId, int districtId, int gradeId)
+        public async Task<List<AccountListViewModel>> GetTutorAccountsByFilter(
+            int subjectId, int districtId, int gradeId, int page)
         {
-            List<Tutor> tutorprofiles = (await _tutorRepository.GetTutorprofilesByFilter(subjectId, districtId, gradeId)).ToList();
+            List<AccountListViewModel> tutorprofiles = (await _tutorRepository.GetTutorAccountsByFilter(subjectId, districtId, gradeId, page)).ToList();
             return tutorprofiles;
         }
 
-        public async Task<List<Tutor>> GetTutorprofilesByClassId(int classId)
+        public async Task<List<TutorCardViewModel>> GetTutorCardsByFilter(
+           int subjectId, int districtId, int gradeId, int page)
         {
-            List<Tutor> tutorprofiles = (await _tutorRepository.GetTutorprofilesByClassId(classId)).ToList();
-            return tutorprofiles;
+            IEnumerable<TutorCardViewModel> tutorprofiles = await _tutorRepository.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
+            return tutorprofiles.ToList();
         }
 
         public async Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page)
@@ -100,6 +102,11 @@ namespace GiaSuService.Services
             {
                 return new ResponseService { Success = false, Message = "Lỗi hệ thống không cập nhật được" };
             }
+        }
+
+        public Task<List<AccountListViewModel>> GetTutorProfilesByFilter(int subjectId, int districtId, int gradeId, int page)
+        {
+            throw new NotImplementedException();
         }
     }
 }

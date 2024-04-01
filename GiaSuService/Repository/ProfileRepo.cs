@@ -21,7 +21,7 @@ namespace GiaSuService.Repository
             return await _context.Identitycards.AsNoTracking().FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
         }
 
-        public Task<List<AccountListViewModel>> GetEmployeeList(int crrPage)
+        public async Task<List<AccountListViewModel>> GetEmployeeList(int crrPage)
         {
             IQueryable<AccountListViewModel> query = _context.Employees
                 .AsNoTracking()
@@ -40,7 +40,7 @@ namespace GiaSuService.Repository
             query = query.Skip(crrPage * AppConfig.ROWS_ACCOUNT_LIST)
                     .Take(AppConfig.ROWS_ACCOUNT_LIST);
 
-            return query.ToListAsync();
+            return await query.ToListAsync();
         }
 
         public async Task<ProfileViewModel?> GetEmployeeProfile(int empId)

@@ -15,13 +15,13 @@ namespace GiaSuService.Controllers
         private readonly ITutorService _tutorService;
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
-        
-        //public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService)
-        //{
-        //    _tutorService = tutorService;
-        //    _catalogService = catalogService;
-        //    _addressService = addressService;
-        //}
+
+        public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService)
+        {
+            _tutorService = tutorService;
+            _catalogService = catalogService;
+            _addressService = addressService;
+        }
 
         public IActionResult Index()
         {
@@ -44,68 +44,26 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorList()
         {
-            var tutorList = await _tutorService.GetTutorprofilesByFilter(0, 0, 0);
-            List<TutorCardViewModel> tutorCards = new List<TutorCardViewModel>();
-            //foreach(var tutor in tutorList)
-            //{
-            //    tutorCards.Add(new TutorCardViewModel()
-            //    {
-            //        Id = tutor.Id,
-            //        AdditionalProfile = tutor.Additionalinfo ?? "",
-            //        Area = tutor.Area,
-            //        Avatar = tutor.Account.Avatar,
-            //        TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Districtname)),
-            //        Birth = tutor.Account.Birth.ToString("dd/MM/yyyy"),
-            //        College = tutor.College,
-            //        TutorType = tutor.Currentstatus.ToString(),
-            //        FullName = tutor.Account.Fullname,
-            //        GradeList = string.Join(", ", tutor.Grades.Select(g => g.Gradename)),
-            //        GraduateYear = tutor.Academicyearto,
-            //        SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Subjectname))
-            //    });
-            //}
-            //List<Province> provinceList = await _addressService.GetProvinces();
-            //List<Subject> subjectList = await _catalogService.GetAllSubjects();
-            //List<Grade> gradeList = await _catalogService.GetAllGrades();
-
-            //List<ProvinceViewModel> provinceViews = Utility.ConvertToProvinceViewList(provinceList);
-            //List<SubjectViewModel> subjectViews = Utility.ConvertToSubjectViewList(subjectList);
-            //List<GradeViewModel> gradeViews = Utility.ConvertToGradeViewList(gradeList);
+            var gradeViews = await _catalogService.GetAllGrades();
+            var provinceViews = await _addressService.GetProvinces();
+            var subjectViews = await _catalogService.GetAllSubjects();
 
             TutorCardListViewModel result = new TutorCardListViewModel() { 
-                TutorList = tutorCards,
-                //GradeList = gradeViews,
-                //ProvinceList = provinceViews,
-                //SubjectList = subjectViews,
+                GradeList = gradeViews,
+                ProvinceList = provinceViews,
+                SubjectList = subjectViews,
             };
 
             return View(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTutorsBy(int districtId, int gradeId, int subjectId)
+        public async Task<IActionResult> GetTutorsBy(int districtId, int gradeId, int subjectId, int page)
         {
-            var tutorList = await _tutorService.GetTutorprofilesByFilter(subjectId, districtId, gradeId);
-            List<TutorCardViewModel> tutorCards = new List<TutorCardViewModel>();
-            foreach (var tutor in tutorList)
-            {
-                //tutorCards.Add(new TutorCardViewModel()
-                //{
-                //    Id = tutor.Id,
-                //    AdditionalProfile = tutor.Additionalinfo ?? "",
-                //    Area = tutor.Area,
-                //    Avatar = tutor.Account.Avatar,
-                //    TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Districtname)),
-                //    Birth = tutor.Account.Birth.ToString("dd/MM/yyyy"),
-                //    College = tutor.College,
-                //    TutorType = tutor.Currentstatus.ToString(),
-                //    FullName = tutor.Account.Fullname,
-                //    GradeList = string.Join(", ", tutor.Grades.Select(g => g.Gradename)),
-                //    GraduateYear = tutor.Academicyearto,
-                //    SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Subjectname))
-                //});
-            }
-            return Json(tutorCards);
+            var queries = await _tutorService.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
+            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries, page, totalPages };
+            return Json(response);
         }
     }
 }

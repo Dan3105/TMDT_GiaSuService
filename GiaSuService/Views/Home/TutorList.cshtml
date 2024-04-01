@@ -52,37 +52,13 @@
         </div>
     </div>
     <hr />
-    <div id="list-tutor" class="row d-flex justify-content-center">
-        @foreach (var item in Model.TutorList)
-        {
-            <div class="col-md-5 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <img src="@item.Avatar" alt="Avatar" class="img-fluid" style="width: 200px; height: 200px;">
-                            <div class="m-lg-2">
-                                <h5 class="card-text fs-6">Gia sư: @item.FullName</h5>
-                                <p class="card-text mb-1">Ngày sinh: @item.Birth</p>
-                                <p class="card-text mb-1">Loại gia sư: @item.TutorType</p>
-                                <p class="card-text mb-1">Tên trường học: @item.College</p>
-                                <p class="card-text mb-1">Chuyên ngành: @item.Area</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <p class="card-text mb-1"><b>Graduate Year:</b> @item.GraduateYear</p>
-                        </div>
-                        <p class="card-text"><b>Subjects:</b> @item.SubjectList</p>
-                        <p class="card-text"><b>Grades:</b> @item.GradeList</p>
-                        <p class="card-text"><b>Teaching Area:</b> @item.TeachingArea</p>
-                        <p class="card-text"><b>Additional Profile:</b> @item.AdditionalProfile</p>
-                        <div class="d-flex justify-content-center">
-<a class="btn btn-primary customstyle-button" href="@Url.Action("TutorRequestForm", "Customer", new{tutorId = item.Id})">Chọn gia sư</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+    <div id="items-container" class="row d-flex justify-content-center">
+    </div>
+
+    <div id="pagination">
+        <button id="prev-page" disabled>Previous Page</button>
+        <span id="current-page">Page 1</span>
+        <button id="next-page">Next Page</button>
     </div>
 </div>
 
@@ -96,7 +72,7 @@
             data: { 'provinceId': selectedIdProvince },
             success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
-                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận'));
+                $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận'));
                 for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
                 }
@@ -106,51 +82,81 @@
             }
         });
     }
-
-    function updateNewList() {
+    var currentPage = 0;
+    function loadItems(pageNumber) {
         var selectedIdDistrict = $('#districtSelectionContainer').val();
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
-        
-        $.ajax({
-            url: '/Home/GetTutorsBy',
-            type: 'GET',
-            data: {'districtId':selectedIdDistrict, 'gradeId': selectedIdGrade, 'subjectId': selectedIdSubject},
-            success: function(data){
+
+        $.getJSON("/Home/GetTutorsBy", { districtId: selectedIdDistrict, gradeId: selectedIdGrade, subjectId: selectedIdSubject, page: pageNumber })
+            .done(function (data) {
                 console.log(data);
-                $("#list-tutor").empty();
-                for (var i = 0; i < data.length; i++){
-                var item = data[i];
-                var html_tag = `<div class="col-md-5 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <img src="${item.avatar}" alt="Avatar" class="img-fluid" style="width: 200px; height: 200px;">
-                                <div class="m-lg-2">
-                                    <h5 class="card-text fs-6">Gia Sư: ${item.fullName}</h5>
-                                    <p class="card-text mb-1">Birthdate: ${item.birth}</p>
-                                    <p class="card-text mb-1">Tutor Type: ${item.tutorType}</p>
-                                    <p class="card-text mb-1">College: ${item.college}</p>
-                                    <p class="card-text mb-1">Area: ${item.area}</p>
+                $("#items-container").empty(); // Clear existing items
+
+                // Update page information
+                $("#current-page").text(`Page ${data.page + 1}`);
+
+                // Disable "Next Page" button if at the last page
+                $("#next-page").prop("disabled", data.page === data.totalPages - 1);
+                $("#prev-page").prop("disabled", data.page === 0);
+                // Dynamically add items to the view
+                $.each(data.queries, function (index, item) {
+                    //console.log(item);
+                    var spanActive = item.lockStatus ? `<span class="text-danger">Tạm đóng</span>` : `<span class="text-success">Hoạt động</span>`;
+                    var itemHtml = `
+                                <div class="col-md-5 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <img src="${item.avatar}" alt="Avatar" class="img-fluid" style="width: 200px; height: 200px;">
+                                            <div class="m-lg-2">
+                                                <h5 class="card-text fs-6">Gia Sư: ${item.fullName}</h5>
+                                                <p class="card-text mb-1">Birthdate: ${item.birth}</p>
+                                                <p class="card-text mb-1">Tutor Type: ${item.tutorType}</p>
+                                                <p class="card-text mb-1">College: ${item.college}</p>
+                                                <p class="card-text mb-1">Area: ${item.area}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <p class="card-text mb-1"><b>Graduate Year:</b> ${item.graduateYear}</p>
+                                        </div>
+                                        <p class="card-text"><b>Subjects:</b> ${item.subjectList}</p>
+                                            <p class="card-text"><b>Grades:</b> ${item.gradeList}</p>
+                                        <p class="card-text"><b>Teaching Area:</b> ${item.teachingArea}</p>
+                                        <p class="card-text"><b>Additional Profile:</b> ${item.additionalProfile}</p>
+                                        <div class="d-flex justify-content-center">
+                                            <a class="btn btn-primary" href="#">Chọn gia sư</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
-                                <p class="card-text mb-1"><b>Graduate Year:</b> ${item.graduateYear}</p>
-                            </div>
-                            <p class="card-text"><b>Subjects:</b> ${item.subjectList}</p>
-                                <p class="card-text"><b>Grades:</b> ${item.gradeList}</p>
-                            <p class="card-text"><b>Teaching Area:</b> ${item.teachingArea}</p>
-                            <p class="card-text"><b>Additional Profile:</b> ${item.additionalProfile}</p>
-                            <div class="d-flex justify-content-center">
-                                <a class="btn btn-primary" href="#">Chọn gia sư</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>`
-                $("#list-tutor").append(html_tag);
-                };
+                                        `;
+                    $("#items-container").append(itemHtml);
+                });
+            });
+    }
+    function updateNewList() {
+        
+        currentPage = 0;
+        // Load initial page
+        loadItems(currentPage);
+
+        // Handle "Next Page" button click
+        $("#next-page").click(function () {
+            if (!$(this).prop("disabled")) {
+                currentPage++;
+                loadItems(currentPage);
             }
         });
-    }
+
+        // (Optional) Handle "Previous Page" button click (implement similar logic)
+        $("#prev-page").click(function () {
+            if (!$(this).prop("disabled")) {
+                currentPage--;
+                loadItems(currentPage);
+            }
+        });
+    };
+    loadItems(currentPage);
 </script>
