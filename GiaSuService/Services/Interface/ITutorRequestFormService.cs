@@ -5,13 +5,10 @@ namespace GiaSuService.Services.Interface
 {
     public interface ITutorRequestFormService
     {
-        public Task<List<Tutorrequestform>> GetTutorRequestFormsByFilter(
-            int subjectId, int districtId, int gradeId);
         public Task<Tutorrequestform?> GetTutorRequestFormById(int formId);
         //public Task<List<Tutorrequestform>> GetTutorrequestforms(AppConfig.TutorRequestStatus status);
-        public Task<List<Tutorrequestform>> GetTutorRequestForms();
-        public Task<bool> CreateForm(Tutorrequestform form);
-        public Task<bool> UpdateForm(Tutorrequestform form);
+        public Task<ResponseService> CreateForm(Tutorrequestform form, List<int> sessionList, List<int> tutorList);
+        public Task<bool> UpdateForm(Tutorrequestform form, List<int> sessionList, string statusName);
 
     }
 }

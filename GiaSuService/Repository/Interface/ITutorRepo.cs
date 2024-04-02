@@ -13,7 +13,7 @@ namespace GiaSuService.Repository.Interface
         public Task<IEnumerable<TutorCardViewModel>> GetTutorCardsByFilter(
             int subjectId, int districtId, int gradeId, int page);
         public Task<IEnumerable<Tutor>> GetTutorprofilesByClassId(int classId);
-        public Task<List<Tutor>> GetSubTutorProfile(List<int> ids);
+        public Task<List<TutorCardViewModel>> GetSubTutorCardView(List<int> ids);
         public Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page);
 
 

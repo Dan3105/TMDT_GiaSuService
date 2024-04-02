@@ -25,6 +25,11 @@ namespace GiaSuService.Services
             return await _profileRepo.GetEmployeeProfile(empId);
         }
 
+        public async Task<int?> GetIdProfile(int accountId, string roleName)
+        {
+            return await _profileRepo.GetProfileId(accountId, roleName);
+        }
+
         public async Task<ResponseService> UpdateEmployeeProfile(ProfileViewModel model)
         {
 

@@ -31,7 +31,7 @@ namespace GiaSuService.Repository
 
         public async Task<Status?> GetStatus(string nameStatus, string typeStatus)
         {
-            return (await _context.Statuses.AsNoTracking()
+            return (await _context.Statuses
                 .FirstOrDefaultAsync(p => p.Statustype.Type == typeStatus && p.Name.ToLower() == nameStatus.ToLower())
                 );
         }

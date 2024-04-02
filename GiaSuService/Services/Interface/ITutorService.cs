@@ -17,7 +17,7 @@ namespace GiaSuService.Services.Interface
 
         public Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page);
         public Task<TutorProfileViewModel?> GetTutorprofileById(int id);
-        public Task<List<Tutor>> GetSubTutors(List<int> ids);
+        public Task<List<TutorCardViewModel>> GetSubTutors(List<int> ids);
 
         public Task<ResponseService> UpdateTutorProfileStatus(int tutorId, string status);
     }

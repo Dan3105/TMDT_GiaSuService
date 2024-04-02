@@ -11,7 +11,10 @@ namespace GiaSuService.Models.CustomerViewModel
         public List<ProvinceViewModel> Provinces { get; set; } = new List<ProvinceViewModel>();
         public List<SubjectViewModel> Subjects { get; set; } = new List<SubjectViewModel>();
         public List<GradeViewModel> Grades { get; set; } = new List<GradeViewModel>();
-        public List<TutorCardViewModel> TutorCards { get; set; } = new List<TutorCardViewModel>();
+        //public List<TutorCardViewModel> TutorCards { get; set; } = new List<TutorCardViewModel>();
+        public List<SessionViewModel> Sessions { get; set; } = new List<SessionViewModel>();
+
+        public List<int> SessionSelected => Sessions.Where(p =>p.IsChecked).Select(p => p.SessionId).ToList();
     }
 
     public class TutorRequestProfile

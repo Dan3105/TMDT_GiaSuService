@@ -57,9 +57,9 @@ namespace GiaSuService.Services
             return tutorprofile;
         }
 
-        public async Task<List<Tutor>> GetSubTutors(List<int> ids)
+        public async Task<List<TutorCardViewModel>> GetSubTutors(List<int> ids)
         {
-            return await _tutorRepository.GetSubTutorProfile(ids);
+            return await _tutorRepository.GetSubTutorCardView(ids);
         }
 
         public async Task<ResponseService> UpdateTutorProfileStatus(int tutorId, string status)

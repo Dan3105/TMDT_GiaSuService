@@ -57,9 +57,15 @@ namespace GiaSuService.Repository
             throw new NotImplementedException();
         }
 
-        public Task<List<GradeViewModel>> GetSubGrades(List<int> ids)
+        public async Task<List<GradeViewModel>> GetSubGrades(List<int> ids)
         {
-            throw new NotImplementedException();
+            return await _context.Grades.AsNoTracking()
+                .Select(p => new GradeViewModel
+                {
+                    GradeId = p.Id,
+                    GradeName = p.Name
+                })
+                .ToListAsync();
         }
 
         public Task<SubjectViewModel> GetSubjectById(int subjectId)
@@ -67,9 +73,16 @@ namespace GiaSuService.Repository
             throw new NotImplementedException();
         }
 
-        public Task<List<SessionViewModel>> GetSubSessions(List<int> ids)
+        public async Task<List<SessionViewModel>> GetSubSessions(List<int> ids)
         {
-            throw new NotImplementedException();
+            return await _context.Sessiondates.AsNoTracking()
+                .Select(p => new SessionViewModel
+                {
+                    SessionId = p.Id,
+                    SessionName = p.Name
+                })
+                .Where(p => ids.Contains(p.SessionId))
+                .ToListAsync();
         }
 
         public Task<List<SubjectViewModel>> GetSubSubjects(List<int> ids)

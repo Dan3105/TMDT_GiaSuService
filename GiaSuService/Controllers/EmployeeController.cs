@@ -174,44 +174,44 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> ApplyTutorRequest(int id)
         {
-            var thisForm = await _tutorRequestService.GetTutorRequestFormById(id);
-            if (thisForm == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
-                return RedirectToAction("TutorRequestQueue", "Employee");
-            }
-            //thisForm.Status = AppConfig.TutorRequestStatus.APPROVAL;
-            bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
-            if (isSuccess)
-            {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Đơn được chấp thuận thành công";
-            }
-            else
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
-            }
+            //var thisForm = await _tutorRequestService.GetTutorRequestFormById(id);
+            //if (thisForm == null)
+            //{
+            //    TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
+            //    return RedirectToAction("TutorRequestQueue", "Employee");
+            //}
+            ////thisForm.Status = AppConfig.TutorRequestStatus.APPROVAL;
+            //bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
+            //if (isSuccess)
+            //{
+            //    TempData[AppConfig.MESSAGE_SUCCESS] = "Đơn được chấp thuận thành công";
+            //}
+            //else
+            //{
+            //    TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
+            //}
             return RedirectToAction("TutorRequestQueue", "Employee");
         }
 
         [HttpGet]
         public async Task<IActionResult> DenyTutorRequest(int id)
         {
-            var thisForm = await _tutorRequestService.GetTutorRequestFormById(id);
-            if (thisForm == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
-                return RedirectToAction("TutorRequestQueue", "Employee");
-            }
-            //thisForm.Status = AppConfig.TutorRequestStatus.DENY;
-            bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
-            if (isSuccess)
-            {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Đã từ chối đơn thành công";
-            }
-            else
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
-            }
+            //var thisForm = await _tutorRequestService.GetTutorRequestFormById(id);
+            //if (thisForm == null)
+            //{
+            //    TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
+            //    return RedirectToAction("TutorRequestQueue", "Employee");
+            //}
+            ////thisForm.Status = AppConfig.TutorRequestStatus.DENY;
+            //bool isSuccess = await _tutorRequestService.UpdateForm(thisForm);
+            //if (isSuccess)
+            //{
+            //    TempData[AppConfig.MESSAGE_SUCCESS] = "Đã từ chối đơn thành công";
+            //}
+            //else
+            //{
+            //    TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại";
+            //}
             return RedirectToAction("TutorRequestQueue", "Employee");
         }
 

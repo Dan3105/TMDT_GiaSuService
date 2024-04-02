@@ -99,34 +99,18 @@ namespace GiaSuService.Repository
             return tutorProfiles;
         }
 
-        public async Task<bool> UpdateProfile(Tutor tutor)
-        {
-            if (tutor != null)
-            {
-                _context.Tutors.Update(tutor);
-                return await SaveChanges();
-            }
-
-            return false;
-        }
-
-        public async Task<bool> UpdateRegisterStatus(int tutorProfileId)
-        {
-            Tutor? tutorProfile = await _context.Tutors
-                                    .FirstOrDefaultAsync(p => p.Id == tutorProfileId);
-            if (tutorProfile != null)
-            {
-                //tutorProfile.Formstatus = status;
-                return await UpdateProfile(tutorProfile);
-            }
-
-            return false;
-        }
-
-        public async Task<List<Tutor>> GetSubTutorProfile(List<int> ids)
+        public async Task<List<TutorCardViewModel>> GetSubTutorCardView(List<int> ids)
         {
             var tutors = await _context.Tutors
-                .Include(p => p.Account)
+                .Select(p => new TutorCardViewModel
+                {
+                    Id = p.Id,
+                    Avatar = p.Account.Avatar,
+                    FullName = p.Fullname,
+                    Area = p.Area,
+                    College = p.College,
+                    TutorType = p.Typetutor ? "Giáo viên" : "Sinh viên",
+                })
                 .Where(p => ids.Contains(p.Id)).ToListAsync();
             return tutors;
         }

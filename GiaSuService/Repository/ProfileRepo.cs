@@ -141,5 +141,29 @@ namespace GiaSuService.Repository
                 .FirstOrDefaultAsync(p => p.TutorId == tutorId);
             return result;
         }
+
+        public async Task<int?> GetProfileId(int accountId, string roleName)
+        {
+            if (roleName.Equals(AppConfig.ADMINROLENAME.ToLower()) || roleName.Equals(AppConfig.EMPLOYEEROLENAME.ToLower()))
+            {
+                return (await _context.Employees.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+                    
+            }
+
+            if (roleName.Equals(AppConfig.TUTORROLENAME.ToLower()))
+            {
+                return (await _context.Tutors.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+            }
+
+            if (roleName.Equals(AppConfig.CUSTOMERROLENAME))
+            {
+                return (await _context.Customers.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+            }
+
+            return null;
+        }
     }
 }

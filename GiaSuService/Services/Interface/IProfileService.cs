@@ -6,6 +6,7 @@ namespace GiaSuService.Services.Interface
 {
     public interface IProfileService
     {
+        public Task<int?> GetIdProfile(int accountId, string roleName);
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int page);
         public Task<ProfileViewModel?> GetEmployeeProfile(int empId);

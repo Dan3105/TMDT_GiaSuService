@@ -7,28 +7,6 @@
 
 <div class="container">
     <div id="list-tutor" class="row d-flex justify-content-center">
-        @foreach (var item in Model.TutorCards)
-        {
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <img src="@item.Avatar" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
-                            <div class="m-lg-2">
-                                <h5 class="card-text fs-6">Gia Sư: @item.FullName</h5>
-                                <p class="card-text mb-1">Tutor Type: @item.TutorType</p>
-                                <p class="card-text mb-1">College: @item.College</p>
-                                <p class="card-text mb-1">Area: @item.Area</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-center align-items-center mb-3">
-                        <a class="btn btn-primary" href="@Url.Action("DeleteTutorRequest", "Customer", new{id = item.Id})">Hủy chọn</a>
-                    </div>
-                </div>
-            </div>
-        }
     </div>
     <div class="d-flex justify-content-center">
         <a class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
@@ -106,6 +84,22 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label>Thời gian dạy:</label>
+            <div class="row row-cols-3">
+                @for (int i = 0; i < Model.Sessions.Count(); i++)
+                {
+                    <div class="checkbox">
+                        <label>
+                            @Html.HiddenFor(m => m.Sessions[i].SessionId)
+                            @Html.CheckBoxFor(m => m.Sessions[i].IsChecked, new {@class = "form-check-input customformcheck-input"})
+                            @Model.Sessions[i].SessionName
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary customstyle-button">Gửi</button>
     </form>
 </div>
@@ -129,5 +123,57 @@
                 console.error("Error fetching districts:", textStatus, errorThrown);
             }
         });
+    }
+
+    $.ajax({
+        url: `/Customer/GetTutorsSelectedInCookie`,
+        success: function (data) {
+            $("#list-tutor").empty();
+            for (var i = 0; i < data.length; i++) {
+                item = data[i];
+ 
+                $("#list-tutor")
+                    .append(`
+                    <div id="${item.id}_view" class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <img src="${item.avatar}" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
+                                    <div class="m-lg-2">
+                                        <h5 class="card-text fs-6">Gia Sư: ${item.fullName} </h5>
+                                        <p class= "card-text mb-1" > Tutor Type: ${item.tutorType} </p>
+                                        <p class= "card-text mb-1" > College: ${item.college} </p>
+                                        <p class="card-text mb-1">Area: ${item.area}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                 <a onclick="deleteTutor(${item.id})" class="btn btn-primary")">Hủy chọn</a>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+            }
+        }
+    })
+
+    function deleteTutor(id) {
+        event.preventDefault();
+        $.ajax({
+            url: "/Customer/DeleteTutorRequest",
+            type: "GET",
+            data: { id: id },
+            success: function () {
+                $(`#${id}_view`).fadeOut("fast", function () { // Animate the removal
+                    $(`#${id}_view`).remove();
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Handle network or server errors (optional)
+                console.error("Error deleting tutor:", textStatus, errorThrown);
+                alert("An error occurred while deleting the tutor.");
+            }
+        })
     }
 </script>

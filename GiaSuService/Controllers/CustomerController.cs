@@ -18,18 +18,20 @@ namespace GiaSuService.Controllers
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
         private readonly ITutorService _tutorService;
+        private readonly IProfileService _profileService;   
         private readonly ITutorRequestFormService _tutorRequestFormService;
-        
-        
-        //public CustomerController(ICatalogService catalogService, IAddressService addressService, ITutorService tutorService
-        //    ,ITutorRequestFormService tutorRequestFormService, IAuthService authService)
-        //{
-        //    _addressService = addressService;
-        //    _catalogService = catalogService;
-        //    _tutorService = tutorService;
-        //    _tutorRequestFormService = tutorRequestFormService;
-        //    _authService = authService;
-        //}
+
+
+        public CustomerController(ICatalogService catalogService, IAddressService addressService, ITutorService tutorService
+            ,IAuthService authService, IProfileService profileService, ITutorRequestFormService tutorRequestFormService)
+        {
+            _addressService = addressService;
+            _catalogService = catalogService;
+            _tutorService = tutorService;
+            _authService = authService;
+            _profileService = profileService;
+            _tutorRequestFormService = tutorRequestFormService;
+        }
 
         public IActionResult Index()
         {
@@ -43,14 +45,16 @@ namespace GiaSuService.Controllers
             var provinces = await _addressService.GetProvinces();
             var grades = await _catalogService.GetAllGrades();
             var subjects = await _catalogService.GetAllSubjects();
+            var sessions = await _catalogService.GetAllSessions();
 
             FormTutorRequestViewModel vm = new FormTutorRequestViewModel()
             {
                 Profile = new TutorRequestProfile(),
-                //Grades = Utility.ConvertToGradeViewList(grades),
-                //Subjects = Utility.ConvertToSubjectViewList(subjects),
-                //Provinces = Utility.ConvertToProvinceViewList(provinces),
-                //TutorCards = new List<TutorCardViewModel>()
+                Grades = grades,
+                Subjects = subjects,
+                Provinces = provinces,
+                Sessions= sessions,
+                
             };
 
             if(tutorId != null)
@@ -58,29 +62,23 @@ namespace GiaSuService.Controllers
                 AddTutorSelected((int)tutorId);
             }
 
-            var tutorSelectedCookie = GetTutorsSelected();
-            
-            if (tutorSelectedCookie != null)
-            {
-                if(tutorId != null)
-                {
-                    tutorSelectedCookie.Add((int)tutorId);
-                }
-                List<Tutor> tutorprofiles = await _tutorService.GetSubTutors(tutorSelectedCookie);
-                //foreach (var profile in tutorprofiles)
-                //{
-                //    vm.TutorCards.Add(new TutorCardViewModel()
-                //    {
-                //        Id = profile.Id,
-                //        Avatar = profile.Account.Avatar,
-                //        FullName = profile.Account.Fullname,
-                //        Area = profile.Area,
-                //        College = profile.College,
-                //        TutorType = profile.Currentstatus.ToString()
-                //    });
-                //}
-            }
+           
             return View(vm);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = AppConfig.CUSTOMERPOLICY)]
+        public async Task<IActionResult> GetTutorsSelectedInCookie()
+        {
+            var tutorCards = new List<TutorCardViewModel>();
+            var tutorSelectedCookie = GetTutorsSelected();
+            if(tutorSelectedCookie == null)
+            {
+                return Ok(tutorCards);
+            }
+            tutorCards = await _tutorService.GetSubTutors(tutorSelectedCookie);
+
+            return Ok(tutorCards);
         }
 
         [HttpGet]
@@ -117,7 +115,8 @@ namespace GiaSuService.Controllers
         public IActionResult DeleteTutorRequest(int id)
         {
             RemoveTutorSelected(id);
-            return RedirectToAction("TutorRequestForm", "Customer");
+            //return RedirectToAction("TutorRequestForm", "Customer");
+            return Ok();
         }
 
         private List<int>? GetTutorsSelected()
@@ -217,45 +216,39 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Hết hạn đăng nhập";
                 return RedirectToAction("Index", "Identity");
             }
-            Tutorrequestform form = null!;
-            //    new Tutorrequestform()
-            //{
-            //    Additionaldetail = req.Profile.AdditionalDetail,
-            //    Addressdetail = req.Profile.Addressdetail,
-            //    Createddate = DateTime.Now,
-            //    Expireddate = DateTime.Now.AddDays(30),
-            //    Districtid = req.Profile.DistrictId,
-            //    Gradeid = req.Profile.GradeId,
-            //    Subjectid = req.Profile.SubjectId,
-            //    Nsessions = (short)req.Profile.NSessions,
-            //    Nstudents = (short)req.Profile.NStudents,
-            //    Status = AppConfig.TutorRequestStatus.PENDING,
-            //    Accountid = requester
-            //};
 
-            List<int>? ids = GetTutorsSelected();
-            if(ids != null)
+            int? customerId = await _profileService.GetIdProfile(requester, AppConfig.CUSTOMERROLENAME);
+            if(customerId == null)
             {
-                var listTutors = await _tutorService.GetSubTutors(ids);
-                foreach(var tutor in listTutors)
-                {
-                    form.Tutorqueues.Add(new Tutorqueue()
-                    {
-                        Enterdate = DateOnly.FromDateTime(DateTime.Now),
-                        Tutor = tutor
-                    });
-                }
+                TempData[AppConfig.MESSAGE_FAIL] = "Hết hạn đăng nhập";
+                return RedirectToAction("Index", "Identity");
             }
 
-            bool isSuccess = await _tutorRequestFormService.CreateForm(form);
-            if(isSuccess)
+            Tutorrequestform form = new Tutorrequestform()
             {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Đã gửi đơn thành công";
+                Additionaldetail = req.Profile.AdditionalDetail,
+                Addressdetail = req.Profile.Addressdetail,
+                Createddate = DateTime.Now,
+                Expireddate = DateTime.Now.AddDays(30),
+                Districtid = req.Profile.DistrictId,
+                Gradeid = req.Profile.GradeId,
+                Subjectid = req.Profile.SubjectId,
+                Students = req.Profile.NStudents,
+                Customerid = (int)customerId,
+            };
+
+            List<int> ids = GetTutorsSelected() ?? new List<int>();
+
+            ResponseService result = await _tutorRequestFormService.CreateForm(form, req.SessionSelected, ids);
+            //bool isSuccess = false;
+            if(result.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
                 ClearTutorSelected();
                 return RedirectToAction("Index", "Home");
             }
 
-            TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống vui lòng làm lại đi hihi";
+            TempData[AppConfig.MESSAGE_FAIL] = result.Message;
             return RedirectToAction("TutorRequestForm", "Customer");
         }
     }
