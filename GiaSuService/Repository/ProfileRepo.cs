@@ -41,7 +41,7 @@ namespace GiaSuService.Repository
 
         public async Task<Identitycard?> GetIdentitycard(string identityNumber)
         {
-            return await _context.Identitycards.FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
+            return await _context.Identitycards.AsNoTracking().FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
         }
 
         public async Task<List<AccountListViewModel>> GetEmployeeList(int crrPage)

@@ -61,7 +61,7 @@ namespace GiaSuService.Services
 
 
         //This code only update lockenable and identitynumber
-        public async Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel model)
+        public async Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model)
         {
             Tutor? tutorProfile = await _tutorRepo.GetTutor(model.TutorId);
             if(tutorProfile == null)

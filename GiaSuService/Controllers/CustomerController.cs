@@ -81,6 +81,9 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
+
+
+        [HttpGet]
         public IActionResult DeleteTutorRequest(int id)
         {
             RemoveTutorSelected(id);
@@ -185,7 +188,7 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("Index", "Identity");
             }
 
-            int? customerId = await _profileService.GetProfileId(requester, AppConfig.CUSTOMERROLENAME);
+            int? customerId = await _profileService.GetIdProfile(requester, AppConfig.CUSTOMERROLENAME);
             if(customerId == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Hết hạn đăng nhập";
