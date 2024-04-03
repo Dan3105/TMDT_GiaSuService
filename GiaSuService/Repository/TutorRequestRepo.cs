@@ -2,6 +2,7 @@
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
+using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -103,6 +104,34 @@ namespace GiaSuService.Repository
 
                 }).FirstOrDefaultAsync(p => p.FormId == id);
             return result;
+        }
+
+        public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int statusId, int page)
+        {
+            var result = _context.Tutorrequestforms
+                .AsNoTracking()
+                .Select(p => new
+                {
+                    TutorCard = new TutorRequestCardViewModel
+                    {
+                        RequestId = p.Id,
+                        GradeName = p.Grade.Name,
+                        SubjectName = p.Subject.Name,
+                        AdditionalDetail = p.Additionaldetail ?? string.Empty,
+                        Address = $"{p.District.Name}, {p.District.Name}, {p.Addressdetail}",
+                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
+                    },
+                    Status = p.Statusid,
+                    Expired = p.Expireddate
+                })
+                .OrderBy(p => p.Expired)
+                .Where(p => p.Status == statusId && p.Expired > DateTime.Now)
+                .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
+                .Take(AppConfig.ROWS_ACCOUNT_LIST)
+                ;
+                
+
+            return await result.Select(p => p.TutorCard).ToListAsync();
         }
     }
 }

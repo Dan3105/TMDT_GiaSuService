@@ -4,11 +4,12 @@ using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GiaSuService.Controllers
 {
-    [Authorize(Policy = AppConfig.TUTORPOLICY)]
+    
     public class TutorController : Controller
     {
         private readonly ITutorService _tutorService;
@@ -35,6 +36,7 @@ namespace GiaSuService.Controllers
             return Ok();
         }
 
+        [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
@@ -61,6 +63,7 @@ namespace GiaSuService.Controllers
             return View(profile);
         }
 
+        [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(TutorProfileViewModel profile)
         {
@@ -74,6 +77,21 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = response.Message;
             }
             return RedirectToAction("Profile", "Identity");
+        }
+
+        [HttpGet]
+        public IActionResult TutorRequestList()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTutorRequestBy(int page)
+        {
+            var queries = await _tutorRequestService.GetTutorrequestCard(AppConfig.FormStatus.APPROVAL, page);
+            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries, page, totalPages };
+            return Json(response);
         }
     }
 }

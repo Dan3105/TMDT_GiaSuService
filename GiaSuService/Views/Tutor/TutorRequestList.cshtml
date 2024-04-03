@@ -1,0 +1,80 @@
+﻿<div class="container">
+    <div id="items-container" class="row">
+        
+    </div>
+
+    <div id="pagination">
+        <button id="prev-page" disabled>Previous Page</button>
+        <span id="current-page">Page 1</span>
+        <button id="next-page">Next Page</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var currentPage = 0;
+
+        function loadItems(pageNumber) {
+            $.getJSON("/Tutor/GetTutorRequestBy", { page: pageNumber })
+                .done(function (data) {
+                    $("#items-container").empty(); // Clear existing items
+
+                    // Update page information
+                    $("#current-page").text(`Page ${data.page + 1}`);
+
+                    // Disable "Next Page" button if at the last page
+                    $("#next-page").prop("disabled", data.page === data.totalPages - 1);
+                    $("#prev-page").prop("disabled", data.page === 0);
+                    // Dynamically add items to the view
+                    $.each(data.queries, function (index, item) {
+                        console.log(item);
+
+                        var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
+                        console.log(additional_detail)
+                        var itemHtml = `
+                            <div class="col-md-4 col-sm-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                    <h5 class="card-title">Lớp chưa giao</h5>
+                                    </div>
+                                    <div class="card-body">
+                                            <p class="card-text"><b>Tên lớp:</b> ${item.subjectName}</p>
+                                            <p class="card-text"><b>Khối lớp:</b> ${item.gradeName}</p>
+                                                ${additional_detail}
+                                            <p class="card-text"><b>Địa điểm:</b> ${item.address}</p>
+                                            <p class="card-text"><b>Giờ dạy có thể nhận:</b> ${item.sessionsCanTeach}</p>
+                                    </div>
+
+                                            <div class="d-flex justify-content-end m-2">
+                                            <a href="#" class="btn btn-primary">Đăng ký nhận lớp</a>
+                                    </div>
+                                </div>
+                                     
+                            </div>
+                           
+                                    `;
+                        $("#items-container").append(itemHtml);
+                    });
+                });
+        }
+
+        // Load initial page
+        loadItems(currentPage);
+
+        // Handle "Next Page" button click
+        $("#next-page").click(function () {
+            if (!$(this).prop("disabled")) {
+                currentPage++;
+                loadItems(currentPage);
+            }
+        });
+
+        // (Optional) Handle "Previous Page" button click (implement similar logic)
+        $("#prev-page").click(function () {
+            if (!$(this).prop("disabled")) {
+                currentPage--;
+                loadItems(currentPage);
+            }
+        });
+    });
+</script>

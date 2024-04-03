@@ -11,9 +11,9 @@ public partial class Tutorrequestform
 
     public string? Additionaldetail { get; set; }
 
-    public DateTime? Createddate { get; set; }
+    public DateTime Createddate { get; set; }
 
-    public DateTime? Expireddate { get; set; }
+    public DateTime Expireddate { get; set; }
 
     public int Statusid { get; set; }
 

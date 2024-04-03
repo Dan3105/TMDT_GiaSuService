@@ -2,10 +2,10 @@
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
-using GiaSuService.Repository;
+using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GiaSuService.Services
 {
@@ -14,16 +14,14 @@ namespace GiaSuService.Services
         private readonly DvgsDbContext _context;
         private readonly ITutorRequestRepo _tutorRequestRepo;
         private readonly IStatusRepo _statusRepo;
-        private readonly ICategoryRepo _categoryRepo;
         private readonly IQueueRepo _queueRepo;
 
-        public TutorRequestFormService(DvgsDbContext context, ITutorRequestRepo tutorRequestRepo, IStatusRepo statusRepo, ICategoryRepo categoryRepo
+        public TutorRequestFormService(DvgsDbContext context, ITutorRequestRepo tutorRequestRepo, IStatusRepo statusRepo
             , IQueueRepo queueRepo)
         {
             _context = context;
             _tutorRequestRepo = tutorRequestRepo;
             _statusRepo = statusRepo;
-            _categoryRepo = categoryRepo;
             _queueRepo = queueRepo;
         }
 
@@ -116,6 +114,17 @@ namespace GiaSuService.Services
             }
 
             return await _tutorRequestRepo.GetTutorRequestQueueByStatus(status.Id, page);
+        }
+
+        [AllowAnonymous]
+        public async Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(AppConfig.FormStatus statusName, int page)
+        {
+            var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
+            if(status == null)
+            {
+                return null!;
+            }
+            return await _tutorRequestRepo.GetTutorRequestCardByStatus(status.Id, page);
         }
 
         public async Task<ResponseService> UpdateStatusTutorRequest(int id, string status)
