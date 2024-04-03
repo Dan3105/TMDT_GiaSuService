@@ -21,16 +21,16 @@
                         <dt class="col-sm-4">Phone:</dt>
                         <dd class="col-sm-8">@Model.Phone</dd>
                         <div class="form-group">
-                            <label asp-for="@Model.Identitycard">Identity Card:</label>
-                            <input type="text" asp-for="Identitycard" class="form-control" />
-                            <span asp-validation-for="Identitycard" class="text-danger"></span>
+                            <label asp-for="@Model.IdentityCard">Identity Card:</label>
+                            <input type="text" asp-for="IdentityCard" class="form-control" />
+                            <span asp-validation-for="IdentityCard" class="text-danger"></span>
                         </div>
                         <dt class="col-sm-4">Gender:</dt>
                         <dd class="col-sm-8">@Model.Gender</dd>
                         <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
                         <dd class="col-sm-8 row">
                             <div class="col">
-                                @if (!string.IsNullOrEmpty(Model.Frontidentitycard))
+                                @if (!string.IsNullOrEmpty(Model.FrontIdentityCard))
                                 {
                                     <img src="@Model.Avatar" alt="Front ID Card" class="img-thumbnail" />
                                 }
@@ -40,7 +40,7 @@
                                 }
                             </div>
                             <div class="col">
-                                @if (!string.IsNullOrEmpty(Model.Backidentitycard))
+                                @if (!string.IsNullOrEmpty(Model.BackIdentityCard))
                                 {
                                     <img src="@Model.Avatar" alt="Back ID Card" class="img-thumbnail" />
                                 }
@@ -64,7 +64,7 @@
                             }
                         </dd>
                         <dt class="col-sm-4">Address:</dt>
-                        <dd class="col-sm-8">@Model.Address</dd>
+                        <dd class="col-sm-8">@Model.AddressDetail</dd>
                     </dl>
                 </div>
 

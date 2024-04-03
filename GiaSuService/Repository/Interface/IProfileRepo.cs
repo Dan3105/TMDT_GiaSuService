@@ -11,13 +11,10 @@ namespace GiaSuService.Repository.Interface
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int crrPage);
 
-
-        public Task<ProfileViewModel?> GetEmployeeProfile(int accountId);
-        public Task<ProfileViewModel?> GetCustomerProfile(int accountId);
-        public Task<TutorProfileViewModel?> GetTutorProfile(int accountId);
-        public Task<ResponseService> UpdateEmployeeProfile(ProfileViewModel profile);
-        public Task<ResponseService> UpdateCustomerProfile(ProfileViewModel profile);
-        public Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel profile);
+        public Task<ProfileViewModel?> GetProfile(int profileId, string role);
+        public Task<TutorProfileViewModel?> GetTutorProfile(int tutorId);
+        public Task<bool> UpdateProfile(ProfileViewModel profile, string role);
+        public Task<bool> UpdateTutorProfile(TutorProfileViewModel profile);
 
     }
 }

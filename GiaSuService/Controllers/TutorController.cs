@@ -42,7 +42,15 @@ namespace GiaSuService.Controllers
 
             if (accountId == null || accountId == "" ) return RedirectToAction("Index", "Home");
 
-            var profile = await _profileService.GetTutorProfile(int.Parse(accountId));
+            int? profileId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (profileId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var profile = await _profileService.GetTutorProfile((int)profileId);
 
             if (profile == null)
             {

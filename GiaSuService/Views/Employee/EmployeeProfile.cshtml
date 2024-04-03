@@ -11,7 +11,7 @@
         <div class="col-md-8">
             <form method="post" asp-action="EmployeeProfile">
 
-                <input type="hidden" asp-for="EmployeeId" />
+                <input type="hidden" asp-for="ProfileId" />
 
                 <div class="form-group">
                     <label asp-for="FullName">Full Name:</label>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="row form-group">
                     <div class="col">
-                        <img src="@Model.FrontIdentiyCard" alt="Front identity card" />
+                        <img src="@Model.FrontIdentityCard" alt="Front identity card" />
                     </div>
                     <div class=col>
                         <img src="@Model.BackIdentityCard" alt="Back identity card" />

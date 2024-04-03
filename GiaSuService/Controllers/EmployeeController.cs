@@ -79,14 +79,14 @@ namespace GiaSuService.Controllers
             return View();
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> GetTutorRequestOnPending(int page)
         {
             List<TutorRequestQueueViewModel> queries = await _tutorRequestService.GetTutorrequestQueue(AppConfig.FormStatus.PENDING, page);
             int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries, page, totalPages };
             return Json(response);
-        }
+        }*/
 
         [HttpGet]
         public async Task<IActionResult> TutorRequestProfile(int id)

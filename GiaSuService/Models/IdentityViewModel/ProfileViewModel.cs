@@ -4,7 +4,7 @@ namespace GiaSuService.Models.IdentityViewModel
 {
     public class ProfileViewModel
     {
-        public int ProfileId { get; set; }
+        public int ProfileId { get; set; }  // employee_id or customer_id
         public int IdentityId { get; set; }
         public int AccountId { get; set; }
         public required string FullName { get; set; }

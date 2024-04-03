@@ -86,7 +86,15 @@ namespace GiaSuService.Controllers
             //User not founded
             if (accountId == null || accountId == "" || userRole == null) return RedirectToAction("Index", "Home");
 
-            var profile = await _profileService.GetProfile(int.Parse(accountId), userRole);
+            var profileId = await _profileService.GetProfileId(int.Parse(accountId), userRole);
+
+            if (profileId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var profile = await _profileService.GetProfile((int)profileId, userRole);
             if (profile == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
