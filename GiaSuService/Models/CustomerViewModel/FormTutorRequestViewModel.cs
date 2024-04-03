@@ -22,9 +22,6 @@ namespace GiaSuService.Models.CustomerViewModel
         [Required]
         public int NStudents { get; set; }
 
-        [Required]
-        public int NSessions { get; set; }
-
         public string? AdditionalDetail { get; set; } = string.Empty;
 
         [Required]

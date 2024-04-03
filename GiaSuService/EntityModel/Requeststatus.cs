@@ -9,7 +9,7 @@ public partial class Requeststatus
 
     public string Context { get; set; } = null!;
 
-    public DateOnly? Createdate { get; set; }
+    public DateTime? Createdate { get; set; }
 
     public int Tutorrequestid { get; set; }
 

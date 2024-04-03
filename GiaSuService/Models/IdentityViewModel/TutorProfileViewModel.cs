@@ -30,6 +30,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public int TutorId { get; set; }
         public string College { get; set; } = string.Empty;
         public string Area { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
         public string? Additionalinfo { get; set; }
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }

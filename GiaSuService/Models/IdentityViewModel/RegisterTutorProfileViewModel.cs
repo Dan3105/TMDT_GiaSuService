@@ -33,7 +33,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public string Gender { get; set; } = "Nam";
 
         [StringLength(255, ErrorMessage = "Image Invalid.")]
-        public string LogoAccount { get; set; } = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
+        public string Avatar { get; set; } = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
 
         [StringLength(255, ErrorMessage = "Image Invalid.")]
         public string FrontIdentityCard { get; set; } = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
