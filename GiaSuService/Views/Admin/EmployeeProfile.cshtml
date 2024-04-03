@@ -1,0 +1,93 @@
+﻿@using GiaSuService.Models.IdentityViewModel
+
+@model ProfileViewModel
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="@Model.Avatar" alt="@Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;" />
+        </div>
+        <div class="col-md-8">
+            <form method="post" asp-action="EmployeeProfile">
+
+                <input type="hidden" asp-for="EmployeeId" />
+                <input type="hidden" asp-for="IdentityId" />
+                <input type="hidden" asp-for="AccountId" />
+                <div class="form-group">
+                    <label asp-for="FullName">Full Name:</label>
+                    <span class="form-text text-muted">@Model.FullName</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email">Email:</label>
+                    <span class="form-text text-muted">@Model.Email</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone">Phone:</label>
+                    <span class="form-text text-muted">@Model.Phone</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthDate">Birth Date:</label>
+                    <span class="form-text text-muted">@Model.BirthDate?.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gender">Gender:</label>
+                    <span class="form-text text-muted">@Model.Gender</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AddressDetail">Address:</label>
+                    <span class="form-text text-muted">@Model.AddressDetail</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdentityCard">Identity Card:</label>
+                    <input type="text" asp-for="IdentityCard" class="form-control" />
+                    <span asp-validation-for="IdentityCard" class="text-danger"></span>
+                </div>
+                <div class="row form-group">
+                    <div class="col">
+                        <img src="@Model.FrontIdentiyCard" alt="Front identity card"/>
+                    </div>
+                    <div class=col>
+                        <img src="@Model.BackIdentityCard" alt="Back identity card"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LockStatus">Lock Status:</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input customformcheck-input" type="checkbox" asp-for="LockStatus" id="lockCheckbox" />
+                        <label class="form-check-label" id="lockStatusLabel">
+                            @if (@Model.LockStatus)
+                            {
+                                <span class="text-danger">Locked User</span>
+                            }
+                            else
+                            {
+                                <span class="text-success">Active User</span>
+                            }
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary customstyle-button">Update Profile</button>
+            </form>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var checkbox = document.getElementById("lockCheckbox");
+                var label = document.getElementById("lockStatusLabel");
+
+                checkbox.addEventListener("change", function () {
+                    if (checkbox.checked) {
+                        label.textContent = "Lock user";
+                        label.classList.add("text-danger");
+                        label.classList.remove("text-success");
+                    } else {
+                        label.textContent = "Enable user";
+                        label.classList.remove("text-danger");
+                        label.classList.add("text-success");
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>

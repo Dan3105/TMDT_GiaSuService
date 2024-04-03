@@ -13,7 +13,7 @@ public partial class Registerstatusdetail
 
     public int Statusid { get; set; }
 
-    public DateOnly Reviewdate { get; set; }
+    public DateTime Reviewdate { get; set; }
 
     public virtual Status Status { get; set; } = null!;
 
