@@ -3,12 +3,10 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Models.UtilityViewModel;
-using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 using System.Security.Claims;
 
 
@@ -20,12 +18,14 @@ namespace GiaSuService.Controllers
         private readonly IAuthService _authService;
         private readonly IAddressService _addressService;
         private readonly ICatalogService _catalogService;
+        private readonly IProfileService _profileService;
 
-        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService)
+        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, IProfileService profileService)
         {
             _authService = authService;
             _addressService = addressService;
             _catalogService = catalogService;
+            _profileService = profileService;
         }
 
         public IActionResult Index()
@@ -75,29 +75,44 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public IActionResult Profile()
+        [Authorize(Policy = AppConfig.PROFILE_POLICY)]
+        public async Task<IActionResult> Profile()
         {
-            // Retrieve user id
-            var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            //If no user founded
-            if(userId == null || userId == "") return RedirectToAction("Index", "Home");
-
-            //Get role of user
             var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
 
-            //If user is admin
-            if (userRole == AppConfig.ADMINROLENAME) return RedirectToAction("EmployeeProfile", "Admin", new { id = int.Parse(userId) });
+            if (userRole == AppConfig.TUTORROLENAME) return RedirectToAction("Profile", "Tutor");
 
-            //If user is employee
-            if (userRole == AppConfig.EMPLOYEEROLENAME) return RedirectToAction("EmployeeProfile", "Employee", new { id = int.Parse(userId) });
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+            //User not founded
+            if (accountId == null || accountId == "" || userRole == null) return RedirectToAction("Index", "Home");
 
-            //If user is tutor
-            if (userRole == AppConfig.TUTORROLENAME) return RedirectToAction("TutorProfile", "Tutor", new { id = int.Parse(userId) });
+            var profile = await _profileService.GetProfile(int.Parse(accountId), userRole);
+            if (profile == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
 
-            //if user is customer
-            return RedirectToAction("CustomerProfile", "Customer", new { id = int.Parse(userId) });
+            return View(profile);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = AppConfig.PROFILE_POLICY)]
+        public async Task<IActionResult> UpdateProfile(ProfileViewModel profile)
+        {
+            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+            if (userRole == null) return RedirectToAction("Index", "Home");
+
+            ResponseService response = await _profileService.UpdateProfile(profile, userRole);
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+            return RedirectToAction("Profile", "Identity");
         }
 
         [HttpGet]
@@ -109,6 +124,13 @@ namespace GiaSuService.Controllers
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Provinces()
+        {
+            var provinces = await _addressService.GetProvinces();
+            return Json(provinces);
         }
 
         [HttpGet]

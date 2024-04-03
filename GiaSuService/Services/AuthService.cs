@@ -34,6 +34,26 @@ namespace GiaSuService.Services
             _statusRepo = statusRepo;
         }
 
+        public async Task<ResponseService> CheckEmailExist(string email)
+        {
+            Account? acc = await _accountRepo.GetByEmailOrPhone(email);
+            if (acc == null)
+            {
+                return new ResponseService { Success = false, Message = "Email chưa tồn tại" };
+            }
+            return new ResponseService { Success = true, Message = "Email đã tồn tại" }; ;
+        }
+
+        public async Task<ResponseService> CheckPhoneExist(string phone)
+        {
+            Account? acc = await _accountRepo.GetByEmailOrPhone(phone);
+            if (acc == null)
+            {
+                return new ResponseService { Success = false, Message = "Số điện thoại chưa tồn tại" };
+            }
+            return new ResponseService { Success = true, Message = "Số điện thoại đã tồn tại" };
+        }
+
         public async Task<ResponseService> CreateAccount(Account account)
         {
             try

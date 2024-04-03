@@ -9,8 +9,14 @@ namespace GiaSuService.Services.Interface
         public Task<int?> GetIdProfile(int accountId, string roleName);
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int page);
-        public Task<ProfileViewModel?> GetEmployeeProfile(int empId);
+        
+        // Function to get or update user with role employee or customer
+        public Task<ProfileViewModel?> GetProfile(int accountId, string userRole);
+        public Task<ResponseService> UpdateProfile(ProfileViewModel profile, string userRole);
 
-        public Task<ResponseService> UpdateEmployeeProfile(ProfileViewModel model);
+        // Function to get or update tutor
+        public Task<TutorProfileViewModel?> GetTutorProfile(int accountId);
+        public Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel profile);
+
     }
 }

@@ -28,37 +28,6 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EmployeeProfile(int id)
-        {
-            Account account = await _authService.GetAccountById(id);
-            if (account == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
-                return RedirectToAction("EmployeeList", "Admin");
-            }
-
-            //District district = await _addressService.GetDistrictData(account.Districtid);
-            //DistrictViewModel district = await _addressService.GetDistrictData(1);
-            //ProfileViewModel profile = null!;
-            //    new EmployeeProfileViewModel()
-            //{
-            //    LogoAccount = account.Avatar,
-            //    Phone = account.Phone,
-            //    IdentityCard = account.Identitycard,
-            //    FrontIdentiyCard = account.Frontidentitycard,
-            //    BackIdentityCard = account.Backidentitycard,
-            //    Gender = account.Gender,
-            //    Email = account.Email,
-            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-            //    FullName = account.Fullname,
-            //    LockStatus = account.Lockenable,
-            //    BirthDate = account.Birth,
-            //    EmployeeId = account.Id
-            //};
-            return View();
-        }
-
-        [HttpGet]
         public IActionResult TutorRegisterQueue()
         {
             return View();
@@ -228,60 +197,6 @@ namespace GiaSuService.Controllers
             int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries, page, totalPages };
             return Json(response);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> TutorProfile(int id)
-        {
-            Account account = await _authService.GetAccountById(id);
-            if (account == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
-                return RedirectToAction("TutorList", "Employee");
-            }
-
-            //District district = await _addressService.GetDistrictData(account.Districtid);
-            //District district = await _addressService.GetDistrictData(1);
-            //ProfileViewModel employeeProfileViewModel = null!;
-            //new EmployeeProfileViewModel();
-            //{
-            //    LogoAccount = account.Avatar,
-            //    Phone = account.Phone,
-            //    IdentityCard = account.Identitycard,
-            //    FrontIdentiyCard = account.Frontidentitycard,
-            //    BackIdentityCard = account.Backidentitycard,
-            //    Gender = account.Gender,
-            //    Email = account.Email,
-            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-            //    FullName = account.Fullname,
-            //    LockStatus = account.Lockenable,
-            //    BirthDate = account.Birth,
-            //    EmployeeId = account.Id
-            //};
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> TutorProfile(ProfileViewModel employeeProfileViewModel)
-        {
-            Account? account = await _authService.GetAccountById(employeeProfileViewModel.EmployeeId);
-            if (account == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
-                return RedirectToAction("TutorList", "Employee");
-            }
-
-            ResponseService result = await _authService.UpdateAccount(account);
-            if (result.Success)
-            {
-                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
-                return RedirectToAction("TutorList", "Employee");
-            }
-            else
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = result.Message;
-                return RedirectToAction("TutorList", "Employee");
-            }
         }
     }
 }

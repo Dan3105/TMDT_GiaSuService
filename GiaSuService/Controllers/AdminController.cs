@@ -42,35 +42,6 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EmployeeProfile(int id)
-        {
-            var employee = await _profileService.GetEmployeeProfile(id);
-            if(employee == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Tdn mã nhân viên không tồn tại";
-                return RedirectToAction("EmployeeList", "Admin");
-            }
-
-            return View(employee);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EmployeeProfile(ProfileViewModel employeeProfileViewModel)
-        {
-            ResponseService result = await _profileService.UpdateEmployeeProfile(employeeProfileViewModel);
-            if (result.Success)
-            {
-                TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
-                return RedirectToAction("EmployeeList", "Admin");
-            }
-            else
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = result.Message;
-                return RedirectToAction("EmployeeList", "Admin");
-            }
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Register(RegisterAccountProfileViewModel view)
         {
             var provinces = await _addressService.GetProvinces();

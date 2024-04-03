@@ -7,12 +7,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <img src="@Model.LogoAccount" alt="@Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;" />
+            <img src="@Model.Avatar" alt="@Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;" />
         </div>
         <div class="col-md-8">
             <form method="post" asp-action="TutorProfile">
 
-                <input type="hidden" asp-for="EmployeeId" />
+                <input type="hidden" asp-for="AccountId" />
 
                 <div class="form-group">
                     <label asp-for="FullName">Full Name:</label>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="row form-group">
                     <div class="col">
-                        <img src="@Model.FrontIdentiyCard" alt="Front identity card" />
+                        <img src="@Model.FrontIdentityCard" alt="Front identity card" />
                     </div>
                     <div class=col>
                         <img src="@Model.BackIdentityCard" alt="Back identity card" />
