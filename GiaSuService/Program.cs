@@ -18,8 +18,14 @@ builder.Services.AddControllersWithViews();
 var datasourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("TutorConnection") ?? throw new InvalidOperationException("Connection string 'TutorConnection' not found."));
 
 builder.Services.AddDbContext<DvgsDbContext>(options =>
+{
     options.UseNpgsql(datasourceBuilder.Build())
-        .EnableServiceProviderCaching(false));
+        .EnableServiceProviderCaching(false);
+}
+);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+
 builder.Services.AddAuthentication().AddCookie(AppConfig.AUTHSCHEME, o =>
 {
     o.ExpireTimeSpan = TimeSpan.FromMinutes(15);
