@@ -59,6 +59,16 @@ namespace GiaSuService.Services
             return await _profileRepo.GetTutorProfile(profileId);
         }
 
+        public async Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel profile)
+        {
+            bool isSuccess = await _profileRepo.UpdateTutorProfile(profile);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+            }
+            return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
+        }
+
 
         //This code only update lockenable and identitynumber
         public async Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model)

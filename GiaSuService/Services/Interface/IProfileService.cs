@@ -18,5 +18,7 @@ namespace GiaSuService.Services.Interface
         
         public Task<TutorProfileViewModel?> GetTutorProfile(int tutorId);
         public Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel model);
+
+        public Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model);
     }
 }
