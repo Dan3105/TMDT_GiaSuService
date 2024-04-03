@@ -23,36 +23,55 @@ namespace GiaSuService.Services
             return _profileRepo.GetEmployeeList(page);
         }
 
-        public async Task<ProfileViewModel?> GetEmployeeProfile(int empId) { 
-            return await _profileRepo.GetEmployeeProfile(empId);
-        }
-
         public async Task<int?> GetIdProfile(int accountId, string roleName)
         {
             return await _profileRepo.GetProfileId(accountId, roleName);
         }
 
-        public async Task<ResponseService> UpdateEmployeeProfile(ProfileViewModel model)
+        public async Task<ProfileViewModel?> GetProfile(int accountId, string userRole)
+        {
+            if (userRole == AppConfig.CUSTOMERROLENAME)
+            {
+                return await _profileRepo.GetCustomerProfile(accountId);
+            }
+            return await _profileRepo.GetEmployeeProfile(accountId);
+
+        }
+
+        // Kiểm tra tài khoản thay đổi email, sdt, cccd có đc hay ko?
+        /*private async Task<ResponseService> CheckDuplicated(string email, string phone, string identitycard)
         {
 
-            Identitycard? identitycard = await _profileRepo.GetIdentitycard(model.IdentityCard);
-            var profileEmployee = await _profileRepo.GetEmployeeProfile(model.EmployeeId);
-            if(identitycard != null && !identitycard.Identitynumber.Equals(profileEmployee?.IdentityCard))
-            {
-                return new ResponseService { Success = false, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
-            }
-            bool isSuccess = await _profileRepo.UpdateEmployeProfile(model);
-            if (isSuccess)
-            {
-                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
-            }
+            return false;
+        }*/
 
-            return new ResponseService { Success = false, Message = "Lỗi hệ thống 500" };
+        public async Task<ResponseService> UpdateProfile(ProfileViewModel profile, string userRole)
+        {
+            ResponseService? response = null;
+            if (userRole == AppConfig.CUSTOMERROLENAME)
+            {
+                response = await _profileRepo.UpdateCustomerProfile(profile);
+            }
+            else
+            {
+                response = await _profileRepo.UpdateEmployeeProfile(profile);
+            }
+            return response;
+        }
+
+        public async Task<TutorProfileViewModel?> GetTutorProfile(int accountId)
+        {
+            return await _profileRepo.GetTutorProfile(accountId);
+        }
+
+        public async Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel profile)
+        {
+            return await _profileRepo.UpdateTutorProfile(profile);
         }
 
 
         //This code only update lockenable and identitynumber
-        public async Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel model)
+        public async Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model)
         {
             Tutor? tutorProfile = await _tutorRepo.GetTutor(model.TutorId);
             if(tutorProfile == null)
@@ -60,7 +79,7 @@ namespace GiaSuService.Services
                 return new ResponseService { Success = false, Message = "Không tìm được mã nhân viên" };
             }
 
-            Identitycard? identitycard = await _profileRepo.GetIdentitycard(model.Identitycard);
+            Identitycard? identitycard = await _profileRepo.GetIdentitycard(model.IdentityCard);
             
             if(identitycard != null && tutorProfile.Identity.Identitynumber != identitycard.Identitynumber)
             {
@@ -68,7 +87,7 @@ namespace GiaSuService.Services
             }
 
             tutorProfile.Account.Lockenable = model.Lockenable;
-            tutorProfile.Identity.Identitynumber = model.Identitycard;
+            tutorProfile.Identity.Identitynumber = model.IdentityCard;
 
             var isSuccess = await _tutorRepo.UpdateTutor(tutorProfile);
             if (isSuccess) { return new ResponseService { Success = true, Message = "Cập nhật gia sư thành công" }; }

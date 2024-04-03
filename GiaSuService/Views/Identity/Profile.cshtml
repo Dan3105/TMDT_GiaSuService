@@ -1,0 +1,163 @@
+﻿@using GiaSuService.Models.IdentityViewModel
+@using System.Security.Claims
+@using GiaSuService.Configs;
+
+@model ProfileViewModel
+@{
+    var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div style="text-align: center;">
+                <img src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
+                <button class="btn btn-primary customstyle-button" onclick="">Đổi ảnh đại diện</button>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <form method="post" asp-action="UpdateProfile">
+
+                <h1>Thông tin tài khoản</h1>
+
+                <input type="hidden" asp-for="AccountId" />
+                <input type="hidden" asp-for="IdentityId" />
+                <input type="hidden" asp-for="ProfileId" />
+                <input type="hidden" asp-for="LockStatus" />
+
+                <div class="form-group">
+                    <label asp-for="FullName">Họ tên:</label>
+                    <input type="text" asp-for="FullName" class="form-control" style="margin-bottom: 10px;" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email">Email:</label>
+                    <input type="text" asp-for="Email" class="form-control" style="margin-bottom: 10px;" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone">Số điện thoại:</label>
+                    <input type="text" asp-for="Phone" class="form-control" style="margin-bottom: 10px;" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthDate">Ngày sinh:</label>
+                    <input type="date" asp-for="BirthDate" class="form-control" style="margin-bottom: 10px;" value="@Model.BirthDate?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gender">Giới tính:</label>
+                    <select class="form-control" asp-for="Gender" style="margin-bottom: 10px;">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="province">Tỉnh / Thành phố:</label>
+                        <select class="form-select" asp-for="SelectedProvinceId" id="province" onchange="getDistricts()" style="margin-bottom: 10px;">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="district">Quận / Huyện:</label>
+                        <select class="form-select" asp-for="SelectedDistrictId" id="district" style="margin-bottom: 10px;">
+                        </select>
+                    </div>
+
+                    <label asp-for="AddressDetail">Số nhà, tên đường:</label>
+                    <input type="text" asp-for="AddressDetail" class="form-control" style="margin-bottom: 10px;" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdentityCard">Số CMND/CCCD:</label>
+                    <input type="text" asp-for="IdentityCard" class="form-control" style="margin-bottom: 10px;" />
+                </div>
+                <div class="row form-group">
+                    <div class="col">
+                        <label asp-for="FrontIdentityCard">Mặt trước:</label>
+                        <img src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước" />
+                    </div>
+                    <div class=col>
+                        <label asp-for="BackIdentityCard">Mặt sau:</label>
+                        <img src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau" />
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary customstyle-button" style="margin-top: 5px;">Cập nhật</button>
+                </div>
+
+            </form>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                firstLoad(); // Call the getProvinces function when the view is first loaded
+            });
+
+            function firstLoad() {
+                var selectedProvinceId = "@Model.SelectedProvinceId";
+                $.ajax({
+                    url: `/Identity/Provinces`,
+                    type: 'GET',
+                    success: function (data) {
+                        $("#province").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            var option = $('<option></option>').val(data[i].provinceId).text(data[i].provinceName);
+                            if (data[i].provinceId == selectedProvinceId) {
+                                option.prop('selected', true);
+                            }
+                            $("#province").append(option);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error fetching provinces:", textStatus, errorThrown);
+                    }
+                });
+
+                var selectedDistrictId = "@Model.SelectedDistrictId";
+                $.ajax({
+                    url: `/Identity/Districts`,
+                    type: 'GET',
+                    data: { 'provinceId': selectedProvinceId },
+                    success: function (data) {
+                        $("#district").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                            if (data[i].districtId == selectedDistrictId) {
+                                option.prop('selected', true);
+                            }
+                            $("#district").append(option);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error fetching districts:", textStatus, errorThrown);
+                    }
+                });
+            }
+
+            function getDistricts() {
+                var selectedProvinceId = $("#province").val();
+                var selectedDistrictId = "@Model.SelectedDistrictId";
+
+                $.ajax({
+                    url: `/Identity/Districts`,
+                    type: 'GET',
+                    data: { 'provinceId': selectedProvinceId },
+                    success: function (data) {
+                        $("#district").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                            if (data[i].districtId == selectedDistrictId) {
+                                option.prop('selected', true);
+                            }
+                            $("#district").append(option);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error fetching districts:", textStatus, errorThrown);
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
+
+

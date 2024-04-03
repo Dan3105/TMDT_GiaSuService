@@ -147,7 +147,7 @@ namespace GiaSuService.Controllers
         [HttpPost]
         public async Task<IActionResult> TutorProfile(TutorProfileViewModel tutorProfileViewModel)
         {
-            ResponseService result = await _profileService.UpdateTutorProfile(tutorProfileViewModel);
+            ResponseService result = await _profileService.UpdateTutorProfileInEmployee(tutorProfileViewModel);
             
             if (result.Success)
             {

@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 
 namespace GiaSuService.Controllers
 {
+    [Authorize(Policy = AppConfig.CUSTOMERPOLICY)]
     public class CustomerController : Controller
     {
         private readonly IAuthService _authService;
@@ -39,7 +40,6 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = AppConfig.CUSTOMERPOLICY)]
         public async Task<IActionResult> TutorRequestForm(int? tutorId = null)
         {
             var provinces = await _addressService.GetProvinces();
@@ -67,7 +67,6 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = AppConfig.CUSTOMERPOLICY)]
         public async Task<IActionResult> GetTutorsSelectedInCookie()
         {
             var tutorCards = new List<TutorCardViewModel>();
@@ -82,34 +81,7 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CustomerProfile(int id)
-        {
-            Account account = await _authService.GetAccountById(id);
-            if (account == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Mã khách hàng không tồn tại";
-                return RedirectToAction("Customer", "Index");
-            }
 
-            //District district = await _addressService.GetDistrictData(account.Districtid);
-            CustomerProfileViewModel profile = null!;
-            //    new CustomerProfileViewModel()
-            //{
-            //    Avatar = account.Avatar,
-            //    Phone = account.Phone,
-            //    IdentityCard = account.Identitycard,
-            //    FrontIdentiyCard = account.Frontidentitycard,
-            //    BackIdentityCard = account.Backidentitycard,
-            //    Gender = account.Gender,
-            //    Email = account.Email,
-            //    AddressDetail = district.Province.Provincename + " " + district.Districtname + " " + account.Addressdetail,
-            //    FullName = account.Fullname,
-            //    LockStatus = account.Lockenable,
-            //    BirthDate = account.Birth,
-            //    CustomerId = account.Id
-            //};
-            return View(profile);
-        }
 
         [HttpGet]
         public IActionResult DeleteTutorRequest(int id)
@@ -200,7 +172,6 @@ namespace GiaSuService.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = AppConfig.CUSTOMERPOLICY)]
         public async Task<IActionResult> SubmitTutorRequest(FormTutorRequestViewModel req)
         {
             if (!ModelState.IsValid)

@@ -69,6 +69,8 @@ namespace GiaSuService.Configs
         public const string CUSTOMERROLENAME = "customer";
         public const string CUSTOMERPOLICY = "customer_policy";
 
+        public const string PROFILE_POLICY = "profile_policy";
+
         public const string MESSAGE_SUCCESS = "message_success";
         public const string MESSAGE_FAIL = "message_failed";
 

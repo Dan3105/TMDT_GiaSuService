@@ -19,13 +19,13 @@
                 <dt class="col-sm-4">Phone:</dt>
                 <dd class="col-sm-8">@Model.Phone</dd>
                 <dt class="col-sm-4">Identity Card:</dt>
-                <dd class="col-sm-8">@Model.Identitycard</dd>
+                <dd class="col-sm-8">@Model.IdentityCard</dd>
                 <dt class="col-sm-4">Gender:</dt>
                 <dd class="col-sm-8">@Model.Gender</dd>
                 <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
                 <dd class="col-sm-8 row">
                     <div class="col">
-                        @if (!string.IsNullOrEmpty(Model.Frontidentitycard))
+                        @if (!string.IsNullOrEmpty(Model.FrontIdentityCard))
                         {
                             <img src="@Model.Avatar" alt="Front ID Card" class="img-thumbnail" />
                         }
@@ -35,7 +35,7 @@
                         }
                     </div>
                     <div class="col">
-                        @if (!string.IsNullOrEmpty(Model.Backidentitycard))
+                        @if (!string.IsNullOrEmpty(Model.BackIdentityCard))
                         {
                             <img src="@Model.Avatar" alt="Back ID Card" class="img-thumbnail" />
                         }
@@ -59,7 +59,7 @@
                     }
                 </dd>
                 <dt class="col-sm-4">Address:</dt>
-                <dd class="col-sm-8">@Model.Address</dd>
+                <dd class="col-sm-8">@Model.AddressDetail</dd>
             </dl>
         </div>
 
@@ -103,4 +103,74 @@
             <a href="@Url.Action("DenyTutor", "Employee", new {id = @Model.TutorId})" class="btn btn-danger">Deny</a>
         </div>
     </div> *@
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            firstLoad(); // Call the getProvinces function when the view is first loaded
+        });
+
+        function firstLoad() {
+            var selectedProvinceId = "@Model.SelectedProvinceId";
+            $.ajax({
+                url: `/Identity/Provinces`,
+                type: 'GET',
+                success: function (data) {
+                    $("#province").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var option = $('<option></option>').val(data[i].provinceId).text(data[i].provinceName);
+                        if (data[i].provinceId == selectedProvinceId) {
+                            option.prop('selected', true);
+                        }
+                        $("#province").append(option);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching provinces:", textStatus, errorThrown);
+                }
+            });
+
+            var selectedDistrictId = "@Model.SelectedDistrictId";
+            $.ajax({
+                url: `/Identity/Districts`,
+                type: 'GET',
+                data: { 'provinceId': selectedProvinceId },
+                success: function (data) {
+                    $("#district").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                        if (data[i].districtId == selectedDistrictId) {
+                            option.prop('selected', true);
+                        }
+                        $("#district").append(option);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching districts:", textStatus, errorThrown);
+                }
+            });
+        }
+
+        function getDistricts() {
+            var selectedProvinceId = $("#province").val();
+            var selectedDistrictId = "@Model.SelectedDistrictId";
+
+            $.ajax({
+                url: `/Identity/Districts`,
+                type: 'GET',
+                data: { 'provinceId': selectedProvinceId },
+                success: function (data) {
+                    $("#district").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                        if (data[i].districtId == selectedDistrictId) {
+                            option.prop('selected', true);
+                        }
+                        $("#district").append(option);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching districts:", textStatus, errorThrown);
+                }
+            });
+        }
+    </script>
 </div>

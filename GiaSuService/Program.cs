@@ -40,28 +40,35 @@ builder.Services.AddAuthorization(o =>
     {
         policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
         policy.RequireAuthenticatedUser();
-        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.ADMINROLENAME));
+        policy.RequireRole(AppConfig.ADMINROLENAME);
     });
 
     o.AddPolicy(AppConfig.EMPLOYEEPOLICY, policy =>
     {
         policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
         policy.RequireAuthenticatedUser();
-        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.EMPLOYEEROLENAME));
+        policy.RequireRole(AppConfig.EMPLOYEEROLENAME);
     });
 
     o.AddPolicy(AppConfig.CUSTOMERPOLICY, policy =>
     {
         policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
         policy.RequireAuthenticatedUser();
-        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.CUSTOMERROLENAME));
+        policy.RequireRole(AppConfig.CUSTOMERROLENAME);
     });
 
     o.AddPolicy(AppConfig.TUTORPOLICY, policy =>
     {
         policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
         policy.RequireAuthenticatedUser();
-        policy.Requirements.Add(new ShouldRoleRequire(AppConfig.TUTORROLENAME));
+        policy.RequireRole(AppConfig.TUTORROLENAME);
+    });
+
+    o.AddPolicy(AppConfig.PROFILE_POLICY, policy =>
+    {
+        policy.AddAuthenticationSchemes(AppConfig.AUTHSCHEME);
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(AppConfig.ADMINROLENAME, AppConfig.EMPLOYEEROLENAME, AppConfig.CUSTOMERROLENAME, AppConfig.TUTORROLENAME);
     });
 });
 

@@ -28,8 +28,8 @@ namespace GiaSuService.Services
 
         public async Task<List<ProvinceViewModel>> GetProvinces()
         {
-            var provinces = await _addressRepository.GetAllProvinces();
-            return provinces.ToList();
+            List<ProvinceViewModel> provinces = (await _addressRepository.GetAllProvinces()).ToList();
+            return provinces;
         }
 
 

@@ -96,6 +96,10 @@
 </form>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        getDistricts(); // Call the getDistricts function when the view is first loaded
+    });
+
     function getDistricts() {
         $("#provincedefault").remove();
 
