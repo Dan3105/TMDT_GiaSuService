@@ -125,6 +125,10 @@
                                                 <p class="card-text"><b>Grades:</b> ${item.gradeList}</p>
                                             <p class="card-text"><b>Teaching Area:</b> ${item.teachingArea}</p>
                                             <p class="card-text"><b>Additional Profile:</b> ${item.additionalProfile}</p>
+                                            <p class="card-text"><b>Trạng thái:</b>
+                                                         <span class="text-success ${item.isActive ? 'd-none' : ''}">Còn hoạt động</span>
+                                                         <span class="text-danger ${!item.isActive ? 'd-none' : ''}">Không hoạt động</span>
+                                            </p>
                                             <div class="d-flex justify-content-center">
                                                     <a class="btn btn-primary" href="/Employee/TutorProfile?id=${item.id}">Thông tin chi tiết</a>
                                             </div>

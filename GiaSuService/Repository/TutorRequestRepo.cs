@@ -59,7 +59,7 @@ namespace GiaSuService.Repository
             return filteredForms;
         }
 
-        /*public async Task<List<TutorRequestQueueViewModel>> GetTutorRequestQueueByStatus(int statusId, int page)
+        public async Task<List<TutorRequestQueueViewModel>> GetTutorRequestQueueByStatus(int statusId, int page)
         {
             return await _context.Tutorrequestforms
                 .AsNoTracking()
@@ -76,7 +76,7 @@ namespace GiaSuService.Repository
                     },
                     ExpiredDate = p.Expireddate,
                     CreatedDate = p.Createddate,
-                    StatusId=p.Statusid
+                    StatusId = p.Statusid
                 })
                 .Where(p => p.ExpiredDate > DateTime.Now && p.StatusId == statusId)
                 .OrderByDescending(p => p.CreatedDate)
@@ -84,7 +84,7 @@ namespace GiaSuService.Repository
                 .Take(AppConfig.ROWS_ACCOUNT_LIST)
                 .Select(p => p.TutorRequest)
                 .ToListAsync();
-        }*/
+        }
 
         public async Task<TutorRequestProfileViewModel?> GetTutorRequestProfile(int id)
         {

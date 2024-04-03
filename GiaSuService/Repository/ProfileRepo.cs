@@ -156,6 +156,7 @@ namespace GiaSuService.Repository
                     Academicyearto = tutor.Academicyearto,
                     Additionalinfo = tutor.Additionalinfo,
                     Birth = tutor.Birth,
+                    IsActive = tutor.Isactive,
 
                     TypeTutor = tutor.Typetutor,
 
