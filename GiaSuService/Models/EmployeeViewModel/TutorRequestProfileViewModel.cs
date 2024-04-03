@@ -9,8 +9,8 @@ namespace GiaSuService.Models.EmployeeViewModel
         public string GradeName { get; set; } = string.Empty;
         public string SubjectName { get; set; } = string.Empty;
         public string AddressName { get; set; } = string.Empty;
-        public DateTime CreatedDate { get; set; }
-        public DateTime ExpiredDate { get; set; }
+        public DateOnly CreatedDate { get; set; }
+        public DateOnly ExpiredDate { get; set; }
         public string CurrentStatus { get; set; } = string.Empty;
 
         public List<TutorCardViewModel> TutorCards { get; set; } = new List<TutorCardViewModel>();

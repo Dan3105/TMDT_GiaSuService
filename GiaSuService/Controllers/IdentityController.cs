@@ -217,7 +217,7 @@ namespace GiaSuService.Controllers
                 Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
                 Roleid = (int)roleId,
                 Lockenable = false,
-                Avatar = model.AccountProfile.Avatar,
+                Avatar = model.AccountProfile.LogoAccount,
                 Createdate = DateTime.Now,
                 Tutor = new Tutor()
                 {
@@ -303,7 +303,7 @@ namespace GiaSuService.Controllers
                 Email = accountProfile.Email,
                 Phone = accountProfile.Phone,
                 Passwordhash = Utility.HashPassword(accountProfile.Password),
-                Avatar = accountProfile.Avatar,
+                Avatar = accountProfile.LogoAccount,
                 Createdate = DateTime.Now,
                 Lockenable = false,
                 Roleid = (int)roleId,

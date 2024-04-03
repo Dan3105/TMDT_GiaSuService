@@ -15,10 +15,33 @@ namespace GiaSuService.Repository
             _context = context;
         }
 
+        public async Task<int?> GetProfileId(int accountId, string roleName)
+        {
+            if (roleName.Equals(AppConfig.ADMINROLENAME.ToLower()) || roleName.Equals(AppConfig.EMPLOYEEROLENAME.ToLower()))
+            {
+                return (await _context.Employees.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+
+            }
+
+            if (roleName.Equals(AppConfig.TUTORROLENAME.ToLower()))
+            {
+                return (await _context.Tutors.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+            }
+
+            if (roleName.Equals(AppConfig.CUSTOMERROLENAME))
+            {
+                return (await _context.Customers.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+            }
+
+            return null;
+        }
 
         public async Task<Identitycard?> GetIdentitycard(string identityNumber)
         {
-            return await _context.Identitycards.FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
+            return await _context.Identitycards.AsNoTracking().FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
         }
 
         public async Task<List<AccountListViewModel>> GetEmployeeList(int crrPage)
@@ -43,14 +66,14 @@ namespace GiaSuService.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<ProfileViewModel?> GetEmployeeProfile(int empId)
+        public async Task<ProfileViewModel?> GetEmployeeProfile(int accountId)
         {
-            ProfileViewModel? query = await _context.Employees
+            ProfileViewModel? profile = await _context.Employees
                 .AsNoTracking()
                 .Select(p => new ProfileViewModel()
                 {
+                    ProfileId = p.Id,
                     IdentityId = p.Identityid,
-                    EmployeeId = p.Id,
                     AccountId = p.Accountid,
                     Avatar = p.Account.Avatar,
                     Email = p.Account.Email,
@@ -58,115 +81,263 @@ namespace GiaSuService.Repository
                     FullName = p.Fullname,
                     LockStatus = p.Account.Lockenable ?? false,
                     Phone = p.Account.Phone,
-                    Gender = p.Gender == "M" ? "Nam" : "Nữ",
+                    Gender = (p.Gender == "M" ? "Nam" : "Nữ"),
                     IdentityCard = p.Identity.Identitynumber,
-                    FrontIdentiyCard = p.Identity.Frontidentitycard,
+                    FrontIdentityCard = p.Identity.Frontidentitycard,
                     BackIdentityCard = p.Identity.Backidentitycard,
 
-                    AddressDetail = $"{p.District.Province.Name}, {p.District.Name}, {p.Addressdetail}",
+                    AddressDetail = p.Addressdetail,
+                    SelectedDistrictId = p.Districtid,
+                    SelectedProvinceId = p.District.Provinceid,
                 })
-                .FirstOrDefaultAsync(p => p.EmployeeId == empId);
+                .FirstOrDefaultAsync(p => p.AccountId == accountId);
 
-            return query;
-
+            return profile;
         }
 
-        public async Task<bool> UpdateEmployeProfile(ProfileViewModel employeeProfile)
+        public async Task<ProfileViewModel?> GetCustomerProfile(int accountId)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
+            ProfileViewModel? profile = await _context.Customers
+                .AsNoTracking()
+                .Select(p => new ProfileViewModel()
                 {
+                    ProfileId = p.Id,
+                    IdentityId = p.Identityid,
+                    AccountId = p.Accountid,
+                    Avatar = p.Account.Avatar,
+                    Email = p.Account.Email,
+                    BirthDate = p.Birth,
+                    FullName = p.Fullname,
+                    LockStatus = p.Account.Lockenable ?? false,
+                    Phone = p.Account.Phone,
+                    Gender = (p.Gender == "M" ? "Nam" : "Nữ"),
+                    IdentityCard = p.Identity.Identitynumber,
+                    FrontIdentityCard = p.Identity.Frontidentitycard,
+                    BackIdentityCard = p.Identity.Backidentitycard,
 
-                    Identitycard? identity = await _context.Identitycards.FindAsync(employeeProfile.IdentityId);
-                    if (identity == null)
-                    {
-                        return false;
-                    }
-                    identity.Identitynumber = employeeProfile.IdentityCard;
-                    identity.Backidentitycard = employeeProfile.BackIdentityCard;
-                    identity.Frontidentitycard = employeeProfile.FrontIdentiyCard;
+                    AddressDetail = p.Addressdetail,
+                    SelectedDistrictId = p.Districtid,
+                    SelectedProvinceId = p.District.Provinceid,
+                })
+                .FirstOrDefaultAsync(p => p.AccountId == accountId);
 
-                    Account? account = await _context.Accounts.FindAsync(employeeProfile.AccountId);
-                    if(account == null)
-                    {
-                        return false;
-                    }
-                    account.Lockenable = employeeProfile.LockStatus;
-
-                    _context.Identitycards.Update(identity);
-                    _context.Accounts.Update(account);
-                    int result = _context.SaveChanges();
-                    transaction.Commit();
-                    return result > 0;
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                }
-            }
-            return false;
+            return profile;
         }
 
-        public async Task<TutorProfileViewModel?> GetTutorProfile(int tutorId)
+        public async Task<TutorProfileViewModel?> GetTutorProfile(int accountId)
         {
-
-            var result = await _context.Tutors
+            var profile = await _context.Tutors
                 .Select(tutor => new TutorProfileViewModel
                 {
                     TutorId = tutor.Id,
+                    AccountId = tutor.Accountid,
+                    IdentityId = tutor.Identityid,
                     Email = tutor.Account.Email,
                     Phone = tutor.Account.Phone,
                     Lockenable = tutor.Account.Lockenable ?? false,
-                    Createdate = DateOnly.FromDateTime((DateTime)tutor.Account.Createdate!),  
+                    Createdate = DateOnly.FromDateTime((DateTime)tutor.Account.Createdate!),
+                    LockStatus = tutor.Account.Lockenable ?? false,
                     Avatar = tutor.Account.Avatar,
 
                     Fullname = tutor.Fullname,
                     Gender = tutor.Gender == "M" ? "Nam" : "Nữ",
-                    Address = $"{tutor.District.Province.Name}, {tutor.District.Name}, {tutor.Addressdetail}",
-                    
+                    AddressDetail = tutor.Addressdetail,
+                    SelectedDistrictId = tutor.Districtid,
+                    SelectedProvinceId = tutor.District.Provinceid,
+
                     Area = tutor.Area,
                     College = tutor.College,
                     Academicyearfrom = tutor.Academicyearfrom,
                     Academicyearto = tutor.Academicyearto,
                     Additionalinfo = tutor.Additionalinfo,
                     Birth = tutor.Birth,
-                    
-                    TypeTutor = tutor.Typetutor ? "Giáo viên" : "Phụ huynh",
 
-                    Identitycard = tutor.Identity.Identitynumber,
-                    Frontidentitycard = tutor.Identity.Frontidentitycard,
-                    Backidentitycard = tutor.Identity.Backidentitycard,
-                    IsActive = tutor.Isactive
+                    TypeTutor = tutor.Typetutor,
+
+                    IdentityCard = tutor.Identity.Identitynumber,
+                    FrontIdentityCard = tutor.Identity.Frontidentitycard,
+                    BackIdentityCard = tutor.Identity.Backidentitycard,
                 })
-                .FirstOrDefaultAsync(p => p.TutorId == tutorId);
-            
-            //var latestStatus = await _statusRe
-            return result;
+                .FirstOrDefaultAsync(p => p.AccountId == accountId);
+
+            return profile;
         }
 
-        public async Task<int?> GetProfileId(int accountId, string roleName)
+        public async Task<ResponseService> UpdateEmployeeProfile(ProfileViewModel profile)
         {
-            if (roleName.Equals(AppConfig.ADMINROLENAME.ToLower()) || roleName.Equals(AppConfig.EMPLOYEEROLENAME.ToLower()))
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return (await _context.Employees.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
-                    
-            }
+                try
+                {
+                    Identitycard? identity = await _context.Identitycards.FindAsync(profile.IdentityId);
+                    if (identity == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy CMND/CCCD" };
+                    }
+                    identity.Identitynumber = profile.IdentityCard;
+                    identity.Backidentitycard = profile.BackIdentityCard;
+                    identity.Frontidentitycard = profile.FrontIdentityCard;
 
-            if (roleName.Equals(AppConfig.TUTORROLENAME.ToLower()))
+                    Account? account = await _context.Accounts.FindAsync(profile.AccountId);
+                    if (account == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy tài khoản" };
+                    }
+                    account.Email = profile.Email;
+                    account.Phone = profile.Phone;
+                    account.Avatar = profile.Avatar;
+                    account.Lockenable = profile.LockStatus;
+
+                    Employee? employee = await _context.Employees.FindAsync(profile.ProfileId);
+                    if (employee == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy nhân viên" };
+                    }
+                    employee.Fullname = profile.FullName;
+                    employee.Addressdetail = profile.AddressDetail;
+                    employee.Gender = profile.Gender == "Nam" ? "M" : "F";
+                    employee.Birth = profile.BirthDate;
+                    employee.Districtid = profile.SelectedDistrictId;
+
+                    _context.Identitycards.Update(identity);
+                    _context.Accounts.Update(account);
+                    _context.Employees.Update(employee);
+                    int result = _context.SaveChanges();
+                    transaction.Commit();
+                    if (result > 0)
+                    {
+                        return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+                    }
+                    else
+                    {
+                        return new ResponseService { Success = false, Message = "Cập nhật không thành công" };
+                    }
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return new ResponseService { Success = false, Message = "Cập nhật không thành công" };
+        }
+
+        public async Task<ResponseService> UpdateCustomerProfile(ProfileViewModel profile)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return (await _context.Tutors.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
-            }
+                try
+                {
+                    Identitycard? identity = await _context.Identitycards.FindAsync(profile.IdentityId);
+                    if (identity == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy CMND/CCCD" };
+                    }
+                    identity.Identitynumber = profile.IdentityCard;
+                    identity.Backidentitycard = profile.BackIdentityCard;
+                    identity.Frontidentitycard = profile.FrontIdentityCard;
 
-            if (roleName.Equals(AppConfig.CUSTOMERROLENAME))
+                    Account? account = await _context.Accounts.FindAsync(profile.AccountId);
+                    if (account == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy tài khoản" };
+                    }
+                    account.Email = profile.Email;
+                    account.Phone = profile.Phone;
+                    account.Avatar = profile.Avatar;
+                    account.Lockenable = profile.LockStatus;
+
+                    Customer? customer = await _context.Customers.FindAsync(profile.ProfileId);
+                    if (customer == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy khách hàng" };
+                    }
+                    customer.Fullname = profile.FullName;
+                    customer.Addressdetail = profile.AddressDetail;
+                    customer.Gender = profile.Gender == "Nam" ? "M" : "F";
+                    customer.Birth = profile.BirthDate;
+                    customer.Districtid = profile.SelectedDistrictId;
+
+                    _context.Identitycards.Update(identity);
+                    _context.Accounts.Update(account);
+                    _context.Customers.Update(customer);
+
+                    int result = _context.SaveChanges();
+                    transaction.Commit();
+                    if (result > 0)
+                    {
+                        return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+                    }
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return new ResponseService { Success = false, Message = "Cập nhật không thành công" };
+        }
+
+        public async Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel profile)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return (await _context.Customers.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
-            }
+                try
+                {
+                    Identitycard? identity = await _context.Identitycards.FindAsync(profile.IdentityId);
+                    if (identity == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy CMND/CCCD" };
+                    }
+                    identity.Identitynumber = profile.IdentityCard;
+                    identity.Backidentitycard = profile.BackIdentityCard;
+                    identity.Frontidentitycard = profile.FrontIdentityCard;
 
-            return null;
+                    Account? account = await _context.Accounts.FindAsync(profile.AccountId);
+                    if (account == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy tài khoản" };
+                    }
+                    account.Email = profile.Email;
+                    account.Phone = profile.Phone;
+                    account.Avatar = profile.Avatar;
+                    account.Lockenable = profile.LockStatus;
+
+                    Tutor? tutor = await _context.Tutors.FindAsync(profile.TutorId);
+                    if (tutor == null)
+                    {
+                        return new ResponseService { Success = false, Message = "Không tìm thấy gia sư" };
+                    }
+                    tutor.Fullname = profile.Fullname;
+                    tutor.Addressdetail = profile.AddressDetail;
+                    tutor.Gender = profile.Gender == "Nam" ? "M" : "F";
+                    tutor.Birth = profile.Birth;
+                    tutor.Districtid = profile.SelectedDistrictId;
+                    tutor.College = profile.College;
+                    tutor.Area = profile.Area;
+                    tutor.Additionalinfo = profile.Additionalinfo;
+                    tutor.Academicyearfrom = profile.Academicyearfrom;
+                    tutor.Academicyearto = profile.Academicyearto;
+                    tutor.Typetutor = profile.TypeTutor;
+
+                    _context.Identitycards.Update(identity);
+                    _context.Accounts.Update(account);
+                    _context.Tutors.Update(tutor);
+                    int result = _context.SaveChanges();
+                    transaction.Commit();
+                    if (result > 0)
+                    {
+                        return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+                    }
+                    else
+                    {
+                        return new ResponseService { Success = false, Message = "Cập nhật không thành công" };
+                    }
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return new ResponseService { Success = false, Message = "Cập nhật không thành công" };
         }
     }
 }

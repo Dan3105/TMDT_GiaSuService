@@ -82,7 +82,7 @@ namespace GiaSuService.Controllers
                 Email = accountProfile.Email,
                 Phone = accountProfile.Phone,
                 Lockenable = false,
-                Avatar = accountProfile.Avatar,
+                Avatar = accountProfile.LogoAccount,
                 Roleid = (int)roleId,
                 Createdate = DateTime.Now,
                 Passwordhash = Utility.HashPassword(accountProfile.Password),

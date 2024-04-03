@@ -6,7 +6,7 @@ namespace GiaSuService.Services
 {
     public class TutorRequestHistoryStatusService : ITutorRequestHistoryStatusService
     {
-        private readonly ITutorRequestHistoryStatusRepo _repo;
+        private readonly ITutorRequestHistoryStatusRepository _repo;
         //public TutorRequestHistoryStatusService(ITutorRequestHistoryStatusRepository repo)
         //{
         //    _repo = repo;

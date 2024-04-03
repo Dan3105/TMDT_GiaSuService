@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GiaSuService.Repository
 {
-    public class TutorRequestHistoryStatusRepo : ITutorRequestHistoryStatusRepo
+    public class TutorRequestHistoryStatusRepository : ITutorRequestHistoryStatusRepository
     {
         private readonly DvgsDbContext _context;
 
-        public TutorRequestHistoryStatusRepo(DvgsDbContext context)
+        public TutorRequestHistoryStatusRepository(DvgsDbContext context)
         {
             _context = context;
         }

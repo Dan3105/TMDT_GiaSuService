@@ -3,6 +3,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 
@@ -88,7 +89,7 @@ namespace GiaSuService.Services
             tutor.Registerstatusdetails.Add(new Registerstatusdetail
             {
                 Context = "",
-                Reviewdate = DateTime.Now,
+                Reviewdate = DateOnly.FromDateTime(DateTime.Now),
                 Status = dbStatus,
             });
 
@@ -101,6 +102,11 @@ namespace GiaSuService.Services
             {
                 return new ResponseService { Success = false, Message = "Lỗi hệ thống không cập nhật được" };
             }
+        }
+
+        public Task<List<AccountListViewModel>> GetTutorProfilesByFilter(int subjectId, int districtId, int gradeId, int page)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -9,7 +9,7 @@ public partial class Tutorqueue
 
     public int Tutorid { get; set; }
 
-    public DateTime? Enterdate { get; set; }
+    public DateOnly? Enterdate { get; set; }
 
     public int Statusid { get; set; }
 
