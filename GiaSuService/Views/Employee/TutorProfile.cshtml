@@ -1,75 +1,130 @@
-﻿
-@using GiaSuService.Models.IdentityViewModel
+﻿@using GiaSuService.Models.IdentityViewModel
 
-@model ProfileViewModel
+@model TutorProfileViewModel
 
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
-            <img src="@Model.LogoAccount" alt="@Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;" />
-        </div>
-        <div class="col-md-8">
-            <form method="post" asp-action="TutorProfile">
+        <form method="post" asp-action="TutorProfile">
+            <input type="hidden" asp-for="TutorId"/>
+            <div class="row">
+                <div class="col-md-6 border-end">
+                    <h2>Account Profile</h2>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">Full Name:</dt>
+                        <dd class="col-sm-8">@Model.Fullname</dd>
+                        <dt class="col-sm-4">Date of Birth:</dt>
+                        <dd class="col-sm-8">@Model.Birth?.ToString("dd-MM-yyyy")</dd>
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+                        <dt class="col-sm-4">Phone:</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+                        <div class="form-group">
+                            <label asp-for="@Model.Identitycard">Identity Card:</label>
+                            <input type="text" asp-for="Identitycard" class="form-control" />
+                            <span asp-validation-for="Identitycard" class="text-danger"></span>
+                        </div>
+                        <dt class="col-sm-4">Gender:</dt>
+                        <dd class="col-sm-8">@Model.Gender</dd>
+                        <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
+                        <dd class="col-sm-8 row">
+                            <div class="col">
+                                @if (!string.IsNullOrEmpty(Model.Frontidentitycard))
+                                {
+                                    <img src="@Model.Avatar" alt="Front ID Card" class="img-thumbnail" />
+                                }
+                                else
+                                {
+                                    <span>No front ID card uploaded</span>
+                                }
+                            </div>
+                            <div class="col">
+                                @if (!string.IsNullOrEmpty(Model.Backidentitycard))
+                                {
+                                    <img src="@Model.Avatar" alt="Back ID Card" class="img-thumbnail" />
+                                }
+                                else
+                                {
+                                    <span>No back ID card uploaded</span>
+                                }
+                            </div>
 
-                <input type="hidden" asp-for="EmployeeId" />
+                        </dd>
 
-                <div class="form-group">
-                    <label asp-for="FullName">Full Name:</label>
-                    <span class="form-text text-muted">@Model.FullName</span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Email">Email:</label>
-                    <span class="form-text text-muted">@Model.Email</span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Phone">Phone:</label>
-                    <span class="form-text text-muted">@Model.Phone</span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="BirthDate">Birth Date:</label>
-                    @* <span class="form-text text-muted">@Model.BirthDate.ToString("dd/MM/yyyy")</span> *@
-                </div>
-                <div class="form-group">
-                    <label asp-for="Gender">Gender:</label>
-                    <span class="form-text text-muted">@Model.Gender</span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AddressDetail">Address:</label>
-                    <span class="form-text text-muted">@Model.AddressDetail</span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="IdentityCard">Identity Card:</label>
-                    <input type="text" asp-for="IdentityCard" class="form-control" />
-                    <span asp-validation-for="IdentityCard" class="text-danger"></span>
-                </div>
-                <div class="row form-group">
-                    <div class="col">
-                        <img src="@Model.FrontIdentiyCard" alt="Front identity card" />
-                    </div>
-                    <div class=col>
-                        <img src="@Model.BackIdentityCard" alt="Back identity card" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="LockStatus">Lock Status:</label>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input customformcheck-input" type="checkbox" asp-for="LockStatus" id="lockCheckbox" />
-                        <label class="form-check-label" id="lockStatusLabel">
-                            @if (@Model.LockStatus)
+                        <dt class="col-sm-4">Created Date:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Createdate.HasValue)
                             {
-                                <span class="text-danger">Locked User</span>
+                                @Model.Createdate.Value.ToString("dd-MM-yyyy")
                             }
                             else
                             {
-                                <span class="text-success">Active User</span>
+                                <span>Not available</span>
                             }
-                        </label>
+                        </dd>
+                        <dt class="col-sm-4">Address:</dt>
+                        <dd class="col-sm-8">@Model.Address</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-center">
+                        @if (!string.IsNullOrEmpty(Model.Avatar))
+                        {
+                            <img src="@Model.Avatar" alt="Avatar" class="img-thumbnail" />
+                        }
+                        else
+                        {
+                            <span>No avatar uploaded</span>
+                        }
                     </div>
+                    <h2>Tutor Profile</h2>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-5">College:</dt>
+                        <dd class="col-sm-7">@Model.College</dd>
+                        <dt class="col-sm-5">Area:</dt>
+                        <dd class="col-sm-7">@Model.Area</dd>
+                        <dt class="col-sm-5">Additional Info:</dt>
+                        <dd class="col-sm-7">@Model.Additionalinfo</dd>
+                        <dt class="col-sm-5">Academic Year (From):</dt>
+                        <dd class="col-sm-7">@Model.Academicyearfrom</dd>
+                        <dt class="col-sm-5">Academic Year (To):</dt>
+                        <dd class="col-sm-7">@Model.Academicyearto</dd>
+                        <dt class="col-sm-5">Type Tutor:</dt>
+                        <dd class="col-sm-7">@Model.TypeTutor</dd>
+                        <dt class="col-sm-5">Form Status:</dt>
+                        <dd class="col-sm-7">
+                            <b>@Model.Formstatus?.ToString()</b>
+                        </dd>
+                        <dt class="col-sm-5">Trạng thái: </dt>
+                        <dd class="col-sm-7">
+                            @if(@Model.IsActive){ <b class="text-success">Họat động</b>}
+                            else {<b class="text-danger">Dừng hoạt động</b>}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Lockenable">Lock Status:</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input customformcheck-input" type="checkbox" asp-for="Lockenable" id="lockCheckbox" />
+                    <label class="form-check-label" id="lockStatusLabel">
+                        @if (@Model.Lockenable)
+                        {
+                            <span class="text-danger">Locked User</span>
+                        }
+                        else
+                        {
+                            <span class="text-success">Active User</span>
+                        }
+                    </label>
                 </div>
                 <button type="submit" class="btn btn-primary customstyle-button">Update Profile</button>
-            </form>
-        </div>
+            </div>
+        </form>
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {

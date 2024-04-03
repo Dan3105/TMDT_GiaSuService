@@ -10,7 +10,8 @@ namespace GiaSuService.Services.Interface
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int page);
         public Task<ProfileViewModel?> GetEmployeeProfile(int empId);
-
         public Task<ResponseService> UpdateEmployeeProfile(ProfileViewModel model);
+        
+        public Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel model);
     }
 }

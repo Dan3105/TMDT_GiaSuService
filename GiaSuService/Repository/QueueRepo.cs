@@ -23,7 +23,7 @@ namespace GiaSuService.Repository
                     form.Tutorqueues.Add(
                     new Tutorqueue
                     {
-                        Enterdate = DateOnly.FromDateTime(DateTime.Now),
+                        Enterdate = DateTime.Now,
                         Statusid = statusDefaultId,
                         Tutorid = id,
                     });

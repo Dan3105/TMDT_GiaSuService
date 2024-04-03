@@ -139,7 +139,10 @@ namespace GiaSuService.Repository
 
         public async Task<Tutor?> GetTutor(int id)
         {
-            return await _context.Tutors.FindAsync(id);
+            return await _context.Tutors
+                .Include(p => p.Identity)
+                .Include(p => p.Account)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> SaveChanges()

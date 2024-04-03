@@ -9,9 +9,9 @@ public partial class Transactionhistory
 
     public int Typetransactionid { get; set; }
 
-    public DateOnly? Createdate { get; set; }
+    public DateTime? Createdate { get; set; }
 
-    public DateOnly? Paymentdate { get; set; }
+    public DateTime? Paymentdate { get; set; }
 
     public decimal Actualamount { get; set; }
 

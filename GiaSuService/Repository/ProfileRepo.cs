@@ -18,7 +18,7 @@ namespace GiaSuService.Repository
 
         public async Task<Identitycard?> GetIdentitycard(string identityNumber)
         {
-            return await _context.Identitycards.AsNoTracking().FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
+            return await _context.Identitycards.FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
         }
 
         public async Task<List<AccountListViewModel>> GetEmployeeList(int crrPage)
@@ -52,7 +52,7 @@ namespace GiaSuService.Repository
                     IdentityId = p.Identityid,
                     EmployeeId = p.Id,
                     AccountId = p.Accountid,
-                    LogoAccount = p.Account.Avatar,
+                    Avatar = p.Account.Avatar,
                     Email = p.Account.Email,
                     BirthDate = p.Birth,
                     FullName = p.Fullname,
@@ -137,8 +137,11 @@ namespace GiaSuService.Repository
                     Identitycard = tutor.Identity.Identitynumber,
                     Frontidentitycard = tutor.Identity.Frontidentitycard,
                     Backidentitycard = tutor.Identity.Backidentitycard,
+                    IsActive = tutor.Isactive
                 })
                 .FirstOrDefaultAsync(p => p.TutorId == tutorId);
+            
+            //var latestStatus = await _statusRe
             return result;
         }
 

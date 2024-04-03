@@ -89,7 +89,7 @@ namespace GiaSuService.Services
             tutor.Registerstatusdetails.Add(new Registerstatusdetail
             {
                 Context = "",
-                Reviewdate = DateOnly.FromDateTime(DateTime.Now),
+                Reviewdate = DateTime.Now,
                 Status = dbStatus,
             });
 

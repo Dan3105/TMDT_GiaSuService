@@ -111,7 +111,7 @@ namespace GiaSuService.Controllers
                 Email = accountProfile.Email,
                 Phone = accountProfile.Phone,
                 Lockenable = false,
-                Avatar = accountProfile.LogoAccount,
+                Avatar = accountProfile.Avatar,
                 Roleid = (int)roleId,
                 Createdate = DateTime.Now,
                 Passwordhash = Utility.HashPassword(accountProfile.Password),

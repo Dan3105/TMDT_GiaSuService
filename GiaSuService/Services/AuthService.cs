@@ -73,7 +73,7 @@ namespace GiaSuService.Services
                     account.Tutor.Registerstatusdetails.Add(new Registerstatusdetail()
                     {
                         Context = "Tạo tài khoản",
-                        Reviewdate = DateOnly.FromDateTime(DateTime.Now),
+                        Reviewdate = DateTime.Now,
                         Statusid = status.Id,
                     });
 

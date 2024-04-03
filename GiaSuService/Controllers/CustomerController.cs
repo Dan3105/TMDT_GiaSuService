@@ -95,7 +95,7 @@ namespace GiaSuService.Controllers
             CustomerProfileViewModel profile = null!;
             //    new CustomerProfileViewModel()
             //{
-            //    LogoAccount = account.Avatar,
+            //    Avatar = account.Avatar,
             //    Phone = account.Phone,
             //    IdentityCard = account.Identitycard,
             //    FrontIdentiyCard = account.Frontidentitycard,
