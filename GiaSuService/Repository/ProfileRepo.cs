@@ -286,6 +286,7 @@ namespace GiaSuService.Repository
                     tutor.Academicyearfrom = profile.Academicyearfrom;
                     tutor.Academicyearto = profile.Academicyearto;
                     tutor.Typetutor = profile.TypeTutor;
+                    tutor.Isactive = profile.IsActive;
 
                     _context.Identitycards.Update(identity);
                     _context.Accounts.Update(account);

@@ -26,9 +26,29 @@
                 <div class="form-group">
                     <label asp-for="Createdate" style="margin-bottom: 10px;">Ngày tạo: @Model.Createdate?.ToString("yyyy-MM-dd")</label>
                 </div>
+
+                @* Trạng thái gia sư đã được duyệt hoạt động trong hệ thống *@
                 @* <div class="form-group">
-                    <label asp-for="Formstatus">Đã được duyệt: @Model.Formstatus</label>
+                    <label asp-for="IsValid" style="margin-bottom: 10px;">Trạng thái duyệt hoạt động ???</label>
                 </div> *@
+
+                <div class="form-group">
+                    <label asp-for="IsActive">Trạng thái dạy học:</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input customformcheck-input" type="checkbox" asp-for="IsActive"
+                               id="lockCheckbox" onchange="changeActiveStatus()" />
+                        <label class="form-check-label" id="IsActiveLabel">
+                            @if (@Model.IsActive)
+                            {
+                                <span class="text-success">Đang hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Dừng hoạt động</span>
+                            }
+                        </label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label asp-for="Fullname">Họ tên:</label>
                     <input type="text" asp-for="Fullname" class="form-control" style="margin-bottom: 10px;" />
@@ -183,7 +203,25 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 firstLoad(); // Call the getProvinces function when the view is first loaded
+                changeActiveStatus();
             });
+
+            function changeActiveStatus() {
+                var checkbox = document.getElementById("lockCheckbox");
+                var label = document.getElementById("IsActiveLabel");
+
+                checkbox.addEventListener("change", function () {
+                    if (checkbox.checked) {
+                        label.textContent = "Đang hoạt động";
+                        label.classList.add("text-success");
+                        label.classList.remove("text-danger");
+                    } else {
+                        label.textContent = "Dừng hoạt động";
+                        label.classList.remove("text-success");
+                        label.classList.add("text-danger");
+                    }
+                });
+            }
 
             function firstLoad() {
                 var selectedProvinceId = "@Model.SelectedProvinceId";
