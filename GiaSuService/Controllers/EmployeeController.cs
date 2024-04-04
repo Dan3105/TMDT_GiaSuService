@@ -196,5 +196,31 @@ namespace GiaSuService.Controllers
 
             return View(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorRequestEditByEmployee(int id)
+        {
+            var thisForm = await _tutorRequestService.GetTutorRequestProfileEdit(id);
+            if (thisForm == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn vui lòng làm lại";
+                return RedirectToAction("TutorRequestList", "Employee");
+            }
+
+            if(thisForm.CurrentStatus.ToLower() != AppConfig.FormStatus.APPROVAL.ToString().ToLower())
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Đơn này đã được giao hoặc chưa được duyệt";
+                return RedirectToAction("TutorRequestList", "Employee");
+            }
+            var gradeViews = await _catalogService.GetAllGrades();
+            var sessionViews = await _catalogService.GetAllSessions();
+            var subjectViews = await _catalogService.GetAllSubjects();
+
+            thisForm.Sessions = sessionViews;
+            thisForm.Grades = gradeViews;
+            thisForm.Subjects = subjectViews;
+
+            return View(thisForm);
+        }
     }
 }

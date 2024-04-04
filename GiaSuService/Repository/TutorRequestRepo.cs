@@ -140,5 +140,28 @@ namespace GiaSuService.Repository
 
             return await result.Select(p => p.TutorCard).ToListAsync();
         }
+
+        public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)
+        {
+            return await _context.Tutorrequestforms
+                .Select(p => new TutorRequestProfileEditViewModel
+                {
+
+                    DistrictId = p.Districtid,
+                    AdditionalDetail = p.Additionaldetail,
+                    Addressdetail = p.Addressdetail,
+                    CreateDate = p.Createddate,
+                    ExpireDate = p.Expireddate,
+                    CurrentStatus = p.Status.Name,
+                    FullName = p.Customer.Fullname,
+                    GradeId = p.Gradeid,
+                    NStudents = p.Students,
+                    ProvinceId = p.District.Provinceid,
+                    SelectedBefore = p.Sessions.Select(p => p.Id).ToList(),
+                    RequestId = p.Id,
+                    SubjectId = p.Subjectid,
+                })
+                .FirstOrDefaultAsync(p => p.RequestId == id);
+        }
     }
 }

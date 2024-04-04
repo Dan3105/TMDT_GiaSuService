@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 
@@ -15,5 +16,7 @@ namespace GiaSuService.Services.Interface
         public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page);
         public Task<ResponseService> UpdateStatusTutorRequest(int id, string status);
+
+        public Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id);
     }
 }

@@ -16,5 +16,6 @@ namespace GiaSuService.Repository.Interface
         public Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page);
 
         public Task<TutorRequestProfileViewModel?> GetTutorRequestProfile(int id);
+        public Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id);
     }
 }

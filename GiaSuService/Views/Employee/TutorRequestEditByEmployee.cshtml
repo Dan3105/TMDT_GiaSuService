@@ -1,0 +1,218 @@
+﻿@using GiaSuService.Models.EmployeeViewModel;
+@model TutorRequestProfileEditViewModel;
+
+<div class="container">
+    <div id="list-tutor" class="row d-flex justify-content-center">
+    </div>
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
+        </div>
+    <hr />
+
+    <h1>Tutor Request Form</h1>
+
+    <form asp-action="SubmitTutorRequest" asp-controller="Customer" method="post">
+        <input type="hidden" asp-for="RequestId"/>
+        <div class="form-group">
+            <label asp-for="NStudents">Số lượng học sinh:</label>
+            <input asp-for="NStudents" type="number" min="1" max="9" class="form-control customform-control" required />
+            <span asp-validation-for="NStudents" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="AdditionalDetail">Thông tin bổ sung (Nếu có):</label>
+            <textarea asp-for="AdditionalDetail" rows="5" class="form-control customform-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="province">Tỉnh/ Thành phố:</label>
+            <select class="form-select customform-control" id="province" onchange="getDistricts()">
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Quận:</label>
+            <select id="district" asp-for="DistrictId" class="form-control customform-control">
+                <option>Chọn quận</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Addressdetail">Địa chỉ chi tiết:</label>
+            <input asp-for="Addressdetail" class="form-control customform-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Môn học:</label>
+            <select asp-for="SubjectId" class="form-select" id="subject">
+                @if (Model.Subjects != null)
+                {
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        @if(subject.SubjectId == Model.SubjectId)
+                        {
+                            <option selected value="@subject.SubjectId">@subject.SubjectName</option>
+                        }else{
+                            <option value="@subject.SubjectId">@subject.SubjectName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="grade">Khối lớp:</label>
+            <select asp-for="GradeId" class="form-select" id="grade">
+                @if (Model.Grades != null)
+                {
+                    @foreach (var grade in Model.Grades)
+                    {
+                        @if(grade.GradeId == Model.GradeId)
+                        {
+                            <option selected value="@grade.GradeId">@grade.GradeName</option>
+                        }else{
+                            <option value="@grade.GradeId">@grade.GradeName</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian dạy:</label>
+            <div class="row row-cols-3">
+                @for (int i = 0; i < Model.Sessions.Count(); i++)
+                {
+                    Model.Sessions[i].IsChecked = Model.SelectedBefore.Contains(Model.Sessions[i].SessionId);
+                    <div class="checkbox">
+                        <label>
+                            @Html.HiddenFor(m => m.Sessions[i].SessionId)
+                            @Html.CheckBoxFor(m => m.Sessions[i].IsChecked, new {@class = "form-check-input customformcheck-input"})
+                            @Model.Sessions[i].SessionName
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary customstyle-button">Gửi</button>
+    </form>
+</div>
+
+<script>
+    function getDistricts() {
+        $("#provincedefault").remove();
+
+        var selectedIdProvince = $("#province").val();
+        $.ajax({
+            url: `/Identity/Districts`,
+            type: 'GET',
+            data: { 'provinceId': selectedIdProvince },
+            success: function (data) {
+                $("#districtSelectionContainer").empty(); // Replace the content with updated data
+                for (var i = 0; i < data.length; i++) {
+                    $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching districts:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        firstLoad(); // Call the getProvinces function when the view is first loaded
+    });
+
+    function firstLoad() {
+        var selectedProvinceId = "@Model.ProvinceId";
+        $.ajax({
+            url: `/Identity/Provinces`,
+            type: 'GET',
+            success: function (data) {
+                $("#province").empty();
+                for (var i = 0; i < data.length; i++) {
+                    var option = $('<option></option>').val(data[i].provinceId).text(data[i].provinceName);
+                    if (data[i].provinceId == selectedProvinceId) {
+                        option.prop('selected', true);
+                    }
+                    $("#province").append(option);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching provinces:", textStatus, errorThrown);
+            }
+        });
+
+        var selectedDistrictId = "@Model.DistrictId";
+        $.ajax({
+            url: `/Identity/Districts`,
+            type: 'GET',
+            data: { 'provinceId': selectedProvinceId },
+            success: function (data) {
+                $("#district").empty();
+                for (var i = 0; i < data.length; i++) {
+                    var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                    if (data[i].districtId == selectedDistrictId) {
+                        option.prop('selected', true);
+                    }
+                    $("#district").append(option);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching districts:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    $.ajax({
+        url: `/Customer/GetTutorsSelectedInCookie`,
+        success: function (data) {
+            $("#list-tutor").empty();
+            for (var i = 0; i < data.length; i++) {
+                item = data[i];
+
+                $("#list-tutor")
+                    .append(`
+                        <div id="${item.id}_view" class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <img src="${item.avatar}" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
+                                        <div class="m-lg-2">
+                                            <h5 class="card-text fs-6">Gia Sư: ${item.fullName} </h5>
+                                            <p class= "card-text mb-1" > Tutor Type: ${item.tutorType} </p>
+                                            <p class= "card-text mb-1" > College: ${item.college} </p>
+                                            <p class="card-text mb-1">Area: ${item.area}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                     <a onclick="deleteTutor(${item.id})" class="btn btn-primary")">Hủy chọn</a>
+                                </div>
+                            </div>
+                        </div>
+                        `)
+            }
+        }
+    })
+
+    function deleteTutor(id) {
+        event.preventDefault();
+        $.ajax({
+            url: "/Customer/DeleteTutorRequest",
+            type: "GET",
+            data: { id: id },
+            success: function () {
+                $(`#${id}_view`).fadeOut("fast", function () { // Animate the removal
+                    $(`#${id}_view`).remove();
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Handle network or server errors (optional)
+                console.error("Error deleting tutor:", textStatus, errorThrown);
+                alert("An error occurred while deleting the tutor.");
+            }
+        })
+    }
+</script>

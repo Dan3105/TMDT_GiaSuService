@@ -70,9 +70,9 @@
             <select asp-for="Profile.GradeId" class="form-select" id="grade">
                 @if (Model.Grades != null)
                 {
-                    @foreach (var subject in Model.Grades)
+                    @foreach (var grade in Model.Grades)
                     {
-                        <option value="@subject.GradeId">@subject.GradeName</option>
+                        <option value="@grade.GradeId">@grade.GradeName</option>
                     }
                 }
             </select>

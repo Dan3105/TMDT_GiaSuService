@@ -154,5 +154,10 @@ namespace GiaSuService.Services
                 return new ResponseService { Success = false, Message = "Lỗi hệ thống không cập nhật được" };
             }
         }
+
+        public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)
+        {
+            return await _tutorRequestRepo.GetTutorRequestProfileEdit(id);
+        }
     }
 }
