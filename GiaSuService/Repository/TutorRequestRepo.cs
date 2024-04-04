@@ -106,7 +106,7 @@ namespace GiaSuService.Repository
             return result;
         }
 
-        public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int statusId, int page)
+        public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page)
         {
             var result = _context.Tutorrequestforms
                 .AsNoTracking()
@@ -121,11 +121,18 @@ namespace GiaSuService.Repository
                         Address = $"{p.District.Name}, {p.District.Name}, {p.Addressdetail}",
                         SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
                     },
+                    GradeId = p.Gradeid,
+                    SubjectId = p.Subjectid,
+                    DistrictId = p.Districtid,
                     Status = p.Statusid,
                     Expired = p.Expireddate
                 })
                 .OrderBy(p => p.Expired)
-                .Where(p => p.Status == statusId && p.Expired > DateTime.Now)
+                .Where(p => p.Status == statusId && p.Expired > DateTime.Now 
+                        && (districtId == 0 || p.DistrictId == districtId) 
+                        && (gradeId == 0 || p.GradeId == gradeId) 
+                        && (subjectId == 0 || p.SubjectId == subjectId)
+                        )
                 .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
                 .Take(AppConfig.ROWS_ACCOUNT_LIST)
                 ;

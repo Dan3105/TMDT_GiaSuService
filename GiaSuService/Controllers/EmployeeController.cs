@@ -79,14 +79,14 @@ namespace GiaSuService.Controllers
             return View();
         }
 
-        /*[HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetTutorRequestOnPending(int page)
         {
             List<TutorRequestQueueViewModel> queries = await _tutorRequestService.GetTutorrequestQueue(AppConfig.FormStatus.PENDING, page);
             int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries, page, totalPages };
             return Json(response);
-        }*/
+        }
 
         [HttpGet]
         public async Task<IActionResult> TutorRequestProfile(int id)
@@ -159,6 +159,23 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = result.Message;
                 return RedirectToAction("TutorProfile", "Employee", new {id = tutorProfileViewModel.TutorId});
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorRequestList()
+        {
+            var gradeViews = await _catalogService.GetAllGrades();
+            var provinceViews = await _addressService.GetProvinces();
+            var subjectViews = await _catalogService.GetAllSubjects();
+
+            TutorRequestListViewModel result = new TutorRequestListViewModel()
+            {
+                GradeList = gradeViews,
+                ProvinceList = provinceViews,
+                SubjectList = subjectViews,
+            };
+
+            return View(result);
         }
     }
 }

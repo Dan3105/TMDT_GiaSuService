@@ -38,5 +38,6 @@ namespace GiaSuService.Models.IdentityViewModel
         public string? Formstatus { get; set; }
         #endregion
 
+
     }
 }

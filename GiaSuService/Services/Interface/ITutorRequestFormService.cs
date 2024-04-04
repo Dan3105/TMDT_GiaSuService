@@ -12,7 +12,8 @@ namespace GiaSuService.Services.Interface
         public Task<bool> UpdateForm(Tutorrequestform form, List<int> sessionList, string statusName);
 
         public Task<List<TutorRequestQueueViewModel>> GetTutorrequestQueue(AppConfig.FormStatus status, int page);
-        public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(AppConfig.FormStatus statusName, int page);
+        public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+            AppConfig.FormStatus statusName, int page);
         public Task<ResponseService> UpdateStatusTutorRequest(int id, string status);
     }
 }

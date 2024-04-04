@@ -15,12 +15,14 @@ namespace GiaSuService.Controllers
         private readonly ITutorService _tutorService;
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
+        private readonly ITutorRequestFormService _tutorRequestService;
 
-        public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService)
+        public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService, ITutorRequestFormService tutorRequestService)
         {
             _tutorService = tutorService;
             _catalogService = catalogService;
             _addressService = addressService;
+            _tutorRequestService = tutorRequestService;
         }
 
         public IActionResult Index()
@@ -61,6 +63,15 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> GetTutorsBy(int districtId, int gradeId, int subjectId, int page)
         {
             var queries = await _tutorService.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
+            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries, page, totalPages };
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int page)
+        {
+            var queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page);
             int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries, page, totalPages };
             return Json(response);

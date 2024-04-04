@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.Models.IdentityViewModel;
+using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -80,18 +81,22 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public IActionResult TutorRequestList()
+        public async Task<IActionResult> TutorRequestList()
         {
-            return View();
+            var gradeViews = await _catalogService.GetAllGrades();
+            var provinceViews = await _addressService.GetProvinces();
+            var subjectViews = await _catalogService.GetAllSubjects();
+
+            TutorRequestListViewModel result = new TutorRequestListViewModel()
+            {
+                GradeList = gradeViews,
+                ProvinceList = provinceViews,
+                SubjectList = subjectViews,
+            };
+
+            return View(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTutorRequestBy(int page)
-        {
-            var queries = await _tutorRequestService.GetTutorrequestCard(AppConfig.FormStatus.APPROVAL, page);
-            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
-            return Json(response);
-        }
+       
     }
 }
