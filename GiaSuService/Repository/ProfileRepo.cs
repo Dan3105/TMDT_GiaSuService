@@ -163,6 +163,8 @@ namespace GiaSuService.Repository
                     IdentityCard = tutor.Identity.Identitynumber,
                     FrontIdentityCard = tutor.Identity.Frontidentitycard,
                     BackIdentityCard = tutor.Identity.Backidentitycard,
+
+                    IsValid = tutor.Isvalid
                 })
                 .FirstOrDefaultAsync(p => p.TutorId == tutorId);
 

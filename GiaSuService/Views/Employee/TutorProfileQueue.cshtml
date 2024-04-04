@@ -1,6 +1,6 @@
-﻿@using GiaSuService.Models.IdentityViewModel;
+﻿@using GiaSuService.Models.EmployeeViewModel;
 @using GiaSuService.Configs;
-@model TutorProfileViewModel
+@model ContextReviewingRegister;
 
 @{
     ViewData["Title"] = "Profile Details";
@@ -12,23 +12,23 @@
             <hr />
             <dl class="row">
                 <dt class="col-sm-4">Full Name:</dt>
-                <dd class="col-sm-8">@Model.Fullname</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.Fullname</dd>
                 <dt class="col-sm-4">Date of Birth:</dt>
-                <dd class="col-sm-8">@Model.Birth?.ToString("dd-MM-yyyy")</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.Birth?.ToString("dd-MM-yyyy")</dd>
                 <dt class="col-sm-4">Email:</dt>
-                <dd class="col-sm-8">@Model.Email</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.Email</dd>
                 <dt class="col-sm-4">Phone:</dt>
-                <dd class="col-sm-8">@Model.Phone</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.Phone</dd>
                 <dt class="col-sm-4">Identity Card:</dt>
-                <dd class="col-sm-8">@Model.IdentityCard</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.IdentityCard</dd>
                 <dt class="col-sm-4">Gender:</dt>
-                <dd class="col-sm-8">@Model.Gender</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.Gender</dd>
                 <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
                 <dd class="col-sm-8 row">
                     <div class="col">
-                        @if (!string.IsNullOrEmpty(Model.FrontIdentityCard))
+                        @if (!string.IsNullOrEmpty(Model.TutorProfileVM.FrontIdentityCard))
                         {
-                            <img src="@Model.Avatar" alt="Front ID Card" class="img-thumbnail" />
+                            <img src="@Model.TutorProfileVM.Avatar" alt="Front ID Card" class="img-thumbnail" />
                         }
                         else
                         {
@@ -36,9 +36,9 @@
                         }
                     </div>
                     <div class="col">
-                        @if (!string.IsNullOrEmpty(Model.BackIdentityCard))
+                        @if (!string.IsNullOrEmpty(Model.TutorProfileVM.BackIdentityCard))
                         {
-                            <img src="@Model.Avatar" alt="Back ID Card" class="img-thumbnail" />
+                            <img src="@Model.TutorProfileVM.Avatar" alt="Back ID Card" class="img-thumbnail" />
                         }
                         else
                         {
@@ -50,9 +50,9 @@
 
                 <dt class="col-sm-4">Created Date:</dt>
                 <dd class="col-sm-8">
-                    @if (Model.Createdate.HasValue)
+                    @if (Model.TutorProfileVM.Createdate.HasValue)
                     {
-                        @Model.Createdate.Value.ToString("dd-MM-yyyy")
+                        @Model.TutorProfileVM.Createdate.Value.ToString("dd-MM-yyyy")
                     }
                     else
                     {
@@ -60,15 +60,15 @@
                     }
                 </dd>
                 <dt class="col-sm-4">Address:</dt>
-                <dd class="col-sm-8">@Model.AddressDetail</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM.AddressDetail</dd>
             </dl>
         </div>
 
         <div class="col-md-6">
             <div class="d-flex justify-content-center">
-                @if (!string.IsNullOrEmpty(Model.Avatar))
+                @if (!string.IsNullOrEmpty(Model.TutorProfileVM.Avatar))
                 {
-                    <img src="@Model.Avatar" alt="Avatar" class="img-thumbnail" />
+                    <img src="@Model.TutorProfileVM.Avatar" alt="Avatar" class="img-thumbnail" />
                 }
                 else
                 {
@@ -79,17 +79,17 @@
             <hr />
             <dl class="row">
                 <dt class="col-sm-5">College:</dt>
-                <dd class="col-sm-7">@Model.College</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM.College</dd>
                 <dt class="col-sm-5">Area:</dt>
-                <dd class="col-sm-7">@Model.Area</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM.Area</dd>
                 <dt class="col-sm-5">Additional Info:</dt>
-                <dd class="col-sm-7">@Model.Additionalinfo</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM.Additionalinfo</dd>
                 <dt class="col-sm-5">Academic Year (From):</dt>
-                <dd class="col-sm-7">@Model.Academicyearfrom</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM.Academicyearfrom</dd>
                 <dt class="col-sm-5">Academic Year (To):</dt>
-                <dd class="col-sm-7">@Model.Academicyearto</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM.Academicyearto</dd>
                 <dt class="col-sm-5">Type Tutor:</dt>
-                @if (Model.TypeTutor)
+                @if (Model.TutorProfileVM.TypeTutor)
                 {
                     <dd class="col-sm-7">Gia sư</dd>
                 }
@@ -99,16 +99,31 @@
                 }
                 <dt class="col-sm-5">Form Status:</dt>
                 <dd class="col-sm-7">
-                    <b>@Model.Formstatus?.ToString()</b>
+                    <b>@Model.TutorProfileVM.Formstatus?.ToString()</b>
                 </dd>
             </dl>
         </div>
     </div>
 
-    <div class="row mt-4 justify-content-end">
-        <div class="col-auto">
-            <a href="@Url.Action("UpdateStatusTutor", "Employee", new {id = @Model.TutorId, statusType=AppConfig.RegisterStatus.APPROVAL.ToString()})" class="btn btn-primary">Apply</a>
-            <a href="@Url.Action("UpdateStatusTutor", "Employee", new {id = @Model.TutorId, statusType=AppConfig.RegisterStatus.DENY.ToString()})" class="btn btn-danger">Deny</a>
+    <form asp-action="UpdateStatusTutor" asp-controller="Employee" method="post">
+        <div class="form-group row mt-2">
+            <label for="Context" class="form-label fw-bold">Example textarea:</label>
+            <div class="col-sm-9">
+                <textarea class="form-control" asp-for="Context" rows="4" placeholder="Reason for submitting"></textarea>
+            </div>
+
+            <div class="col-sm-3 mt-4 justify-content-end">
+                <div class="col-auto">
+                    <input type="hidden" asp-for="TutorProfileVM!.TutorId" />
+
+                    <button type="submit" class="btn btn-primary" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Apply</button>
+                    <button type="submit" class="btn btn-danger" name="submitType" value="@AppConfig.RegisterStatus.DENY.ToString()">Deny</button>
+
+                </div>
+            </div>
         </div>
-    </div>
+        
+        
+    </form>
+    
 </div>

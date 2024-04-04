@@ -52,19 +52,38 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> TutorProfileQueue(int id)
         {
+           
             TutorProfileViewModel? tutor = await _tutorService.GetTutorprofileById(id);
             if (tutor == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "User cannot be found";
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
-            return View(tutor);
+
+            if(tutor.IsValid == true)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Đơn này đã được xử lý";
+                return RedirectToAction("TutorRegisterQueue", "Employee");
+            }
+
+            ContextReviewingRegister vm = new ContextReviewingRegister
+            {
+                TutorProfileVM = tutor,
+                Context = string.Empty,
+            };
+            return View(vm);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> UpdateStatusTutor(int id, string statusType)
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatusTutor(ContextReviewingRegister response)
         {
-            var result = await _tutorService.UpdateTutorProfileStatus(id, statusType);
+            if (response.TutorProfileVM != null && response.TutorProfileVM.TutorId == 0)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Error 404";
+                return RedirectToAction("TutorRegisterQueue", "Employee");
+            }
+
+            var result = await _tutorService.UpdateTutorProfileStatus(response.TutorProfileVM!.TutorId, response.StatusType, response.Context);
             if(result.Success) {
                 TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
                 return RedirectToAction("TutorRegisterQueue", "Employee");

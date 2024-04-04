@@ -36,6 +36,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public short Academicyearto { get; set; }
         public bool TypeTutor { get; set; }
         public string? Formstatus { get; set; }
+        public bool IsValid { get; set; }   
         #endregion
 
 

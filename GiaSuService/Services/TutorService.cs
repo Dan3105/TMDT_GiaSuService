@@ -61,7 +61,7 @@ namespace GiaSuService.Services
             return await _tutorRepository.GetSubTutorCardView(ids);
         }
 
-        public async Task<ResponseService> UpdateTutorProfileStatus(int tutorId, string status)
+        public async Task<ResponseService> UpdateTutorProfileStatus(int tutorId, string status, string context)
         {
             var dbStatus = await _statusRepository.GetStatus(status, AppConfig.register_status);
             if (dbStatus == null)
@@ -87,7 +87,7 @@ namespace GiaSuService.Services
 
             tutor.Registerstatusdetails.Add(new Registerstatusdetail
             {
-                Context = "",
+                Context = context,
                 Reviewdate = DateTime.Now,
                 Status = dbStatus,
             });
