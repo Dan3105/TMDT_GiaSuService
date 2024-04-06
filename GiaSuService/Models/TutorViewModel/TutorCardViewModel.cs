@@ -17,5 +17,7 @@ namespace GiaSuService.Models.TutorViewModel
         public string SubjectList { get; set; } = string.Empty;
         public string TeachingArea { get; set; } = string.Empty;
         public string AdditionalProfile { get; set; } = string.Empty;
+
+        public bool IsActive { get; set; }
     }
 }

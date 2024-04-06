@@ -90,18 +90,17 @@
 
         $.getJSON("/Home/GetTutorsBy", { districtId: selectedIdDistrict, gradeId: selectedIdGrade, subjectId: selectedIdSubject, page: pageNumber })
             .done(function (data) {
-                console.log(data);
+                //console.log(data);
                 $("#items-container").empty(); // Clear existing items
 
                 // Update page information
                 $("#current-page").text(`Page ${data.page + 1}`);
 
                 // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page === data.totalPages - 1);
+                $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
                 $("#prev-page").prop("disabled", data.page === 0);
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
-                    //console.log(item);
                     var spanActive = item.lockStatus ? `<span class="text-danger">Tạm đóng</span>` : `<span class="text-success">Hoạt động</span>`;
                     var itemHtml = `
                                     <div class="col-md-5 mb-3">
@@ -126,8 +125,8 @@
                                             <p class="card-text"><b>Teaching Area:</b> ${item.teachingArea}</p>
                                             <p class="card-text"><b>Additional Profile:</b> ${item.additionalProfile}</p>
                                             <p class="card-text"><b>Trạng thái:</b>
-                                                         <span class="text-success ${item.isActive ? 'd-none' : ''}">Còn hoạt động</span>
-                                                         <span class="text-danger ${!item.isActive ? 'd-none' : ''}">Không hoạt động</span>
+                                                         <span class="text-success ${!item.isActive ? 'd-none' : ''}">Còn hoạt động</span>
+                                                         <span class="text-danger ${item.isActive ? 'd-none' : ''}">Không hoạt động</span>
                                             </p>
                                             <div class="d-flex justify-content-center">
                                                     <a class="btn btn-primary" href="/Employee/TutorProfile?id=${item.id}">Thông tin chi tiết</a>

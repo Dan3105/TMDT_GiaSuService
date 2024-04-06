@@ -120,11 +120,17 @@
     </div>
     <div class="form-group">
         <label for="addressName">Loại gia sư:</label>
-        <select class="form-control customform-control" id="gender" asp-for="RegisterTutorProfile!.TypeTutor">
-            <option value="@false">Sinh viên</option>
-            <option value="@true">Gia Sư</option>
+        <select class="form-control customform-control" id="gender" asp-for="RegisterTutorProfile!.TypeTutorId">
+            @if (Model.ListTutorType != null)
+            {
+                <option id="provincedefault">-Công việc hiện tại-</option>
+                @foreach (var type in Model.ListTutorType)
+                {
+                    <option value="@type.TutorTypeId">@type.TypeName</option>
+                }
+            }
         </select>
-        @* @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.TypeTutor, "", new { @class = "text-danger" }) *@
+        @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.TypeTutorId, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">

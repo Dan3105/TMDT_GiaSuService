@@ -5,6 +5,9 @@ namespace GiaSuService.Repository.Interface
 {
     public interface ICategoryRepo
     {
+        public Task<TutorTypeViewModel> GetTutorTypeById(int typeId);
+        public Task<List<TutorTypeViewModel>> GetAllTutorTypes();
+
         public Task<GradeViewModel> GetGradeById(int gradeId);
         public Task<List<GradeViewModel>> GetAllGrades();
         public Task<List<GradeViewModel>> GetSubGrades(List<int> ids);

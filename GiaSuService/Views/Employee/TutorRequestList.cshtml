@@ -94,6 +94,7 @@
 
                 // Update page information
                 $("#current-page").text(`Page ${data.page + 1}`);
+                console.log(data.page, data.totalPages);
 
                 // Disable "Next Page" button if at the last page
                 $("#next-page").prop("disabled", data.page === data.totalPages - 1);

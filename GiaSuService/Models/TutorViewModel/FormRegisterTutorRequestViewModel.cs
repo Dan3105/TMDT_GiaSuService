@@ -18,6 +18,7 @@ namespace GiaSuService.Models.TutorViewModel
         public List<SessionViewModel> ListSessionDate { get; set; } = new List<SessionViewModel>();
         public List<GradeViewModel> ListGrade { get; set; } = new List<GradeViewModel>();
         public List<SubjectViewModel> ListSubject { get; set; } = new List<SubjectViewModel>();
+        public List<TutorTypeViewModel> ListTutorType { get; set; } = new List<TutorTypeViewModel>();
         public List<int> ListDistrict { get; set; } = new List<int>();
 
         public List<SessionViewModel> GetSessionSelected => ListSessionDate.Where(p => p.IsChecked).ToList();
@@ -35,7 +36,7 @@ namespace GiaSuService.Models.TutorViewModel
         [Required(ErrorMessage = "Please")]
         public string Area { get; set; } = string.Empty;
 
-        public bool TypeTutor { get; set; }
+        public int TypeTutorId { get; set; }
 
         public string? AdditionalInfo { get; set; } = string.Empty;
 

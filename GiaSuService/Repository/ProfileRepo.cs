@@ -4,7 +4,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-
+using GiaSuService.Models.UtilityViewModel;
 namespace GiaSuService.Repository
 {
     public class ProfileRepo : IProfileRepo
@@ -155,9 +155,13 @@ namespace GiaSuService.Repository
                     Academicyearto = tutor.AcademicYearTo,
                     Additionalinfo = tutor.AdditionalInfo,
                     Birth = tutor.Birth,
-                    IsActive = tutor.IsActive,
+                    IsActive = tutor.IsActive ?? false,
 
-                    TutorType = tutor.TutorTypeId,
+                    TutorType = new TutorTypeViewModel
+                    {
+                        TutorTypeId = tutor.TutorTypeId,
+                        TypeName = tutor.TutorType.Name
+                    },
 
                     IdentityCard = tutor.Identity.IdentityNumber,
                     FrontIdentityCard = tutor.Identity.FrontIdentityCard,
@@ -284,7 +288,7 @@ namespace GiaSuService.Repository
                     tutor.AdditionalInfo = profile.Additionalinfo;
                     tutor.AcademicYearFrom = profile.Academicyearfrom;
                     tutor.AcademicYearTo = profile.Academicyearto;
-                    tutor.TutorTypeId = profile.TutorType;
+                    tutor.TutorTypeId = profile.TutorType.TutorTypeId!;
                     tutor.IsActive = profile.IsActive;
 
                     _context.IdentityCards.Update(identity);

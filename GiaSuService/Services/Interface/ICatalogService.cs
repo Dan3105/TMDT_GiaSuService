@@ -5,6 +5,9 @@ namespace GiaSuService.Services.Interface
 {
     public interface ICatalogService
     {
+        Task<List<TutorTypeViewModel>> GetAllTutorType();
+        Task<TutorTypeViewModel> GetTutorTypeById(int tutorTypeId);
+
         // CRUD operations for Sessions
         Task<List<SessionViewModel>> GetAllSessions();
         Task<SessionViewModel> GetSessionById(int sessionId);

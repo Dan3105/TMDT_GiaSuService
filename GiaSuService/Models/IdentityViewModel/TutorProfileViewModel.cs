@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Models.IdentityViewModel
 {
@@ -33,9 +34,10 @@ namespace GiaSuService.Models.IdentityViewModel
         public string? Additionalinfo { get; set; }
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }
-        public int TutorType { get; set; }
+        public required TutorTypeViewModel TutorType { get; set; }
+      
         public string? Formstatus { get; set; }
-        //public bool IsValid { get; set; }   
+        
         #endregion
 
 

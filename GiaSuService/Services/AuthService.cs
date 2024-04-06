@@ -90,6 +90,8 @@ namespace GiaSuService.Services
                         return new ResponseService { Success = false, Message = "Hệ thống không tạo được trạng thái vui lòng làm lại" };
                     }
 
+                    account.Tutor.StatusId = status.Id;
+
                     account.Tutor.TutorStatusDetails.Add(new TutorStatusDetail()
                     {
                         Context = "Tạo tài khoản",

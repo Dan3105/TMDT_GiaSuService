@@ -57,6 +57,19 @@ namespace GiaSuService.Services
         {
             return await _categoryRepo.GetSubjectById(subjectId);
         }
+
+        #endregion
+
+        #region CRUD TutorType
+        public async Task<List<TutorTypeViewModel>> GetAllTutorType()
+        {
+            return await _categoryRepo.GetAllTutorTypes();
+        }
+
+        public async Task<TutorTypeViewModel> GetTutorTypeById(int tutorTypeId)
+        {
+            return await _categoryRepo.GetTutorTypeById(tutorTypeId);
+        }
         #endregion
     }
 }

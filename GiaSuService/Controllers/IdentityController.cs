@@ -155,6 +155,7 @@ namespace GiaSuService.Controllers
             var listSubject = await _catalogService.GetAllSubjects();
             var listGrade = await _catalogService.GetAllGrades();
             var listProvinces = await _addressService.GetProvinces();
+            var listTypeTutor = await _catalogService.GetAllTutorType();
             if (listProvinces == null || listSession == null || listSubject == null || listGrade == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Hệ thống cập nhật thiếu dữ liệu vui lòng làm lại";
@@ -167,6 +168,7 @@ namespace GiaSuService.Controllers
                 ListSessionDate = listSession,
                 ListGrade = listGrade,
                 ListSubject = listSubject,
+                ListTutorType = listTypeTutor
             };
             if (acvm != null)
             {
@@ -187,7 +189,7 @@ namespace GiaSuService.Controllers
                 {
                     if(valid.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
                     {
-                        Console.WriteLine(valid.Value);
+                        //Console.WriteLine(valid.Value);
                     }
                 }
 
@@ -217,7 +219,7 @@ namespace GiaSuService.Controllers
             var listGrade = model.GetGradeSelected.Select(p => p.GradeId);
             var listSession = model.GetSessionSelected.Select(p => p.SessionId);
             var listSubject = model.GetSubjectSelected.Select(p => p.SubjectId);
-            
+     
             Account account = new Account()
             {
                 Email = model.AccountProfile.Email,
@@ -241,7 +243,7 @@ namespace GiaSuService.Controllers
                     AdditionalInfo = model.RegisterTutorProfile.AdditionalInfo,
                     College = model.RegisterTutorProfile.College,
                     Area = model.RegisterTutorProfile.Area,
-                    //TypeTutor = model.RegisterTutorProfile.TypeTutor,
+                    TutorTypeId = model.RegisterTutorProfile.TypeTutorId,
                 
                     IsActive = true,
                     //Isvalid = false,

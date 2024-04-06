@@ -55,7 +55,7 @@ namespace GiaSuService.Repository
                         FullName = p.Tutor.FullName,
                         Area = p.Tutor.Area,
                         College = p.Tutor.College,
-                        //TutorType = p.Tutor.TypeTutor,
+                        TutorType = p.Tutor.TutorType.Name,
                     },
                     TutorRequestId = p.TutorRequestId,
                     StatusId = p.StatusId

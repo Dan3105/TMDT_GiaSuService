@@ -32,7 +32,7 @@ namespace GiaSuService.Repository
                         ImageUrl = p.Account.Avatar,
                     },
                     CreateDate = p.Account.CreateDate,
-                    //IsValid = p.IsValid,
+                    StatusName = p.Status.Name,
                     Subjects = p.Subjects.Select(s => s.Id),
                     Districts = p.Districts.Select(d => d.Id),
                     Grades = p.Grades.Select(g => g.Id)
@@ -40,11 +40,11 @@ namespace GiaSuService.Repository
                 .Where(p => (subjectId == 0 || p.Subjects.Contains(subjectId))
                         && (districtId == 0 || p.Districts.Contains(districtId))
                         && (gradeId == 0 || p.Grades.Contains(gradeId))
-                        )//&& p.IsValid)
+                        && (p.StatusName == RegisterStatus.APPROVAL.ToString().ToLower()))
                 ;
 
-            filteredTutors = filteredTutors.Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
-                .Take(AppConfig.ROWS_ACCOUNT_LIST)
+            filteredTutors = filteredTutors.Skip(page * ROWS_ACCOUNT_LIST)
+                .Take(ROWS_ACCOUNT_LIST)
                 ;
 
             return await filteredTutors.Select(p => p.Tutors).ToListAsync();
@@ -58,7 +58,7 @@ namespace GiaSuService.Repository
                 .Where(tutor => (subjectId == 0 || tutor.Subjects.Any(s => s.Id == subjectId))
                                && (districtId == 0 || tutor.Districts.Any(d => d.Id == districtId))
                                && (gradeId == 0 || tutor.Grades.Any(g => g.Id == gradeId))
-                               )//&& tutor.IsValid)
+                               && tutor.Status.Name == AppConfig.RegisterStatus.APPROVAL.ToString().ToLower())
                 .OrderByDescending(p => p.Account.CreateDate)
                 .Select(tutor => new TutorCardViewModel
                 {
@@ -66,17 +66,18 @@ namespace GiaSuService.Repository
                     AdditionalProfile = tutor.AdditionalInfo ?? "",
                     Area = tutor.Area,
                     Avatar = tutor.Account.Avatar,
-                    Birth = ((DateOnly)tutor.Birth!).ToString("dd/MM/yyyy"),
+                    Birth = tutor.Birth.ToString("dd/MM/yyyy"),
                     College = tutor.College,
-                    //TutorType = tutor.Typetutor ? "Giáo viên" : "Sinh viên",
+                    TutorType = tutor.TutorType.Name,
                     FullName = tutor.FullName,
                     GraduateYear = tutor.AcademicYearTo,
                     GradeList = string.Join(", ", tutor.Grades.Select(g => g.Name)),
                     TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Name)),
                     SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Name)),
+                    IsActive = tutor.IsActive ?? false,
                 })
-                .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
-                .Take(AppConfig.ROWS_ACCOUNT_LIST);
+                .Skip(page * ROWS_ACCOUNT_LIST)
+                .Take(ROWS_ACCOUNT_LIST);
 
             return await query.ToListAsync();
         }
@@ -109,7 +110,8 @@ namespace GiaSuService.Repository
                     FullName = p.FullName,
                     Area = p.Area,
                     College = p.College,
-                    //TutorType = p.Typetutor ? "Giáo viên" : "Sinh viên",
+                    TutorType = p.TutorType.Name,
+                    IsActive= p.IsActive ?? false,
                 })
                 .Where(p => ids.Contains(p.Id)).ToListAsync();
             return tutors;
@@ -124,16 +126,15 @@ namespace GiaSuService.Repository
                     Area = p.Area,
                     College = p.College,
                     CreateDate = DateOnly.FromDateTime(p.Account.CreateDate),
-                    //CurrentStatus = p.Typetutor ? "Gia sư" : "Sinh viên",
+                    CurrentStatus = p.TutorType.Name,
                     FullName = p.FullName,
-                    //IsValid = p.Isvalid,
-                    StatusQuery = "Đang chờ duyệt"
+                    StatusQuery = p.Status.Name
                 })
                 .OrderByDescending(p => p.CreateDate)
-                .Where(p => p.IsValid == false);
+                .Where(p => p.StatusQuery == RegisterStatus.PENDING.ToString().ToLower());
 
 
-            tutor_queues = tutor_queues.Skip(page * AppConfig.ROWS_ACCOUNT_LIST).Take(AppConfig.ROWS_ACCOUNT_LIST);
+            tutor_queues = tutor_queues.Skip(page * ROWS_ACCOUNT_LIST).Take(ROWS_ACCOUNT_LIST);
             return await tutor_queues.ToListAsync(); ;
         }
 

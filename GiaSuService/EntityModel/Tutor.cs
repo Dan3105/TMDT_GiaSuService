@@ -25,7 +25,7 @@ public partial class Tutor
 
     public short AcademicYearTo { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public bool? IsActive { get; set; } = true;
 
     public int DistrictId { get; set; }
 

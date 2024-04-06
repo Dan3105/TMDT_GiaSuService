@@ -21,7 +21,9 @@ namespace GiaSuService.Repository
                 {
                     GradeId = p.Id,
                     GradeName = p.Name,
+                    Value = p.Value,
                 })
+                .OrderBy(p => p.Value)
                 .ToListAsync();
         }
 
@@ -31,8 +33,10 @@ namespace GiaSuService.Repository
                 .Select(p => new SessionViewModel
                 {
                     SessionId = p.Id,
-                    SessionName = p.Name
+                    SessionName = p.Name,
+                    Value = p.Value
                 })
+                .OrderBy(p => p.Value)
                 .ToListAsync();
         }
 
@@ -42,8 +46,23 @@ namespace GiaSuService.Repository
                 .Select(p=> new SubjectViewModel
                 {
                     SubjectId = p.Id,
-                    SubjectName = p.Name
+                    SubjectName = p.Name,
+                    Value = p.Value
                 })
+                .OrderBy(p => p.Value)
+                .ToListAsync();
+        }
+
+        public async Task<List<TutorTypeViewModel>> GetAllTutorTypes()
+        {
+            return await _context.TutorTypes.AsNoTracking()
+                .Select(p => new TutorTypeViewModel
+                    {
+                        TutorTypeId = p.Id,
+                        TypeName = p.Name,
+                        Value=p.Value,
+                    })
+                .OrderBy(p => p.Value)
                 .ToListAsync();
         }
 
@@ -63,8 +82,11 @@ namespace GiaSuService.Repository
                 .Select(p => new GradeViewModel
                 {
                     GradeId = p.Id,
-                    GradeName = p.Name
+                    GradeName = p.Name,
+                    Value = p.Value,
                 })
+                .OrderBy(p => p.Value)
+                .Where(p => ids.Contains(p.Value))
                 .ToListAsync();
         }
 
@@ -79,13 +101,20 @@ namespace GiaSuService.Repository
                 .Select(p => new SessionViewModel
                 {
                     SessionId = p.Id,
-                    SessionName = p.Name
+                    SessionName = p.Name,
+                    Value = p.Value
                 })
                 .Where(p => ids.Contains(p.SessionId))
+                .OrderBy(p => p.Value)
                 .ToListAsync();
         }
 
         public Task<List<SubjectViewModel>> GetSubSubjects(List<int> ids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TutorTypeViewModel> GetTutorTypeById(int typeId)
         {
             throw new NotImplementedException();
         }
