@@ -11,7 +11,7 @@ public partial class Subject
 
     public int Value { get; set; }
 
-    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
+    public virtual ICollection<RequestTutorForm> RequestTutorForms { get; set; } = new List<RequestTutorForm>();
 
     public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 }

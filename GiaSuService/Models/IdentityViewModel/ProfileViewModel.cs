@@ -8,7 +8,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public int IdentityId { get; set; }
         public int AccountId { get; set; }
         public required string FullName { get; set; }
-        public DateOnly? BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
         public required string Email { get; set; }
         public required string Phone { get; set; }
         [Required(ErrorMessage = "Please enter your identity card number.")]

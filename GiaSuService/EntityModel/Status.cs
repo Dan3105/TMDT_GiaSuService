@@ -9,13 +9,15 @@ public partial class Status
 
     public string Name { get; set; } = null!;
 
-    public int Statustypeid { get; set; }
+    public int StatusTypeId { get; set; }
 
-    public virtual ICollection<Registerstatusdetail> Registerstatusdetails { get; set; } = new List<Registerstatusdetail>();
+    public virtual ICollection<RequestTutorForm> RequestTutorForms { get; set; } = new List<RequestTutorForm>();
 
-    public virtual Statustype Statustype { get; set; } = null!;
+    public virtual StatusType StatusType { get; set; } = null!;
 
-    public virtual ICollection<Tutorqueue> Tutorqueues { get; set; } = new List<Tutorqueue>();
+    public virtual ICollection<TutorApplyForm> TutorApplyForms { get; set; } = new List<TutorApplyForm>();
 
-    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
+    public virtual ICollection<TutorStatusDetail> TutorStatusDetails { get; set; } = new List<TutorStatusDetail>();
+
+    public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 }

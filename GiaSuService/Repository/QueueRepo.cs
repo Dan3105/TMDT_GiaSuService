@@ -15,18 +15,18 @@ namespace GiaSuService.Repository
             _context = context;
         }
 
-        public bool AddTutorsToQueue(Tutorrequestform form, List<int> ids, int statusDefaultId)
+        public bool AddTutorsToQueue(RequestTutorForm form, List<int> ids, int statusDefaultId)
         {
             try {
-                form.Tutorqueues = new List<Tutorqueue>();
+                form.TutorApplyForms = new List<TutorApplyForm>();
                 foreach(var id in ids)
                 {
-                    form.Tutorqueues.Add(
-                    new Tutorqueue
+                    form.TutorApplyForms.Add(
+                    new TutorApplyForm
                     {
-                        Enterdate = DateTime.Now,
-                        Statusid = statusDefaultId,
-                        Tutorid = id,
+                        EnterDate = DateTime.Now,
+                        StatusId = statusDefaultId,
+                        TutorId = id,
                     });
                 }
 
@@ -45,20 +45,20 @@ namespace GiaSuService.Repository
 
         public async Task<List<TutorCardViewModel>> GetTutorInQueueByForm(int requestId, int statusId = 0)
         {
-            var queries = await _context.Tutorqueues
+            var queries = await _context.TutorApplyForms
                 .Select(p => new
                 {
                     Tutor = new TutorCardViewModel
                     {
-                        Id = p.Tutorid,
+                        Id = p.TutorId,
                         Avatar = p.Tutor.Account.Avatar,
-                        FullName = p.Tutor.Fullname,
+                        FullName = p.Tutor.FullName,
                         Area = p.Tutor.Area,
                         College = p.Tutor.College,
-                        TutorType = p.Tutor.Typetutor ? "Giáo viên" : "Sinh viên",
+                        //TutorType = p.Tutor.TypeTutor,
                     },
-                    TutorRequestId = p.Tutorrequestid,
-                    StatusId = p.Statusid
+                    TutorRequestId = p.TutorRequestId,
+                    StatusId = p.StatusId
                 })
                 .Where(p => p.TutorRequestId == requestId && (statusId == 0 || statusId == p.StatusId))
                 .Select(p => p.Tutor)

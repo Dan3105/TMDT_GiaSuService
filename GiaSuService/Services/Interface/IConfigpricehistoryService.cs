@@ -4,10 +4,10 @@ namespace GiaSuService.Services.Interface
 {
     public interface IConfigpriceService
     {
-        public Task<Configprice?> GetConfigpriceById(int id);
-        public Task<List<Configprice>> GetConfigpricehistories();
-        public Task<List<Configprice>> GetConfigpricehistoriesAfterDate(DateTime datetime);
-        public Task<bool> CreateConfigprice(Configprice config);
-        public Task<bool> UpdateConfigprice(Configprice config);
+        public Task<ConfigPrice?> GetConfigpriceById(int id);
+        public Task<List<ConfigPrice>> GetConfigpricehistories();
+        public Task<List<ConfigPrice>> GetConfigpricehistoriesAfterDate(DateTime datetime);
+        public Task<bool> CreateConfigprice(ConfigPrice config);
+        public Task<bool> UpdateConfigprice(ConfigPrice config);
     }
 }

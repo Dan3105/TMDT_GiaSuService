@@ -7,7 +7,7 @@ namespace GiaSuService.Repository.Interface
     public interface IProfileRepo
     {
         public Task<int?> GetProfileId(int accountId, string roleName);
-        public Task<Identitycard?> GetIdentitycard(string identityNumber);
+        public Task<IdentityCard?> GetIdentitycard(string identityNumber);
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int crrPage);
 

@@ -17,17 +17,17 @@ namespace GiaSuService.Repository
             _context = context;
         }
 
-        public void Create(Tutorrequestform entity)
+        public void Create(RequestTutorForm entity)
         {
-            _context.Tutorrequestforms.Add(entity);
+            _context.RequestTutorForms.Add(entity);
         }
 
-        public void Update(Tutorrequestform entity)
+        public void Update(RequestTutorForm entity)
         {
-            _context.Tutorrequestforms.Update(entity);
+            _context.RequestTutorForms.Update(entity);
         }
 
-        public void Delete(Tutorrequestform entity)
+        public void Delete(RequestTutorForm entity)
         {
             throw new NotImplementedException();
         }
@@ -37,24 +37,24 @@ namespace GiaSuService.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public async Task<Tutorrequestform?> Get(int id)
+        public async Task<RequestTutorForm?> Get(int id)
         {
-            return (await _context.Tutorrequestforms
+            return (await _context.RequestTutorForms
                 .Include(p => p.Customer)
                 .FirstOrDefaultAsync(p => p.Id == id));
         }
 
-        public async Task<List<Tutorrequestform>> GetAll()
+        public async Task<List<RequestTutorForm>> GetAll()
         {
-            return (await _context.Tutorrequestforms.ToListAsync());
+            return (await _context.RequestTutorForms.ToListAsync());
         }
 
-        public async Task<List<Tutorrequestform>> GetByFilter(int subjectId, int gradeId, int districtId)
+        public async Task<List<RequestTutorForm>> GetByFilter(int subjectId, int gradeId, int districtId)
         {
-            var filteredForms = await _context.Tutorrequestforms
-                .Where(p => (subjectId == 0 || p.Subjectid == subjectId)
-                      && (gradeId == 0 || p.Gradeid == gradeId)
-                      && (districtId == 0 || p.Districtid == districtId))
+            var filteredForms = await _context.RequestTutorForms
+                .Where(p => (subjectId == 0 || p.SubjectId == subjectId)
+                      && (gradeId == 0 || p.GradeId == gradeId)
+                      && (districtId == 0 || p.DistrictId == districtId))
             .ToListAsync();
 
             return filteredForms;
@@ -62,22 +62,22 @@ namespace GiaSuService.Repository
 
         public async Task<List<TutorRequestQueueViewModel>> GetTutorRequestQueueByStatus(int statusId, int page)
         {
-            return await _context.Tutorrequestforms
+            return await _context.RequestTutorForms
                 .AsNoTracking()
                 .Select(p => new
                 {
                     TutorRequest = new TutorRequestQueueViewModel
                     {
-                        AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.Additionaldetail}",
-                        CreatedDate = ((DateTime)p.Createddate!).ToString("dd-MM-yyyy HH:mm:ss"),
+                        AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.AdditionalDetail}",
+                        CreatedDate = ((DateTime)p.CreateDate!).ToString("dd-MM-yyyy HH:mm:ss"),
                         FormId = p.Id,
-                        FullNameRequester = p.Customer.Fullname,
+                        FullNameRequester = p.Customer.FullName,
                         GradeName = p.Grade.Name,
                         SubjectName = p.Subject.Name,
                     },
-                    ExpiredDate = p.Expireddate,
-                    CreatedDate = p.Createddate,
-                    StatusId = p.Statusid
+                    ExpiredDate = p.ExpiredDate,
+                    CreatedDate = p.CreateDate,
+                    StatusId = p.StatusId
                 })
                 .Where(p => p.ExpiredDate > DateTime.Now && p.StatusId == statusId)
                 .OrderByDescending(p => p.CreatedDate)
@@ -89,16 +89,16 @@ namespace GiaSuService.Repository
 
         public async Task<TutorRequestProfileViewModel?> GetTutorRequestProfile(int id)
         {
-            var result = await _context.Tutorrequestforms
+            var result = await _context.RequestTutorForms
                 .AsNoTracking()
                 .Select(p => new TutorRequestProfileViewModel
                 {
                     FormId = p.Id,
-                    FullNameRequester = p.Customer.Fullname,
-                    AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.Additionaldetail}",
-                    CreatedDate = (DateTime)p.Createddate!,
+                    FullNameRequester = p.Customer.FullName,
+                    AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.AdditionalDetail}",
+                    CreatedDate = p.CreateDate,
                     CurrentStatus = p.Status.Name.ToString(),
-                    ExpiredDate = (DateTime)p.Expireddate!,
+                    ExpiredDate = p.CreateDate,
                     GradeName = p.Grade.Name,
                     SubjectName = p.Subject.Name,
 
@@ -108,7 +108,7 @@ namespace GiaSuService.Repository
 
         public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page)
         {
-            var result = _context.Tutorrequestforms
+            var result = _context.RequestTutorForms
                 .AsNoTracking()
                 .Select(p => new
                 {
@@ -117,15 +117,15 @@ namespace GiaSuService.Repository
                         RequestId = p.Id,
                         GradeName = p.Grade.Name,
                         SubjectName = p.Subject.Name,
-                        AdditionalDetail = p.Additionaldetail ?? string.Empty,
-                        Address = $"{p.District.Name}, {p.District.Name}, {p.Addressdetail}",
+                        AdditionalDetail = p.AdditionalDetail ?? string.Empty,
+                        Address = $"{p.District.Name}, {p.District.Name}, {p.AddressDetail}",
                         SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
                     },
-                    GradeId = p.Gradeid,
-                    SubjectId = p.Subjectid,
-                    DistrictId = p.Districtid,
-                    Status = p.Statusid,
-                    Expired = p.Expireddate
+                    GradeId = p.GradeId,
+                    SubjectId = p.SubjectId,
+                    DistrictId = p.DistrictId,
+                    Status = p.StatusId,
+                    Expired = p.ExpiredDate
                 })
                 .OrderBy(p => p.Expired)
                 .Where(p => p.Status == statusId && p.Expired > DateTime.Now 
@@ -143,23 +143,23 @@ namespace GiaSuService.Repository
 
         public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)
         {
-            return await _context.Tutorrequestforms
+            return await _context.RequestTutorForms
                 .Select(p => new TutorRequestProfileEditViewModel
                 {
 
-                    DistrictId = p.Districtid,
-                    AdditionalDetail = p.Additionaldetail,
-                    Addressdetail = p.Addressdetail,
-                    CreateDate = p.Createddate,
-                    ExpireDate = p.Expireddate,
+                    DistrictId = p.DistrictId,
+                    AdditionalDetail = p.AdditionalDetail,
+                    Addressdetail = p.AddressDetail,
+                    CreateDate = p.CreateDate,
+                    ExpireDate = p.ExpiredDate,
                     CurrentStatus = p.Status.Name,
-                    FullName = p.Customer.Fullname,
-                    GradeId = p.Gradeid,
+                    FullName = p.Customer.FullName,
+                    GradeId = p.GradeId,
                     NStudents = p.Students,
-                    ProvinceId = p.District.Provinceid,
+                    ProvinceId = p.District.ProvinceId,
                     SelectedBefore = p.Sessions.Select(p => p.Id).ToList(),
                     RequestId = p.Id,
-                    SubjectId = p.Subjectid,
+                    SubjectId = p.SubjectId,
                 })
                 .FirstOrDefaultAsync(p => p.RequestId == id);
         }

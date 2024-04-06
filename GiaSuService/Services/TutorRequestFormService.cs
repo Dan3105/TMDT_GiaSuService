@@ -35,7 +35,7 @@ namespace GiaSuService.Services
             return form;
         }
 
-        public async Task<ResponseService> CreateForm(Tutorrequestform form, List<int> listSession, List<int> listTutor)
+        public async Task<ResponseService> CreateForm(RequestTutorForm form, List<int> listSession, List<int> listTutor)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -54,7 +54,7 @@ namespace GiaSuService.Services
                     {
                         return new ResponseService { Success = false, Message = "Bạn chưa chọn ngày dạy" };
                     }
-                    var sessionQueries = _context.Sessiondates.Where(p => listSession.Contains(p.Id));
+                    var sessionQueries = _context.SessionDates.Where(p => listSession.Contains(p.Id));
                     foreach(var session in sessionQueries)
                     {
                         form.Sessions.Add(session);
@@ -85,7 +85,7 @@ namespace GiaSuService.Services
            
         }
 
-        public async Task<bool> UpdateForm(Tutorrequestform form, List<int> sessionList, string statusName)
+        public async Task<bool> UpdateForm(RequestTutorForm form, List<int> sessionList, string statusName)
         {
             try
             {

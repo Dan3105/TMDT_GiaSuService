@@ -81,24 +81,24 @@ namespace GiaSuService.Controllers
             {
                 Email = accountProfile.Email,
                 Phone = accountProfile.Phone,
-                Lockenable = false,
+                LockEnable = false,
                 Avatar = accountProfile.Avatar,
-                Roleid = (int)roleId,
-                Createdate = DateTime.Now,
-                Passwordhash = Utility.HashPassword(accountProfile.Password),
+                RoleId = (int)roleId,
+                CreateDate = DateTime.Now,
+                PasswordHash = Utility.HashPassword(accountProfile.Password),
 
                 Employee = new Employee()
                 {
-                    Fullname = accountProfile.FullName,
+                    FullName = accountProfile.FullName,
                     Birth = accountProfile.BirthDate,
                     Gender = accountProfile.Gender,
-                    Addressdetail = accountProfile.AddressName,
-                    Districtid = accountProfile.SelectedDistrictId,
-                    Identity = new Identitycard()
+                    AddressDetail = accountProfile.AddressName,
+                    DistrictId = accountProfile.SelectedDistrictId,
+                    Identity = new IdentityCard()
                     {
-                        Identitynumber = accountProfile.IdentityCard,
-                        Frontidentitycard = accountProfile.FrontIdentityCard,
-                        Backidentitycard = accountProfile.BackIdentityCard,
+                        IdentityNumber = accountProfile.IdentityCard,
+                        FrontIdentityCard = accountProfile.FrontIdentityCard,
+                        BackIdentityCard = accountProfile.BackIdentityCard,
                     }
                 }
             };

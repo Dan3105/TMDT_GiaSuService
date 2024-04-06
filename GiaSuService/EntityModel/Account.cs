@@ -11,15 +11,15 @@ public partial class Account
 
     public string Phone { get; set; } = null!;
 
-    public string Passwordhash { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
 
-    public bool? Lockenable { get; set; }
+    public bool LockEnable { get; set; }
 
     public string Avatar { get; set; } = null!;
 
-    public DateTime? Createdate { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public int Roleid { get; set; }
+    public int RoleId { get; set; }
 
     public virtual Customer? Customer { get; set; }
 
@@ -27,7 +27,7 @@ public partial class Account
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual ICollection<Transactionhistory> Transactionhistoryhistories { get; set; } = new List<Transactionhistory>();
+    public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
 
     public virtual Tutor? Tutor { get; set; }
 }

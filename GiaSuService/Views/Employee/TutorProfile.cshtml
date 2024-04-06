@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <form method="post" asp-action="TutorProfile">
-            <input type="hidden" asp-for="TutorId"/>
+            <input type="hidden" asp-for="TutorId" />
             <div class="row">
                 <div class="col-md-6 border-end">
                     <h2>Account Profile</h2>
@@ -15,7 +15,7 @@
                         <dt class="col-sm-4">Full Name:</dt>
                         <dd class="col-sm-8">@Model.Fullname</dd>
                         <dt class="col-sm-4">Date of Birth:</dt>
-                        <dd class="col-sm-8">@Model.Birth?.ToString("dd-MM-yyyy")</dd>
+                        <dd class="col-sm-8">@Model.Birth.ToString("dd-MM-yyyy")</dd>
                         <dt class="col-sm-4">Email:</dt>
                         <dd class="col-sm-8">@Model.Email</dd>
                         <dt class="col-sm-4">Phone:</dt>
@@ -53,14 +53,7 @@
 
                         <dt class="col-sm-4">Created Date:</dt>
                         <dd class="col-sm-8">
-                            @if (Model.Createdate.HasValue)
-                            {
-                                @Model.Createdate.Value.ToString("dd-MM-yyyy")
-                            }
-                            else
-                            {
-                                <span>Not available</span>
-                            }
+                            @Model.Createdate.ToString("dd-MM-yyyy")
                         </dd>
                         <dt class="col-sm-4">Address:</dt>
                         <dd class="col-sm-8">@Model.AddressDetail</dd>
@@ -92,33 +85,39 @@
                         <dt class="col-sm-5">Academic Year (To):</dt>
                         <dd class="col-sm-7">@Model.Academicyearto</dd>
                         <dt class="col-sm-5">Type Tutor:</dt>
-                        @if (Model.TypeTutor)
+                        @* @if (Model.TypeTutor)
                         {
-                            <dd class="col-sm-7">Gia sư</dd>
+                        <dd class="col-sm-7">Gia sư</dd>
                         }
                         else
                         {
-                            <dd class="col-sm-7">Sinh viên</dd>
-                        }
+                        <dd class="col-sm-7">Sinh viên</dd>
+                        } *@
                         <dt class="col-sm-5">Form Status:</dt>
                         <dd class="col-sm-7">
                             <b>@Model.Formstatus?.ToString()</b>
                         </dd>
                         <dt class="col-sm-5">Trạng thái: </dt>
                         <dd class="col-sm-7">
-                            @if(@Model.IsActive){ <b class="text-success">Họat động</b>}
-                            else {<b class="text-danger">Dừng hoạt động</b>}
+                            @if (@Model.IsActive)
+                            {
+                                <b class="text-success">Họat động</b>
+                            }
+                            else
+                            {
+                                <b class="text-danger">Dừng hoạt động</b>
+                            }
                         </dd>
                     </dl>
                 </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="Lockenable">Lock Status:</label>
+                <label asp-for="LockEnable">Lock Status:</label>
                 <div class="form-check form-switch">
-                    <input class="form-check-input customformcheck-input" type="checkbox" asp-for="Lockenable" id="lockCheckbox" />
+                    <input class="form-check-input customformcheck-input" type="checkbox" asp-for="LockEnable" id="lockCheckbox" />
                     <label class="form-check-label" id="lockStatusLabel">
-                        @if (@Model.Lockenable)
+                        @if (@Model.LockEnable)
                         {
                             <span class="text-danger">Locked User</span>
                         }

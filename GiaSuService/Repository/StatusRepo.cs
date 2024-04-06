@@ -15,14 +15,14 @@ namespace GiaSuService.Repository
         public async Task<List<string>> GetAllStatus(string typeStatus)
         {
             return await _context.Statuses.AsNoTracking()
-                .Where(p => p.Statustype.Type == typeStatus)
+                .Where(p => p.StatusType.Type == typeStatus)
                 .Select(p => p.Name).ToListAsync();
         }
 
         public async Task<string?> GetLatestStatusInTutorRegister(int tutorId)
         {
-            var tutorRequest = await _context.Registerstatusdetails.AsNoTracking()
-                .Select(p => new { TutorId = p.Tutorid, StatusName = p.Status.Name, ReviewingDate = p.Reviewdate })
+            var tutorRequest = await _context.TutorStatusDetails.AsNoTracking()
+                .Select(p => new { TutorId = p.TutorId, StatusName = p.Status.Name, ReviewingDate = p.CreateDate })
                 .Where(p => p.TutorId == tutorId)
                 .OrderByDescending(p => p.ReviewingDate)
                 .FirstOrDefaultAsync();
@@ -32,7 +32,7 @@ namespace GiaSuService.Repository
         public async Task<Status?> GetStatus(string nameStatus, string typeStatus)
         {
             return (await _context.Statuses
-                .FirstOrDefaultAsync(p => p.Statustype.Type == typeStatus && p.Name.ToLower() == nameStatus.ToLower())
+                .FirstOrDefaultAsync(p => p.StatusType.Type == typeStatus && p.Name.ToLower() == nameStatus.ToLower())
                 );
         }
 

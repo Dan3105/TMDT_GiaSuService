@@ -128,24 +128,24 @@ static async Task GenSuperAdmin(DvgsDbContext context)
         {
             Email = "superadmin@gmail.com",
             Phone = "0868273914",
-            Passwordhash = BCrypt.Net.BCrypt.HashPassword("superadmin"),
-            Lockenable = false,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("superadmin"),
+            LockEnable = false,
             Avatar = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
-            Createdate = DateTime.Now,
-            Roleid = 1,
+            CreateDate = DateTime.Now,
+            RoleId = 1,
             
             Employee = new GiaSuService.EntityModel.Employee()
             {
-                Addressdetail = "Nowhere",
+                AddressDetail = "Nowhere",
                 Birth = new DateOnly(2002, 05, 31),
-                Fullname = "SuperAdmin Nguyen",
+                FullName = "SuperAdmin Nguyen",
                 Gender = "M",
-                Districtid = 568,
-                Identity = new GiaSuService.EntityModel.Identitycard()
+                DistrictId = 568,
+                Identity = new GiaSuService.EntityModel.IdentityCard()
                 {
-                    Identitynumber = "123456789",
-                    Frontidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
-                    Backidentitycard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+                    IdentityNumber = "123456789",
+                    FrontIdentityCard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+                    BackIdentityCard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
 
                 }
             },

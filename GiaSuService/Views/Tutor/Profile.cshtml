@@ -21,10 +21,10 @@
                 <input type="hidden" asp-for="AccountId" />
                 <input type="hidden" asp-for="IdentityId" />
                 <input type="hidden" asp-for="TutorId" />
-                <input type="hidden" asp-for="LockStatus" />
+                <input type="hidden" asp-for="LockEnable" />
 
                 <div class="form-group">
-                    <label asp-for="Createdate" style="margin-bottom: 10px;">Ngày tạo: @Model.Createdate?.ToString("yyyy-MM-dd")</label>
+                    <label asp-for="Createdate" style="margin-bottom: 10px;">Ngày tạo: @Model.Createdate.ToString("yyyy-MM-dd")</label>
                 </div>
 
                 @* Trạng thái gia sư đã được duyệt hoạt động trong hệ thống *@
@@ -63,7 +63,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Birth">Ngày sinh:</label>
-                    <input type="date" asp-for="Birth" class="form-control" style="margin-bottom: 10px;" value="@Model.Birth?.ToString("yyyy-MM-dd")" />
+                    <input type="date" asp-for="Birth" class="form-control" style="margin-bottom: 10px;" value="@Model.Birth.ToString("yyyy-MM-dd")" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Gender">Giới tính:</label>
@@ -127,11 +127,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="TypeTutor">Loại gia sư:</label>
+                    @* <label asp-for="TypeTutor">Loại gia sư:</label>
                     <select class="form-select" asp-for="TypeTutor" style="margin-bottom: 10px;">
                         <option value="@false">Sinh viên</option>
                         <option value="@true">Gia Sư</option>
-                    </select>
+                    </select> *@
                 </div>
 
                 <div class="form-group">

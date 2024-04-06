@@ -3,35 +3,31 @@ using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
 
-public partial class Transactionhistory
+public partial class TransactionHistory
 {
     public int Id { get; set; }
 
-    public int Typetransactionid { get; set; }
+    public int TypeTransactionId { get; set; }
 
-    public DateTime? Createdate { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public DateTime? Paymentdate { get; set; }
+    public DateTime? PaymentDate { get; set; }
 
-    public decimal Actualamount { get; set; }
-
-    public decimal Payamount { get; set; }
-
-    public double? Rate { get; set; }
+    public decimal PaymentAmount { get; set; }
 
     public string? Context { get; set; }
 
-    public int Employeeid { get; set; }
+    public int EmployeeId { get; set; }
 
-    public int Accountid { get; set; }
+    public int AccountId { get; set; }
 
-    public int Formid { get; set; }
+    public int FormId { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 
     public virtual Employee Employee { get; set; } = null!;
 
-    public virtual Tutorrequestform Form { get; set; } = null!;
+    public virtual RequestTutorForm Form { get; set; } = null!;
 
-    public virtual Typetransaction Typetransaction { get; set; } = null!;
+    public virtual TypeTransaction TypeTransaction { get; set; } = null!;
 }

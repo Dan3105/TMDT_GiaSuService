@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
 
-public partial class Statustype
+public partial class StatusType
 {
     public int Id { get; set; }
 

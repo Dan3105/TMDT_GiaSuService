@@ -3,17 +3,13 @@ using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
 
-public partial class Grade
+public partial class TutorType
 {
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 
     public int Value { get; set; }
-
-    public virtual ICollection<ConfigPrice> ConfigPrices { get; set; } = new List<ConfigPrice>();
-
-    public virtual ICollection<RequestTutorForm> RequestTutorForms { get; set; } = new List<RequestTutorForm>();
 
     public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 }

@@ -9,7 +9,7 @@ public partial class District
 
     public string Name { get; set; } = null!;
 
-    public int Provinceid { get; set; }
+    public int ProvinceId { get; set; }
 
     public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 
@@ -17,7 +17,7 @@ public partial class District
 
     public virtual Province Province { get; set; } = null!;
 
-    public virtual ICollection<Tutorrequestform> Tutorrequestforms { get; set; } = new List<Tutorrequestform>();
+    public virtual ICollection<RequestTutorForm> RequestTutorForms { get; set; } = new List<RequestTutorForm>();
 
     public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 

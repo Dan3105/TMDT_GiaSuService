@@ -79,15 +79,15 @@ namespace GiaSuService.Services
                 return new ResponseService { Success = false, Message = "Không tìm được mã nhân viên" };
             }
 
-            Identitycard? identitycard = await _profileRepo.GetIdentitycard(model.IdentityCard);
+            IdentityCard? identitycard = await _profileRepo.GetIdentitycard(model.IdentityCard);
             
-            if(identitycard != null && tutorProfile.Identity.Identitynumber != identitycard.Identitynumber)
+            if(identitycard != null && tutorProfile.Identity.IdentityNumber != identitycard.IdentityNumber)
             {
                 return new ResponseService { Success = false, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
             }
 
-            tutorProfile.Account.Lockenable = model.Lockenable;
-            tutorProfile.Identity.Identitynumber = model.IdentityCard;
+            tutorProfile.Account.LockEnable = model.LockEnable;
+            tutorProfile.Identity.IdentityNumber = model.IdentityCard;
 
             var isSuccess = await _tutorRepo.UpdateTutor(tutorProfile);
             if (isSuccess) { return new ResponseService { Success = true, Message = "Cập nhật gia sư thành công" }; }

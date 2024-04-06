@@ -18,7 +18,7 @@ namespace GiaSuService.Repository
         {
             return await _context.Districts
                 .AsNoTracking()
-                .Where(p => p.Provinceid == provinceId)
+                .Where(p => p.ProvinceId == provinceId)
                 .Select(p => new DistrictViewModel
                 {
                     DistrictName = p.Name,

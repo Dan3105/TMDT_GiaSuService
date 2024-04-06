@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
 
-public partial class Identitycard
+public partial class IdentityCard
 {
     public int Id { get; set; }
 
-    public string Identitynumber { get; set; } = null!;
+    public string IdentityNumber { get; set; } = null!;
 
-    public string Frontidentitycard { get; set; } = null!;
+    public string FrontIdentityCard { get; set; } = null!;
 
-    public string Backidentitycard { get; set; } = null!;
+    public string BackIdentityCard { get; set; } = null!;
 
     public virtual Customer? Customer { get; set; }
 

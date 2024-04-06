@@ -27,7 +27,7 @@ namespace GiaSuService.Repository
 
         public async Task<List<SessionViewModel>> GetAllSessions()
         {
-            return await _context.Sessiondates.AsNoTracking()
+            return await _context.SessionDates.AsNoTracking()
                 .Select(p => new SessionViewModel
                 {
                     SessionId = p.Id,
@@ -75,7 +75,7 @@ namespace GiaSuService.Repository
 
         public async Task<List<SessionViewModel>> GetSubSessions(List<int> ids)
         {
-            return await _context.Sessiondates.AsNoTracking()
+            return await _context.SessionDates.AsNoTracking()
                 .Select(p => new SessionViewModel
                 {
                     SessionId = p.Id,

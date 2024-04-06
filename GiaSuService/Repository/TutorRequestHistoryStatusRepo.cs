@@ -14,14 +14,14 @@ namespace GiaSuService.Repository
             _context = context;
         }
 
-        public void Create(Requeststatus entity)
+        public void Create(RequestStatus entity)
         {
-            _context.Requeststatuses.Add(entity);
+            _context.RequestStatuses.Add(entity);
         }
 
-        public void Update(Requeststatus entity)
+        public void Update(RequestStatus entity)
         {
-            _context.Requeststatuses.Update(entity);
+            _context.RequestStatuses.Update(entity);
         }
 
         public async Task<bool> SaveChanges()
@@ -29,14 +29,14 @@ namespace GiaSuService.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public void Delete(Requeststatus entity)
+        public void Delete(RequestStatus entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Requeststatus>> GetByTutorRequestFormId(int formId)
+        public async Task<IEnumerable<RequestStatus>> GetByTutorRequestFormId(int formId)
         {
-            return (await _context.Requeststatuses
+            return (await _context.RequestStatuses
                 .Where(p => p.Id == formId)
                 .ToListAsync());
         }

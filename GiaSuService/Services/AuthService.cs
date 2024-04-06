@@ -79,7 +79,7 @@ namespace GiaSuService.Services
                 try
                 {
                     //Check
-                    var existsingIdentity = await _profileRepo.GetIdentitycard(account.Tutor!.Identity.Identitynumber);
+                    var existsingIdentity = await _profileRepo.GetIdentitycard(account.Tutor!.Identity.IdentityNumber);
                     if (existsingIdentity != null)
                     {
                         return new ResponseService { Success = false, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
@@ -90,16 +90,16 @@ namespace GiaSuService.Services
                         return new ResponseService { Success = false, Message = "Hệ thống không tạo được trạng thái vui lòng làm lại" };
                     }
 
-                    account.Tutor.Registerstatusdetails.Add(new Registerstatusdetail()
+                    account.Tutor.TutorStatusDetails.Add(new TutorStatusDetail()
                     {
                         Context = "Tạo tài khoản",
-                        Reviewdate = DateTime.Now,
-                        Statusid = status.Id,
+                        StatusId = status.Id,
+                        CreateDate = DateTime.Now,
                     });
 
                     foreach (var id in sessionIds)
                     {
-                        var session = await _context.Sessiondates.FindAsync(id);
+                        var session = await _context.SessionDates.FindAsync(id);
                         if (session != null)
                         {
                             account.Tutor.Sessions.Add(session);
@@ -195,7 +195,7 @@ namespace GiaSuService.Services
                 return null;
             }
 
-            if (BCrypt.Net.BCrypt.Verify(password, account.Passwordhash))
+            if (BCrypt.Net.BCrypt.Verify(password, account.PasswordHash))
             {
                 return account;
             }

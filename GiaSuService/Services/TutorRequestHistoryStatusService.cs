@@ -12,7 +12,7 @@ namespace GiaSuService.Services
         //    _repo = repo;
         //}
 
-        public async Task<bool> CreateRequestHistory(Requeststatus form)
+        public async Task<bool> CreateRequestHistory(RequestStatus form)
         {
             try
             {
@@ -26,13 +26,13 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<List<Requeststatus>> GetByTutorRequestFormId(int reqFormId)
+        public async Task<List<RequestStatus>> GetByTutorRequestFormId(int reqFormId)
         {
-            List<Requeststatus> forms = (await _repo.GetByTutorRequestFormId(reqFormId)).ToList();
+            List<RequestStatus> forms = (await _repo.GetByTutorRequestFormId(reqFormId)).ToList();
             return forms;
         }
 
-        public async Task<bool> UpdateRequestHistory(Requeststatus form)
+        public async Task<bool> UpdateRequestHistory(RequestStatus form)
         {
             try
             {

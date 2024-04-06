@@ -2,8 +2,8 @@
 
 namespace GiaSuService.Repository.Interface
 {
-    public interface ITutorRequestHistoryStatusRepo : IRepository<Requeststatus>
+    public interface ITutorRequestHistoryStatusRepo : IRepository<RequestStatus>
     {
-        public Task<IEnumerable<Requeststatus>> GetByTutorRequestFormId(int formId);
+        public Task<IEnumerable<RequestStatus>> GetByTutorRequestFormId(int formId);
     }
 }

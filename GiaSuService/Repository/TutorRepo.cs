@@ -27,12 +27,12 @@ namespace GiaSuService.Repository
                     Tutors = new AccountListViewModel()
                     {
                         Email = p.Account.Email,
-                        FullName = p.Fullname,
-                        LockStatus = p.Account.Lockenable ?? true,
+                        FullName = p.FullName,
+                        LockStatus = p.Account.LockEnable,
                         ImageUrl = p.Account.Avatar,
                     },
-                    CreateDate = p.Account.Createdate,
-                    IsValid = p.Isvalid,
+                    CreateDate = p.Account.CreateDate,
+                    //IsValid = p.IsValid,
                     Subjects = p.Subjects.Select(s => s.Id),
                     Districts = p.Districts.Select(d => d.Id),
                     Grades = p.Grades.Select(g => g.Id)
@@ -40,7 +40,7 @@ namespace GiaSuService.Repository
                 .Where(p => (subjectId == 0 || p.Subjects.Contains(subjectId))
                         && (districtId == 0 || p.Districts.Contains(districtId))
                         && (gradeId == 0 || p.Grades.Contains(gradeId))
-                        && p.IsValid)
+                        )//&& p.IsValid)
                 ;
 
             filteredTutors = filteredTutors.Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
@@ -58,19 +58,19 @@ namespace GiaSuService.Repository
                 .Where(tutor => (subjectId == 0 || tutor.Subjects.Any(s => s.Id == subjectId))
                                && (districtId == 0 || tutor.Districts.Any(d => d.Id == districtId))
                                && (gradeId == 0 || tutor.Grades.Any(g => g.Id == gradeId))
-                               && tutor.Isvalid)
-                .OrderByDescending(p => p.Account.Createdate)
+                               )//&& tutor.IsValid)
+                .OrderByDescending(p => p.Account.CreateDate)
                 .Select(tutor => new TutorCardViewModel
                 {
                     Id = tutor.Id,
-                    AdditionalProfile = tutor.Additionalinfo ?? "",
+                    AdditionalProfile = tutor.AdditionalInfo ?? "",
                     Area = tutor.Area,
                     Avatar = tutor.Account.Avatar,
                     Birth = ((DateOnly)tutor.Birth!).ToString("dd/MM/yyyy"),
                     College = tutor.College,
-                    TutorType = tutor.Typetutor ? "Giáo viên" : "Sinh viên",
-                    FullName = tutor.Fullname,
-                    GraduateYear = tutor.Academicyearto,
+                    //TutorType = tutor.Typetutor ? "Giáo viên" : "Sinh viên",
+                    FullName = tutor.FullName,
+                    GraduateYear = tutor.AcademicYearTo,
                     GradeList = string.Join(", ", tutor.Grades.Select(g => g.Name)),
                     TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Name)),
                     SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Name)),
@@ -85,10 +85,10 @@ namespace GiaSuService.Repository
         public async Task<IEnumerable<Tutor>> GetTutorprofilesByClassId(int classId)
         {
             //Get list tutorId by classId
-            var tutorIds = await _context.Tutorqueues
-                                .Where(p => p.Tutorrequestid == classId)
+            var tutorIds = await _context.TutorApplyForms
+                                .Where(p => p.TutorRequestId == classId)
                                 .Include(p => p.Tutor)
-                                .Select(p => p.Tutorid)
+                                .Select(p => p.TutorId)
                                 .ToListAsync();
 
             // Get list Tutorprofile by tutorId
@@ -106,10 +106,10 @@ namespace GiaSuService.Repository
                 {
                     Id = p.Id,
                     Avatar = p.Account.Avatar,
-                    FullName = p.Fullname,
+                    FullName = p.FullName,
                     Area = p.Area,
                     College = p.College,
-                    TutorType = p.Typetutor ? "Giáo viên" : "Sinh viên",
+                    //TutorType = p.Typetutor ? "Giáo viên" : "Sinh viên",
                 })
                 .Where(p => ids.Contains(p.Id)).ToListAsync();
             return tutors;
@@ -123,10 +123,10 @@ namespace GiaSuService.Repository
                     Id = p.Id,
                     Area = p.Area,
                     College = p.College,
-                    CreateDate = DateOnly.FromDateTime((DateTime)p.Account.Createdate!),
-                    CurrentStatus = p.Typetutor ? "Gia sư" : "Sinh viên",
-                    FullName = p.Fullname,
-                    IsValid = p.Isvalid,
+                    CreateDate = DateOnly.FromDateTime(p.Account.CreateDate),
+                    //CurrentStatus = p.Typetutor ? "Gia sư" : "Sinh viên",
+                    FullName = p.FullName,
+                    //IsValid = p.Isvalid,
                     StatusQuery = "Đang chờ duyệt"
                 })
                 .OrderByDescending(p => p.CreateDate)

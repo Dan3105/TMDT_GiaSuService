@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
 
-public partial class Registerstatusdetail
+public partial class TutorStatusDetail
 {
     public int Id { get; set; }
 
-    public int Tutorid { get; set; }
-
     public string Context { get; set; } = null!;
 
-    public int Statusid { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public DateTime Reviewdate { get; set; }
+    public int TutorId { get; set; }
+
+    public int StatusId { get; set; }
 
     public virtual Status Status { get; set; } = null!;
 

@@ -20,42 +20,42 @@ namespace GiaSuService.Repository
             if (roleName.Equals(AppConfig.ADMINROLENAME.ToLower()) || roleName.Equals(AppConfig.EMPLOYEEROLENAME.ToLower()))
             {
                 return (await _context.Employees.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+                    .FirstOrDefaultAsync(p => p.AccountId == accountId))?.Id;
 
             }
 
             if (roleName.Equals(AppConfig.TUTORROLENAME.ToLower()))
             {
                 return (await _context.Tutors.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+                    .FirstOrDefaultAsync(p => p.AccountId == accountId))?.Id;
             }
 
             if (roleName.Equals(AppConfig.CUSTOMERROLENAME))
             {
                 return (await _context.Customers.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Accountid == accountId))?.Id;
+                    .FirstOrDefaultAsync(p => p.AccountId == accountId))?.Id;
             }
 
             return null;
         }
 
-        public async Task<Identitycard?> GetIdentitycard(string identityNumber)
+        public async Task<IdentityCard?> GetIdentitycard(string identityNumber)
         {
-            return await _context.Identitycards.AsNoTracking().FirstOrDefaultAsync(x => x.Identitynumber == identityNumber);
+            return await _context.IdentityCards.AsNoTracking().FirstOrDefaultAsync(x => x.IdentityNumber == identityNumber);
         }
 
         public async Task<List<AccountListViewModel>> GetEmployeeList(int crrPage)
         {
             IQueryable<AccountListViewModel> query = _context.Employees
                 .AsNoTracking()
-                .Where(p => p.Account.Roleid != 1)
+                .Where(p => p.Account.RoleId != 1)
                 .Select(p => new AccountListViewModel()
                 {
                     Email = p.Account.Email,
-                    FullName = p.Fullname,
+                    FullName = p.FullName,
                     Id = p.Id,
                     ImageUrl = p.Account.Avatar,
-                    LockStatus = p.Account.Lockenable ?? false,
+                    LockStatus = p.Account.LockEnable,
                 })
                 .OrderBy(p => p.Id)
                 ;
@@ -80,22 +80,22 @@ namespace GiaSuService.Repository
                 .Select(p => new ProfileViewModel()
                 {
                     ProfileId = p.Id,
-                    IdentityId = p.Identityid,
-                    AccountId = p.Accountid,
+                    IdentityId = p.IdentityId,
+                    AccountId = p.AccountId,
                     Avatar = p.Account.Avatar,
                     Email = p.Account.Email,
                     BirthDate = p.Birth,
-                    FullName = p.Fullname,
-                    LockStatus = p.Account.Lockenable ?? false,
+                    FullName = p.FullName,
+                    LockStatus = p.Account.LockEnable,
                     Phone = p.Account.Phone,
                     Gender = (p.Gender == "M" ? "Nam" : "Nữ"),
-                    IdentityCard = p.Identity.Identitynumber,
-                    FrontIdentityCard = p.Identity.Frontidentitycard,
-                    BackIdentityCard = p.Identity.Backidentitycard,
+                    IdentityCard = p.Identity.IdentityNumber,
+                    FrontIdentityCard = p.Identity.FrontIdentityCard,
+                    BackIdentityCard = p.Identity.BackIdentityCard,
 
-                    AddressDetail = p.Addressdetail,
-                    SelectedDistrictId = p.Districtid,
-                    SelectedProvinceId = p.District.Provinceid,
+                    AddressDetail = p.AddressDetail,
+                    SelectedDistrictId = p.DistrictId,
+                    SelectedProvinceId = p.District.ProvinceId,
                 })
                 .FirstOrDefaultAsync(p => p.ProfileId == profileId);
             }
@@ -106,22 +106,22 @@ namespace GiaSuService.Repository
                 .Select(p => new ProfileViewModel()
                 {
                     ProfileId = p.Id,
-                    IdentityId = p.Identityid,
-                    AccountId = p.Accountid,
+                    IdentityId = p.IdentityId,
+                    AccountId = p.AccountId,
                     Avatar = p.Account.Avatar,
                     Email = p.Account.Email,
                     BirthDate = p.Birth,
-                    FullName = p.Fullname,
-                    LockStatus = p.Account.Lockenable ?? false,
+                    FullName = p.FullName,
+                    LockStatus = p.Account.LockEnable,
                     Phone = p.Account.Phone,
                     Gender = (p.Gender == "M" ? "Nam" : "Nữ"),
-                    IdentityCard = p.Identity.Identitynumber,
-                    FrontIdentityCard = p.Identity.Frontidentitycard,
-                    BackIdentityCard = p.Identity.Backidentitycard,
+                    IdentityCard = p.Identity.IdentityNumber,
+                    FrontIdentityCard = p.Identity.FrontIdentityCard,
+                    BackIdentityCard = p.Identity.BackIdentityCard,
 
-                    AddressDetail = p.Addressdetail,
-                    SelectedDistrictId = p.Districtid,
-                    SelectedProvinceId = p.District.Provinceid,
+                    AddressDetail = p.AddressDetail,
+                    SelectedDistrictId = p.DistrictId,
+                    SelectedProvinceId = p.District.ProvinceId,
                 })
                 .FirstOrDefaultAsync(p => p.ProfileId == profileId);
             }
@@ -135,36 +135,35 @@ namespace GiaSuService.Repository
                 .Select(tutor => new TutorProfileViewModel
                 {
                     TutorId = tutor.Id,
-                    AccountId = tutor.Accountid,
-                    IdentityId = tutor.Identityid,
+                    AccountId = tutor.AccountId,
+                    IdentityId = tutor.IdentityId,
                     Email = tutor.Account.Email,
                     Phone = tutor.Account.Phone,
-                    Lockenable = tutor.Account.Lockenable ?? false,
-                    Createdate = DateOnly.FromDateTime((DateTime)tutor.Account.Createdate!),
-                    LockStatus = tutor.Account.Lockenable ?? false,
+                    LockEnable = tutor.Account.LockEnable,
+                    Createdate = DateOnly.FromDateTime(tutor.Account.CreateDate),
                     Avatar = tutor.Account.Avatar,
 
-                    Fullname = tutor.Fullname,
+                    Fullname = tutor.FullName,
                     Gender = tutor.Gender == "M" ? "Nam" : "Nữ",
-                    AddressDetail = tutor.Addressdetail,
-                    SelectedDistrictId = tutor.Districtid,
-                    SelectedProvinceId = tutor.District.Provinceid,
+                    AddressDetail = tutor.AddressDetail,
+                    SelectedDistrictId = tutor.DistrictId,
+                    SelectedProvinceId = tutor.District.ProvinceId,
 
                     Area = tutor.Area,
                     College = tutor.College,
-                    Academicyearfrom = tutor.Academicyearfrom,
-                    Academicyearto = tutor.Academicyearto,
-                    Additionalinfo = tutor.Additionalinfo,
+                    Academicyearfrom = tutor.AcademicYearFrom,
+                    Academicyearto = tutor.AcademicYearTo,
+                    Additionalinfo = tutor.AdditionalInfo,
                     Birth = tutor.Birth,
-                    IsActive = tutor.Isactive,
+                    IsActive = tutor.IsActive,
 
-                    TypeTutor = tutor.Typetutor,
+                    TutorType = tutor.TutorTypeId,
 
-                    IdentityCard = tutor.Identity.Identitynumber,
-                    FrontIdentityCard = tutor.Identity.Frontidentitycard,
-                    BackIdentityCard = tutor.Identity.Backidentitycard,
+                    IdentityCard = tutor.Identity.IdentityNumber,
+                    FrontIdentityCard = tutor.Identity.FrontIdentityCard,
+                    BackIdentityCard = tutor.Identity.BackIdentityCard,
 
-                    IsValid = tutor.Isvalid
+                    //IsValid = tutor.Isvalid
                 })
                 .FirstOrDefaultAsync(p => p.TutorId == tutorId);
 
@@ -179,14 +178,14 @@ namespace GiaSuService.Repository
             {
                 try
                 {
-                    Identitycard? identity = await _context.Identitycards.FindAsync(profile.IdentityId);
+                    IdentityCard? identity = await _context.IdentityCards.FindAsync(profile.IdentityId);
                     if (identity == null)
                     {
                         return false;
                     }
-                    identity.Identitynumber = profile.IdentityCard;
-                    identity.Backidentitycard = profile.BackIdentityCard;
-                    identity.Frontidentitycard = profile.FrontIdentityCard;
+                    identity.IdentityNumber = profile.IdentityCard;
+                    identity.BackIdentityCard = profile.BackIdentityCard;
+                    identity.FrontIdentityCard = profile.FrontIdentityCard;
 
                     Account? account = await _context.Accounts.FindAsync(profile.AccountId);
                     if (account == null)
@@ -196,9 +195,9 @@ namespace GiaSuService.Repository
                     account.Email = profile.Email;
                     account.Phone = profile.Phone;
                     account.Avatar = profile.Avatar;
-                    account.Lockenable = profile.LockStatus;
+                    account.LockEnable = profile.LockStatus;
 
-                    _context.Identitycards.Update(identity);
+                    _context.IdentityCards.Update(identity);
                     _context.Accounts.Update(account);
 
                     if (role == AppConfig.EMPLOYEEROLENAME || role == AppConfig.ADMINROLENAME)
@@ -208,11 +207,11 @@ namespace GiaSuService.Repository
                         {
                             return false;
                         }
-                        employee.Fullname = profile.FullName;
-                        employee.Addressdetail = profile.AddressDetail;
+                        employee.FullName = profile.FullName;
+                        employee.AddressDetail = profile.AddressDetail;
                         employee.Gender = profile.Gender == "Nam" ? "M" : "F";
                         employee.Birth = profile.BirthDate;
-                        employee.Districtid = profile.SelectedDistrictId;
+                        employee.DistrictId = profile.SelectedDistrictId;
                         _context.Employees.Update(employee);
                     }
                     else
@@ -222,11 +221,11 @@ namespace GiaSuService.Repository
                         {
                             return false;
                         }
-                        customer.Fullname = profile.FullName;
-                        customer.Addressdetail = profile.AddressDetail;
+                        customer.FullName = profile.FullName;
+                        customer.AddressDetail = profile.AddressDetail;
                         customer.Gender = profile.Gender == "Nam" ? "M" : "F";
                         customer.Birth = profile.BirthDate;
-                        customer.Districtid = profile.SelectedDistrictId;
+                        customer.DistrictId = profile.SelectedDistrictId;
                         _context.Customers.Update(customer);
                     }
 
@@ -251,14 +250,14 @@ namespace GiaSuService.Repository
             {
                 try
                 {
-                    Identitycard? identity = await _context.Identitycards.FindAsync(profile.IdentityId);
+                    IdentityCard? identity = await _context.IdentityCards.FindAsync(profile.IdentityId);
                     if (identity == null)
                     {
                         return false;
                     }
-                    identity.Identitynumber = profile.IdentityCard;
-                    identity.Backidentitycard = profile.BackIdentityCard;
-                    identity.Frontidentitycard = profile.FrontIdentityCard;
+                    identity.IdentityNumber = profile.IdentityCard;
+                    identity.BackIdentityCard = profile.BackIdentityCard;
+                    identity.FrontIdentityCard = profile.FrontIdentityCard;
 
                     Account? account = await _context.Accounts.FindAsync(profile.AccountId);
                     if (account == null)
@@ -268,27 +267,27 @@ namespace GiaSuService.Repository
                     account.Email = profile.Email;
                     account.Phone = profile.Phone;
                     account.Avatar = profile.Avatar;
-                    account.Lockenable = profile.LockStatus;
+                    account.LockEnable = profile.LockEnable;
 
                     Tutor? tutor = await _context.Tutors.FindAsync(profile.TutorId);
                     if (tutor == null)
                     {
                         return false;
                     }
-                    tutor.Fullname = profile.Fullname;
-                    tutor.Addressdetail = profile.AddressDetail;
+                    tutor.FullName = profile.Fullname;
+                    tutor.AddressDetail = profile.AddressDetail;
                     tutor.Gender = profile.Gender == "Nam" ? "M" : "F";
                     tutor.Birth = profile.Birth;
-                    tutor.Districtid = profile.SelectedDistrictId;
+                    tutor.DistrictId = profile.SelectedDistrictId;
                     tutor.College = profile.College;
                     tutor.Area = profile.Area;
-                    tutor.Additionalinfo = profile.Additionalinfo;
-                    tutor.Academicyearfrom = profile.Academicyearfrom;
-                    tutor.Academicyearto = profile.Academicyearto;
-                    tutor.Typetutor = profile.TypeTutor;
-                    tutor.Isactive = profile.IsActive;
+                    tutor.AdditionalInfo = profile.Additionalinfo;
+                    tutor.AcademicYearFrom = profile.Academicyearfrom;
+                    tutor.AcademicYearTo = profile.Academicyearto;
+                    tutor.TutorTypeId = profile.TutorType;
+                    tutor.IsActive = profile.IsActive;
 
-                    _context.Identitycards.Update(identity);
+                    _context.IdentityCards.Update(identity);
                     _context.Accounts.Update(account);
                     _context.Tutors.Update(tutor);
                     int result = _context.SaveChanges();

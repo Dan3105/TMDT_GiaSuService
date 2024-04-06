@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace GiaSuService.EntityModel;
 
-public partial class Requeststatus
+public partial class RequestStatus
 {
     public int Id { get; set; }
 
     public string Context { get; set; } = null!;
 
-    public DateTime? Createdate { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public int Tutorrequestid { get; set; }
+    public int TutorRequestId { get; set; }
 
-    public virtual Tutorrequestform Tutorrequest { get; set; } = null!;
+    public virtual RequestTutorForm TutorRequest { get; set; } = null!;
 }

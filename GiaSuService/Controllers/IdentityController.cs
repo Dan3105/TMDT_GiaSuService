@@ -47,7 +47,7 @@ namespace GiaSuService.Controllers
             }
 
             var user = await _authService.ValidateAccount(model.LoginName!, model.Password!);
-            if (user != null && (bool)!user.Lockenable!)
+            if (user != null && !user.LockEnable)
             {
                 List<Claim> claims = new List<Claim>()
                 {
@@ -222,35 +222,35 @@ namespace GiaSuService.Controllers
             {
                 Email = model.AccountProfile.Email,
                 Phone = model.AccountProfile.Phone,
-                Passwordhash = Utility.HashPassword(model.AccountProfile.Password),
-                Roleid = (int)roleId,
-                Lockenable = false,
+                PasswordHash = Utility.HashPassword(model.AccountProfile.Password),
+                RoleId = (int)roleId,
+                LockEnable = false,
                 Avatar = model.AccountProfile.Avatar,
-                Createdate = DateTime.Now,
+                CreateDate = DateTime.Now,
                 Tutor = new Tutor()
                 {
                     Birth = model.AccountProfile.BirthDate,
-                    Fullname = model.AccountProfile.FullName,
-                    Addressdetail = model.AccountProfile.AddressName,
-                    Districtid = model.AccountProfile.SelectedDistrictId,
+                    FullName = model.AccountProfile.FullName,
+                    AddressDetail = model.AccountProfile.AddressName,
+                    DistrictId = model.AccountProfile.SelectedDistrictId,
                     Gender = model.AccountProfile.Gender,
                      
                     //Hoc van
-                    Academicyearfrom = model.RegisterTutorProfile.AcademicYearFrom,
-                    Academicyearto = model.RegisterTutorProfile.AcademicYearto,
-                    Additionalinfo = model.RegisterTutorProfile.AdditionalInfo,
+                    AcademicYearFrom = model.RegisterTutorProfile.AcademicYearFrom,
+                    AcademicYearTo = model.RegisterTutorProfile.AcademicYearto,
+                    AdditionalInfo = model.RegisterTutorProfile.AdditionalInfo,
                     College = model.RegisterTutorProfile.College,
                     Area = model.RegisterTutorProfile.Area,
-                    Typetutor = model.RegisterTutorProfile.TypeTutor,
+                    //TypeTutor = model.RegisterTutorProfile.TypeTutor,
                 
-                    Isactive = true,
-                    Isvalid = false,
+                    IsActive = true,
+                    //Isvalid = false,
 
-                    Identity = new Identitycard()
+                    Identity = new IdentityCard()
                     {
-                        Identitynumber = model.AccountProfile.IdentityCard,
-                        Frontidentitycard = model.AccountProfile.FrontIdentityCard,
-                        Backidentitycard = model.AccountProfile.BackIdentityCard,
+                        IdentityNumber = model.AccountProfile.IdentityCard,
+                        FrontIdentityCard = model.AccountProfile.FrontIdentityCard,
+                        BackIdentityCard = model.AccountProfile.BackIdentityCard,
                     }, 
                 }
                 
@@ -310,25 +310,25 @@ namespace GiaSuService.Controllers
             {
                 Email = accountProfile.Email,
                 Phone = accountProfile.Phone,
-                Passwordhash = Utility.HashPassword(accountProfile.Password),
+                PasswordHash = Utility.HashPassword(accountProfile.Password),
                 Avatar = accountProfile.Avatar,
-                Createdate = DateTime.Now,
-                Lockenable = false,
-                Roleid = (int)roleId,
+                CreateDate = DateTime.Now,
+                LockEnable = false,
+                RoleId = (int)roleId,
                 
                 Customer = new Customer()
                 {
-                    Fullname = accountProfile.FullName,
+                    FullName = accountProfile.FullName,
                     Birth = accountProfile.BirthDate,
                     Gender = accountProfile.Gender,
-                    Addressdetail = accountProfile.AddressName,
-                    Districtid = accountProfile.SelectedDistrictId,
+                    AddressDetail = accountProfile.AddressName,
+                    DistrictId = accountProfile.SelectedDistrictId,
 
-                    Identity = new Identitycard()
+                    Identity = new IdentityCard()
                     {
-                        Identitynumber= accountProfile.IdentityCard,
-                        Frontidentitycard = accountProfile.FrontIdentityCard,
-                        Backidentitycard = accountProfile.BackIdentityCard,
+                        IdentityNumber= accountProfile.IdentityCard,
+                        FrontIdentityCard = accountProfile.FrontIdentityCard,
+                        BackIdentityCard = accountProfile.BackIdentityCard,
                     }
                 }
             };

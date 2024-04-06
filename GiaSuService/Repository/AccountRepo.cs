@@ -32,7 +32,7 @@ namespace GiaSuService.Repository
         public async Task<IEnumerable<Account>> GetAccountsByRoleId(int roleId)
         {
             var result = await _context.Accounts
-                .Where(p => p.Roleid == roleId)
+                .Where(p => p.RoleId == roleId)
                 .ToListAsync();
 
             return result;
@@ -67,17 +67,17 @@ namespace GiaSuService.Repository
 
         public async Task<Tutor?> GetTutorByAccount(int accountId)
         {
-            return await _context.Tutors.FirstOrDefaultAsync(p => p.Accountid == accountId);
+            return await _context.Tutors.FirstOrDefaultAsync(p => p.AccountId == accountId);
         }
 
         public async Task<Employee?> GetEmployeeByAccount(int accountId)
         {
-            return await _context.Employees.FirstOrDefaultAsync(p => p.Accountid == accountId);
+            return await _context.Employees.FirstOrDefaultAsync(p => p.AccountId == accountId);
         }
 
         public async Task<Customer?> GetCustomerByAccount(int accountId)
         {
-            return await _context.Customers.FirstOrDefaultAsync(p => p.Accountid == accountId);
+            return await _context.Customers.FirstOrDefaultAsync(p => p.AccountId == accountId);
         }
     }
 }

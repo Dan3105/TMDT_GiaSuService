@@ -195,17 +195,17 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("Index", "Identity");
             }
 
-            Tutorrequestform form = new Tutorrequestform()
+            RequestTutorForm form = new RequestTutorForm()
             {
-                Additionaldetail = req.Profile.AdditionalDetail,
-                Addressdetail = req.Profile.Addressdetail,
-                Createddate = DateTime.Now,
-                Expireddate = DateTime.Now.AddDays(30),
-                Districtid = req.Profile.DistrictId,
-                Gradeid = req.Profile.GradeId,
-                Subjectid = req.Profile.SubjectId,
+                AdditionalDetail = req.Profile.AdditionalDetail,
+                AddressDetail = req.Profile.Addressdetail,
+                CreateDate = DateTime.Now,
+                ExpiredDate = DateTime.Now.AddDays(30),
+                DistrictId = req.Profile.DistrictId,
+                GradeId = req.Profile.GradeId,
+                SubjectId = req.Profile.SubjectId,
                 Students = req.Profile.NStudents,
-                Customerid = (int)customerId,
+                CustomerId = (int)customerId,
             };
 
             List<int> ids = GetTutorsSelected() ?? new List<int>();

@@ -78,18 +78,18 @@ namespace GiaSuService.Services
             if (dbStatus.Name == AppConfig.RegisterStatus.APPROVAL.ToString().ToLower() ||
                 dbStatus.Name == AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
             {
-                tutor.Isvalid = true;
+                //tutor.Isvalid = true;
             }
             else
             {
-                tutor.Isvalid = false;
+                //tutor.Isvalid = false;
             }
 
-            tutor.Registerstatusdetails.Add(new Registerstatusdetail
+            tutor.TutorStatusDetails.Add(new TutorStatusDetail
             {
                 Context = context,
-                Reviewdate = DateTime.Now,
                 Status = dbStatus,
+                CreateDate = DateTime.Now,
             });
 
             bool isSuccess = await _tutorRepository.UpdateTutor(tutor);
