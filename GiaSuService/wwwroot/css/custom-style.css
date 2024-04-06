@@ -35,17 +35,26 @@ h1 {
 }
 
 
-
 .customform-control {
     width: 100%;
     font-size: 0.9rem;
     border: 1px solid var(--box-color);
 }
-    
+
+input.customform-control {
+    width: 100%;
+}
+
 
 .customform-select {
     width: contain;
     font-size: 0.9rem;
     border: 1px solid var(--box-color);
+}
+
+#pagination {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center;
 }
 
