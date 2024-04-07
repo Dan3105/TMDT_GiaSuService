@@ -1,0 +1,153 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
+<div class="container">
+    <h1>Session Manager</h1>
+
+    <table id="sessionTable"
+           data-pagination="true"
+           data-height="500"
+           class="table table-striped thead-light">
+        <thead>
+            <tr>
+                <th data-field="sessionId" data-visible="false"></th>
+                <th data-width="40" data-width-unit="%" data-field="sessionName">Name</th>
+                <th data-width="20" data-width-unit="%" data-field="value">Order</th>
+                <th data-width="40" data-width-unit="%">Action</th>
+            </tr>
+        </thead>
+        <tbody id="data-container">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    
+
+    $(document).ready(function () {
+
+        function actionFormatter(value, row, index) {
+            return `
+                    <button type="button" class="btn btn-sm btn-success add-button">Add</button>
+                    <button type="button" class="btn btn-sm btn-primary edit-button" data-session-id="${row.sessionId}">Edit</button>
+                    <button type="button" class="btn btn-sm btn-danger delete-button" data-session-id="${row.sessionId}">Delete</button>
+                `;
+        }
+
+        function refreshTable() {
+            $.ajax({
+                url: '/Admin/GetSessionList',
+                method: 'GET',
+                success: function (data) {
+                    $("#sessionTable").bootstrapTable('load', data);
+
+                }
+            })
+        }
+
+        $("#sessionTable").bootstrapTable({
+            columns: [
+                { field: 'sessionId', visible: false },
+                { field: 'sessionName', title: 'Name' },
+                { field: 'value', title: 'Order' },
+                { field: 'actionButtons', title: 'Action', formatter: actionFormatter }
+            ]
+        });
+        refreshTable();
+
+        $(document).on('click', '.edit-button', function () {
+            var $tr = $(this).closest('tr');
+            var $tds = $tr.find('td');
+
+            // Extract current values from the table cells
+            var name = $tds.eq(0).text();
+            var order = $tds.eq(1).text();
+
+            var sessionId = $(this).data('session-id');
+
+            var originalData = $tr.html();
+            $tr.html(`
+              <td><input type="text" class="form-control" name="sessionName" placeholder="Enter Name" value="${name}"></td>
+              <td><input type="number" class="form-control" name="value" placeholder="Enter Order" value="${order}"></td>
+              <td>
+                <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
+          </td>
+        `);
+
+            $tr.find('.cancel-edit-button').click(function () {
+                $tr.html(originalData);
+            });
+
+            $tr.find('.submit-edit-button').click(function () {
+                if (confirm("Are you sure you want to delete this item?")) {
+                    var formData = {
+                        sessionName: $tr.find('input[name="sessionName"]').val(),
+                        sessionId: sessionId,
+                        value: $tr.find('input[name="value"]').val(),
+                    };
+                    console.log(formData);
+                    $.ajax({
+                        url: '/Admin/UpdateSession',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            })
+        })
+
+
+        $(document).on('click', '.delete-button', function () {
+            if (confirm("Are you sure you want to delete this item?")) {
+                var row = $(this).closest('tr');
+                var selectedIdsInput = row.find('input[name="selectedIds"]');
+                var sessionId = selectedIdsInput.val();
+
+                refreshTable();
+
+            }
+
+        })
+
+
+        // Add Row Button Click
+        $(document).on('click', '.add-button', function () {
+            var newRowHtml = `
+                                <tr>
+                                    <td><input type="text" class="form-control" placeholder="Enter Name"></td>
+                                        <td><input type="text" class="form-control" placeholder="Enter Order"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
+                                        <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
+                                    </td>
+                                </tr>`;
+
+            $(this).closest('tr').after(newRowHtml);
+        });
+
+        // Submit Button Click (Dynamically Added Row)
+        $(document).on('click', '.submit-add-button', function () {
+            var newName = $(this).closest('tr').find('input[type="text"]').val();
+            // Perform your action here, for example, send an AJAX request
+
+            // Once action is performed, you might want to refresh the table or do something else
+
+            // For demonstration, let's just remove the row
+            $(this).closest('tr').remove();
+        });
+
+        // Cancel Button Click (Dynamically Added Row)
+        $(document).on('click', '.cancel-add-button', function () {
+            $(this).closest('tr').remove();
+        });
+
+
+    });
+</script>

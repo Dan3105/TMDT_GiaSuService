@@ -2,6 +2,7 @@
 using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
+using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,14 @@ namespace GiaSuService.Controllers
         private readonly IAddressService _addressService;
         private readonly IAuthService _authService;
         private readonly IProfileService _profileService;
-        public AdminController(IAddressService addressService, IAuthService authService, IProfileService profileService)
+        private readonly ICatalogService _catalogService;
+        public AdminController(IAddressService addressService, IAuthService authService, IProfileService profileService, 
+            ICatalogService catalogService)
         {
             _addressService = addressService;
             _authService = authService;
             _profileService = profileService;
+            _catalogService = catalogService;
         }
 
         public IActionResult Index()
@@ -114,5 +118,24 @@ namespace GiaSuService.Controllers
             return RedirectToAction("", "Admin");
         }
 
+        [HttpGet]
+        public IActionResult SessionDateManager()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSessionList()
+        {
+            var result = await _catalogService.GetAllSessions();
+            return Json(result);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateSession([FromBody] SessionViewModel vm)
+        {
+
+            return Ok(vm);
+        }
     }
 }
