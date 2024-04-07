@@ -7,29 +7,28 @@
     ViewData["Title"] = "Login";
 }
 
+<h1>Đăng nhập</h1>
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-header">
-                    Login Form
-                </div>
+               
                 <div class="card-body">
                     @using (Html.BeginForm("Login", "Identity", FormMethod.Post))
                     {
-                        @Html.AntiForgeryToken()  
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.LoginName, "Username:")
-                            @Html.TextBoxFor(m => m.LoginName, new { @class = "form-control" })
+                        @Html.AntiForgeryToken()
+                        <div class="form-group pb-3">
+                            @Html.LabelFor(m => m.LoginName, "Tên đăng nhập:")
+                            @Html.TextBoxFor(m => m.LoginName, new { @class = "form-control customform-control" })
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Password, "Password:")
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        <div class="form-group pb-3">
+                            @Html.LabelFor(m => m.Password, "Mật khẩu:")
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control customform-control" })
                         </div>
 
-                        <div class="form-group">
-                            <input type="submit" value="Login" class="btn btn-primary customstyle-button" />
+                        <div class="form-group text-center">
+                            <input type="submit" value="Đăng nhập" class="btn btn-primary customstyle-button" />
                         </div>
                     }
                 </div>
