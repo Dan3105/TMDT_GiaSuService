@@ -1,4 +1,5 @@
-﻿using GiaSuService.EntityModel;
+﻿using GiaSuService.Configs;
+using GiaSuService.EntityModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
@@ -13,12 +14,6 @@ namespace GiaSuService.Services
         {
             _categoryRepo = categoryRepo;
         }
-        //public CatalogService(ISessionRepository sessionRepository, IGradeRepository gradeRepository, ISubjectRepository subjectRepository)
-        //{
-        //    _sessionRepository = sessionRepository;
-        //    _gradeRepository = gradeRepository;
-        //    _subjectRepository = subjectRepository;
-        //}
 
         #region CRUD Session
 
@@ -32,7 +27,50 @@ namespace GiaSuService.Services
             return await _categoryRepo.GetSessionById(sessionId);
         }
 
-       
+
+        public async Task<ResponseService> UpdateSessionDate(SessionViewModel vm)
+        {
+            SessionViewModel? session = await _categoryRepo.GetSessionById(vm.SessionId);
+
+            if (session == null)
+            {
+                return new ResponseService { Message = "Không tìm thấy dữ liệu", Success = false };
+            }
+
+            bool isUnique = await _categoryRepo.IsUniqueName(vm.SessionName, vm.GetType());
+
+            if (!isUnique && (!session.SessionName.Equals(vm.SessionName)
+                && session.Value != vm.Value))
+            {
+                return new ResponseService { Message = "Tên bị trùng trong hệ thống", Success = false };
+            }
+
+            bool updateSuccess = await _categoryRepo.UpdateSessionDate(vm);
+            if (updateSuccess)
+            {
+                return new ResponseService { Message = "Cập nhật thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+
+        public async Task<ResponseService> CreateSessionDate(SessionViewModel vm)
+        {
+            bool isUnique = await _categoryRepo.IsUniqueName(vm.SessionName, vm.GetType());
+            if (!isUnique)
+            {
+                return new ResponseService { Message = "Tên bị trùng trong hệ thống", Success = false };
+            }
+
+            bool addSuccess = await _categoryRepo.CreateSessionDate(vm);
+            if (addSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+
         #endregion
 
         #region CRUD Grade
@@ -70,6 +108,18 @@ namespace GiaSuService.Services
         {
             return await _categoryRepo.GetTutorTypeById(tutorTypeId);
         }
+
+        public async Task<ResponseService> DeleteSessionDate(int id)
+        {
+            bool delSuccess = await _categoryRepo.DeleteSessionDate(id);
+            if (delSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+
         #endregion
     }
 }

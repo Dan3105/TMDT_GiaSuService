@@ -4,28 +4,34 @@ namespace GiaSuService.Models.UtilityViewModel
 {
     public class SessionViewModel
     {
+        [Required]
         public string SessionName { get; set; } = string.Empty;
         public int SessionId { get; set; }
         public bool IsChecked { get; set; } = false;
 
+        [Required]
         public int Value { get; set; }
     }
 
     public class GradeViewModel
     {
+        [Required]
         public string GradeName { get; set; } = string.Empty;
         public int GradeId { get; set; }
         public bool IsChecked { get; set; } = false;
 
+        [Required]
         public int Value { get; set; }
     }
 
     public class SubjectViewModel
     {
+        [Required]
         public string SubjectName { get; set; } = string.Empty;
         public int SubjectId { get; set; }
         public bool IsChecked { get; set; } = false;
-
+        
+        [Required]
         public int Value { get; set; }
     }
 

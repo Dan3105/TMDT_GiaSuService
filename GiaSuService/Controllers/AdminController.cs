@@ -132,10 +132,28 @@ namespace GiaSuService.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateSession([FromBody] SessionViewModel vm)
+        public async Task<IActionResult> UpdateSession([FromBody] SessionViewModel vm)
         {
+            ResponseService mess = await _catalogService.UpdateSessionDate(vm);
+            return Ok(mess);
+        }
 
-            return Ok(vm);
+        [HttpPost]
+        public async Task<IActionResult> CreateSession([FromBody] SessionViewModel vm)
+        {
+            if(!ModelState.IsValid)
+            {
+                return Ok(new ResponseService { Success = false, Message = "Vui lòng điền đủ thông tin" });
+            }
+            ResponseService mess = await _catalogService.CreateSessionDate(vm);
+            return Ok(mess);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteSession(int id)
+        {
+            ResponseService mess = await _catalogService.DeleteSessionDate(id);
+            return Ok(mess);
         }
     }
 }

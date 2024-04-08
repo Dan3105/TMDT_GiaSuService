@@ -1,4 +1,5 @@
-﻿using GiaSuService.EntityModel;
+﻿using GiaSuService.Configs;
+using GiaSuService.EntityModel;
 using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Services.Interface
@@ -9,6 +10,9 @@ namespace GiaSuService.Services.Interface
         Task<TutorTypeViewModel> GetTutorTypeById(int tutorTypeId);
 
         // CRUD operations for Sessions
+        Task<ResponseService> UpdateSessionDate(SessionViewModel vm);
+        Task<ResponseService> CreateSessionDate(SessionViewModel vm);
+        Task<ResponseService> DeleteSessionDate(int id);
         Task<List<SessionViewModel>> GetAllSessions();
         Task<SessionViewModel> GetSessionById(int sessionId);
 

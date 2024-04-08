@@ -16,9 +16,13 @@ namespace GiaSuService.Repository.Interface
         public Task<List<SubjectViewModel>> GetAllSubjects();
         public Task<List<SubjectViewModel>> GetSubSubjects(List<int> ids);
 
-        public Task<SessionViewModel> GetSessionById(int sessionId);
+        public Task<bool> CreateSessionDate(SessionViewModel session);
+        public Task<bool> UpdateSessionDate(SessionViewModel session);
+        public Task<bool> DeleteSessionDate(int session);
+        public Task<SessionViewModel?> GetSessionById(int sessionId);
         public Task<List<SessionViewModel>> GetAllSessions();
         public Task<List<SessionViewModel>> GetSubSessions(List<int> ids);
 
+        public Task<bool> IsUniqueName(string name, Type type);
     }
 }

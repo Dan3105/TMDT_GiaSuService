@@ -22,8 +22,6 @@
 </div>
 
 <script>
-    
-
     $(document).ready(function () {
 
         function actionFormatter(value, row, index) {
@@ -56,19 +54,19 @@
         refreshTable();
 
         $(document).on('click', '.edit-button', function () {
-            var $tr = $(this).closest('tr');
-            var $tds = $tr.find('td');
+            let $tr = $(this).closest('tr');
+            let $tds = $tr.find('td');
 
             // Extract current values from the table cells
-            var name = $tds.eq(0).text();
-            var order = $tds.eq(1).text();
+            let name = $tds.eq(0).text();
+            let order = $tds.eq(1).text();
 
-            var sessionId = $(this).data('session-id');
+            let sessionId = $(this).data('session-id');
 
-            var originalData = $tr.html();
+            let originalData = $tr.html();
             $tr.html(`
               <td><input type="text" class="form-control" name="sessionName" placeholder="Enter Name" value="${name}"></td>
-              <td><input type="number" class="form-control" name="value" placeholder="Enter Order" value="${order}"></td>
+              <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
               <td>
                 <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
                 <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
@@ -80,20 +78,27 @@
             });
 
             $tr.find('.submit-edit-button').click(function () {
-                if (confirm("Are you sure you want to delete this item?")) {
-                    var formData = {
+                if (confirm("Are you sure you want to update this item?")) {
+                    let formData = {
                         sessionName: $tr.find('input[name="sessionName"]').val(),
                         sessionId: sessionId,
                         value: $tr.find('input[name="value"]').val(),
                     };
-                    console.log(formData);
+
                     $.ajax({
                         url: '/Admin/UpdateSession',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(formData),
                         success: function (data) {
-                            console.log(data);
+                            if (data.success) {
+                                toastr["success"](data.message);
+                            }
+                            else{
+                                toastr["error"](data.message);
+                            }
+
+                            refreshTable();
                         },
                         error: function (xhr, status, error) {
                             console.error('Error:', error);
@@ -107,11 +112,29 @@
         $(document).on('click', '.delete-button', function () {
             if (confirm("Are you sure you want to delete this item?")) {
                 var row = $(this).closest('tr');
-                var selectedIdsInput = row.find('input[name="selectedIds"]');
-                var sessionId = selectedIdsInput.val();
+                let sessionId = $(this).data('session-id');
+                console.log(sessionId);
+                $.ajax({
+                    url: '/Admin/DeleteSession',
+                    method: 'GET',
+                    contentType: 'application/json',
+                    data: {'id': sessionId},
+                    success: function (data) {
+                        if (data.success) {
+                            toastr["success"](data.message);
+                            refreshTable();
+                        }
+                        else {
+                            toastr["error"](data.message);
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
 
                 refreshTable();
-
             }
 
         })
@@ -119,35 +142,53 @@
 
         // Add Row Button Click
         $(document).on('click', '.add-button', function () {
+            let $tr = $(this).closest('tr');
+            let $tds = $tr.find('td');
+            let order = parseInt($tds.eq(1).text()) + 1;
             var newRowHtml = `
                                 <tr>
-                                    <td><input type="text" class="form-control" placeholder="Enter Name"></td>
-                                        <td><input type="text" class="form-control" placeholder="Enter Order"></td>
+                                        <td><input type="text" class="form-control" name="sessionName" placeholder="Enter Name"></td>
+                                        <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
                                     <td>
                                         <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
                                         <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
                                     </td>
                                 </tr>`;
 
-            $(this).closest('tr').after(newRowHtml);
+            var $newRow = $tr.after(newRowHtml).next('tr');
+            $newRow.find('.cancel-add-button').click(function () {
+                $(this).closest('tr').remove();
+            });
+
+            $newRow.find('.submit-add-button').click(function () {
+                if (confirm("Are you sure you want to add this item?")) {
+                    let formData = {
+                        sessionName: $newRow.find('input[name="sessionName"]').val(),
+                        value: $newRow.find('input[name="value"]').val(),
+                    };
+                    $.ajax({
+                        url: '/Admin/CreateSession',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function (data) {
+                            if (data.success) {
+                                toastr["success"](data.message);
+                            }
+                            else {
+                                toastr["error"](data.message);
+                            }
+
+                            refreshTable();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            })
         });
-
-        // Submit Button Click (Dynamically Added Row)
-        $(document).on('click', '.submit-add-button', function () {
-            var newName = $(this).closest('tr').find('input[type="text"]').val();
-            // Perform your action here, for example, send an AJAX request
-
-            // Once action is performed, you might want to refresh the table or do something else
-
-            // For demonstration, let's just remove the row
-            $(this).closest('tr').remove();
-        });
-
-        // Cancel Button Click (Dynamically Added Row)
-        $(document).on('click', '.cancel-add-button', function () {
-            $(this).closest('tr').remove();
-        });
-
 
     });
 </script>
+
