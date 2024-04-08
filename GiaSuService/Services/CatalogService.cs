@@ -22,12 +22,6 @@ namespace GiaSuService.Services
             return await _categoryRepo.GetAllSessions();
         }
 
-        public async Task<SessionViewModel> GetSessionById(int sessionId)
-        {
-            return await _categoryRepo.GetSessionById(sessionId);
-        }
-
-
         public async Task<ResponseService> UpdateSessionDate(SessionViewModel vm)
         {
             SessionViewModel? session = await _categoryRepo.GetSessionById(vm.SessionId);
@@ -53,7 +47,6 @@ namespace GiaSuService.Services
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
         }
-
         public async Task<ResponseService> CreateSessionDate(SessionViewModel vm)
         {
             bool isUnique = await _categoryRepo.IsUniqueName(vm.SessionName, vm.GetType());
@@ -70,10 +63,74 @@ namespace GiaSuService.Services
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
         }
+        public async Task<ResponseService> DeleteSessionDate(int id)
+        {
+            bool delSuccess = await _categoryRepo.DeleteSessionDate(id);
+            if (delSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+
 
         #endregion
 
         #region CRUD Grade
+
+        public async Task<ResponseService> UpdateSubject(SubjectViewModel vm)
+        {
+            SubjectViewModel? session = await _categoryRepo.GetSubjectById(vm.SubjectId);
+
+            if (session == null)
+            {
+                return new ResponseService { Message = "Không tìm thấy dữ liệu", Success = false };
+            }
+
+            bool isUnique = await _categoryRepo.IsUniqueName(vm.SubjectName, vm.GetType());
+
+            if (!isUnique && (!session.SubjectName.Equals(vm.SubjectName)
+                && session.Value != vm.Value))
+            {
+                return new ResponseService { Message = "Tên bị trùng trong hệ thống", Success = false };
+            }
+
+            bool updateSuccess = await _categoryRepo.UpdateSubject(vm);
+            if (updateSuccess)
+            {
+                return new ResponseService { Message = "Cập nhật thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+        public async Task<ResponseService> CreateSubject(SubjectViewModel vm)
+        {
+            bool isUnique = await _categoryRepo.IsUniqueName(vm.SubjectName, vm.GetType());
+            if (!isUnique)
+            {
+                return new ResponseService { Message = "Tên bị trùng trong hệ thống", Success = false };
+            }
+
+            bool addSuccess = await _categoryRepo.CreateSubject(vm);
+            if (addSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+        public async Task<ResponseService> DeleteSubject(int id)
+        {
+            bool delSuccess = await _categoryRepo.DeleteSubject(id);
+            if (delSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+
         public async Task<List<GradeViewModel>> GetAllGrades()
         {
             return await _categoryRepo.GetAllGrades();
@@ -109,17 +166,7 @@ namespace GiaSuService.Services
             return await _categoryRepo.GetTutorTypeById(tutorTypeId);
         }
 
-        public async Task<ResponseService> DeleteSessionDate(int id)
-        {
-            bool delSuccess = await _categoryRepo.DeleteSessionDate(id);
-            if (delSuccess)
-            {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
-            }
-
-            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
-        }
-
+       
         #endregion
     }
 }

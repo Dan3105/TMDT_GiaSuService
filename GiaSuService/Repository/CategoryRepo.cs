@@ -203,6 +203,40 @@ namespace GiaSuService.Repository
                 }
             }
         }
+        public async Task<bool> DeleteSessionDate(int id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var session = await _context.SessionDates.FindAsync(id);
+                    if(session == null)
+                    {
+                        return false;
+                    }
+                    var oldValue = session.Value;
+                    _context.SessionDates.Remove(session);
+                    await _context.SaveChangesAsync();
+
+                    var sessions = _context.SessionDates.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                    foreach (var ss in sessions)
+                    {
+                        ss.Value--;
+                    }
+                    await _context.SaveChangesAsync();
+
+                    // Commit the transaction
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
 
         public async Task<bool> IsUniqueName(string name, Type type)
         {
@@ -221,23 +255,104 @@ namespace GiaSuService.Repository
 
             return false;
         }
-
-        public async Task<bool> DeleteSessionDate(int id)
+        public async Task<bool> CreateSubject(SubjectViewModel subject)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var session = await _context.SessionDates.FindAsync(id);
-                    if(session == null)
+                    int count = await _context.Subjects.AsNoTracking().CountAsync();
+                    int newValue = Math.Min(count, int.Max(1, subject.Value));
+
+                    var sessions = _context.Subjects.Where(p => p.Value >= newValue).OrderBy(p => p.Value);
+                    foreach (var ss in sessions)
+                    {
+                        ss.Value++;
+                    }
+                    await _context.SaveChangesAsync();
+
+                    Subject newData = new Subject { Name = subject.SubjectName, Value = newValue };
+                    _context.Subjects.Add(newData);
+                    await _context.SaveChangesAsync();
+
+                    // Commit the transaction
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+        public async Task<bool> UpdateSubject(SubjectViewModel subject)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    int count = await _context.Subjects.AsNoTracking().CountAsync();
+                    Subject? res = await _context.Subjects.FindAsync(subject.SubjectId);
+                    if (res == null)
+                    {
+                        return false;
+                    }
+                    int newValue = Math.Min(count, int.Max(1, subject.Value));
+                    int oldValue = res.Value;
+                    res.Value = count + 1;
+                    _context.SaveChanges();
+                    if (oldValue < newValue)
+                    {
+                        var sessions = _context.Subjects.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                        foreach (var ss in sessions)
+                        {
+                            ss.Value--;
+                        }
+
+                    }
+                    else if (oldValue > newValue)
+                    {
+                        var sessions = _context.Subjects.Where(p => p.Value < oldValue).OrderBy(p => p.Value);
+                        foreach (var ss in sessions)
+                        {
+                            ss.Value++;
+                        }
+                    }
+                    res.Name = subject.SubjectName;
+                    res.Value = newValue;
+                    //res.Value = session.Value;
+                    await _context.SaveChangesAsync();
+
+                    // Commit the transaction
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+        public async Task<bool> DeleteSubject(int id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var session = await _context.Subjects.FindAsync(id);
+                    if (session == null)
                     {
                         return false;
                     }
                     var oldValue = session.Value;
-                    _context.SessionDates.Remove(session);
+                    _context.Subjects.Remove(session);
                     await _context.SaveChangesAsync();
 
-                    var sessions = _context.SessionDates.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                    var sessions = _context.Subjects.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
                     foreach (var ss in sessions)
                     {
                         ss.Value--;

@@ -118,6 +118,7 @@ namespace GiaSuService.Controllers
             return RedirectToAction("", "Admin");
         }
 
+        #region Session Manager
         [HttpGet]
         public IActionResult SessionDateManager()
         {
@@ -130,14 +131,12 @@ namespace GiaSuService.Controllers
             var result = await _catalogService.GetAllSessions();
             return Json(result);
         }
-
         [HttpPost]
         public async Task<IActionResult> UpdateSession([FromBody] SessionViewModel vm)
         {
             ResponseService mess = await _catalogService.UpdateSessionDate(vm);
             return Ok(mess);
         }
-
         [HttpPost]
         public async Task<IActionResult> CreateSession([FromBody] SessionViewModel vm)
         {
@@ -148,12 +147,49 @@ namespace GiaSuService.Controllers
             ResponseService mess = await _catalogService.CreateSessionDate(vm);
             return Ok(mess);
         }
-
         [HttpGet]
         public async Task<IActionResult> DeleteSession(int id)
         {
             ResponseService mess = await _catalogService.DeleteSessionDate(id);
             return Ok(mess);
         }
+        #endregion
+
+        #region Subject Manager
+        [HttpGet]
+        public IActionResult SubjectManager()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSubjectList()
+        {
+            var result = await _catalogService.GetAllSubjects();
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateSubject([FromBody] SubjectViewModel vm)
+        {
+            ResponseService mess = await _catalogService.UpdateSubject(vm);
+            return Ok(mess);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateSubject([FromBody] SubjectViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Ok(new ResponseService { Success = false, Message = "Vui lòng điền đủ thông tin" });
+            }
+            ResponseService mess = await _catalogService.CreateSubject(vm);
+            return Ok(mess);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteSubject(int id)
+        {
+            ResponseService mess = await _catalogService.DeleteSubject(id);
+            return Ok(mess);
+        }
+        #endregion
     }
 }

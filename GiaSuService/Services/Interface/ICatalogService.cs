@@ -14,13 +14,15 @@ namespace GiaSuService.Services.Interface
         Task<ResponseService> CreateSessionDate(SessionViewModel vm);
         Task<ResponseService> DeleteSessionDate(int id);
         Task<List<SessionViewModel>> GetAllSessions();
-        Task<SessionViewModel> GetSessionById(int sessionId);
 
         // CRUD operations for Grades
         Task<List<GradeViewModel>> GetAllGrades();
         Task<GradeViewModel> GetGradeById(int gradeId);
 
         // CRUD operations for Subjects
+        Task<ResponseService> UpdateSubject(SubjectViewModel vm);
+        Task<ResponseService> CreateSubject(SubjectViewModel vm);
+        Task<ResponseService> DeleteSubject(int id);
         Task<List<SubjectViewModel>> GetAllSubjects();
         Task<SubjectViewModel> GetSubjectById(int subjectId);
     }

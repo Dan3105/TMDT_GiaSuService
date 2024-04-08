@@ -1,0 +1,194 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
+<div class="container">
+    <h1>Subject Manager</h1>
+
+    <table id="subjectTable"
+           data-pagination="true"
+           data-height="500"
+           class="table table-striped thead-light">
+        <thead>
+            <tr>
+                <th data-field="subjectId" data-visible="false"></th>
+                <th data-width="40" data-width-unit="%" data-field="subjectName">Name</th>
+                <th data-width="20" data-width-unit="%" data-field="value">Order</th>
+                <th data-width="40" data-width-unit="%">Action</th>
+            </tr>
+        </thead>
+        <tbody id="data-container">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        function actionFormatter(value, row, index) {
+            return `
+                        <button type="button" class="btn btn-sm btn-success add-button">Add</button>
+                        <button type="button" class="btn btn-sm btn-primary edit-button" data-subject-id="${row.subjectId}">Edit</button>
+                        <button type="button" class="btn btn-sm btn-danger delete-button" data-subject-id="${row.subjectId}">Delete</button>
+                    `;
+        }
+
+        function refreshTable() {
+            $.ajax({
+                url: '/Admin/GetSubjectList',
+                method: 'GET',
+                success: function (data) {
+                    $("#subjectTable").bootstrapTable('load', data);
+
+                }
+            })
+        }
+
+        $("#subjectTable").bootstrapTable({
+            columns: [
+                { field: 'subjectId', visible: false },
+                { field: 'subjectName', title: 'Name' },
+                { field: 'value', title: 'Order' },
+                { field: 'actionButtons', title: 'Action', formatter: actionFormatter }
+            ]
+        });
+        refreshTable();
+
+        $(document).on('click', '.edit-button', function () {
+            let $tr = $(this).closest('tr');
+            let $tds = $tr.find('td');
+
+            // Extract current values from the table cells
+            let name = $tds.eq(0).text();
+            let order = $tds.eq(1).text();
+
+            let subjectId = $(this).data('subject-id');
+
+            let originalData = $tr.html();
+            $tr.html(`
+                  <td><input type="text" class="form-control" name="subjectName" placeholder="Enter Name" value="${name}"></td>
+                  <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                  <td>
+                    <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
+                    <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
+              </td>
+            `);
+
+            $tr.find('.cancel-edit-button').click(function () {
+                $tr.html(originalData);
+            });
+
+            $tr.find('.submit-edit-button').click(function () {
+                if (confirm("Are you sure you want to update this item?")) {
+                    let formData = {
+                        subjectName: $tr.find('input[name="subjectName"]').val(),
+                        subjectId: subjectId,
+                        value: $tr.find('input[name="value"]').val(),
+                    };
+
+                    $.ajax({
+                        url: '/Admin/UpdateSubject',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function (data) {
+                            if (data.success) {
+                                toastr["success"](data.message);
+                            }
+                            else {
+                                toastr["error"](data.message);
+                            }
+
+                            refreshTable();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            })
+        })
+
+
+        $(document).on('click', '.delete-button', function () {
+            if (confirm("Are you sure you want to delete this item?")) {
+                var row = $(this).closest('tr');
+                let subjectId = $(this).data('subject-id');
+                console.log(subjectId);
+                $.ajax({
+                    url: '/Admin/DeleteSubject',
+                    method: 'GET',
+                    contentType: 'application/json',
+                    data: { 'id': subjectId },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr["success"](data.message);
+                            refreshTable();
+                        }
+                        else {
+                            toastr["error"](data.message);
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+
+                refreshTable();
+            }
+
+        })
+
+
+        // Add Row Button Click
+        $(document).on('click', '.add-button', function () {
+            let $tr = $(this).closest('tr');
+            let $tds = $tr.find('td');
+            let order = parseInt($tds.eq(1).text()) + 1;
+            var newRowHtml = `
+                                    <tr>
+                                            <td><input type="text" class="form-control" name="subjectName" placeholder="Enter Name"></td>
+                                            <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                                        <td>
+                                            <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
+                                            <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
+                                        </td>
+                                    </tr>`;
+
+            var $newRow = $tr.after(newRowHtml).next('tr');
+            $newRow.find('.cancel-add-button').click(function () {
+                $(this).closest('tr').remove();
+            });
+
+            $newRow.find('.submit-add-button').click(function () {
+                if (confirm("Are you sure you want to add this item?")) {
+                    let formData = {
+                        subjectName: $newRow.find('input[name="subjectName"]').val(),
+                        value: $newRow.find('input[name="value"]').val(),
+                    };
+                    $.ajax({
+                        url: '/Admin/CreateSubject',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function (data) {
+                            if (data.success) {
+                                toastr["success"](data.message);
+                            }
+                            else {
+                                toastr["error"](data.message);
+                            }
+
+                            refreshTable();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            })
+        });
+
+    });
+</script>
+
