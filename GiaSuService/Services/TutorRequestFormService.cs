@@ -1,6 +1,7 @@
 ﻿using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
@@ -158,6 +159,11 @@ namespace GiaSuService.Services
         public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)
         {
             return await _tutorRequestRepo.GetTutorRequestProfileEdit(id);
+        }
+
+        public async Task<List<CustomerTutorRequestViewModel>> GetCustomerTutorRequest(int customerId)
+        {
+            return await _tutorRequestRepo.GetListTutorRequestOfCustomer(customerId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 
@@ -17,5 +18,7 @@ namespace GiaSuService.Repository.Interface
 
         public Task<TutorRequestProfileViewModel?> GetTutorRequestProfile(int id);
         public Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id);
+
+        public Task<List<CustomerTutorRequestViewModel>> GetListTutorRequestOfCustomer(int customerId);
     }
 }

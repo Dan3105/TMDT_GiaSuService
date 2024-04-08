@@ -15,7 +15,6 @@ namespace GiaSuService.Controllers
     [Authorize(Policy = AppConfig.CUSTOMERPOLICY)]
     public class CustomerController : Controller
     {
-        private readonly IAuthService _authService;
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
         private readonly ITutorService _tutorService;
@@ -24,12 +23,11 @@ namespace GiaSuService.Controllers
 
 
         public CustomerController(ICatalogService catalogService, IAddressService addressService, ITutorService tutorService
-            ,IAuthService authService, IProfileService profileService, ITutorRequestFormService tutorRequestFormService)
+            , IProfileService profileService, ITutorRequestFormService tutorRequestFormService)
         {
             _addressService = addressService;
             _catalogService = catalogService;
             _tutorService = tutorService;
-            _authService = authService;
             _profileService = profileService;
             _tutorRequestFormService = tutorRequestFormService;
         }
@@ -81,7 +79,26 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> CustomerListTutorRequest()
+        {
+            int requester = -1;
+            int.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)!.Value, out requester);
+            if (requester == -1)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Hết hạn đăng nhập";
+                return RedirectToAction("Index", "Identity");
+            }
 
+            int? customerId = await _profileService.GetProfileId(requester, AppConfig.CUSTOMERROLENAME);
+            if (customerId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Hết hạn đăng nhập";
+                return RedirectToAction("Index", "Identity");
+            }
+
+            var listProfile = await _tutorRequestFormService.GetCustomerTutorRequest((int)customerId);
+            return View(listProfile);
+        }
 
         [HttpGet]
         public IActionResult DeleteTutorRequest(int id)

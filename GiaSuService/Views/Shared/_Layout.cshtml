@@ -99,10 +99,19 @@
                                     <span>Lớp mới cần gia sư</span>
                                 </a>
                             </li>
+                            @if (roleName == AppConfig.CUSTOMERROLENAME)
+                            {
+                                <li>
+                                    <a href="@Url.Action("CustomerListTutorRequest", "Customer")">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>Các đơn tìm gia sư của tôi</span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
-
                     </div>
                 }
+                
                 @if(roleName == AppConfig.EMPLOYEEROLENAME)
                 {
                     <div class="sidebar-menu">

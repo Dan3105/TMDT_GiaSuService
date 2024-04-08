@@ -1,6 +1,7 @@
 ﻿using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
@@ -162,6 +163,31 @@ namespace GiaSuService.Repository
                     SubjectId = p.SubjectId,
                 })
                 .FirstOrDefaultAsync(p => p.RequestId == id);
+        }
+
+        public async Task<List<CustomerTutorRequestViewModel>> GetListTutorRequestOfCustomer(int customerId)
+        {
+            return await _context.RequestTutorForms
+                .AsNoTracking()
+                .Select(p => new {
+                    CustomerRequest = new CustomerTutorRequestViewModel
+                    {
+                        AdditionalDetail = p.AdditionalDetail,
+                        AddressDetail = $"{p.District.Province}, {p.District.Name}, {p.AddressDetail}",
+                        CreateDate = p.CreateDate,
+                        ExpiredDate = p.ExpiredDate,
+                        GradeName = p.Grade.Name,
+                        RequestId = p.Id,
+                        StatusName = p.Status.Name,
+                        Students = p.Students,
+                        SubjectName = p.Subject.Name,
+                    },
+                    p.CustomerId,
+                })
+                .OrderByDescending(p => p.CustomerRequest.CreateDate)
+                .Where(p => p.CustomerId == customerId)
+                .Select(p => p.CustomerRequest)
+                .ToListAsync();
         }
     }
 }

@@ -18,5 +18,6 @@ namespace GiaSuService.Services.Interface
         public Task<ResponseService> UpdateStatusTutorRequest(int id, string status);
 
         public Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id);
+        public Task<List<CustomerTutorRequestViewModel>> GetCustomerTutorRequest(int accountId);
     }
 }
