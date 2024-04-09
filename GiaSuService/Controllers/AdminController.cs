@@ -199,5 +199,45 @@ namespace GiaSuService.Controllers
             return Ok(mess);
         }
         #endregion
+
+        #region Grade Manager
+        public IActionResult GradeManager()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGradeList()
+        {
+            var result = await _catalogService.GetAllGrades();
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateGrade([FromBody] GradeViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.GradeName) || vm.Value == 0)
+            {
+                return Ok(new ResponseService { Success = false, Message = "Vui lòng điền đủ thông tin" });
+            }
+            ResponseService mess = await _catalogService.UpdateGrade(vm);
+            return Ok(mess);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateGrade([FromBody] GradeViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.GradeName) || vm.Value == 0)
+            {
+                return Ok(new ResponseService { Success = false, Message = "Vui lòng điền đủ thông tin" });
+            }
+            ResponseService mess = await _catalogService.CreateGrade(vm);
+            return Ok(mess);
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteGrade(int id)
+        {
+            ResponseService mess = await _catalogService.DeleteGrade(id);
+            return Ok(mess);
+        }
+        #endregion
     }
 }

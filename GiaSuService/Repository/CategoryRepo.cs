@@ -23,6 +23,7 @@ namespace GiaSuService.Repository
                     GradeId = p.Id,
                     GradeName = p.Name,
                     Value = p.Value,
+                    Fee = p.Fee,
                 })
                 .OrderBy(p => p.Value)
                 .ToListAsync();
@@ -67,9 +68,10 @@ namespace GiaSuService.Repository
                 .ToListAsync();
         }
 
-        public Task<GradeViewModel> GetGradeById(int gradeId)
+        public async Task<GradeViewModel?> GetGradeById(int gradeId)
         {
-            throw new NotImplementedException();
+            return await _context.Grades.Select(p => new GradeViewModel { GradeId = p.Id, GradeName = p.Name, Value = p.Value, Fee=p.Fee })
+                .FirstOrDefaultAsync(p => p.GradeId == gradeId);
         }
 
         public async Task<SessionViewModel?> GetSessionById(int sessionId)
@@ -92,9 +94,10 @@ namespace GiaSuService.Repository
                 .ToListAsync();
         }
 
-        public Task<SubjectViewModel> GetSubjectById(int subjectId)
+        public async Task<SubjectViewModel?> GetSubjectById(int subjectId)
         {
-            throw new NotImplementedException();
+            return await _context.Subjects.Select(p => new SubjectViewModel { SubjectId = p.Id, SubjectName = p.Name, Value = p.Value })
+                .FirstOrDefaultAsync(p => p.SubjectId == subjectId);
         }
 
         public async Task<List<SessionViewModel>> GetSubSessions(List<int> ids)
@@ -264,8 +267,8 @@ namespace GiaSuService.Repository
                     int count = await _context.Subjects.AsNoTracking().CountAsync();
                     int newValue = Math.Min(count, int.Max(1, subject.Value));
 
-                    var sessions = _context.Subjects.Where(p => p.Value >= newValue).OrderBy(p => p.Value);
-                    foreach (var ss in sessions)
+                    var subjects = _context.Subjects.Where(p => p.Value >= newValue).OrderBy(p => p.Value);
+                    foreach (var ss in subjects)
                     {
                         ss.Value++;
                     }
@@ -343,13 +346,13 @@ namespace GiaSuService.Repository
             {
                 try
                 {
-                    var session = await _context.Subjects.FindAsync(id);
-                    if (session == null)
+                    var subject = await _context.Subjects.FindAsync(id);
+                    if (subject == null)
                     {
                         return false;
                     }
-                    var oldValue = session.Value;
-                    _context.Subjects.Remove(session);
+                    var oldValue = subject.Value;
+                    _context.Subjects.Remove(subject);
                     await _context.SaveChangesAsync();
 
                     var sessions = _context.Subjects.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
@@ -360,6 +363,121 @@ namespace GiaSuService.Repository
                     await _context.SaveChangesAsync();
 
                     // Commit the transaction
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
+        public async Task<bool> CreateGrade(GradeViewModel grade)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    int count = await _context.Grades.AsNoTracking().CountAsync();
+                    int newValue = Math.Min(count, int.Max(1, grade.Value));
+
+                    var grades = _context.Grades.Where(p => p.Value >= newValue).OrderBy(p => p.Value);
+                    foreach (var ss in grades)
+                    {
+                        ss.Value++;
+                    }
+                    await _context.SaveChangesAsync();
+
+                    Grade newData = new Grade { Name = grade.GradeName, Value = newValue, Fee = grade.Fee };
+                    _context.Grades.Add(newData);
+                    await _context.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+        public async Task<bool> UpdateGrade(GradeViewModel grade)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    int count = await _context.Grades.AsNoTracking().CountAsync();
+                    Grade? res = await _context.Grades.FindAsync(grade.GradeId);
+                    if (res == null)
+                    {
+                        return false;
+                    }
+                    int newValue = Math.Min(count, int.Max(1, grade.Value));
+                    int oldValue = res.Value;
+                    res.Value = count + 1;
+                    _context.SaveChanges();
+                    if (oldValue < newValue)
+                    {
+                        var grades = _context.Grades.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                        foreach (var ss in grades)
+                        {
+                            ss.Value--;
+                        }
+
+                    }
+                    else if (oldValue > newValue)
+                    {
+                        var grades = _context.Grades.Where(p => p.Value < oldValue).OrderBy(p => p.Value);
+                        foreach (var ss in grades)
+                        {
+                            ss.Value++;
+                        }
+                    }
+                    res.Name = grade.GradeName;
+                    res.Value = newValue;
+                    res.Fee = grade.Fee;
+
+                    await _context.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+        public async Task<bool> DeleteGrade(int id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var grade = await _context.Grades.FindAsync(id);
+                    if (grade == null)
+                    {
+                        return false;
+                    }
+                    var oldValue = grade.Value;
+                    _context.Grades.Remove(grade);
+                    await _context.SaveChangesAsync();
+
+                    var grades = _context.Grades.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                    foreach (var ss in grades)
+                    {
+                        ss.Value--;
+                    }
+                    await _context.SaveChangesAsync();
+
                     transaction.Commit();
 
                     return true;

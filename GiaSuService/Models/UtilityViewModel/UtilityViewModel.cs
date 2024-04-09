@@ -18,6 +18,7 @@ namespace GiaSuService.Models.UtilityViewModel
         public bool IsChecked { get; set; } = false;
 
         public int Value { get; set; }
+        public decimal Fee { get; set; }
     }
 
     public class SubjectViewModel

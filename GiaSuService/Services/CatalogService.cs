@@ -143,6 +143,58 @@ namespace GiaSuService.Services
         #endregion
 
         #region CRUD Subject
+        public async Task<ResponseService> UpdateGrade(GradeViewModel vm)
+        {
+            GradeViewModel? grade = await _categoryRepo.GetGradeById(vm.GradeId);
+
+            if (grade == null)
+            {
+                return new ResponseService { Message = "Không tìm thấy dữ liệu", Success = false };
+            }
+
+            bool isUnique = await _categoryRepo.IsUniqueName(vm.GradeName, vm.GetType());
+
+            if (!isUnique && (!grade.GradeName.Equals(vm.GradeName)
+                && grade.Value != vm.Value))
+            {
+                return new ResponseService { Message = "Tên bị trùng trong hệ thống", Success = false };
+            }
+
+            bool updateSuccess = await _categoryRepo.UpdateGrade(vm);
+            if (updateSuccess)
+            {
+                return new ResponseService { Message = "Cập nhật thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+        public async Task<ResponseService> CreateGrade(GradeViewModel vm)
+        {
+            bool isUnique = await _categoryRepo.IsUniqueName(vm.GradeName, vm.GetType());
+            if (!isUnique)
+            {
+                return new ResponseService { Message = "Tên bị trùng trong hệ thống", Success = false };
+            }
+
+            bool addSuccess = await _categoryRepo.CreateGrade(vm);
+            if (addSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+        public async Task<ResponseService> DeleteGrade(int id)
+        {
+            bool delSuccess = await _categoryRepo.DeleteGrade(id);
+            if (delSuccess)
+            {
+                return new ResponseService { Message = "Tạo thành công", Success = true };
+            }
+
+            return new ResponseService { Message = "Lỗi hệ thống", Success = false };
+        }
+
         public async Task<List<SubjectViewModel>> GetAllSubjects()
         {
             return await _categoryRepo.GetAllSubjects();
@@ -165,8 +217,6 @@ namespace GiaSuService.Services
         {
             return await _categoryRepo.GetTutorTypeById(tutorTypeId);
         }
-
-       
         #endregion
     }
 }

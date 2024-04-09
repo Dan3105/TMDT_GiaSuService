@@ -16,6 +16,9 @@ namespace GiaSuService.Services.Interface
         Task<List<SessionViewModel>> GetAllSessions();
 
         // CRUD operations for Grades
+        Task<ResponseService> UpdateGrade(GradeViewModel vm);
+        Task<ResponseService> CreateGrade(GradeViewModel vm);
+        Task<ResponseService> DeleteGrade(int id);
         Task<List<GradeViewModel>> GetAllGrades();
         Task<GradeViewModel> GetGradeById(int gradeId);
 

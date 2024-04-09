@@ -2,18 +2,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
 <div class="container">
-    <h1>Subject Manager</h1>
+    <h1>Grade Manager</h1>
 
-    <table id="subjectTable"
+    <table id="gradeTable"
            data-pagination="true"
            data-height="500"
            class="table table-striped thead-light">
         <thead>
             <tr>
-                <th data-field="subjectId" data-visible="false"></th>
-                <th data-width="40" data-width-unit="%" data-field="subjectName">Name</th>
-                <th data-width="20" data-width-unit="%" data-field="value">Order</th>
-                <th data-width="40" data-width-unit="%">Action</th>
+                <th data-field="gradeId" data-visible="false"></th>
+                <th data-width="35" data-width-unit="%" data-field="gradeName">Name</th>
+                <th data-width="15" data-width-unit="%" data-field="fee">Fee</th>
+                <th data-width="15" data-width-unit="%" data-field="value">Order</th>
+                <th data-width="35" data-width-unit="%">Action</th>
             </tr>
         </thead>
         <tbody id="data-container">
@@ -26,27 +27,28 @@
 
         function actionFormatter(value, row, index) {
             return `
-                        <button type="button" class="btn btn-sm btn-success add-button">Add</button>
-                        <button type="button" class="btn btn-sm btn-primary edit-button" data-subject-id="${row.subjectId}">Edit</button>
-                        <button type="button" class="btn btn-sm btn-danger delete-button" data-subject-id="${row.subjectId}">Delete</button>
-                    `;
+                            <button type="button" class="btn btn-sm btn-success add-button">Add</button>
+                            <button type="button" class="btn btn-sm btn-primary edit-button" data-grade-id="${row.gradeId}">Edit</button>
+                            <button type="button" class="btn btn-sm btn-danger delete-button" data-grade-id="${row.gradeId}">Delete</button>
+                        `;
         }
 
         function refreshTable() {
             $.ajax({
-                url: '/Admin/GetSubjectList',
+                url: '/Admin/GetGradeList',
                 method: 'GET',
                 success: function (data) {
-                    $("#subjectTable").bootstrapTable('load', data);
+                    $("#gradeTable").bootstrapTable('load', data);
 
                 }
             })
         }
 
-        $("#subjectTable").bootstrapTable({
+        $("#gradeTable").bootstrapTable({
             columns: [
-                { field: 'subjectId', visible: false },
-                { field: 'subjectName', title: 'Name' },
+                { field: 'gradeId', visible: false },
+                { field: 'gradeName', title: 'Name' },
+                { field: 'fee', title: 'Fee' },
                 { field: 'value', title: 'Order' },
                 { field: 'actionButtons', title: 'Action', formatter: actionFormatter }
             ]
@@ -59,19 +61,21 @@
 
             // Extract current values from the table cells
             let name = $tds.eq(0).text();
-            let order = $tds.eq(1).text();
+            let fee = $tds.eq(1).text();
+            let order = $tds.eq(2).text();
 
-            let subjectId = $(this).data('subject-id');
+            let gradeId = $(this).data('grade-id');
 
             let originalData = $tr.html();
             $tr.html(`
-                  <td><input type="text" class="form-control" name="subjectName" placeholder="Enter Name" value="${name}"></td>
-                  <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
-                  <td>
-                    <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
-                    <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
-              </td>
-            `);
+                      <td><input type="text" class="form-control" name="gradeName" placeholder="Enter Name" value="${name}"></td>
+                      <td><input type="number" class="form-control" name="fee" placeholder="Enter Fee" step="1000" value="${fee}"></td>
+                      <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                      <td>
+                        <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
+                        <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
+                  </td>
+                `);
 
             $tr.find('.cancel-edit-button').click(function () {
                 $tr.html(originalData);
@@ -80,13 +84,14 @@
             $tr.find('.submit-edit-button').click(function () {
                 if (confirm("Are you sure you want to update this item?")) {
                     let formData = {
-                        subjectName: $tr.find('input[name="subjectName"]').val(),
-                        subjectId: subjectId,
+                        gradeName: $tr.find('input[name="gradeName"]').val(),
+                        fee: $tr.find('input[name="fee"]').val(),
+                        gradeId: gradeId,
                         value: $tr.find('input[name="value"]').val(),
                     };
 
                     $.ajax({
-                        url: '/Admin/UpdateSubject',
+                        url: '/Admin/UpdateGrade',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(formData),
@@ -112,10 +117,10 @@
         $(document).on('click', '.delete-button', function () {
             if (confirm("Are you sure you want to delete this item?")) {
                 var row = $(this).closest('tr');
-                let subjectId = $(this).data('subject-id');
-                console.log(subjectId);
+                let gradeId = $(this).data('grade-id');
+                console.log(gradeId);
                 $.ajax({
-                    url: `/Admin/DeleteSubject/${subjectId}`,
+                    url: `/Admin/DeleteGrade/${gradeId}`,
                     method: 'DELETE',
                     contentType: 'application/json',
                     success: function (data) {
@@ -143,16 +148,17 @@
         $(document).on('click', '.add-button', function () {
             let $tr = $(this).closest('tr');
             let $tds = $tr.find('td');
-            let order = parseInt($tds.eq(1).text()) + 1;
+            let order = parseInt($tds.eq(2).text()) + 1;
             var newRowHtml = `
-                                    <tr>
-                                            <td><input type="text" class="form-control" name="subjectName" placeholder="Enter Name"></td>
-                                            <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
-                                        <td>
-                                            <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
-                                            <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
-                                        </td>
-                                    </tr>`;
+                                        <tr>
+                                                <td><input type="text" class="form-control" name="gradeName" placeholder="Enter Name"></td>
+                                                <td><input type="number" step="1000" class="form-control" min=0 name="fee" placeholder="Enter Fee"></td>
+                                                <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
+                                                <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
+                                            </td>
+                                        </tr>`;
 
             var $newRow = $tr.after(newRowHtml).next('tr');
             $newRow.find('.cancel-add-button').click(function () {
@@ -162,11 +168,12 @@
             $newRow.find('.submit-add-button').click(function () {
                 if (confirm("Are you sure you want to add this item?")) {
                     let formData = {
-                        subjectName: $newRow.find('input[name="subjectName"]').val(),
+                        gradeName: $newRow.find('input[name="gradeName"]').val(),
                         value: $newRow.find('input[name="value"]').val(),
+                        fee: $newRow.find('input[name="fee"]').val(),
                     };
                     $.ajax({
-                        url: '/Admin/CreateSubject',
+                        url: '/Admin/CreateGrade',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(formData),
