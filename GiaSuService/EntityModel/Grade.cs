@@ -11,7 +11,7 @@ public partial class Grade
 
     public int Value { get; set; }
 
-    public virtual ICollection<ConfigPrice> ConfigPrices { get; set; } = new List<ConfigPrice>();
+    public decimal Fee { get; set; }
 
     public virtual ICollection<RequestTutorForm> RequestTutorForms { get; set; } = new List<RequestTutorForm>();
 

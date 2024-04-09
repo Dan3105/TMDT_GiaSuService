@@ -104,7 +104,6 @@ namespace GiaSuService.Controllers
         public IActionResult DeleteTutorRequest(int id)
         {
             RemoveTutorSelected(id);
-            //return RedirectToAction("TutorRequestForm", "Customer");
             return Ok();
         }
 

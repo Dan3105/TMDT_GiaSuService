@@ -18,8 +18,6 @@ public partial class DvgsDbContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<ConfigPrice> ConfigPrices { get; set; }
-
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<District> Districts { get; set; }
@@ -98,27 +96,7 @@ public partial class DvgsDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("account_roleid_fkey");
         });
-
-        modelBuilder.Entity<ConfigPrice>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("configprice_pkey");
-
-            entity.ToTable("config_price");
-
-            entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('configprice_id_seq'::regclass)")
-                .HasColumnName("id");
-            entity.Property(e => e.Amount)
-                .HasColumnType("money")
-                .HasColumnName("amount");
-            entity.Property(e => e.GradeId).HasColumnName("grade_id");
-
-            entity.HasOne(d => d.Grade).WithMany(p => p.ConfigPrices)
-                .HasForeignKey(d => d.GradeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("configprice_gradeid_fkey");
-        });
-
+                
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("customer_pkey");
@@ -236,6 +214,10 @@ public partial class DvgsDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("name");
             entity.Property(e => e.Value).HasColumnName("value");
+
+            entity.Property(e => e.Fee)
+            .HasColumnType("money")
+            .HasColumnName("fee");
         });
 
         modelBuilder.Entity<IdentityCard>(entity =>

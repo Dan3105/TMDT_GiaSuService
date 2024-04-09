@@ -60,11 +60,11 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
 
-            //if(tutor.IsValid == true)
-            //{
-            //    TempData[AppConfig.MESSAGE_FAIL] = "Đơn này đã được xử lý";
-            //    return RedirectToAction("TutorRegisterQueue", "Employee");
-            //}
+            if (!tutor.Formstatus.Equals(AppConfig.FormStatus.PENDING.ToString().ToLower()))
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Đơn này đã được xử lý";
+                return RedirectToAction("TutorRegisterQueue", "Employee");
+            }
 
             ContextReviewingRegister vm = new ContextReviewingRegister
             {

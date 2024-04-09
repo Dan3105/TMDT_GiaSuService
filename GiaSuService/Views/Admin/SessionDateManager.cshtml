@@ -116,7 +116,7 @@
                 console.log(sessionId);
                 $.ajax({
                     url: '/Admin/DeleteSession',
-                    method: 'GET',
+                    method: 'DELETE',
                     contentType: 'application/json',
                     data: {'id': sessionId},
                     success: function (data) {

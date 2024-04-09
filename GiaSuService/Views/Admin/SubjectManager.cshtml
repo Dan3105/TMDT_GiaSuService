@@ -116,7 +116,7 @@
                 console.log(subjectId);
                 $.ajax({
                     url: '/Admin/DeleteSubject',
-                    method: 'GET',
+                    method: 'DELETE',
                     contentType: 'application/json',
                     data: { 'id': subjectId },
                     success: function (data) {

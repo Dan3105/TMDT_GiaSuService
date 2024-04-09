@@ -1,0 +1,49 @@
+﻿@using GiaSuService.Configs;
+@using GiaSuService.Models.CustomerViewModel;
+@model IEnumerable<CustomerTutorRequestViewModel>
+
+<div class="container">
+    <h1 class="h3">Customer Tutor Requests</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group">
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item d-flex m-3">
+                        <div class="row w-100">
+                            <div class="col-md-9">
+                                <h5 class="mb-1">@item.SubjectName - @item.GradeName</h5>
+                                <p class="mb-1">Students: @item.Students</p>
+                                <small>Request ID: @item.RequestId</small>
+                                @if (!string.IsNullOrEmpty(item.AdditionalDetail))
+                                {
+                                    <p class="mt-3 mb-0">Additional Details: @item.AdditionalDetail</p>
+                                }
+                            </div>
+                            <div class="col-md-3 row">
+                                <div class="col-md-7 d-flex justify-content-center align-items-center">
+                                    <a href="#" class="btn btn-sm btn-outline-primary me-2">Details</a>
+                                </div>
+                                <div class="col-md-5 d-flex justify-content-end align-items-center">
+                                    @if(item.StatusName == AppConfig.RegisterStatus.DENY.ToString().ToLower())
+                                    {
+                                        <span class="badge bg-danger rounded-pill ms-auto">@item.StatusName</span>
+                                    }
+                                    @if (item.StatusName == AppConfig.RegisterStatus.PENDING.ToString().ToLower())
+                                    {
+                                        <span class="badge bg-info rounded-pill ms-auto">@item.StatusName</span>
+                                    }
+                                    @if (item.StatusName == AppConfig.RegisterStatus.APPROVAL.ToString().ToLower())
+                                    {
+                                        <span class="badge bg-success rounded-pill ms-auto">@item.StatusName</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

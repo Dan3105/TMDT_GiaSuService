@@ -35,9 +35,9 @@ namespace GiaSuService.Models.IdentityViewModel
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }
         public required TutorTypeViewModel TutorType { get; set; }
-      
-        public string? Formstatus { get; set; }
-        
+
+        public string Formstatus { get; set; } = string.Empty;
+
         #endregion
 
 
