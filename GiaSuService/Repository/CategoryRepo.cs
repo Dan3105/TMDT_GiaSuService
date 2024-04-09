@@ -143,7 +143,7 @@ namespace GiaSuService.Repository
                     _context.SaveChanges();
                     if(oldValue < newValue)
                     {
-                        var sessions = _context.SessionDates.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                        var sessions = _context.SessionDates.Where(p => p.Value > oldValue && p.Value <= newValue).OrderBy(p => p.Value);
                         foreach(var ss in sessions)
                         {
                             ss.Value--;
@@ -151,7 +151,7 @@ namespace GiaSuService.Repository
 
                     }else if(oldValue > newValue)
                     {
-                        var sessions = _context.SessionDates.Where(p => p.Value < oldValue).OrderBy(p => p.Value);
+                        var sessions = _context.SessionDates.Where(p => p.Value < oldValue && p.Value >= newValue).OrderBy(p => p.Value);
                         foreach (var ss in sessions)
                         {
                             ss.Value++;
@@ -308,7 +308,7 @@ namespace GiaSuService.Repository
                     _context.SaveChanges();
                     if (oldValue < newValue)
                     {
-                        var sessions = _context.Subjects.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                        var sessions = _context.Subjects.Where(p => p.Value > oldValue && p.Value <= newValue).OrderBy(p => p.Value);
                         foreach (var ss in sessions)
                         {
                             ss.Value--;
@@ -317,7 +317,7 @@ namespace GiaSuService.Repository
                     }
                     else if (oldValue > newValue)
                     {
-                        var sessions = _context.Subjects.Where(p => p.Value < oldValue).OrderBy(p => p.Value);
+                        var sessions = _context.Subjects.Where(p => p.Value < oldValue && p.Value >= newValue).OrderBy(p => p.Value);
                         foreach (var ss in sessions)
                         {
                             ss.Value++;
@@ -424,7 +424,7 @@ namespace GiaSuService.Repository
                     _context.SaveChanges();
                     if (oldValue < newValue)
                     {
-                        var grades = _context.Grades.Where(p => p.Value > oldValue).OrderBy(p => p.Value);
+                        var grades = _context.Grades.Where(p => p.Value > oldValue && p.Value <= newValue).OrderBy(p => p.Value);
                         foreach (var ss in grades)
                         {
                             ss.Value--;
@@ -433,7 +433,7 @@ namespace GiaSuService.Repository
                     }
                     else if (oldValue > newValue)
                     {
-                        var grades = _context.Grades.Where(p => p.Value < oldValue).OrderBy(p => p.Value);
+                        var grades = _context.Grades.Where(p => p.Value < oldValue && p.Value >= newValue).OrderBy(p => p.Value);
                         foreach (var ss in grades)
                         {
                             ss.Value++;
