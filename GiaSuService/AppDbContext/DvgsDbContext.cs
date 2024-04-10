@@ -634,7 +634,7 @@ public partial class DvgsDbContext : DbContext
         {
             entity.HasKey(e => new { e.TutorRequestId, e.TutorId }).HasName("tutorqueue_pkey");
 
-            entity.ToTable("Tutor_Apply_Form");
+            entity.ToTable("tutor_apply_form");
 
             entity.Property(e => e.TutorRequestId).HasColumnName("tutor_request_id");
             entity.Property(e => e.TutorId).HasColumnName("tutor_id");
