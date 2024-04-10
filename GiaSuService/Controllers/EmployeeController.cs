@@ -222,5 +222,50 @@ namespace GiaSuService.Controllers
 
             return View(thisForm);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTutorRequestEdit(TutorRequestProfileEditViewModel model)
+        {
+            if (model == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Đơn đăng ký tìm gia sư không được rỗng";
+                return RedirectToAction("TutorRequestList", "Employee");
+            }
+
+            ResponseService response = await _tutorRequestService.UpdateTutorRequestProfileEdit(model);
+
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+
+            return RedirectToAction("TutorRequestEditByEmployee", "Employee", new {id = model.RequestId});
+        }
+
+        public async Task<IActionResult> CancelTutorRequest(TutorRequestProfileEditViewModel model)
+        {
+            if (model == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Đơn đăng ký tìm gia sư không được rỗng";
+                return RedirectToAction("TutorRequestList", "Employee");
+            }
+
+            ResponseService response = await _tutorRequestService.UpdateStatusTutorRequest(model.RequestId, AppConfig.FormStatus.CANCEL.ToString().ToLower());
+
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Đã huỷ đơn thành công";
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+
+            return RedirectToAction("TutorRequestEditByEmployee", "Employee", new { id = model.RequestId });
+        }
     }
 }
