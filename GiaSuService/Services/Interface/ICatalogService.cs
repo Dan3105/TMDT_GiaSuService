@@ -7,7 +7,6 @@ namespace GiaSuService.Services.Interface
     public interface ICatalogService
     {
         Task<List<TutorTypeViewModel>> GetAllTutorType();
-        Task<TutorTypeViewModel> GetTutorTypeById(int tutorTypeId);
 
         // CRUD operations for Sessions
         Task<ResponseService> UpdateSessionDate(SessionViewModel vm);
@@ -20,13 +19,11 @@ namespace GiaSuService.Services.Interface
         Task<ResponseService> CreateGrade(GradeViewModel vm);
         Task<ResponseService> DeleteGrade(int id);
         Task<List<GradeViewModel>> GetAllGrades();
-        Task<GradeViewModel> GetGradeById(int gradeId);
 
         // CRUD operations for Subjects
         Task<ResponseService> UpdateSubject(SubjectViewModel vm);
         Task<ResponseService> CreateSubject(SubjectViewModel vm);
         Task<ResponseService> DeleteSubject(int id);
         Task<List<SubjectViewModel>> GetAllSubjects();
-        Task<SubjectViewModel> GetSubjectById(int subjectId);
     }
 }

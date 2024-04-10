@@ -53,22 +53,46 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var profile = await _profileService.GetTutorProfile((int)profileId);
+            var profile = await _profileService.GetTutorFormUpdateById((int)profileId);
 
             if (profile == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
                 return RedirectToAction("Index", "Home");
             }
-            
-            return View(profile);
+
+            var provinceList = await _addressService.GetProvinces();
+
+            var gradeList = await _catalogService.GetAllGrades();
+            gradeList.ForEach(p => p.IsChecked = profile.selectedGradeIds.Contains(p.GradeId));
+
+            var subjectList = await _catalogService.GetAllSubjects();
+            subjectList.ForEach(p => p.IsChecked = profile.selectedSubjectIds.Contains(p.SubjectId));
+
+            var sessionList = await _catalogService.GetAllSessions();
+            sessionList.ForEach(p => p.IsChecked = profile.selectedSessionIds.Contains(p.SessionId));
+
+            var tutorTypeList = await _catalogService.GetAllTutorType();
+
+            TutorUpdateRequestViewModel model = new TutorUpdateRequestViewModel()
+            {
+                Form = profile,
+                ProvinceList = provinceList,
+                GradeList = gradeList,
+                SubjectList = subjectList,
+                SessionList = sessionList,
+                TutorTypeList = tutorTypeList
+            };
+
+            return View(model);
         }
 
         [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(TutorProfileViewModel profile)
+        public async Task<IActionResult> UpdateProfile(TutorUpdateRequestViewModel profile)
         {
-            ResponseService response = await _profileService.UpdateTutorProfile(profile);
+
+            ResponseService response = await _profileService.CreateRequestTutorProfile(profile);
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;

@@ -1,6 +1,7 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
+using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 
@@ -59,9 +60,20 @@ namespace GiaSuService.Services
             return await _profileRepo.GetTutorProfile(profileId);
         }
 
-        public async Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel profile)
+        public async Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel profile)
         {
-            bool isSuccess = await _profileRepo.UpdateTutorProfile(profile);
+            profile.Form.selectedDistricts = profile.DistrictSelected;
+            profile.Form.selectedGradeIds = profile.GradeSelected;
+            profile.Form.selectedSessionIds = profile.SessionSelected;
+            profile.Form.selectedSubjectIds = profile.SubjectSelected;
+
+            var origin = await _profileRepo.GetTutorFormUpdateProfile(profile.Form.TutorId);
+            if(origin == null)
+            {
+                return new ResponseService { Success = true, Message = "Không tìm thấy thông tin gia sư trong hệ thống" }; 
+            }
+            TutorFormUpdateProfileViewModel? diff = TutorFormUpdateProfileViewModel.CompareDifference(origin, profile.Form);
+            bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(diff);
             if (isSuccess)
             {
                 return new ResponseService { Success = true, Message = "Cập nhật thành công" };
@@ -93,6 +105,11 @@ namespace GiaSuService.Services
             if (isSuccess) { return new ResponseService { Success = true, Message = "Cập nhật gia sư thành công" }; }
             return new ResponseService { Success = false, Message = "Lỗi cập nhật trong hệ thống" };
             
+        }
+
+        public Task<TutorFormUpdateProfileViewModel?> GetTutorFormUpdateById(int tutorId)
+        {
+            return _profileRepo.GetTutorFormUpdateProfile(tutorId);
         }
     }
 }

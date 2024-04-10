@@ -1,6 +1,6 @@
 ﻿using GiaSuService.Configs;
-using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
+using GiaSuService.Models.TutorViewModel;
 
 namespace GiaSuService.Services.Interface
 {
@@ -17,8 +17,9 @@ namespace GiaSuService.Services.Interface
         public Task<ResponseService> UpdateProfile(ProfileViewModel model, string userRole);
         
         public Task<TutorProfileViewModel?> GetTutorProfile(int tutorId);
-        public Task<ResponseService> UpdateTutorProfile(TutorProfileViewModel model);
-
         public Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model);
+
+        public Task<TutorFormUpdateProfileViewModel?> GetTutorFormUpdateById(int tutorId);
+        public Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel model);
     }
 }

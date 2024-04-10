@@ -135,11 +135,6 @@ namespace GiaSuService.Services
         {
             return await _categoryRepo.GetAllGrades();
         }
-
-        public async Task<GradeViewModel> GetGradeById(int gradeId)
-        {
-            return await _categoryRepo.GetGradeById(gradeId);
-        }
         #endregion
 
         #region CRUD Subject
@@ -198,11 +193,6 @@ namespace GiaSuService.Services
         public async Task<List<SubjectViewModel>> GetAllSubjects()
         {
             return await _categoryRepo.GetAllSubjects();
-        }
-
-        public async Task<SubjectViewModel> GetSubjectById(int subjectId)
-        {
-            return await _categoryRepo.GetSubjectById(subjectId);
         }
 
         #endregion

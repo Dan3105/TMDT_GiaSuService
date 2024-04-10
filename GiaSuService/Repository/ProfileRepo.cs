@@ -5,6 +5,10 @@ using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using GiaSuService.Models.UtilityViewModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using GiaSuService.Models.TutorViewModel;
+using Newtonsoft.Json;
+
 namespace GiaSuService.Repository
 {
     public class ProfileRepo : IProfileRepo
@@ -167,7 +171,6 @@ namespace GiaSuService.Repository
                     FrontIdentityCard = tutor.Identity.FrontIdentityCard,
                     BackIdentityCard = tutor.Identity.BackIdentityCard,
 
-                    //IsValid = tutor.Isvalid
                 })
                 .FirstOrDefaultAsync(p => p.TutorId == tutorId);
 
@@ -248,58 +251,55 @@ namespace GiaSuService.Repository
             return false;
         }
 
-        public async Task<bool> UpdateTutorProfile(TutorProfileViewModel profile)
+        public async Task<bool> UpdateRequestTutorProfile(TutorFormUpdateProfileViewModel? modified)
         {
+            if(modified == null)
+            {
+                return true;
+            }
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    IdentityCard? identity = await _context.IdentityCards.FindAsync(profile.IdentityId);
-                    if (identity == null)
+                    var exitsTutor = await GetTutorFormUpdateProfile(modified.TutorId);
+                    if(exitsTutor == null)
                     {
                         return false;
                     }
-                    identity.IdentityNumber = profile.IdentityCard;
-                    identity.BackIdentityCard = profile.BackIdentityCard;
-                    identity.FrontIdentityCard = profile.FrontIdentityCard;
-
-                    Account? account = await _context.Accounts.FindAsync(profile.AccountId);
-                    if (account == null)
+                    var status = await _context.Statuses.Select(p => new {p.Id, p.Name}).
+                        FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.RegisterStatus.UPDATE.ToString().ToLower()));
+                    if(status == null)
                     {
-                        return false;
+                        throw new NullReferenceException();
                     }
-                    account.Email = profile.Email;
-                    account.Phone = profile.Phone;
-                    account.Avatar = profile.Avatar;
-                    account.LockEnable = profile.LockEnable;
 
-                    Tutor? tutor = await _context.Tutors.FindAsync(profile.TutorId);
-                    if (tutor == null)
+                    string jsonContext = JsonConvert.SerializeObject(modified);
+                    TutorStatusDetail request = new TutorStatusDetail()
                     {
-                        return false;
-                    }
-                    tutor.FullName = profile.Fullname;
-                    tutor.AddressDetail = profile.AddressDetail;
-                    tutor.Gender = profile.Gender == "Nam" ? "M" : "F";
-                    tutor.Birth = profile.Birth;
-                    tutor.DistrictId = profile.SelectedDistrictId;
-                    tutor.College = profile.College;
-                    tutor.Area = profile.Area;
-                    tutor.AdditionalInfo = profile.Additionalinfo;
-                    tutor.AcademicYearFrom = profile.Academicyearfrom;
-                    tutor.AcademicYearTo = profile.Academicyearto;
-                    tutor.TutorTypeId = profile.TutorType.TutorTypeId!;
-                    tutor.IsActive = profile.IsActive;
+                        Context = jsonContext,
+                        CreateDate = DateTime.Now,
+                        TutorId = exitsTutor.TutorId,
+                        StatusId = status.Id,
+                    };
 
-                    _context.IdentityCards.Update(identity);
-                    _context.Accounts.Update(account);
-                    _context.Tutors.Update(tutor);
-                    int result = _context.SaveChanges();
+                    _context.TutorStatusDetails.Add(request);
+                    await _context.SaveChangesAsync();
+
+                    if(modified.IsActive != exitsTutor.IsActive)
+                    {
+                        _context.Tutors
+                            .ExecuteUpdate(x => x 
+                            .SetProperty(p => p.IsActive, modified.IsActive)
+                            .SetProperty(p => p.StatusId, status.Id));
+
+                        await _context.SaveChangesAsync();
+                    }
+                    _context.Tutors.ExecuteUpdate(x => x.SetProperty(p => p.StatusId, status.Id));
+                    await _context.SaveChangesAsync();
                     transaction.Commit();
-                    if (result > 0)
-                    {
-                        return true;
-                    }
+
+                    return true;
                 }
                 catch (Exception)
                 {
@@ -309,7 +309,44 @@ namespace GiaSuService.Repository
             return false;
         }
 
+        public async Task<TutorFormUpdateProfileViewModel?> GetTutorFormUpdateProfile(int tutorId)
+        {
+            return await _context.Tutors.AsNoTracking()
+                .Select(p => new TutorFormUpdateProfileViewModel
+                {
+                    TutorId = p.Id,
+                    Email = p.Account.Email,
+                    Phone = p.Account.Phone,
+                    Avatar = p.Account.Avatar,
+
+                    IdentityCard = p.Identity.IdentityNumber,
+                    FrontIdentityCard = p.Identity.FrontIdentityCard,
+                    BackIdentityCard = p.Identity.BackIdentityCard,
+
+                    Fullname = p.FullName,
+                    Gender = p.Gender,
+                    AddressDetail = p.AddressDetail,
+                    SelectedDistrictId = p.DistrictId,
+                    SelectedProvinceId = p.District.ProvinceId,
+                    Birth = p.Birth,
+
+                    Area = p.Area,
+                    College = p.College,
+                    Academicyearfrom = p.AcademicYearFrom,
+                    Academicyearto = p.AcademicYearTo,
+                    Additionalinfo = p.AdditionalInfo,
+                    IsActive = p.IsActive ?? false,
+
+                    SelectedTutorTypeId = p.TutorTypeId,
+                    selectedDistricts = p.Districts.Select(p => p.Id),
+                    selectedGradeIds = p.Grades.Select(p => p.Id),
+                    selectedSessionIds = p.Sessions.Select(p => p.Id),
+                    selectedSubjectIds = p.Subjects.Select(p => p.Id)
+                })
+                .FirstOrDefaultAsync(p => p.TutorId == tutorId);
+        }
+
+
         #endregion
-    
     }
 }

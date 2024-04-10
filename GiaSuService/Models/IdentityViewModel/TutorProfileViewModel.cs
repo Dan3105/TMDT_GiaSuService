@@ -20,7 +20,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public string FrontIdentityCard { get; set; } = string.Empty;
         public string BackIdentityCard { get; set; } = string.Empty;
         public DateOnly Createdate { get; set; }
-        public required string AddressDetail { get; set; }
+        public string AddressDetail { get; set; } = string.Empty;
         public int SelectedDistrictId { get; set; }
         public int SelectedProvinceId { get; set; }
         #endregion
@@ -34,10 +34,9 @@ namespace GiaSuService.Models.IdentityViewModel
         public string? Additionalinfo { get; set; }
         public short Academicyearfrom { get; set; }
         public short Academicyearto { get; set; }
-        public required TutorTypeViewModel TutorType { get; set; }
+        public TutorTypeViewModel? TutorType { get; set; }
 
         public string Formstatus { get; set; } = string.Empty;
-
         #endregion
 
 
