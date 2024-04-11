@@ -2,7 +2,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
 <div class="container">
-    <h1>Session Manager</h1>
+    <h1>Quản lý buổi học</h1>
 
     <table id="sessionTable"
            data-pagination="true"
@@ -11,9 +11,9 @@
         <thead>
             <tr>
                 <th data-field="sessionId" data-visible="false"></th>
-                <th data-width="40" data-width-unit="%" data-field="sessionName">Name</th>
-                <th data-width="20" data-width-unit="%" data-field="value">Order</th>
-                <th data-width="40" data-width-unit="%">Action</th>
+                <th data-width="40" data-width-unit="%" data-field="sessionName">Buổi học</th>
+                <th data-width="20" data-width-unit="%" data-field="value">Thứ tự</th>
+                <th data-width="40" data-width-unit="%">Hành động</th>
             </tr>
         </thead>
         <tbody id="data-container">
@@ -26,9 +26,9 @@
 
         function actionFormatter(value, row, index) {
             return `
-                    <button type="button" class="btn btn-sm btn-success add-button">Add</button>
-                    <button type="button" class="btn btn-sm btn-primary edit-button" data-session-id="${row.sessionId}">Edit</button>
-                    <button type="button" class="btn btn-sm btn-danger delete-button" data-session-id="${row.sessionId}">Delete</button>
+                    <button type="button" class="btn btn-sm btn-success add-button">Thêm</button>
+                        <button type="button" class="btn btn-sm btn-primary customstyle-button edit-button" data-session-id="${row.sessionId}">Chỉnh sửa</button>
+                    <button type="button" class="btn btn-sm btn-danger delete-button" data-session-id="${row.sessionId}">Xóa</button>
                 `;
         }
 
@@ -46,9 +46,9 @@
         $("#sessionTable").bootstrapTable({
             columns: [
                 { field: 'sessionId', visible: false },
-                { field: 'sessionName', title: 'Name' },
-                { field: 'value', title: 'Order' },
-                { field: 'actionButtons', title: 'Action', formatter: actionFormatter }
+                { field: 'sessionName', title: 'Buổi học' },
+                { field: 'value', title: 'Thứ tự' },
+                { field: 'actionButtons', title: 'Hành động', formatter: actionFormatter }
             ]
         });
         refreshTable();
@@ -65,11 +65,11 @@
 
             let originalData = $tr.html();
             $tr.html(`
-              <td><input type="text" class="form-control" name="sessionName" placeholder="Enter Name" value="${name}"></td>
-              <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                  <td><input type="text" class="form-control customform-control"" name="sessionName" placeholder="Enter Name" value="${name}"></td>
+                  <td><input type="number" class="form-control customform-control"" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
               <td>
-                <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
-                <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
+                <button type="button" class="btn btn-success btn-sm submit-edit-button">Đồng ý</button>
+                <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Hủy bỏ</button>
           </td>
         `);
 
@@ -78,7 +78,7 @@
             });
 
             $tr.find('.submit-edit-button').click(function () {
-                if (confirm("Are you sure you want to update this item?")) {
+                if (confirm("Bạn có chắc chắn muốn chỉnh sửa không?")) {
                     let formData = {
                         sessionName: $tr.find('input[name="sessionName"]').val(),
                         sessionId: sessionId,
@@ -110,7 +110,7 @@
 
 
         $(document).on('click', '.delete-button', function () {
-            if (confirm("Are you sure you want to delete this item?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa không?")) {
                 var row = $(this).closest('tr');
                 let sessionId = $(this).data('session-id');
                 console.log(sessionId);
@@ -147,11 +147,11 @@
             let order = parseInt($tds.eq(1).text()) + 1;
             var newRowHtml = `
                                 <tr>
-                                        <td><input type="text" class="form-control" name="sessionName" placeholder="Enter Name"></td>
-                                        <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                                            <td><input type="text" class="form-control customform-control"" name="sessionName" placeholder="Nhập buổi học"></td>
+                                            <td><input type="number" class="form-control customform-control"" min=1 name="value" placeholder="Nhập thứ tự" value="${order}"></td>
                                     <td>
-                                        <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
-                                        <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
+                                        <button type="button" class="btn btn-success btn-sm submit-add-button">Đồng ý</button>
+                                        <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Hủy bỏ</button>
                                     </td>
                                 </tr>`;
 
@@ -161,7 +161,7 @@
             });
 
             $newRow.find('.submit-add-button').click(function () {
-                if (confirm("Are you sure you want to add this item?")) {
+                if (confirm("Bạn có chắc chắn muốn thêm không?")) {
                     let formData = {
                         sessionName: $newRow.find('input[name="sessionName"]').val(),
                         value: $newRow.find('input[name="value"]').val(),

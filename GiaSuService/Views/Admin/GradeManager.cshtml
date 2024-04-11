@@ -11,9 +11,9 @@
         <thead>
             <tr>
                 <th data-field="gradeId" data-visible="false"></th>
-                <th data-width="35" data-width-unit="%" data-field="gradeName">Name</th>
-                <th data-width="15" data-width-unit="%" data-field="fee">Fee</th>
-                <th data-width="15" data-width-unit="%" data-field="value">Order</th>
+                <th data-width="35" data-width-unit="%" data-field="gradeName">Khối lớp</th>
+                <th data-width="15" data-width-unit="%" data-field="fee">Tiền phí</th>
+                <th data-width="15" data-width-unit="%" data-field="value">Thứ tự</th>
                 <th data-width="35" data-width-unit="%">Action</th>
             </tr>
         </thead>
@@ -27,9 +27,9 @@
 
         function actionFormatter(value, row, index) {
             return `
-                            <button type="button" class="btn btn-sm btn-success add-button">Add</button>
-                            <button type="button" class="btn btn-sm btn-primary edit-button" data-grade-id="${row.gradeId}">Edit</button>
-                            <button type="button" class="btn btn-sm btn-danger delete-button" data-grade-id="${row.gradeId}">Delete</button>
+                            <button type="button" class="btn btn-sm btn-success add-button">Thêm</button>
+                                <button type="button" class="btn btn-sm btn-primary customstyle-button edit-button" data-grade-id="${row.gradeId}">Chỉnh sửa</button>
+                            <button type="button" class="btn btn-sm btn-danger delete-button" data-grade-id="${row.gradeId}">Xóa</button>
                         `;
         }
 
@@ -47,15 +47,15 @@
         $("#gradeTable").bootstrapTable({
             columns: [
                 { field: 'gradeId', visible: false },
-                { field: 'gradeName', title: 'Name' },
+                { field: 'gradeName', title: 'Khối lớp' },
                 {
-                    field: 'fee', title: 'Fee', formatter: function (value, row) {
+                    field: 'fee', title: 'Tiền phí', formatter: function (value, row) {
                         // Format the value as VND currency (assuming data is in decimals)
                         return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                     }
                 },
-                { field: 'value', title: 'Order' },
-                { field: 'actionButtons', title: 'Action', formatter: actionFormatter }
+                { field: 'value', title: 'Thứ tự' },
+                { field: 'actionButtons', title: 'Hành động', formatter: actionFormatter }
             ]
         });
         refreshTable();
@@ -72,12 +72,12 @@
 
             let originalData = $tr.html();
             $tr.html(`
-                      <td><input type="text" class="form-control" name="gradeName" placeholder="Enter Name" value="${name}"></td>
-                      <td><input type="number" class="form-control" name="fee" placeholder="Enter Fee" step="1000" value="${fee}"></td>
+                      <td><input type="text" class="form-control" name="gradeName" placeholder="Nhập khối" value="${name}"></td>
+                      <td><input type="number" class="form-control" name="fee" placeholder="Nhập phí" step="1000" value="${fee}"></td>
                       <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
                       <td>
-                        <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
-                        <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
+                        <button type="button" class="btn btn-success btn-sm submit-edit-button">Đồng ý</button>
+                        <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Hủy bỏ</button>
                   </td>
                 `);
 
@@ -86,7 +86,7 @@
             });
 
             $tr.find('.submit-edit-button').click(function () {
-                if (confirm("Are you sure you want to update this item?")) {
+                if (confirm("Bạn có chắc chắn muốn chỉnh sửa không?")) {
                     let formData = {
                         gradeName: $tr.find('input[name="gradeName"]').val(),
                         fee: $tr.find('input[name="fee"]').val(),
@@ -119,7 +119,7 @@
 
 
         $(document).on('click', '.delete-button', function () {
-            if (confirm("Are you sure you want to delete this item?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa không?")) {
                 var row = $(this).closest('tr');
                 let gradeId = $(this).data('grade-id');
                 $.ajax({
@@ -169,7 +169,7 @@
             });
 
             $newRow.find('.submit-add-button').click(function () {
-                if (confirm("Are you sure you want to add this item?")) {
+                if (confirm("Bạn có chắc chắn muốn thêm không?")) {
                     let formData = {
                         gradeName: $newRow.find('input[name="gradeName"]').val(),
                         value: $newRow.find('input[name="value"]').val(),
