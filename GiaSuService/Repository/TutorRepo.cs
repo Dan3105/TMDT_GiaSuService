@@ -117,7 +117,7 @@ namespace GiaSuService.Repository
             return tutors;
         }
 
-        public async Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page)
+        public async Task<List<TutorRegisterViewModel>> GetRegisterTutorOnPending(int page, RegisterStatus status)
         {
             var tutor_queues = _context.Tutors.AsNoTracking()
                 .Select(p => new TutorRegisterViewModel
@@ -131,7 +131,7 @@ namespace GiaSuService.Repository
                     StatusQuery = p.Status.Name
                 })
                 .OrderByDescending(p => p.CreateDate)
-                .Where(p => p.StatusQuery == RegisterStatus.PENDING.ToString().ToLower());
+                .Where(p => p.StatusQuery.ToLower() == status.ToString().ToLower());
 
 
             tutor_queues = tutor_queues.Skip(page * ROWS_ACCOUNT_LIST).Take(ROWS_ACCOUNT_LIST);
@@ -143,6 +143,7 @@ namespace GiaSuService.Repository
             return await _context.Tutors
                 .Include(p => p.Identity)
                 .Include(p => p.Account)
+                .Include(p => p.Status)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -163,6 +164,5 @@ namespace GiaSuService.Repository
                 return false;
             }
         }
-
     }
 }

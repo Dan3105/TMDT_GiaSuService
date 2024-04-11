@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 
@@ -18,5 +19,7 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> UpdateProfile(ProfileViewModel profile, string role);
         public Task<bool> UpdateRequestTutorProfile(TutorFormUpdateProfileViewModel? profile);
 
+        public Task<DifferenceUpdateRequestFormViewModel?> GetTutorsDifferenceProfile(int tutorId);
+        public Task<bool> UpdateTutorProfileByUpdateForm(Tutor tutor);
     }
 }

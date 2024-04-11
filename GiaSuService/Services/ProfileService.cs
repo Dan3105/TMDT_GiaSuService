@@ -62,10 +62,10 @@ namespace GiaSuService.Services
 
         public async Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel profile)
         {
-            profile.Form.selectedDistricts = profile.DistrictSelected;
-            profile.Form.selectedGradeIds = profile.GradeSelected;
-            profile.Form.selectedSessionIds = profile.SessionSelected;
-            profile.Form.selectedSubjectIds = profile.SubjectSelected;
+            profile.Form.SelectedDistricts = profile.DistrictSelected;
+            profile.Form.SelectedGradeIds = profile.GradeSelected;
+            profile.Form.SelectedSessionIds = profile.SessionSelected;
+            profile.Form.SelectedSubjectIds = profile.SubjectSelected;
 
             var origin = await _profileRepo.GetTutorFormUpdateProfile(profile.Form.TutorId);
             if(origin == null)

@@ -30,7 +30,7 @@
         var currentPage = 0;
 
         function loadItems(pageNumber) {
-            $.getJSON("/Employee/GetTutorRegisterQueue", { page: pageNumber })
+            $.getJSON("/Employee/GetTutorUpdateForms", { page: pageNumber })
                 .done(function (data) {
                     $("#items-container").empty(); // Clear existing items
 
@@ -44,21 +44,21 @@
                     $.each(data.queries, function (index, item) {
                         //console.log(item);
                         var itemHtml = `
-                                    <tr>
-                                <td>${item.fullName}</td>
-                                <td>${item.college}</td>
-                                <td>${item.area}</td>
-                                <td>${item.currentStatus}</td>
-                                <td>${item.statusQuery}</td>
-                                <td>${item.createDate}</td>
-                                <td>
-                                        <a href="/Employee/TutorProfileQueue?id=${item.id}">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                        <tr>
+                                    <td>${item.fullName}</td>
+                                    <td>${item.college}</td>
+                                    <td>${item.area}</td>
+                                    <td>${item.currentStatus}</td>
+                                    <td>${item.statusQuery}</td>
+                                    <td>${item.createDate}</td>
+                                    <td>
+                                            <a href="/Employee/ATutorUpdateForm?tutorId=${item.id}">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
 
-                                </td>
-                            </tr>
-                                `;
+                                    </td>
+                                </tr>
+                                    `;
                         $("#items-container").append(itemHtml);
                     });
                 });

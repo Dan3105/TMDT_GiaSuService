@@ -1,0 +1,155 @@
+﻿@using GiaSuService.Configs;
+@using GiaSuService.Models.EmployeeViewModel;
+@using GiaSuService.Models.TutorViewModel;
+@model DifferenceUpdateRequestFormViewModel
+
+@{
+    ViewData["Title"] = "Difference View";
+}
+
+@{
+    // Define a dictionary to map property names to display names
+    Dictionary<string, string> displayNameMapping = new Dictionary<string, string>()
+    {
+        // { "TutorId", "Tutor ID" },
+        { "Fullname", "Họ Tên" },
+        { "Birth", "Năm sinh" },
+        { "Email", "Email" },
+        { "Phone", "Số điện thoại" },
+        { "Gender", "Giới tính" },
+        { "Avatar", "Avatar" },
+        // { "AddressDetail", "Address Detail" },
+        { "IdentityCard", "Số Chứng minh thư" },
+        // { "FrontIdentityCard", "Front Identity Card" },
+        // { "BackIdentityCard", "Back Identity Card" },
+        { "College", "Đại học" },
+        { "Area", "Chuyên ngành" },
+        // { "IsActive", "Is Active" },
+        { "Additionalinfo", "Thông tin thêm" },
+        { "Academicyearfrom", "Năm bắt đầu học" },
+        { "Academicyearto", "Năm tốt nghiệp" },
+        // { "SelectedTutorTypeId", "Selected Tutor Type ID" },
+        { "FormatAddress", "Địa chỉ" },
+        { "FormatTutorType", "Loại gia sư" },
+        { "FormatTeachingArea", "Các khu vực có thể dạy" },
+        { "FormatGrades", "Các khối có thể dạy" },
+        { "FormatSessions", "Các buổi học có thể dạy" },
+        { "FormatSubjects", "Các môn học có thể dạy" }
+    };
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 border-end border-dark">
+            <h2 >Thông tin ban đầu</h2>
+            <ul class="list-unstyled">
+                @foreach (var property in typeof(TutorFormUpdateProfileViewModel).GetProperties())
+                {
+                    if (!displayNameMapping.ContainsKey(property.Name)) continue;
+                    var originalValue = property.GetValue(Model.Original);
+                    var modifiedValue = property.GetValue(Model.Modified);
+
+                    if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
+                    {
+                        // Get the display name from the mapping, if it exists; otherwise, use the property name
+                        var displayName = displayNameMapping[property.Name];
+
+                        if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
+                        {
+                            int originalIntValue;
+                            int modifiedIntValue;
+                            var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
+                            var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
+
+                            if (originalValueParsed && modifiedValueParsed)
+                            {
+                                if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
+                                {
+                                    <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                                }
+                                else
+                                {
+                                    <li><strong>@displayName</strong>: @originalValue</li>
+                                }
+                            }
+                        }
+                        else if (!originalValue.Equals(modifiedValue))
+                        {
+                            <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                        }
+                        else
+                        {
+                            <li><strong>@displayName</strong>: @originalValue</li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+        
+        <div class="col-md-6">
+            <h2>Thông tin sau khi chỉnh sửa</h2>
+            <ul class="list-unstyled">
+                @foreach (var property in typeof(TutorFormUpdateProfileViewModel).GetProperties())
+                {
+                    if (!displayNameMapping.ContainsKey(property.Name)) continue;
+
+                    var originalValue = property.GetValue(Model.Original);
+                    var modifiedValue = property.GetValue(Model.Modified);
+
+                    if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
+                    {
+                        // Get the display name from the mapping, if it exists; otherwise, use the property name
+                        var displayName = displayNameMapping[property.Name];
+
+                        if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
+                        {
+                            int originalIntValue;
+                            int modifiedIntValue;
+                            var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
+                            var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
+
+                            if (originalValueParsed && modifiedValueParsed)
+                            {
+                                if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
+                                {
+                                    <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
+                                }
+                                else
+                                {
+                                    <li><strong>@displayName</strong>: @originalIntValue</li>
+                                }
+                            }
+                        }
+                        else if (!originalValue.Equals(modifiedValue))
+                        {
+                            <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
+                        }
+                        else
+                        {
+                            <li><strong>@displayName</strong>: @modifiedValue</li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <form asp-action="UpdateTutorProfileInUpdateQueue" asp-controller="Employee" method="post">
+        <div class="form-group row mt-2">
+            <label for="Context" class="form-label fw-bold">Example textarea:</label>
+            <div class="col-sm-9">
+                <textarea class="form-control" asp-for="Context" rows="4" placeholder="Reason for submitting"></textarea>
+            </div>
+
+            <div class="col-sm-3 mt-4 justify-content-end">
+                <div class="col-auto">
+                    <input type="hidden" asp-for="Modified.TutorId" />
+
+                    <button type="submit" class="btn btn-primary" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Apply</button>
+                    <button type="submit" class="btn btn-danger" name="statusType" value="@AppConfig.RegisterStatus.DENY.ToString()">Deny</button>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

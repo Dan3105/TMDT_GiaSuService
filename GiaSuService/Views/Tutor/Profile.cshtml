@@ -19,10 +19,6 @@
                 <h1>Thông tin tài khoản</h1>
                 <input type="hidden" asp-for="Form.TutorId" />
 
-                @* Trạng thái gia sư đã được duyệt hoạt động trong hệ thống *@
-                @* <div class="form-group">
-                    <label asp-for="IsValid" style="margin-bottom: 10px;">Trạng thái duyệt hoạt động ???</label>
-                </div> *@
 
                 <div class="form-group">
                     <label asp-for="Form.IsActive">Trạng thái dạy học:</label>
@@ -55,7 +51,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Birth">Ngày sinh:</label>
-                    <input type="date" asp-for="Form.Birth" class="form-control" style="margin-bottom: 10px;" value="@Model.Form.Birth.ToString("yyyy-MM-dd")" />
+                    <input type="date" asp-for="Form.Birth" class="form-control" style="margin-bottom: 10px;" value="@Model.Form.Birth?.ToString("yyyy-MM-dd")" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Gender">Giới tính:</label>
@@ -258,7 +254,7 @@
                 $("#district").empty();
                 $("#districtCheckBoxes").empty();
 
-                var selectedDistricts = @Html.Raw(Json.Serialize(Model.Form.selectedDistricts))
+                var selectedDistricts = @Html.Raw(Json.Serialize(Model.Form.SelectedDistricts))
                 for (var i = 0; i < data.length; i++) {
                     item = data[i];
                     var option = $('<option></option>').val(item.districtId).text(item.districtName);

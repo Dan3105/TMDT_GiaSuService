@@ -64,13 +64,13 @@ namespace GiaSuService.Controllers
             var provinceList = await _addressService.GetProvinces();
 
             var gradeList = await _catalogService.GetAllGrades();
-            gradeList.ForEach(p => p.IsChecked = profile.selectedGradeIds.Contains(p.GradeId));
+            gradeList.ForEach(p => p.IsChecked = profile.SelectedGradeIds.Contains(p.GradeId));
 
             var subjectList = await _catalogService.GetAllSubjects();
-            subjectList.ForEach(p => p.IsChecked = profile.selectedSubjectIds.Contains(p.SubjectId));
+            subjectList.ForEach(p => p.IsChecked = profile.SelectedSubjectIds.Contains(p.SubjectId));
 
             var sessionList = await _catalogService.GetAllSessions();
-            sessionList.ForEach(p => p.IsChecked = profile.selectedSessionIds.Contains(p.SessionId));
+            sessionList.ForEach(p => p.IsChecked = profile.SelectedSessionIds.Contains(p.SessionId));
 
             var tutorTypeList = await _catalogService.GetAllTutorType();
 

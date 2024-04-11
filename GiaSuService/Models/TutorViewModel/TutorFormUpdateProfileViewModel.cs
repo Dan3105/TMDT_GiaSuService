@@ -23,15 +23,15 @@ namespace GiaSuService.Models.TutorViewModel
     {
         public int TutorId { get; set; }
         public string Fullname { get; set; } = string.Empty;
-        public DateOnly Birth { get; set; }
+        public DateOnly? Birth { get; set; } = null;
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Gender { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
 
         public string AddressDetail { get; set; } = string.Empty;
-        public int SelectedDistrictId { get; set; }
         public int SelectedProvinceId { get; set; }
+        public int SelectedDistrictId { get; set; }
 
         public string IdentityCard { get; set; } = string.Empty;
         public string FrontIdentityCard { get; set; } = string.Empty;
@@ -45,10 +45,17 @@ namespace GiaSuService.Models.TutorViewModel
         public short Academicyearto { get; set; }
         public int SelectedTutorTypeId { get; set; }
 
-        public IEnumerable<int> selectedSubjectIds { get; set; } = new List<int>();
-        public IEnumerable<int> selectedSessionIds { get; set; } = new List<int>();
-        public IEnumerable<int> selectedDistricts { get; set; } = new List<int>();
-        public IEnumerable<int> selectedGradeIds { get; set; } = new List<int>();
+        public string FormatAddress { get; set; } = string.Empty;
+        public string FormatTutorType { get; set; } = string.Empty;
+        public string FormatTeachingArea { get; set; } = string.Empty;
+        public string FormatGrades { get; set; } = string.Empty;
+        public string FormatSessions { get; set; } = string.Empty;
+        public string FormatSubjects { get; set; } = string.Empty;
+
+        public IEnumerable<int> SelectedSubjectIds { get; set; } = new List<int>();
+        public IEnumerable<int> SelectedSessionIds { get; set; } = new List<int>();
+        public IEnumerable<int> SelectedDistricts { get; set; } = new List<int>();
+        public IEnumerable<int> SelectedGradeIds { get; set; } = new List<int>();
 
         public static TutorFormUpdateProfileViewModel? CompareDifference(TutorFormUpdateProfileViewModel origin, TutorFormUpdateProfileViewModel modified)
         {
@@ -83,9 +90,6 @@ namespace GiaSuService.Models.TutorViewModel
             if (origin.SelectedDistrictId != modified.SelectedDistrictId)
                 diff.SelectedDistrictId = modified.SelectedDistrictId;
 
-            if (origin.SelectedProvinceId != modified.SelectedProvinceId)
-                diff.SelectedProvinceId = modified.SelectedProvinceId;
-
             if (origin.IdentityCard != modified.IdentityCard)
                 diff.IdentityCard = modified.IdentityCard;
 
@@ -113,17 +117,14 @@ namespace GiaSuService.Models.TutorViewModel
             if (origin.SelectedTutorTypeId != modified.SelectedTutorTypeId)
                 diff.SelectedTutorTypeId = modified.SelectedTutorTypeId;
 
-            if (!origin.selectedSubjectIds.SequenceEqual(modified.selectedSubjectIds))
-                diff.selectedSubjectIds = modified.selectedSubjectIds;
+            if (!origin.SelectedSubjectIds.SequenceEqual(modified.SelectedSubjectIds))
+                diff.SelectedSubjectIds = modified.SelectedSubjectIds;
 
-            if (!origin.selectedSessionIds.SequenceEqual(modified.selectedSessionIds))
-                diff.selectedSessionIds = modified.selectedSessionIds;
+            if (!origin.SelectedSessionIds.SequenceEqual(modified.SelectedSessionIds))
+                diff.SelectedSessionIds = modified.SelectedSessionIds;
 
-            if (!origin.selectedDistricts.SequenceEqual(modified.selectedDistricts))
-                diff.selectedDistricts = modified.selectedDistricts;
-
-            if (!origin.selectedGradeIds.SequenceEqual(modified.selectedGradeIds))
-                diff.selectedGradeIds = modified.selectedGradeIds;
+            if (!origin.SelectedDistricts.SequenceEqual(modified.SelectedDistricts))
+                diff.SelectedDistricts = modified.SelectedDistricts;
 
             // Check if any property is different, if yes, return the diff object, else return null
             return IsAnyPropertyDifferent(diff) ? diff : null;
@@ -132,11 +133,12 @@ namespace GiaSuService.Models.TutorViewModel
         private static bool IsAnyPropertyDifferent(TutorFormUpdateProfileViewModel viewModel)
         {
             // Check for all properties, except collections, since they are reference types
-            return 
+            return
                    viewModel.Fullname != string.Empty ||
                    viewModel.Email != string.Empty ||
                    viewModel.Phone != string.Empty ||
                    viewModel.Gender != string.Empty ||
+                   viewModel.Birth != null ||
                    //viewModel.Avatar != string.Empty ||
                    viewModel.AddressDetail != string.Empty ||
                    viewModel.IdentityCard != string.Empty ||
@@ -146,9 +148,14 @@ namespace GiaSuService.Models.TutorViewModel
                    viewModel.Area != string.Empty ||
                    viewModel.Additionalinfo != null ||
                    //viewModel.IsActive != false ||
+                   viewModel.SelectedDistrictId != 0 ||
                    viewModel.Academicyearfrom != 0 ||
                    viewModel.Academicyearto != 0 ||
-                   viewModel.SelectedTutorTypeId != 0;
+                   viewModel.SelectedTutorTypeId != 0 ||
+                   viewModel.SelectedSubjectIds.Any() ||
+                   viewModel.SelectedDistricts.Any() ||
+                   viewModel.SelectedGradeIds.Any() ||
+                   viewModel.SelectedSessionIds.Any();
         }
     }
 
