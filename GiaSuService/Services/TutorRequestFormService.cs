@@ -165,5 +165,17 @@ namespace GiaSuService.Services
         {
             return await _tutorRequestRepo.GetListTutorRequestOfCustomer(customerId);
         }
+
+
+        public async Task<ResponseService> UpdateTutorRequestProfileEdit(TutorRequestProfileEditViewModel model)
+        {
+            bool isSuccess = await _tutorRequestRepo.UpdateTutorRequestProfileEdit(model);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+            }
+
+            return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
+        }
     }
 }

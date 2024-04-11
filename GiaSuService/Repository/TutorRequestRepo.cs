@@ -6,6 +6,7 @@ using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GiaSuService.Repository
 {
@@ -188,6 +189,68 @@ namespace GiaSuService.Repository
                 .Where(p => p.CustomerId == customerId)
                 .Select(p => p.CustomerRequest)
                 .ToListAsync();
+        }
+
+        public async Task<bool> UpdateTutorRequestProfileEdit(TutorRequestProfileEditViewModel model)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var profileEdit = await _context.RequestTutorForms
+                        .Include(r => r.Sessions)
+                        .FirstOrDefaultAsync(r => r.Id == model.RequestId);
+
+                    if (profileEdit == null) { return false; }
+
+                    // Remove sessions that are not in the list of selectedSessionDateIds
+                    var sessionsToRemove = profileEdit.Sessions
+                        .Where(s => !model.SessionSelected.Contains(s.Id))
+                        .ToList();
+
+                    foreach (var session in sessionsToRemove)
+                    {
+                        profileEdit.Sessions.Remove(session);
+                    }
+
+                    // Add new sessions that are not already in the existing sessions
+                    var newSessionIds = model.SessionSelected
+                        .Where(id => !profileEdit.Sessions.Any(s => s.Id == id))
+                        .ToList();
+
+                    foreach (var sessionId in newSessionIds)
+                    {
+                        var sessionToAdd = _context.SessionDates.Find(sessionId);
+                        if (sessionToAdd != null)
+                        {
+                            profileEdit.Sessions.Add(sessionToAdd);
+                        }
+                    }
+
+                    // Modify attribute not many-to-many
+                    profileEdit.Students = model.NStudents;
+                    profileEdit.AdditionalDetail = model.AdditionalDetail;
+                    profileEdit.AddressDetail = model.Addressdetail;
+                    profileEdit.DistrictId = model.DistrictId;
+                    profileEdit.SubjectId = model.SubjectId;
+                    profileEdit.GradeId = model.GradeId;
+
+                    _context.RequestTutorForms.Update(profileEdit);
+
+                    int result = _context.SaveChanges();
+                    transaction.Commit();
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                }
+                catch(Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return false;
         }
     }
 }
