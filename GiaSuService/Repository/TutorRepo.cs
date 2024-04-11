@@ -164,5 +164,41 @@ namespace GiaSuService.Repository
                 return false;
             }
         }
+
+        public async Task<TutorProfileStatusDetailHistoryViewModel?> GetATutorProfileHistoryDetail(int statusDetail)
+        {
+            return await _context.TutorStatusDetails
+                .Select(p => new TutorProfileStatusDetailHistoryViewModel
+                {
+                    Date = p.CreateDate,
+                    HistoryId = p.Id,
+                    Context = p.Context,
+                    StatusType = p.Status.Name
+                })
+                .FirstOrDefaultAsync(p => p.HistoryId == statusDetail);
+        }
+
+        public async Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetTutorProfilesHistoryDetail(int tutorId)
+        {
+            return await _context.TutorStatusDetails.Where(p => p.TutorId == tutorId)
+                .OrderBy(p => p.CreateDate)
+                .Select(p => new TutorProfileStatusDetailHistoryViewModel   
+                {
+                    HistoryId = p.Id,
+                    StatusType = p.Status.Name,
+                    Context = p.Context,
+                    Date = p.CreateDate,
+                }).ToListAsync();
+        }
+
+        public async Task<TutorStatusDetail?> GetLatestTutorStatusDetail(int tutorId)
+        {
+            var getLatestStatus = await _context.TutorStatusDetails
+                         .Include(p => p.Status)
+                         .AsNoTracking()
+                         .OrderByDescending(p => p.CreateDate)
+                         .FirstOrDefaultAsync(p => p.TutorId == tutorId);
+            return getLatestStatus;
+        }
     }
 }

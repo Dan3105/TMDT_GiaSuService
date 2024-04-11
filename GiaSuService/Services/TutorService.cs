@@ -6,6 +6,7 @@ using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
+using Newtonsoft.Json;
 using static GiaSuService.Configs.AppConfig;
 
 namespace GiaSuService.Services
@@ -71,7 +72,7 @@ namespace GiaSuService.Services
             {
                 try
                 {
-                    var dbStatus = await _statusRepository.GetStatus(status, AppConfig.register_status);
+                    var dbStatus = await _statusRepository.GetStatus(status, register_status);
                     if (dbStatus == null)
                     {
                         return new ResponseService { Message = "Không cập nhật được trạng thái vui lòng làm lại ", Success = false };
@@ -84,13 +85,13 @@ namespace GiaSuService.Services
                     }
 
                     bool isSuccess = false;
-                    if (tutor.Status.Name.Equals(AppConfig.RegisterStatus.PENDING.ToString().ToLower()))
+                    if (tutor.Status.Name.Equals(RegisterStatus.PENDING.ToString().ToLower()))
                     {
                         isSuccess = await _tutorRepository.UpdateTutor(tutor);
                     }
-                    else if (tutor.Status.Name.Equals(AppConfig.RegisterStatus.UPDATE.ToString().ToLower()))
+                    else if (tutor.Status.Name.Equals(RegisterStatus.UPDATE.ToString().ToLower()))
                     {
-                        if (dbStatus.Name.Equals(AppConfig.RegisterStatus.UPDATE.ToString().ToLower()))
+                        if (dbStatus.Name.Equals(RegisterStatus.UPDATE.ToString().ToLower()))
                         {
                             isSuccess = await _profileRepository.UpdateTutorProfileByUpdateForm(tutor);
                         }
@@ -126,7 +127,42 @@ namespace GiaSuService.Services
 
         public async Task<DifferenceUpdateRequestFormViewModel?> GetTutorUpdateRequest(int tutorId)
         {
-            return await _profileRepository.GetTutorsDifferenceProfile(tutorId);
+            var latestStatus = await _tutorRepository.GetLatestTutorStatusDetail(tutorId);
+            if(latestStatus == null)
+            {
+                return null;
+            }
+            return await _profileRepository.GetTutorsDifferenceProfile(latestStatus.Id);
+        }
+
+        public async Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetStatusTutorHistory(int tutorId)
+        {
+            return await _tutorRepository.GetTutorProfilesHistoryDetail(tutorId);
+        }
+
+        public async Task<TutorProfileStatusDetailHistoryViewModel?> GetAStatusTutorHistory(int historyId)
+        {
+            var historyDetail = await _tutorRepository.GetATutorProfileHistoryDetail(historyId);
+            if(historyDetail == null)
+            {
+                return null;
+            }
+            try
+            {
+                var jsonContext = historyDetail.Context;
+                TutorFormUpdateProfileViewModel? data = JsonConvert.DeserializeObject<TutorFormUpdateProfileViewModel>(jsonContext);
+
+                if (data != null)
+                {
+                    historyDetail.DetailModified = data;
+                }
+
+                return historyDetail;
+            }
+
+            catch (Exception) {
+                return null;
+            }
         }
     }
 }

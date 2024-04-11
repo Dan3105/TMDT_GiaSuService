@@ -8,8 +8,8 @@ namespace GiaSuService.Models.EmployeeViewModel
     {
         public string Context { set; get;  } = string.Empty;
         public string StatusType { get; set; } = string.Empty;
-        public TutorFormUpdateProfileViewModel Original { get; set; } = new TutorFormUpdateProfileViewModel();
-        public TutorFormUpdateProfileViewModel Modified { get; set; } = new TutorFormUpdateProfileViewModel();
+        public TutorFormUpdateProfileViewModel? Original { get; set; } = null;
+        public TutorFormUpdateProfileViewModel? Modified { get; set; } = null;
 
     }
 }

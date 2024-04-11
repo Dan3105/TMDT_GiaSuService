@@ -21,5 +21,8 @@ namespace GiaSuService.Services.Interface
 
         public Task<ResponseService> UpdateTutorProfileStatus(int tutorId, string status, string context);
         public Task<DifferenceUpdateRequestFormViewModel?> GetTutorUpdateRequest(int tutorId);
+
+        public Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetStatusTutorHistory(int tutorId);
+        public Task<TutorProfileStatusDetailHistoryViewModel?> GetAStatusTutorHistory(int historyId);
     }
 }

@@ -1,0 +1,41 @@
+﻿@using GiaSuService.Models.TutorViewModel;
+@using GiaSuService.Configs;
+@model IEnumerable<TutorProfileStatusDetailHistoryViewModel>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Create Date</th>
+            <th>Context</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(Model.ToList().IndexOf(item) + 1)</td>
+                <td>@item.Date</td>
+                <td>
+                    @if (item.StatusType == AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
+                    {
+                        <span>Chỉnh sửa thông tin</span>
+                    }
+                    else
+                    {
+                        <span>@item.Context</span>
+                    }
+                </td>
+                <td>
+                    @if (item.StatusType == AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
+                    {
+                        <a href="@Url.Action("TutorProfileStatusDetail", "Tutor", new {historyId = item.HistoryId})">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

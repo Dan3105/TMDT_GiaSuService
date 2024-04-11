@@ -34,7 +34,7 @@
         <nav id="sidebar" class="sidebar-wrapper">
             <div class="sidebar-content">
                 <div class="sidebar-brand">
-                    <a href="#">Danh mục</a>
+                    <a href="/">Web Thuê Gia sư</a>
                     <div id="close-sidebar">
                         <i class="fas fa-times"></i>
                     </div>
@@ -82,13 +82,14 @@
                                 </a>
 
                             </li>
+                            
                             <li class="sidebar">
                                 <a href="@Url.Action("TutorList","Home")">
                                     <i class="fa fa-address-card"></i>
                                     <span>Danh sách gia sư</span>
                                 </a>
-
                             </li>
+
                             <li class="header-menu">
                                 <span>Gia sư</span>
                             </li>
@@ -105,6 +106,16 @@
                                     <a href="@Url.Action("CustomerListTutorRequest", "Customer")">
                                         <i class="fa fa-calendar"></i>
                                         <span>Các đơn tìm gia sư của tôi</span>
+                                    </a>
+                                </li>
+                            }
+
+                            @if(roleName == AppConfig.TUTORROLENAME)
+                            {
+                                <li>
+                                    <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>Lịch sử thông tin của tôi</span>
                                     </a>
                                 </li>
                             }

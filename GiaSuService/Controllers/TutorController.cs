@@ -121,6 +121,31 @@ namespace GiaSuService.Controllers
             return View(result);
         }
 
-       
+        [HttpGet]
+        public async Task<IActionResult> TutorProfileStatusHistory()
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var histories = await _tutorService.GetStatusTutorHistory((int)tutorId);
+
+            return View(histories);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorProfileStatusDetail(int historyId)
+        {
+            var data = await _tutorService.GetAStatusTutorHistory(historyId);
+            return View(data);
+        }
     }
 }

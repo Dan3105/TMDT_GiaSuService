@@ -1,0 +1,27 @@
+﻿@using GiaSuService.Configs;
+@using GiaSuService.Models.EmployeeViewModel;
+@using GiaSuService.Models.TutorViewModel;
+@model TutorProfileStatusDetailHistoryViewModel
+@{
+    ViewData["Title"] = "Detail View";
+}
+
+<div class="container">
+    <div>
+        <dl>
+            <dd>Ngày tạo:</dd>
+            <dt>@Model.Date</dt>
+        </dl>
+    </div>
+    <div>
+        @if(Model.DetailModified is not null)
+        {
+            <b>Will handler later :( </b>
+            <p>@Model.Context</p>
+
+        }
+    </div>
+    <div>
+        <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")" class="btn btn-info">Quay lại</a>
+    </div>
+</div>

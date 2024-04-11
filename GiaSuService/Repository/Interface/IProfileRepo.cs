@@ -19,7 +19,7 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> UpdateProfile(ProfileViewModel profile, string role);
         public Task<bool> UpdateRequestTutorProfile(TutorFormUpdateProfileViewModel? profile);
 
-        public Task<DifferenceUpdateRequestFormViewModel?> GetTutorsDifferenceProfile(int tutorId);
+        public Task<DifferenceUpdateRequestFormViewModel?> GetTutorsDifferenceProfile(int historyId);
         public Task<bool> UpdateTutorProfileByUpdateForm(Tutor tutor);
     }
 }

@@ -353,28 +353,27 @@ namespace GiaSuService.Repository
             return result;
         }
 
-        public async Task<DifferenceUpdateRequestFormViewModel?> GetTutorsDifferenceProfile(int tutorId)
+        public async Task<DifferenceUpdateRequestFormViewModel?> GetTutorsDifferenceProfile(int historyId)
         {
-            var currentTutorUser = await GetTutorFormUpdateProfile(tutorId);
-            if(currentTutorUser == null)
-            {
-                return null;
-            }
-
-            var getLatestStatus = await _context.TutorStatusDetails
+            var getHistoryStatus = await _context.TutorStatusDetails
                 .Include(p => p.Status)
                 .AsNoTracking()
                 .OrderByDescending(p => p.CreateDate)
-                .FirstOrDefaultAsync(p => p.TutorId == tutorId);
-            
-            if(getLatestStatus == null || getLatestStatus.Status.Name.ToLower() != AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
+                .FirstOrDefaultAsync(p => p.Id == historyId);
+
+            if (getHistoryStatus == null || getHistoryStatus.Status.Name.ToLower() != AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
             {
                 return null;
             }
 
+            var currentTutorUser = await GetTutorFormUpdateProfile(getHistoryStatus.TutorId);
+            if (currentTutorUser == null)
+            {
+                return null;
+            }
             try
             {
-                var jsonContext = getLatestStatus.Context;
+                var jsonContext = getHistoryStatus.Context;
                 TutorFormUpdateProfileViewModel? data = JsonConvert.DeserializeObject<TutorFormUpdateProfileViewModel>(jsonContext);
 
                 if(data == null)

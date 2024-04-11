@@ -23,5 +23,12 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> UpdateTutor(Tutor tutor);
         public Task<bool> SaveChanges();
 
+        public Task<TutorStatusDetail?> GetLatestTutorStatusDetail(int tutorId);
+
+        //This code not load the Differnce and Orignal so be careful
+        public Task<TutorProfileStatusDetailHistoryViewModel?> GetATutorProfileHistoryDetail(int statusDetail);
+
+        //This code not load the Difference and Original detail so be careful
+        public Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetTutorProfilesHistoryDetail(int tutorId);
     }
 }
