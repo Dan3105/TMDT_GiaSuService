@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-3 row">
                                 <div class="col-md-7 d-flex justify-content-center align-items-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary me-2">Details</a>
+                                    <a href="@Url.Action("TutorRequestEdit", "Customer", new{id = item.RequestId})" class="btn btn-sm btn-outline-primary me-2">Details</a>
                                 </div>
                                 <div class="col-md-5 d-flex justify-content-end align-items-center">
                                     @if(item.StatusName == AppConfig.RegisterStatus.DENY.ToString().ToLower())

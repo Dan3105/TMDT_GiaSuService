@@ -10,16 +10,16 @@
 <div class="container">
     <div id="list-tutor" class="row d-flex justify-content-center">
     </div>
-        <div class="d-flex justify-content-center">
-            <a id="choose-tutor" class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
-        </div>
+    <div class="d-flex justify-content-center">
+        <a id="choose-tutor" class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
+    </div>
     <hr />
 
     <h1>Tutor Request Form</h1>
 
     @* <form asp-action="UpdateTutorRequestEdit" asp-controller="Employee" method="post"> *@
-    <form asp-controller="Employee" method="post">
-        <input type="hidden" asp-for="RequestId"/>
+    <form asp-controller="Customer" method="post">
+        <input type="hidden" asp-for="RequestId" />
         <div class="form-group">
             <label asp-for="NStudents">Số lượng học sinh:</label>
             <input asp-for="NStudents" type="number" min="1" max="9" class="form-control customform-control" required />
@@ -55,10 +55,12 @@
                 {
                     @foreach (var subject in Model.Subjects)
                     {
-                        @if(subject.SubjectId == Model.SubjectId)
+                        @if (subject.SubjectId == Model.SubjectId)
                         {
                             <option selected value="@subject.SubjectId">@subject.SubjectName</option>
-                        }else{
+                        }
+                        else
+                        {
                             <option value="@subject.SubjectId">@subject.SubjectName</option>
                         }
                     }
@@ -73,10 +75,12 @@
                 {
                     @foreach (var grade in Model.Grades)
                     {
-                        @if(grade.GradeId == Model.GradeId)
+                        @if (grade.GradeId == Model.GradeId)
                         {
                             <option selected value="@grade.GradeId">@grade.GradeName</option>
-                        }else{
+                        }
+                        else
+                        {
                             <option value="@grade.GradeId">@grade.GradeName</option>
                         }
                     }
@@ -93,7 +97,7 @@
                     <div class="checkbox">
                         <label>
                             @Html.HiddenFor(m => m.Sessions[i].SessionId)
-                            @Html.CheckBoxFor(m => m.Sessions[i].IsChecked, new {@class = "form-check-input customformcheck-input"})
+                            @Html.CheckBoxFor(m => m.Sessions[i].IsChecked, new { @class = "form-check-input customformcheck-input" })
                             @Model.Sessions[i].SessionName
                         </label>
                     </div>
@@ -102,8 +106,8 @@
         </div>
 
         @* <button type="submit" class="btn btn-primary customstyle-button">Cập nhật</button> *@
-        <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Employee")" class="btn btn-primary customstyle-button">Cập nhật</button>
-        <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-danger">Hủy bỏ</button>
+        <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Customer")" class="btn btn-primary customstyle-button">Cập nhật</button>
+        <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Customer")" class="btn btn-danger">Hủy bỏ</button>
     </form>
 </div>
 
@@ -136,7 +140,8 @@
     function setEditMode() {
         var status = "@Model.CurrentStatus";
 
-        if (!(status == "pending" || status == "approval")) {
+        // Customer can edit pending request, approval request must communicate with employee to edit
+        if (!(status == "pending")) {
             document.querySelectorAll('input').forEach(function (input) {
                 input.disabled = true;
             });
@@ -208,26 +213,26 @@
 
                 $("#list-tutor")
                     .append(`
-                        <div id="${item.id}_view" class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <img src="${item.avatar}" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
-                                        <div class="m-lg-2">
-                                            <h5 class="card-text fs-6">Gia Sư: ${item.fullName} </h5>
-                                            <p class= "card-text mb-1" > Tutor Type: ${item.tutorType} </p>
-                                            <p class= "card-text mb-1" > College: ${item.college} </p>
-                                            <p class="card-text mb-1">Area: ${item.area}</p>
+                            <div id="${item.id}_view" class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <img src="${item.avatar}" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
+                                            <div class="m-lg-2">
+                                                <h5 class="card-text fs-6">Gia Sư: ${item.fullName} </h5>
+                                                <p class= "card-text mb-1" > Tutor Type: ${item.tutorType} </p>
+                                                <p class= "card-text mb-1" > College: ${item.college} </p>
+                                                <p class="card-text mb-1">Area: ${item.area}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="d-flex justify-content-center align-items-center mb-3">
-                                     <a onclick="deleteTutor(${item.id})" class="btn btn-primary")">Hủy chọn</a>
+                                    <div class="d-flex justify-content-center align-items-center mb-3">
+                                         <a onclick="deleteTutor(${item.id})" class="btn btn-primary")">Hủy chọn</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        `)
+                            `)
             }
         }
     })
