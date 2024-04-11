@@ -1,8 +1,8 @@
 ﻿:root {
     --bs-font-sans-serif: "Montserrat", sans-serif;
-    --title-font: "MonteCarlo", cursive;
+    --title-font: "Protest Riot", sans-serif;
     --box-color: #F3CCF3;
-    --title-font-size: 4em;
+    --title-font-size: 3em;
     --sidebar-background-color: #decade;
     --sidebar-text-color: #6c0055;
     --sidebar-title-color: #882a8b;
@@ -21,6 +21,11 @@ h1 {
     font-size: var(--title-font-size);
     /*color: #A85295;*/
     color: var(--sidebar-title-color);
+}
+
+h5 {
+    font-family: var(--title-font);
+    text-align: center;
 }
 
 .customstyle-button {
@@ -45,6 +50,10 @@ input.customform-control {
     width: 100%;
 }
 
+.customform-control:disabled, .customform-control[readonly] {
+    background-color: #d3e2ef;
+}
+
 
 .customform-select {
     width: contain;
@@ -57,4 +66,3 @@ input.customform-control {
     justify-content: center; /* Căn giữa theo chiều ngang */
     align-items: center;
 }
-

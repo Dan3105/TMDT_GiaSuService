@@ -19,9 +19,9 @@
     </table>
 
     <div id="pagination">
-        <button id="prev-page" disabled>Previous Page</button>
-        <span id="current-page">Page 1</span>
-        <button id="next-page">Next Page</button>
+        <i id="prev-page" class="fas fa-chevron-left px-2" disabled></i>
+        <span id="current-page" class="px-2">Trang 1</span>
+        <i id="next-page" class="fas fa-chevron-right px-2"></i>
     </div>
 </div>
 
@@ -35,7 +35,7 @@
                     $("#items-container").empty(); // Clear existing items
 
                     // Update page information
-                    $("#current-page").text(`Page ${data.page + 1}`);
+                    $("#current-page").text(`Trang ${data.page + 1}`);
                     console.log(data.page, data.totalPages);
                     // Disable "Next Page" button if at the last page
                     $("#next-page").prop("disabled", data.page === data.totalPages);

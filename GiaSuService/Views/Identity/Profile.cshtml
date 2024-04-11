@@ -31,45 +31,45 @@
                     <label asp-for="FullName">Họ tên:</label>
                     @if (isEmployee)
                     {
-                        <input type="text" asp-for="FullName" class="form-control" style="margin-bottom: 10px;" disabled />
+                        <input type="text" asp-for="FullName" class="form-control customform-control" style="margin-bottom: 10px;" disabled />
                     }
                     else
                     {
-                        <input type="text" asp-for="FullName" class="form-control" style="margin-bottom: 10px;" />
+                        <input type="text" asp-for="FullName" class="form-control customform-control" style="margin-bottom: 10px;" />
                     }
                 </div>
                 <div class="form-group">
                     <label asp-for="Email">Email:</label>
                     @if (isEmployee)
                     {
-                        <input type="text" asp-for="Email" class="form-control" style="margin-bottom: 10px;" disabled />
+                        <input type="text" asp-for="Email" class="form-control customform-control" style="margin-bottom: 10px;" disabled />
                     }
                     else
                     {
-                        <input type="text" asp-for="Email" class="form-control" style="margin-bottom: 10px;" />
+                        <input type="text" asp-for="Email" class="form-control customform-control" style="margin-bottom: 10px;" />
                     }
                 </div>
                 <div class="form-group">
                     <label asp-for="Phone">Số điện thoại:</label>
                     @if (isEmployee)
                     {
-                        <input type="text" asp-for="Phone" class="form-control" style="margin-bottom: 10px;" disabled />
+                        <input type="text" asp-for="Phone" class="form-control customform-control" style="margin-bottom: 10px;" disabled />
                     }
                     else
                     {
-                        <input type="text" asp-for="Phone" class="form-control" style="margin-bottom: 10px;" />
+                        <input type="text" asp-for="Phone" class="form-control customform-control" style="margin-bottom: 10px;" />
                     }
                 </div>
                 <div class="form-group">
                     <label asp-for="BirthDate">Ngày sinh:</label>
                     @if (isEmployee)
                     {
-                        <input type="date" asp-for="BirthDate" class="form-control" style="margin-bottom: 10px;" 
+                        <input type="date" asp-for="BirthDate" class="form-control customform-control" style="margin-bottom: 10px;" 
                         value="@Model.BirthDate.ToString("yyyy-MM-dd")" disabled/>
                     }
                     else
                     {
-                        <input type="date" asp-for="BirthDate" class="form-control" style="margin-bottom: 10px;"
+                        <input type="date" asp-for="BirthDate" class="form-control customform-control" style="margin-bottom: 10px;"
                                value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
                     }
                 </div>
@@ -77,14 +77,14 @@
                     <label asp-for="Gender">Giới tính:</label>
                     @if (isEmployee)
                     {
-                        <select class="form-control" asp-for="Gender" style="margin-bottom: 10px;" disabled>
+                        <select class="form-control customform-control" asp-for="Gender" style="margin-bottom: 10px;" disabled>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                         </select>
                     }
                     else
                     {
-                        <select class="form-control" asp-for="Gender" style="margin-bottom: 10px;">
+                        <select class="form-control customform-control" asp-for="Gender" style="margin-bottom: 10px;">
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                         </select>
@@ -95,13 +95,13 @@
                         <label for="province">Tỉnh / Thành phố:</label>
                         @if (isEmployee)
                         {
-                            <select class="form-select" asp-for="SelectedProvinceId" id="province" onchange="getDistricts()" 
-                            style="margin-bottom: 10px;" disabled>
+                            <select class="form-select customform-control" asp-for="SelectedProvinceId" id="province" onchange="getDistricts()"
+                                    style="margin-bottom: 10px;" disabled>
                             </select>
                         }
                         else
                         {
-                            <select class="form-select" asp-for="SelectedProvinceId" id="province" onchange="getDistricts()"
+                            <select class="form-select customform-control" asp-for="SelectedProvinceId" id="province" onchange="getDistricts()"
                                     style="margin-bottom: 10px;" >
                             </select>
                         }
@@ -111,13 +111,13 @@
                         <label for="district">Quận / Huyện:</label>
                         @if (isEmployee)
                         {
-                            <select class="form-select" asp-for="SelectedDistrictId" id="district"
+                            <select class="form-select customform-control" asp-for="SelectedDistrictId" id="district"
                                     style="margin-bottom: 10px;" disabled>
                             </select>
                         }
                         else
                         {
-                            <select class="form-select" asp-for="SelectedDistrictId" id="district"
+                            <select class="form-select customform-control" asp-for="SelectedDistrictId" id="district"
                                     style="margin-bottom: 10px;">
                             </select>
                         }
@@ -126,22 +126,22 @@
                     <label asp-for="AddressDetail">Số nhà, tên đường:</label>
                     @if (isEmployee)
                     {
-                        <input type="text" asp-for="AddressDetail" class="form-control" style="margin-bottom: 10px;" disabled />
+                        <input type="text" asp-for="AddressDetail" class="form-control customform-control" style="margin-bottom: 10px;" disabled />
                     }
                     else
                     {
-                        <input type="text" asp-for="AddressDetail" class="form-control" style="margin-bottom: 10px;" />
+                        <input type="text" asp-for="AddressDetail" class="form-control customform-control" style="margin-bottom: 10px;" />
                     }
                 </div>
                 <div class="form-group">
                     <label asp-for="IdentityCard">Số CMND/CCCD:</label>
                     @if (isEmployee)
                     {
-                        <input type="text" asp-for="IdentityCard" class="form-control" style="margin-bottom: 10px;" disabled />
+                        <input type="text" asp-for="IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" disabled />
                     }
                     else
                     {
-                        <input type="text" asp-for="IdentityCard" class="form-control" style="margin-bottom: 10px;" />
+                        <input type="text" asp-for="IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
                     }
                 </div>
                 <div class="row form-group">

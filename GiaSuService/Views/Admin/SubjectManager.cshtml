@@ -2,7 +2,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
 <div class="container">
-    <h1>Subject Manager</h1>
+    <h1>Quản lý môn học</h1>
 
     <table id="subjectTable"
            data-pagination="true"
@@ -11,11 +11,11 @@
         <thead>
             <tr>
                 <th data-field="subjectId" data-visible="false"></th>
-                <th data-width="40" data-width-unit="%" data-field="subjectName">Name</th>
-                <th data-width="20" data-width-unit="%" data-field="value">Order</th>
-                <th data-width="40" data-width-unit="%">Action</th>
+                <th data-width="40" data-width-unit="%" data-field="subjectName">Tên môn học</th>
+                <th data-width="20" data-width-unit="%" data-field="value">Thứ tự</th>
+                <th data-width="40" data-width-unit="%">Hành động</th>
             </tr>
-        </thead>
+        </thead>    
         <tbody id="data-container">
         </tbody>
     </table>
@@ -26,9 +26,9 @@
 
         function actionFormatter(value, row, index) {
             return `
-                        <button type="button" class="btn btn-sm btn-success add-button">Add</button>
-                        <button type="button" class="btn btn-sm btn-primary edit-button" data-subject-id="${row.subjectId}">Edit</button>
-                        <button type="button" class="btn btn-sm btn-danger delete-button" data-subject-id="${row.subjectId}">Delete</button>
+                        <button type="button" class="btn btn-sm btn-success add-button">Thêm</button>
+                        <button type="button" class="btn btn-sm btn-primary customstyle-button edit-button" data-subject-id="${row.subjectId}">Chỉnh sửa</button>
+                        <button type="button" class="btn btn-sm btn-danger delete-button" data-subject-id="${row.subjectId}">Xóa</button>
                     `;
         }
 
@@ -46,9 +46,9 @@
         $("#subjectTable").bootstrapTable({
             columns: [
                 { field: 'subjectId', visible: false },
-                { field: 'subjectName', title: 'Name' },
-                { field: 'value', title: 'Order' },
-                { field: 'actionButtons', title: 'Action', formatter: actionFormatter }
+                { field: 'subjectName', title: 'Tên môn học' },
+                { field: 'value', title: 'Thứ tự' },
+                { field: 'actionButtons', title: 'Hành động', formatter: actionFormatter }
             ]
         });
         refreshTable();
@@ -65,11 +65,11 @@
 
             let originalData = $tr.html();
             $tr.html(`
-                  <td><input type="text" class="form-control" name="subjectName" placeholder="Enter Name" value="${name}"></td>
-                  <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                      <td><input type="text" class="form-control customform-control" name="subjectName" placeholder="Tên môn học" value="${name}"></td>
+                  <td><input type="number" class="form-control customform-control" min=1 name="value" placeholder="Thứ tự" value="${order}"></td>
                   <td>
-                    <button type="button" class="btn btn-success btn-sm submit-edit-button">Submit</button>
-                    <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Cancel</button>
+                    <button type="button" class="btn btn-success btn-sm submit-edit-button">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Hủy bỏ</button>
               </td>
             `);
 
@@ -78,7 +78,7 @@
             });
 
             $tr.find('.submit-edit-button').click(function () {
-                if (confirm("Are you sure you want to update this item?")) {
+                if (confirm("Bạn có chắc chắn muốn chỉnh sửa không?")) {
                     let formData = {
                         subjectName: $tr.find('input[name="subjectName"]').val(),
                         subjectId: subjectId,
@@ -110,7 +110,7 @@
 
 
         $(document).on('click', '.delete-button', function () {
-            if (confirm("Are you sure you want to delete this item?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa không?")) {
                 var row = $(this).closest('tr');
                 let subjectId = $(this).data('subject-id');
                 console.log(subjectId);
@@ -146,11 +146,11 @@
             let order = parseInt($tds.eq(1).text()) + 1;
             var newRowHtml = `
                                     <tr>
-                                            <td><input type="text" class="form-control" name="subjectName" placeholder="Enter Name"></td>
-                                            <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                                            <td><input type="text" class="form-control customform-control" name="subjectName" placeholder="Tên môn"></td>
+                                                <td><input type="number" class="form-control customform-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
                                         <td>
-                                            <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
-                                            <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
+                                            <button type="button" class="btn btn-success btn-sm submit-add-button">Đồng ý</button>
+                                            <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Hủy bỏ</button>
                                         </td>
                                     </tr>`;
 
@@ -160,7 +160,7 @@
             });
 
             $newRow.find('.submit-add-button').click(function () {
-                if (confirm("Are you sure you want to add this item?")) {
+                if (confirm("Bạn có chắc chắn muốn thêm không?")) {
                     let formData = {
                         subjectName: $newRow.find('input[name="subjectName"]').val(),
                         value: $newRow.find('input[name="value"]').val(),
