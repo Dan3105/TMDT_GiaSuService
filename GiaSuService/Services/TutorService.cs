@@ -4,6 +4,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 using Newtonsoft.Json;
@@ -17,12 +18,14 @@ namespace GiaSuService.Services
         private readonly ITutorRepo _tutorRepository;
         private readonly IStatusRepo _statusRepository;
         private readonly IProfileRepo _profileRepository;
-        public TutorService(DvgsDbContext context, ITutorRepo tutorRepository, IStatusRepo statusRepository, IProfileRepo profileRepository)
+        private readonly IQueueRepo _queueRepository;
+        public TutorService(DvgsDbContext context, ITutorRepo tutorRepository, IStatusRepo statusRepository, IProfileRepo profileRepository, IQueueRepo queueRepository)
         {
             _context = context;
             _tutorRepository = tutorRepository;
             _statusRepository = statusRepository;
             _profileRepository = profileRepository;
+            _queueRepository = queueRepository;
         }
         public async Task<List<AccountListViewModel>> GetTutorAccountsByFilter(
             int subjectId, int districtId, int gradeId, int page)
@@ -163,6 +166,27 @@ namespace GiaSuService.Services
             catch (Exception) {
                 return null;
             }
+        }
+
+        public async Task<ResponseService> ApplyRequest(int tutorId, int requestId)
+        {
+            Status? status = await _statusRepository.GetStatus(AppConfig.QueueStatus.PENDING.ToString(), AppConfig.queue_status.ToString());
+            if(status == null)
+            {
+                return new ResponseService { Success = false, Message = "Không lấy được trạng thái" };
+            }
+
+            bool isSuccess = await _queueRepository.AddTutorToQueue(tutorId, requestId, status.Id);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Ứng tuyển thành công" };
+            }
+            return new ResponseService { Success = false, Message = "Ứng tuyển thất bại" };
+        }
+
+        public async Task<List<TutorApplyFormViewModel>> GetTutorApplyForm(int tutorId)
+        {
+            return await _tutorRepository.GetListTutorApplyForm(tutorId);
         }
     }
 }

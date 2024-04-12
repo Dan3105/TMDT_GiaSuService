@@ -24,5 +24,9 @@ namespace GiaSuService.Services.Interface
 
         public Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetStatusTutorHistory(int tutorId);
         public Task<TutorProfileStatusDetailHistoryViewModel?> GetAStatusTutorHistory(int historyId);
+
+        public Task<ResponseService> ApplyRequest(int tutorId, int requestId);
+
+        public Task<List<TutorApplyFormViewModel>> GetTutorApplyForm(int tutorId);
     }
 }

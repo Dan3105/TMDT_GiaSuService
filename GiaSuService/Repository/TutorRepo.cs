@@ -1,6 +1,7 @@
 ﻿using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
@@ -199,6 +200,32 @@ namespace GiaSuService.Repository
                          .OrderByDescending(p => p.CreateDate)
                          .FirstOrDefaultAsync(p => p.TutorId == tutorId);
             return getLatestStatus;
+        }
+
+        public async Task<List<TutorApplyFormViewModel>> GetListTutorApplyForm(int tutorId)
+        {
+            //Chua toi uu truy van
+            return await _context.TutorApplyForms
+                .AsNoTracking()
+                .Select(p => new {
+                    TutorApply = new TutorApplyFormViewModel
+                    {
+                        AdditionalDetail = p.TutorRequest.AdditionalDetail,
+                        EnterDate = p.EnterDate,
+                        CreateDate = p.TutorRequest.CreateDate,
+                        ExpiredDate = p.TutorRequest.ExpiredDate,
+                        GradeName = p.TutorRequest.Grade.Name,
+                        RequestId = p.TutorRequest.Id,
+                        StatusName = p.Status.Name,
+                        Students = p.TutorRequest.Students,
+                        SubjectName = p.TutorRequest.Subject.Name,
+                    },
+                    p.TutorId,
+                })
+                .OrderByDescending(p => p.TutorApply.EnterDate)
+                .Where(p => p.TutorId == tutorId)
+                .Select(p => p.TutorApply)
+                .ToListAsync();
         }
     }
 }

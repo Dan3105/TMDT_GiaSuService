@@ -113,6 +113,12 @@
                             @if(roleName == AppConfig.TUTORROLENAME)
                             {
                                 <li>
+                                    <a href="@Url.Action("ListTutorApplyForm", "Tutor")">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>Các đơn đã ứng tuyển</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")">
                                         <i class="fa fa-calendar"></i>
                                         <span>Lịch sử thông tin của tôi</span>

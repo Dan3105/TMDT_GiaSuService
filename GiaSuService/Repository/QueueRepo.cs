@@ -38,6 +38,28 @@ namespace GiaSuService.Repository
             }
            
         }
+
+        public async Task<bool> AddTutorToQueue(int tutorId, int requestId, int statusId)
+        {
+            try
+            {
+                TutorApplyForm form = new TutorApplyForm
+                {
+                    TutorId = tutorId,
+                    TutorRequestId = requestId,
+                    EnterDate = DateTime.Now,
+                    StatusId = statusId,
+                };
+
+                _context.Add(form);
+                return await SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> SaveChanges()
         {
             return await _context.SaveChangesAsync() > 0;

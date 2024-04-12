@@ -30,5 +30,7 @@ namespace GiaSuService.Repository.Interface
 
         //This code not load the Difference and Original detail so be careful
         public Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetTutorProfilesHistoryDetail(int tutorId);
+
+        public Task<List<TutorApplyFormViewModel>> GetListTutorApplyForm(int tutorId);
     }
 }

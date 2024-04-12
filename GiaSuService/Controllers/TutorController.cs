@@ -1,6 +1,8 @@
 ﻿using GiaSuService.Configs;
+using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -146,6 +148,53 @@ namespace GiaSuService.Controllers
         {
             var data = await _tutorService.GetAStatusTutorHistory(historyId);
             return View(data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ApplyRequest(int requestId)
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+            ResponseService response = await _tutorService.ApplyRequest((int)tutorId, requestId);
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+
+            return RedirectToAction("TutorRequestList", "Tutor");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ListTutorApplyForm()
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var listApplyForm = await _tutorService.GetTutorApplyForm((int)tutorId);
+            return View(listApplyForm);
         }
     }
 }
