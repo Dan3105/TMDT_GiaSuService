@@ -8,22 +8,22 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 border-end">
-            <h2>Account Profile</h2>
-            <hr />
+            <h2>Thông tin tài khoản</h2>
+            <hr/>
             <dl class="row">
-                <dt class="col-sm-4">Full Name:</dt>
+                <dt class="col-sm-4">Họ và tên:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Fullname</dd>
-                <dt class="col-sm-4">Date of Birth:</dt>
+                <dt class="col-sm-4">Ngày sinh:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Birth.ToString("dd-MM-yyyy")</dd>
                 <dt class="col-sm-4">Email:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Email</dd>
-                <dt class="col-sm-4">Phone:</dt>
+                <dt class="col-sm-4">Số điện thoại:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Phone</dd>
-                <dt class="col-sm-4">Identity Card:</dt>
+                <dt class="col-sm-4">Số CCCD/ CMND:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.IdentityCard</dd>
-                <dt class="col-sm-4">Gender:</dt>
+                <dt class="col-sm-4">Giới tính:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Gender</dd>
-                <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
+                <dt class="col-sm-4">Hai mặt CCCD:</dt>
                 <dd class="col-sm-8 row">
                     <div class="col">
                         @if (!string.IsNullOrEmpty(Model.TutorProfileVM.FrontIdentityCard))
@@ -32,7 +32,7 @@
                         }
                         else
                         {
-                            <span>No front ID card uploaded</span>
+                            <span>Chưa tải lên mặt trước CCCD</span>
                         }
                     </div>
                     <div class="col">
@@ -42,17 +42,17 @@
                         }
                         else
                         {
-                            <span>No back ID card uploaded</span>
+                            <span>Chưa tải lên mặt sau CCCD</span>
                         }
                     </div>
 
                 </dd>
 
-                <dt class="col-sm-4">Created Date:</dt>
+                <dt class="col-sm-4">Ngày tạo:</dt>
                 <dd class="col-sm-8">
                         @Model.TutorProfileVM.Createdate.ToString("dd-MM-yyyy")
                 </dd>
-                <dt class="col-sm-4">Address:</dt>
+                <dt class="col-sm-4">Địa chỉ:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.AddressDetail</dd>
             </dl>
         </div>
@@ -65,25 +65,25 @@
                 }
                 else
                 {
-                    <span>No avatar uploaded</span>
+                    <span>Chưa tải lên avatar</span>
                 }
             </div>
-            <h2>Tutor Profile</h2>
+            <h2>Thông tin gia sư</h2>
             <hr />
             <dl class="row">
-                <dt class="col-sm-5">College:</dt>
+                <dt class="col-sm-5">Trường học:</dt>
                 <dd class="col-sm-7">@Model.TutorProfileVM.College</dd>
-                <dt class="col-sm-5">Area:</dt>
+                <dt class="col-sm-5">Chuyên ngành:</dt>
                 <dd class="col-sm-7">@Model.TutorProfileVM.Area</dd>
-                <dt class="col-sm-5">Additional Info:</dt>
+                <dt class="col-sm-5">Thông tin thêm:</dt>
                 <dd class="col-sm-7">@Model.TutorProfileVM.Additionalinfo</dd>
-                <dt class="col-sm-5">Academic Year (From):</dt>
+                <dt class="col-sm-5">Năm nhập học:</dt>
                 <dd class="col-sm-7">@Model.TutorProfileVM.Academicyearfrom</dd>
-                <dt class="col-sm-5">Academic Year (To):</dt>
+                <dt class="col-sm-5">Năm tốt nghiệp:</dt>
                 <dd class="col-sm-7">@Model.TutorProfileVM.Academicyearto</dd>
-                <dt class="col-sm-5">Type Tutor:</dt>
+                <dt class="col-sm-5">Trình độ gia sư:</dt>
                 <dd class="col-sm-7">@Model.TutorProfileVM.TutorType.TypeName</dd>
-                <dt class="col-sm-5">Form Status:</dt>
+                <dt class="col-sm-5">Trạng thái đơn:</dt>
                 <dd class="col-sm-7">
                     <b>@Model.TutorProfileVM.Formstatus</b>
                 </dd>
@@ -95,14 +95,14 @@
         <div class="form-group row mt-2">
             <label for="Context" class="form-label fw-bold">Example textarea:</label>
             <div class="col-sm-9">
-                <textarea class="form-control" asp-for="Context" rows="4" placeholder="Reason for submitting"></textarea>
+                <textarea class="form-control customform-control" asp-for="Context" rows="4" placeholder="Reason for submitting"></textarea>
             </div>
 
             <div class="col-sm-3 mt-4 justify-content-end">
                 <div class="col-auto">
                     <input type="hidden" asp-for="TutorProfileVM!.TutorId" />
 
-                    <button type="submit" class="btn btn-primary" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Apply</button>
+                    <button type="submit" class="btn btn-primary customstyle-button" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Apply</button>
                     <button type="submit" class="btn btn-danger" name="submitType" value="@AppConfig.RegisterStatus.DENY.ToString()">Deny</button>
 
                 </div>
