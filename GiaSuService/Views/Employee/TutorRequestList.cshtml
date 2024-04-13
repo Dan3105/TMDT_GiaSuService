@@ -106,7 +106,7 @@
                 $.each(data.queries, function (index, item) {
                     var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
                     var itemHtml = `
-                                    <div class="col-md-4 col-sm-6 mb-3">
+                                    <div class="col-md-6 col-sm-12 col-lg-4 mb-3">
                                         <div class="card">
                                             <div class="card-header bg-light">
                                             <h5 class="card-title">Lớp chưa giao</h5>
@@ -119,8 +119,11 @@
                                                     <p class="card-text"><b>Các khung giờ có thể dạy:</b> ${item.sessionsCanTeach}</p>
                                             </div>
 
-                                            <div class="d-flex justify-content-end m-2">
-                                                    <a href="/Employee/TutorRequestEditByEmployee?id=${item.requestId}" class="btn btn-primary customstyle-button">Thông tin chi tiết</a>
+                                            <div class="d-flex justify-content-between">
+                                                    <a href="/Employee/TutorRequestEditByEmployee?id=${item.requestId}" class="btn btn-primary customstyle-button m-2">Chỉnh sửa thông tin</a>
+                                                    <a href="/Employee/TutorApplyQueue?requestId=${item.requestId}" class="btn btn-warning m-2">
+                                                        Thông tin Hàng chờ 
+                                                    </a>
                                             </div>
                                         </div>
 

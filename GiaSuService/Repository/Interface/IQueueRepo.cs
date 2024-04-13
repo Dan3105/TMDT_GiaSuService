@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 
 namespace GiaSuService.Repository.Interface
@@ -13,5 +14,6 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> SaveChanges();
 
         public Task<List<TutorCardViewModel>> GetTutorInQueueByForm(int requestId, int statusId = 0);
+        public Task<List<TutorApplyRequestQueueViewModel>> GetTutorsApplyRequestQueue(int requestId);
     }
 }

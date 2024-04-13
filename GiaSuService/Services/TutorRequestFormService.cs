@@ -177,5 +177,15 @@ namespace GiaSuService.Services
 
             return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
         }
+
+        public async Task<List<TutorApplyRequestQueueViewModel>> GetTutorsApplyRequestQueue(int formId)
+        {
+            return await _queueRepo.GetTutorsApplyRequestQueue(formId);
+        }
+
+        public async Task<TutorRequestCardViewModel?> GetTutorrequestDetail(int formId)
+        {
+            return await _tutorRequestRepo.GetTutorRequestCardById(formId);
+        }
     }
 }

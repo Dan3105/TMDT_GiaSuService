@@ -310,5 +310,24 @@ namespace GiaSuService.Controllers
             TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
             return RedirectToAction("TutorUpdateQueue", "Employee");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorApplyQueue(int requestId)
+        {
+            TutorRequestCardViewModel? tutorCardInfo = await _tutorRequestService.GetTutorrequestDetail(requestId);
+            if(tutorCardInfo == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm được đơn này trong hệ thống";
+                return RedirectToAction("TutorRequestList", "Employee");
+            }
+            var queries = await _tutorRequestService.GetTutorsApplyRequestQueue(requestId);
+            TutorApplyRequestViewModel data = new TutorApplyRequestViewModel()
+            {
+                tutorRequestInfo = tutorCardInfo,
+                tutors = queries
+            };
+            
+            return View(data);
+        }
     }
 }

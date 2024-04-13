@@ -5,6 +5,7 @@ using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -251,6 +252,25 @@ namespace GiaSuService.Repository
             }
 
             return false;
+        }
+
+        public async Task<TutorRequestCardViewModel?> GetTutorRequestCardById(int requestId)
+        {
+            var result = await _context.RequestTutorForms
+                .AsNoTracking()
+                .Select(p => new TutorRequestCardViewModel
+                    {
+                        RequestId = p.Id,
+                        GradeName = p.Grade.Name,
+                        SubjectName = p.Subject.Name,
+                        AdditionalDetail = p.AdditionalDetail ?? string.Empty,
+                        Address = $"{p.District.Name}, {p.District.Name}, {p.AddressDetail}",
+                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
+                    })
+                .FirstOrDefaultAsync(p => p.RequestId == requestId);
+
+
+            return result;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace GiaSuService.Repository
 {
@@ -79,8 +81,8 @@ namespace GiaSuService.Repository
                         College = p.Tutor.College,
                         TutorType = p.Tutor.TutorType.Name,
                     },
-                    TutorRequestId = p.TutorRequestId,
-                    StatusId = p.StatusId
+                    p.TutorRequestId,
+                    p.StatusId
                 })
                 .Where(p => p.TutorRequestId == requestId && (statusId == 0 || statusId == p.StatusId))
                 .Select(p => p.Tutor)
@@ -90,5 +92,27 @@ namespace GiaSuService.Repository
             return queries;
         }
 
+        public async Task<List<TutorApplyRequestQueueViewModel>> GetTutorsApplyRequestQueue(int requestId)
+        {
+            var queries = await _context.TutorApplyForms
+                .Select(p => new
+                {
+                    Tutor = new TutorApplyRequestQueueViewModel
+                    {
+                        Avatar = p.Tutor.Account.Avatar,
+                        FullName = p.Tutor.FullName,
+                        StatusQueue = p.Status.Name,
+                        TutorId = p.TutorId,
+                        TutorType = p.Tutor.TutorType.Name,
+                    },
+                    p.TutorRequestId,
+                })
+                .Where(p => p.TutorRequestId == requestId)
+                .Select(p => p.Tutor)
+                .ToListAsync();
+            ;
+
+            return queries;
+        }
     }
 }
