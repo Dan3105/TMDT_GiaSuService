@@ -1,0 +1,110 @@
+﻿@using GiaSuService.Models.EmployeeViewModel;
+@using GiaSuService.Configs;
+@using GiaSuService.Models.TutorViewModel;
+
+@model TutorRequestCardViewModel
+
+@{
+    ViewData["Title"] = "Tutor Apply Request Queue";
+}
+
+<h3>Tutor Apply Request Queue</h3>
+
+<div class="container">
+    <p class="card-text"><b>Tên lớp:</b> @Model.SubjectName</p>
+    <p class="card-text"><b>Khối lớp:</b> @Model.GradeName</p>
+    <p class="card-text"><b>Thông tin thêm:</b> @Model.AdditionalDetail</p>
+    <p class="card-text"><b>Địa điểm:</b> @Model.Address</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ảnh</th>
+                <th>Họ Tên</th>
+                <th>Thông tin gia sư</th>
+                <th class="border-end">Trạng thái hiện tại</th>
+                <th class="text-center">Hành động cập nhật</th>
+            </tr>
+        </thead>
+        <tbody id="tutor_container">
+            
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    function getTutorsQueue() {
+        let thisRequestId = @Model.RequestId;
+        $.ajax({
+            url: '/Employee/GetTutorsOnQueue',
+            method: 'GET',
+            data: { requestId: thisRequestId},
+            success: function (response) {
+                $("#tutor_container").empty();
+                $.each(response.tutors, function (index, item) {
+                    var currentStatus = item.statusQueue.toLowerCase(); 
+                    let queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
+                    var itemHtml = `<tr>
+                                        <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
+                                        <td>
+                                            <div>
+                                                <strong>${item.fullName}</strong><br/>
+                                                <span>${item.tutorType}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Detail</a></td>
+                                        <td class="text-center text-capitalize border-end">${item.statusQueue}</td>
+                                        <td>
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-md-12 col-lg-6">
+                                                           <select class="form-select" id="statusSelect_${item.tutorId}">
+                                                        ${queueStatuses.map(status => `<option value="${status}" ${currentStatus === status ? 'selected' : ''}>${status.charAt(0).toUpperCase() + status.slice(1)}</option>`).join('')}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 col-lg-6">
+                                                        <button type="button" class="btn btn-primary m-2" onclick="updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'statusSelect_${item.tutorId}')">
+                                                    Cập nhật
+                                                </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>`;
+                    $("#tutor_container").append(itemHtml);
+                })
+            },
+            error: function (xhr, status, error) {
+                // Handle error if needed
+                console.error('Error:', error);
+            }
+        })
+    }
+    getTutorsQueue();
+    function updateTutorStatus(tutorId, requestId, selectId) {
+        // Get the value of the selected option
+        var selectedValue = document.getElementById(selectId).value;
+
+        // Use the selectedValue as needed (e.g., send it to the server via AJAX)
+        //console.log("Selected value:", selectedValue);
+
+        // Call your function to update the tutor status passing the selected value, tutorId, and requestId
+        $.ajax({
+            url: '/Employee/UpdateTutorStatus',
+            method: 'POST',
+            data: { tutorId : tutorId, requestId: requestId, newStatus: selectedValue },
+            success: function(data){
+                console.log(data);
+                if (data.success) {
+                    toastr["success"](data.message);
+                }
+                else {
+                    toastr["error"](data.message);
+                }
+                getTutorsQueue();
+            },
+            error: function (xhr, status, error) {
+                // Handle error if needed
+                console.error('Error:', error);
+            }
+        })
+    }
+</script>
