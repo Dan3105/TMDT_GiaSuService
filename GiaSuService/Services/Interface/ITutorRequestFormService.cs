@@ -25,5 +25,7 @@ namespace GiaSuService.Services.Interface
         public Task<List<TutorApplyRequestQueueViewModel>> GetTutorsApplyRequestQueue(int formId);
 
         public Task<TutorRequestCardViewModel?> GetTutorrequestDetail(int formId);
+
+        public Task<ResponseService> UpdateTutorQueue(int requestId, int tutorId, string statusName, int employeeId);
     }
 }

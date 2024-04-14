@@ -1,11 +1,14 @@
-﻿using GiaSuService.Models.TutorViewModel;
+﻿using GiaSuService.Configs;
+using GiaSuService.EntityModel;
+using GiaSuService.Models.TutorViewModel;
 
 namespace GiaSuService.Models.EmployeeViewModel
 {
     public class TutorApplyRequestViewModel
     {
-        public TutorRequestCardViewModel tutorRequestInfo { get; set; } = new TutorRequestCardViewModel();
+        //public TutorRequestCardViewModel tutorRequestInfo { get; set; } = new TutorRequestCardViewModel();
         public IEnumerable<TutorApplyRequestQueueViewModel> tutors { get; set; } = new List<TutorApplyRequestQueueViewModel>();
+        public List<string> queriesStatus { get; } = Enum.GetNames(typeof(AppConfig.QueueStatus)).ToList();
     }
 
     public class TutorApplyRequestQueueViewModel

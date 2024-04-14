@@ -6,6 +6,7 @@ using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GiaSuService.Controllers
 {
@@ -320,14 +321,41 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Không tìm được đơn này trong hệ thống";
                 return RedirectToAction("TutorRequestList", "Employee");
             }
-            var queries = await _tutorRequestService.GetTutorsApplyRequestQueue(requestId);
+            
+            
+            return View(tutorCardInfo);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTutorsOnQueue(int requestId)
+        {
+            IEnumerable<TutorApplyRequestQueueViewModel> queries = await _tutorRequestService.GetTutorsApplyRequestQueue(requestId);
             TutorApplyRequestViewModel data = new TutorApplyRequestViewModel()
             {
-                tutorRequestInfo = tutorCardInfo,
-                tutors = queries
+                tutors = queries,
             };
-            
-            return View(data);
+            return Ok(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTutorStatus(int tutorId, int requestId, string newStatus)
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") 
+                return Ok(new ResponseService { Message = "Vui lòng đăng nhập lại để thực hiện thao tác", Success = false});
+
+            int? profileId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.EMPLOYEEROLENAME);
+
+            if (profileId == null)
+            {
+               
+                return Ok(new ResponseService { Message = "Bạn không phải nhân viên để thực hiện thao tác này", Success = false });
+            }
+
+            ResponseService response = await _tutorRequestService.UpdateTutorQueue(requestId, tutorId, newStatus, (int)profileId);
+
+            return Ok(response);
         }
     }
 }

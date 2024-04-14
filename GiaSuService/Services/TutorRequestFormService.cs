@@ -187,5 +187,23 @@ namespace GiaSuService.Services
         {
             return await _tutorRequestRepo.GetTutorRequestCardById(formId);
         }
+
+        public async Task<ResponseService> UpdateTutorQueue(int requestId, int tutorId, string statusName, int employeeId)
+        {
+            Status? status = await _statusRepo.GetStatus(statusName, AppConfig.queue_status);
+            if (status == null)
+            {
+                return new ResponseService { Message = "Không tìm được trạng thái này trong hệ thống", Success = false };
+            }
+
+
+            bool isSuccess = await _queueRepo.UpdateTutorQueue(requestId, tutorId, status, employeeId);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Cập nhật trạng thái thành công" };
+            }
+
+            return new ResponseService { Success = false, Message = "Lỗi hệ thống" };
+        }
     }
 }

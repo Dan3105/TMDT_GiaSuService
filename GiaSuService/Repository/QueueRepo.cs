@@ -106,13 +106,81 @@ namespace GiaSuService.Repository
                         TutorType = p.Tutor.TutorType.Name,
                     },
                     p.TutorRequestId,
+                    p.EnterDate
                 })
+                .OrderBy(p => p.EnterDate)
                 .Where(p => p.TutorRequestId == requestId)
                 .Select(p => p.Tutor)
                 .ToListAsync();
             ;
 
             return queries;
+        }
+
+        public async Task<bool> UpdateTutorQueue(int requestId, int tutorId, Status status, int employeeId)
+        {
+            using(var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var tutorQueue = await _context.TutorApplyForms
+                                .Select(p => new {p.StatusId, p.TutorRequest.GradeId, p.TutorRequestId, p.TutorId})
+                                .FirstOrDefaultAsync(p => p.TutorId == tutorId && p.TutorRequestId == requestId);
+                    
+                    if(tutorQueue == null)
+                    {
+                        throw new NullReferenceException();
+                    }
+
+                    if(tutorQueue.StatusId == status.Id)
+                    {
+                        return true;
+                    }
+
+                    if (status.Name.Equals(AppConfig.QueueStatus.APPROVAL.ToString().ToLower()))
+                    {
+                        int? accountTutorId = (await _context.Tutors.Select(p => new {p.Id, p.AccountId})
+                                                .FirstOrDefaultAsync(p => p.Id == tutorId))?.AccountId;
+                        if(accountTutorId == null)
+                        {
+                            throw new NullReferenceException();
+                        }
+
+                        var price = (await _context.Grades.FindAsync(tutorQueue.GradeId))?.Fee;
+                        if (price == null)
+                        {
+                            throw new NullReferenceException();
+                        }
+                        TransactionHistory newTransaction = new TransactionHistory()
+                        {
+                            CreateDate = DateTime.Now,
+                            AccountId = (int)accountTutorId,
+                            Context = AppConfig.ContextForApplyTutor,
+                            EmployeeId = employeeId,
+                            PaymentAmount =  (decimal)price,
+                            FormId = requestId,
+                            
+                        };
+
+                        _context.TransactionHistories.Add(newTransaction);
+                        throw new NotImplementedException();
+                        //await _context.SaveChangesAsync();
+                    }
+
+                    await _context.TutorApplyForms
+                        .Where(p => p.TutorId == tutorId && p.TutorRequestId == requestId)
+                        .ExecuteUpdateAsync(builder => builder.SetProperty(p => p.StatusId, status.Id));
+
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return true;
+                }
+                catch(Exception) {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+                            
         }
     }
 }

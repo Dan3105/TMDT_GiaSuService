@@ -32,26 +32,6 @@ namespace GiaSuService.Configs
             HANDOVER
         }
 
-        //public enum PaymentMethod
-        //{
-        //    OFFLINE,
-        //    ONLINE
-        //}
-
-
-        //public enum TransactionhistoryType
-        //{
-        //    DEPOSIT,
-        //    PAYROLL,
-        //    TUTION
-        //}
-
-        //public enum TypeTutor
-        //{
-        //    TEACHER,
-        //    STUDENT
-        //}
-
         public const string CLAIM_TYPE_AVATAR = "Avatar";
 
         public const string CLAIM_USER = "User";
@@ -77,5 +57,6 @@ namespace GiaSuService.Configs
         public const string TUTOR_SELECTED_COOKIE = "tutors_cookie";
 
         public const int ROWS_ACCOUNT_LIST = 10;
+        public const string ContextForApplyTutor = "Đóng phí nhận lớp";
     }
 }
