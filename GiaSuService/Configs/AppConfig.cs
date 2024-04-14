@@ -57,6 +57,8 @@ namespace GiaSuService.Configs
         public const string TUTOR_SELECTED_COOKIE = "tutors_cookie";
 
         public const int ROWS_ACCOUNT_LIST = 10;
-        public const string ContextForApplyTutor = "Đóng phí nhận lớp";
+        public static string ContextForApplyTutor(string empName, string empsdt) 
+            => $"Đóng phí nhận lớp, ngay sau khí đóng hãy gửi hình ảnh qua zalo của nhân viên ${empName}: {empsdt}";
+        public const bool DEPOSIT_TYPE = true;
     }
 }

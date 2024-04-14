@@ -25,7 +25,7 @@ public partial class Tutor
 
     public short AcademicYearTo { get; set; }
 
-    public bool? IsActive { get; set; } = true;
+    public bool? IsActive { get; set; }
 
     public int DistrictId { get; set; }
 
@@ -44,6 +44,8 @@ public partial class Tutor
     public virtual IdentityCard Identity { get; set; } = null!;
 
     public virtual Status Status { get; set; } = null!;
+
+    public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
 
     public virtual ICollection<TutorApplyForm> TutorApplyForms { get; set; } = new List<TutorApplyForm>();
 

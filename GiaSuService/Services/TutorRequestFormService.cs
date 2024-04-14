@@ -62,7 +62,7 @@ namespace GiaSuService.Services
                     }
                     if (listTutor.Count > 0)
                     {
-                        int? statusId = (await _statusRepo.GetStatus(AppConfig.QueueStatus.APPROVAL.ToString(), AppConfig.queue_status))?.Id;
+                        int? statusId = (await _statusRepo.GetStatus(AppConfig.QueueStatus.PENDING.ToString(), AppConfig.queue_status))?.Id;
                         if (statusId == null)
                         {
                             return new ResponseService { Success = false, Message = "Việc chọn gia sư không có lỗi vui lòng làm lại" };

@@ -139,31 +139,31 @@ namespace GiaSuService.Repository
 
                     if (status.Name.Equals(AppConfig.QueueStatus.APPROVAL.ToString().ToLower()))
                     {
-                        int? accountTutorId = (await _context.Tutors.Select(p => new {p.Id, p.AccountId})
-                                                .FirstOrDefaultAsync(p => p.Id == tutorId))?.AccountId;
-                        if(accountTutorId == null)
-                        {
-                            throw new NullReferenceException();
-                        }
-
                         var price = (await _context.Grades.FindAsync(tutorQueue.GradeId))?.Fee;
                         if (price == null)
                         {
                             throw new NullReferenceException();
                         }
+
+                        var employeeProfile = await _context.Employees.Select(p => new {p.FullName, p.Id, p.Account.Phone}).FirstOrDefaultAsync(p => p.Id == employeeId);
+                        if (employeeProfile == null)
+                        {
+                            throw new NullReferenceException();
+                        }
+
                         TransactionHistory newTransaction = new TransactionHistory()
                         {
                             CreateDate = DateTime.Now,
-                            AccountId = (int)accountTutorId,
-                            Context = AppConfig.ContextForApplyTutor,
+                            TutorId = tutorId,
+                            Context = AppConfig.ContextForApplyTutor(employeeProfile.FullName, employeeProfile.Phone),
                             EmployeeId = employeeId,
-                            PaymentAmount =  (decimal)price,
+                            PaymentAmount = (decimal)price,
                             FormId = requestId,
-                            
+                            TypeTransaction = AppConfig.DEPOSIT_TYPE
                         };
 
                         _context.TransactionHistories.Add(newTransaction);
-                        throw new NotImplementedException();
+                        //throw new NotImplementedException();
                         //await _context.SaveChangesAsync();
                     }
 

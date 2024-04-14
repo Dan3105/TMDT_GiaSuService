@@ -7,7 +7,7 @@ public partial class TransactionHistory
 {
     public int Id { get; set; }
 
-    public int TypeTransactionId { get; set; }
+    public bool TypeTransaction { get; set; }
 
     public DateTime CreateDate { get; set; }
 
@@ -19,15 +19,13 @@ public partial class TransactionHistory
 
     public int EmployeeId { get; set; }
 
-    public int AccountId { get; set; }
+    public int TutorId { get; set; }
 
     public int FormId { get; set; }
-
-    public virtual Account Account { get; set; } = null!;
 
     public virtual Employee Employee { get; set; } = null!;
 
     public virtual RequestTutorForm Form { get; set; } = null!;
 
-    public virtual TypeTransaction TypeTransaction { get; set; } = null!;
+    public virtual Tutor Tutor { get; set; } = null!;
 }

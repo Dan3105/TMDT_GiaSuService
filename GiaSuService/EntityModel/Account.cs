@@ -27,7 +27,5 @@ public partial class Account
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
-
     public virtual Tutor? Tutor { get; set; }
 }

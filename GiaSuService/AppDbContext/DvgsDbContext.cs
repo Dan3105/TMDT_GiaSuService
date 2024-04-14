@@ -54,8 +54,6 @@ public partial class DvgsDbContext : DbContext
 
     public virtual DbSet<TutorType> TutorTypes { get; set; }
 
-    public virtual DbSet<TypeTransaction> TypeTransactions { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Name=ConnectionStrings:TutorConnection");
 
@@ -96,7 +94,7 @@ public partial class DvgsDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("account_roleid_fkey");
         });
-                
+
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("customer_pkey");
@@ -210,14 +208,13 @@ public partial class DvgsDbContext : DbContext
             entity.HasIndex(e => e.Value, "grade_value_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Fee)
+                .HasColumnType("money")
+                .HasColumnName("fee");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
             entity.Property(e => e.Value).HasColumnName("value");
-
-            entity.Property(e => e.Fee)
-            .HasColumnType("money")
-            .HasColumnName("fee");
         });
 
         modelBuilder.Entity<IdentityCard>(entity =>
@@ -265,9 +262,7 @@ public partial class DvgsDbContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("nextval('requeststatus_id_seq'::regclass)")
                 .HasColumnName("id");
-            entity.Property(e => e.Context)
-                .HasMaxLength(255)
-                .HasColumnName("context");
+            entity.Property(e => e.Context).HasColumnName("context");
             entity.Property(e => e.CreateDate)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -444,10 +439,11 @@ public partial class DvgsDbContext : DbContext
 
             entity.ToTable("transaction_history");
 
+            entity.HasIndex(e => new { e.TutorId, e.FormId, e.TypeTransaction }, "ck_tutorid_formid_typetransaction").IsUnique();
+
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("nextval('transactionhistory_id_seq'::regclass)")
                 .HasColumnName("id");
-            entity.Property(e => e.AccountId).HasColumnName("account_id");
             entity.Property(e => e.Context)
                 .HasMaxLength(255)
                 .HasColumnName("context");
@@ -463,12 +459,8 @@ public partial class DvgsDbContext : DbContext
             entity.Property(e => e.PaymentDate)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("payment_date");
-            entity.Property(e => e.TypeTransactionId).HasColumnName("type_transaction_id");
-
-            entity.HasOne(d => d.Account).WithMany(p => p.TransactionHistories)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("transactionhistory_accountid_fkey");
+            entity.Property(e => e.TutorId).HasColumnName("tutor_id");
+            entity.Property(e => e.TypeTransaction).HasColumnName("type_transaction");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.TransactionHistories)
                 .HasForeignKey(d => d.EmployeeId)
@@ -480,10 +472,10 @@ public partial class DvgsDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("transactionhistory_formid_fkey");
 
-            entity.HasOne(d => d.TypeTransaction).WithMany(p => p.TransactionHistories)
-                .HasForeignKey(d => d.TypeTransactionId)
+            entity.HasOne(d => d.Tutor).WithMany(p => p.TransactionHistories)
+                .HasForeignKey(d => d.TutorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("transactionhistory_typetransactionid_fkey");
+                .HasConstraintName("transaction_history_tutor_id_fkey");
         });
 
         modelBuilder.Entity<Tutor>(entity =>
@@ -705,22 +697,6 @@ public partial class DvgsDbContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("name");
             entity.Property(e => e.Value).HasColumnName("value");
-        });
-
-        modelBuilder.Entity<TypeTransaction>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("typetransaction_pkey");
-
-            entity.ToTable("type_transaction");
-
-            entity.HasIndex(e => e.Name, "typetransaction_name_key").IsUnique();
-
-            entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('typetransaction_id_seq'::regclass)")
-                .HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
         });
 
         OnModelCreatingPartial(modelBuilder);
