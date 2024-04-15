@@ -17,7 +17,8 @@ namespace GiaSuService.Models.EmployeeViewModel
         public string Avatar { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string TutorType { get; set; } = string.Empty;
-        public string StatusQueue { get; set; } = string.Empty; 
+        public string StatusQueue { get; set; } = string.Empty;
+        public bool IsHaveTransaction { get; set; } = false;
     }
 
 }

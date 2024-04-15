@@ -18,15 +18,17 @@ namespace GiaSuService.Controllers
         private readonly IAddressService _addressService;
         private readonly ICatalogService _catalogService;
         private readonly IProfileService _profileService;
+        private readonly ITransactionService _transactionService;
 
         public EmployeeController(ITutorService tutorService, ITutorRequestFormService tutorRequestFormService, IAddressService addressService, ICatalogService catalogService,
-            IProfileService profileService)
+            IProfileService profileService, ITransactionService transactionService)
         {
             _tutorService = tutorService;
             _tutorRequestService = tutorRequestFormService;
             _addressService = addressService;
             _catalogService = catalogService;
             _profileService = profileService;
+            _transactionService = transactionService;
         }
 
         public IActionResult Index()
@@ -356,6 +358,51 @@ namespace GiaSuService.Controllers
             ResponseService response = await _tutorRequestService.UpdateTutorQueue(requestId, tutorId, newStatus, (int)profileId);
 
             return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorTransactionDetail(int tutorId, int requestId)
+        {
+            var result = await _transactionService.GetDetailTutorQueueTransaction(tutorId, requestId);
+            return View(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateRefundTransaction(int tutorId, int requestId)
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "")
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Vui lòng đăng nhập lại để thực hiện thao tác";
+                return RedirectToAction("");
+            }
+
+            int? empId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.EMPLOYEEROLENAME);
+
+            if (empId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Bạn không phải nhân viên để thực hiện thao tác này";
+                return RedirectToAction("");
+            }
+
+            var response = await _transactionService.CreateRefundService(tutorId, requestId, (int)empId);
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+            return RedirectToAction("TutorTransactionDetail", "Employee", new { tutorId, requestId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateDepositTransaction(int tutorId, int requestId)
+        {
+
+            return RedirectToAction("TutorTransactionDetail", "Employee", new { tutorId, requestId });
         }
     }
 }

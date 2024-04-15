@@ -1,4 +1,6 @@
-﻿using NpgsqlTypes;
+﻿using GiaSuService.EntityModel;
+using NpgsqlTypes;
+using System.Globalization;
 
 namespace GiaSuService.Configs
 {
@@ -29,7 +31,8 @@ namespace GiaSuService.Configs
             PENDING,
             APPROVAL,
             DENY,
-            HANDOVER
+            HANDOVER,
+            REFUND,
         }
 
         public const string CLAIM_TYPE_AVATAR = "Avatar";
@@ -57,8 +60,17 @@ namespace GiaSuService.Configs
         public const string TUTOR_SELECTED_COOKIE = "tutors_cookie";
 
         public const int ROWS_ACCOUNT_LIST = 10;
-        public static string ContextForApplyTutor(string empName, string empsdt) 
-            => $"Đóng phí nhận lớp, ngay sau khí đóng hãy gửi hình ảnh qua zalo của nhân viên ${empName}: {empsdt}";
+        public static string ContextForApplyTutor(string empName, string empphone) 
+            => $"Đóng phí nhận lớp, ngay sau khí đóng hãy gửi hình ảnh qua zalo của nhân viên ${empName}: {empphone}";
+
+        public static string ContextForRefundTransaction(string tutorName, string empphone, string empName, decimal price)
+        {
+            CultureInfo cultureInfo = CultureInfo.GetCultureInfo("vi-VN");
+
+            string vndString = price.ToString("c", cultureInfo);
+            return $"Hoàn trả {vndString} cho gia sư {tutorName}, được thực hiện bởi {empName}, có thể liên lạc thông tin của nhân viên qua số điện thoại {empphone}";
+        }
+
         public const bool DEPOSIT_TYPE = true;
     }
 }

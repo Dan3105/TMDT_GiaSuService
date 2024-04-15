@@ -20,9 +20,10 @@
             <tr>
                 <th>Ảnh</th>
                 <th>Họ Tên</th>
-                <th>Thông tin gia sư</th>
-                <th class="border-end">Trạng thái hiện tại</th>
-                <th class="text-center">Hành động cập nhật</th>
+                <th>Thông tin</th>
+                <th class="border-end">Trạng thái</th>
+                <th class="text-center border-end">Hành động cập nhật</th>
+                <th class="text-center">Thông tin hóa đơn</th>
             </tr>
         </thead>
         <tbody id="tutor_container">
@@ -43,7 +44,10 @@
                 $("#tutor_container").empty();
                 $.each(response.tutors, function (index, item) {
                     var currentStatus = item.statusQueue.toLowerCase(); 
-                    let queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
+                    var queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
+                    var href = item.isHaveTransaction ? `/Employee/TutorTransactionDetail?tutorId=${item.tutorId}&requestId=${thisRequestId}` : "#";
+                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Detail</a>`
+
                     var itemHtml = `<tr>
                                         <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
                                         <td>
@@ -54,18 +58,23 @@
                                         </td>
                                         <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Detail</a></td>
                                         <td class="text-center text-capitalize border-end">${item.statusQueue}</td>
-                                        <td>
+                                        <td class="border-end">
                                             <div class="row d-flex align-items-center">
-                                                <div class="col-md-12 col-lg-6">
+                                                <div class="col-md-12 col-lg-7">
                                                            <select class="form-select" id="statusSelect_${item.tutorId}">
                                                         ${queueStatuses.map(status => `<option value="${status}" ${currentStatus === status ? 'selected' : ''}>${status.charAt(0).toUpperCase() + status.slice(1)}</option>`).join('')}
                                                     </select>
                                                 </div>
-                                                <div class="col-md-12 col-lg-6">
-                                                        <button type="button" class="btn btn-primary m-2" onclick="updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'statusSelect_${item.tutorId}')">
+                                                <div class="col-md-12 col-lg-5">
+                                                        <button type="button" class="btn btn-primary m-1" onclick="updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'statusSelect_${item.tutorId}')">
                                                     Cập nhật
                                                 </button>
                                                 </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="h-100 d-flex align-items-center justify-content-center text-center">
+                                                    ${aTagTransaction}
                                             </div>
                                         </td>
                                     </tr>`;

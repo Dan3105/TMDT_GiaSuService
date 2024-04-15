@@ -18,20 +18,18 @@ namespace GiaSuService.Controllers
         private readonly ITutorService _tutorService;
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
-        private readonly ITutorRequestFormService _tutorRequestService;
-        private readonly IAuthService _authService;
         private readonly IProfileService _profileService;
+        private readonly ITransactionService _transactionService;
 
 
         public TutorController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
-            ITutorRequestFormService tutorRequestService, IAuthService authService, IProfileService profileService)
+             IProfileService profileService, ITransactionService transactionService)
         {
             _tutorService = tutorService;
             _catalogService = catalogService;
             _addressService = addressService;
-            _tutorRequestService = tutorRequestService;
-            _authService = authService;
             _profileService = profileService;
+            _transactionService = transactionService;
         }
 
         public IActionResult Index()
@@ -195,6 +193,25 @@ namespace GiaSuService.Controllers
 
             var listApplyForm = await _tutorService.GetTutorApplyForm((int)tutorId);
             return View(listApplyForm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorTransactionList()
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var results = await _transactionService.GetListTutorTransaction((int)tutorId);
+            return View(results);   
         }
     }
 }

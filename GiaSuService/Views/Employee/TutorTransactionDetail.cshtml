@@ -1,0 +1,84 @@
+﻿@using GiaSuService.Models.EmployeeViewModel;
+@model TutorTransactionDetailViewModel
+
+<div class="container">
+    @if (Model.TransactionDeposit != null)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h2>Transaction Deposit</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Transaction ID:</strong> @Model.TransactionDeposit.TransactionId</p>
+                <p><strong>Employee Name:</strong> @Model.TransactionDeposit.EmployeeName</p>
+                <p><strong>Tutor Name:</strong> @Model.TransactionDeposit.TutorName</p>
+                <p><strong>Create Date:</strong> @Model.TransactionDeposit.CreateDate</p>
+                <p><strong>Payment Date:</strong> @(string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate) ? "Chưa thanh toán" : Model.TransactionDeposit.PaymentDate)</p>
+                <p><strong>Context:</strong> @Model.TransactionDeposit.Context</p>
+                <p><strong>Price:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
+                @if (Model.TransactionRefund == null && string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate))
+                {
+                    <div>
+                        <form class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
+                            <input type="hidden" name="TransactionID" value="@Model.TransactionDeposit.TransactionId">
+                            <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.TransactionRefund != null)
+    {
+        <div class="card mt-3">
+            <div class="card-header">
+                <h2>Transaction Refund</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Transaction ID:</strong> @Model.TransactionRefund.TransactionId</p>
+                <p><strong>Employee Name:</strong> @Model.TransactionRefund.EmployeeName</p>
+                <p><strong>Tutor Name:</strong> @Model.TransactionRefund.TutorName</p>
+                <p><strong>Create Date:</strong> @Model.TransactionRefund.CreateDate</p>
+                <p><strong>Payment Date:</strong> @(string.IsNullOrEmpty(Model.TransactionRefund.PaymentDate) ? "Chưa thanh toán" : Model.TransactionRefund.PaymentDate)</p>
+                <p><strong>Context:</strong> @Model.TransactionRefund.Context</p>
+                <p><strong>Price:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionRefund.Price)</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mt-4 d-flex justify-content-center align-items-center">
+            @if(Model.TransactionDeposit != null)
+            {
+                <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit.TutorId, requestId=Model.TransactionDeposit.RequestId})" class="btn btn-outline-warning">Tạo hóa đơn hoàn tiền</a>
+            }
+            else{<span class="text-danger">Hệ thống không tìm thấy bất cứ hóa đơn nào của gia sư tới đơn tìm này</span>}
+        </div>
+    }
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var refundLink = document.getElementById('refundLink');
+        if (refundLink) {
+            refundLink.addEventListener('click', function (event) {
+                var confirmation = confirm("Are you sure you want to create a refund transaction?");
+                if (!confirmation) {
+                    event.preventDefault(); // Prevent the default action (opening the link) if user cancels
+                }
+            });
+        }
+
+        var paymentLink = document.getElementById('confirmPayment');
+        if (paymentLink) {
+            paymentLink.addEventListener('click', function (event) {
+                var confirmation = confirm("Are you sure you want to create a refund transaction?");
+                if (!confirmation) {
+                    event.preventDefault(); // Prevent the default action (opening the link) if user cancels
+                }
+            });
+        }
+    });
+</script>

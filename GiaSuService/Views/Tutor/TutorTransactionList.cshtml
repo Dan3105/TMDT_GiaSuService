@@ -1,0 +1,36 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+@model IEnumerable<TransactionDetailViewModel>
+
+@{
+    ViewBag.Title = "Transaction Details";
+}
+
+<h2>Transaction Details</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tutor</th>
+            <th>Employee</th>
+            <th>Create Date</th>
+            <th>Payment Date</th>
+            <th>Context</th>
+            <th>Price</th>
+            <th>Thông tin lớp học</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model)
+        {
+            <tr>
+                <td>@transaction.TutorName</td>
+                <td>@transaction.EmployeeName</td>
+                <td>@transaction.CreateDate</td>
+                <td>@(!string.IsNullOrEmpty(transaction.PaymentDate) ? transaction.PaymentDate : "Chưa thanh toán")</td>
+                <td>@transaction.Context</td>
+                <td>@transaction.Price</td>
+                <td><a href="#" class="btn btn-outline-info">Thông tin</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

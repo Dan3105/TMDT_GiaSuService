@@ -114,6 +114,12 @@ namespace GiaSuService.Repository
                 .ToListAsync();
             ;
 
+            foreach(var record in queries)
+            {
+                bool any = await _context.TransactionHistories.AnyAsync(p=> p.TutorId == record.TutorId && p.FormId == requestId);
+                record.IsHaveTransaction = any;
+            }
+
             return queries;
         }
 
@@ -167,9 +173,23 @@ namespace GiaSuService.Repository
                         //await _context.SaveChangesAsync();
                     }
 
+                    if (status.Name.Equals(AppConfig.QueueStatus.HANDOVER.ToString().ToLower()))
+                    {
+                        var statusType = await _context.StatusTypes.FirstOrDefaultAsync(p => p.Type.ToLower().Equals(AppConfig.form_status.ToLower()));
+                        if (statusType == null) { throw new NullReferenceException(); }
+                        var formStatus = await _context.Statuses.FirstOrDefaultAsync(p => p.Name.ToLower().Equals(AppConfig.FormStatus.HANDOVER.ToString().ToLower())
+                                                                                && p.StatusTypeId==statusType.Id);
+                        if (formStatus == null) { throw new NullReferenceException(); }
+
+                        await _context.RequestTutorForms
+                            .Where(p => p.Id == requestId)
+                            .ExecuteUpdateAsync(p => p.SetProperty(p => p.StatusId, formStatus.Id));
+                            
+                    }
+
                     await _context.TutorApplyForms
-                        .Where(p => p.TutorId == tutorId && p.TutorRequestId == requestId)
-                        .ExecuteUpdateAsync(builder => builder.SetProperty(p => p.StatusId, status.Id));
+                    .Where(p => p.TutorId == tutorId && p.TutorRequestId == requestId)
+                    .ExecuteUpdateAsync(builder => builder.SetProperty(p => p.StatusId, status.Id));
 
                     await _context.SaveChangesAsync();
                     transaction.Commit();
