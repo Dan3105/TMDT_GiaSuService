@@ -6,46 +6,46 @@
 }
 
 <div class="container">
-    <h1>Request Detail</h1>
+    <h1 class="pb-3">Chi tiết yêu cầu</h1>
     <div class="row">
         <div class="col-sm-5 border-end">
-            <h6>Thông tin đơn tìm gia sư</h6>
+            <h5>Thông tin đơn tìm gia sư</h5>
             <hr />
             <dl>
-                <dt>Created Date:</dt>
+                <dt>Ngày tạo:</dt>
                 <dd>@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
 
-                <dt>Expired Date:</dt>
+                <dt>Ngày hết hạn:</dt>
                 <dd>@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
 
-                <dt>Request Status:</dt>
+                <dt>Trạng thái yêu cầu:</dt>
                 <dd>@Model.RequestStatus</dd>
 
-                <dt>Number of students:</dt>
+                <dt>Số lượng học sinh:</dt>
                 <dd>@Model.NStudent</dd>
 
                 @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
                 {
-                    <dt>Customer name:</dt>
+                    <dt>Tên khách hàng:</dt>
                     <dd>@Model.CustomerFullName</dd>
                 }
 
-                <dt>Grade Name:</dt>
+                <dt>Khối lớp:</dt>
                 <dd>@Model.GradeName</dd>
 
-                <dt>Subject Name:</dt>
+                <dt>Tên môn học:</dt>
                 <dd>@Model.SubjectName</dd>
 
                 @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
                 {
-                    <dt>Address:</dt>
+                    <dt>Địa chỉ chi tiết:</dt>
                     <dd>@Model.Address</dd>
                 }
 
-                <dt>Location:</dt>
+                <dt>Địa chỉ:</dt>
                 <dd>@Model.Location</dd>
 
-                <dt>Additional details:</dt>
+                <dt>Thông tin thêm:</dt>
                 <dd>@Model.AdditionalDetail</dd>
             </dl>
         </div>

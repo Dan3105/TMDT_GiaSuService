@@ -1,7 +1,10 @@
 ﻿@using GiaSuService.Models.IdentityViewModel
 
 @model ProfileViewModel
-
+@{
+    ViewData["Title"] = "Employee Profile";
+}
+<h1>Thông tin nhân viên</h1>
 
 <div class="container">
     <div class="row">
@@ -11,7 +14,7 @@
         <div class="col-md-8">
             <form method="post" asp-action="EmployeeProfile">
                 <div class="form-group">
-                    <label asp-for="FullName">Full Name:</label>
+                    <label asp-for="FullName">Tên nhân viên:</label>
                     <span class="form-text text-muted">@Model.FullName</span>
                 </div>
                 <div class="form-group">
@@ -19,51 +22,51 @@
                     <span class="form-text text-muted">@Model.Email</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Phone">Phone:</label>
+                    <label asp-for="Phone">Số điện thoại:</label>
                     <span class="form-text text-muted">@Model.Phone</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="BirthDate">Birth Date:</label>
+                    <label asp-for="BirthDate">Ngày sinh:</label>
                     <span class="form-text text-muted">@Model.BirthDate.ToString("dd/MM/yyyy")</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Gender">Gender:</label>
+                    <label asp-for="Gender">Giới tính:</label>
                     <span class="form-text text-muted">@Model.Gender</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="AddressDetail">Address:</label>
+                    <label asp-for="AddressDetail">Địa chỉ chi tiết:</label>
                     <span class="form-text text-muted">@Model.AddressDetail</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="IdentityCard">Identity Card:</label>
+                    <label asp-for="IdentityCard">Số CCCD:</label>
                     <input type="text" asp-for="IdentityCard" class="form-control" />
                     <span asp-validation-for="IdentityCard" class="text-danger"></span>
                 </div>
                 <div class="row form-group">
                     <div class="col">
-                        <img src="@Model.FrontIdentityCard" alt="Front identity card"/>
+                        <img src="@Model.FrontIdentityCard" alt="Mặt trước CCCD" />
                     </div>
                     <div class=col>
-                        <img src="@Model.BackIdentityCard" alt="Back identity card"/>
+                        <img src="@Model.BackIdentityCard" alt="Mặt sau CCCD" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LockStatus">Lock Status:</label>
+                    <label asp-for="LockStatus">Trạng thái tài khoản:</label>
                     <div class="form-check form-switch">
                         <input class="form-check-input customformcheck-input" type="checkbox" asp-for="LockStatus" id="lockCheckbox" />
                         <label class="form-check-label" id="lockStatusLabel">
                             @if (@Model.LockStatus)
                             {
-                                <span class="text-danger">Locked User</span>
+                                <span class="text-danger">Đã khóa</span>
                             }
                             else
                             {
-                                <span class="text-success">Active User</span>
+                                <span class="text-success">Đang hoạt động</span>
                             }
                         </label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary customstyle-button">Update Profile</button>
+                <button type="submit" class="btn btn-primary customstyle-button">Cập nhật thông tin</button>
             </form>
         </div>
 

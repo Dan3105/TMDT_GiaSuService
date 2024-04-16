@@ -4,6 +4,9 @@
 @using GiaSuService.Models.TutorViewModel;
 @model TutorUpdateRequestViewModel
 
+@{
+    ViewData["Title"] = "Tutor Profile";
+}
 
 <div class="container">
     <div class="row">
@@ -39,23 +42,23 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Fullname">Họ tên:</label>
-                    <input type="text" asp-for="Form.Fullname" class="form-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.Fullname" class="form-control customform-control" style="margin-bottom: 10px;" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Email">Email:</label>
-                    <input type="text" asp-for="Form.Email" class="form-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.Email" class="form-control customform-control" style="margin-bottom: 10px;" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Phone">Số điện thoại:</label>
-                    <input type="text" asp-for="Form.Phone" class="form-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.Phone" class="form-control customform-control" style="margin-bottom: 10px;" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Birth">Ngày sinh:</label>
-                    <input type="date" asp-for="Form.Birth" class="form-control" style="margin-bottom: 10px;" value="@Model.Form.Birth?.ToString("yyyy-MM-dd")" />
+                    <input type="date" asp-for="Form.Birth" class="form-control customform-control" style="margin-bottom: 10px;" value="@Model.Form.Birth?.ToString("yyyy-MM-dd")" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Gender">Giới tính:</label>
-                    <select class="form-control" asp-for="Form.Gender" style="margin-bottom: 10px;">
+                    <select class="form-control customform-control" asp-for="Form.Gender" style="margin-bottom: 10px;">
                         <option value="M">Nam</option>
                         <option value="F">Nữ</option>
                     </select>
@@ -63,22 +66,22 @@
                 <div class="form-group">
                     <div class="form-group">
                         <label for="province">Tỉnh / Thành phố:</label>
-                        <select class="form-select" asp-for="Form.SelectedProvinceId" id="province" onchange="getDistricts()" style="margin-bottom: 10px;">
+                        <select class="form-select customform-control" asp-for="Form.SelectedProvinceId" id="province" onchange="getDistricts()" style="margin-bottom: 10px;">
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="district">Quận / Huyện:</label>
-                        <select class="form-select" asp-for="Form.SelectedDistrictId" id="district" style="margin-bottom: 10px;">
+                        <select class="form-select customform-control" asp-for="Form.SelectedDistrictId" id="district" style="margin-bottom: 10px;">
                         </select>
                     </div>
 
                     <label asp-for="Form.AddressDetail">Số nhà, tên đường:</label>
-                    <input type="text" asp-for="Form.AddressDetail" class="form-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.AddressDetail" class="form-control customform-control" style="margin-bottom: 10px;" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.IdentityCard">Số CMND/CCCD:</label>
-                    <input type="text" asp-for="Form.IdentityCard" class="form-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
                 </div>
                 <div class="row form-group">
                     <div class="col">
@@ -94,23 +97,23 @@
                 @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
                 <div class="form-group">
                     <label asp-for="Form.College">Trường đào tạo:</label>
-                    <input type="text" asp-for="Form.College" class="form-control" style="margin-bottom: 10px;">
+                    <input type="text" asp-for="Form.College" class="form-control customform-control" style="margin-bottom: 10px;">
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Form.Area">Chuyên ngành:</label>
-                    <input type="text" asp-for="Form.Area" class="form-control" style="margin-bottom: 10px;">
+                    <input type="text" asp-for="Form.Area" class="form-control customform-control" style="margin-bottom: 10px;">
                 </div>
                 <div class="form-group">
                     <label>Niên khóa:</label>
                     <div class="row">
                         <div class="col-6">
                             <label asp-for="Form.Academicyearfrom">Từ năm:</label>
-                            <input type="number" asp-for="Form.Academicyearfrom" class="form-control" style="margin-bottom: 10px;">
+                            <input type="number" asp-for="Form.Academicyearfrom" class="form-control customform-control" style="margin-bottom: 10px;">
                         </div>
                         <div class="col-6">
                             <label asp-for="Form.Academicyearto">Đến năm:</label>
-                            <input type="number" asp-for="Form.Academicyearto" class="form-control" style="margin-bottom: 10px;">
+                            <input type="number" asp-for="Form.Academicyearto" class="form-control customform-control" style="margin-bottom: 10px;">
                         </div>
                     </div>
                 </div>
@@ -126,7 +129,7 @@
 
                 <div class="form-group">
                     <label asp-for="Form.Additionalinfo">Thông tin thêm:</label>
-                    <input type="text" asp-for="Form.Additionalinfo" class="form-control" style="margin-bottom: 10px;">
+                    <input type="text" asp-for="Form.Additionalinfo" class="form-control customform-control" style="margin-bottom: 10px;">
                 </div>
 
                 <div class="form-group">

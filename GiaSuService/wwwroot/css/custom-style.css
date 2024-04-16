@@ -37,9 +37,20 @@ h5 {
     color: white;
 }
 
+.customstyle-button:hover {
+        background-color: var(--sidebar-text-hover-color);
+        color: #FFF;
+}
+
+
 .customformcheck-input {
     /*border-color: var(--box-color);*/
     border-color: #F3CCF3
+}
+
+.customformcheck-input:checked {
+        background-color: var(--sidebar-text-hover-color);
+        border-color: #F3CCF3;
 }
 
 

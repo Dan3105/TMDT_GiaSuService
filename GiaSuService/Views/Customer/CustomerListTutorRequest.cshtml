@@ -1,9 +1,11 @@
 ﻿@using GiaSuService.Configs;
 @using GiaSuService.Models.CustomerViewModel;
 @model IEnumerable<CustomerTutorRequestViewModel>
-
+@{
+    ViewData["Title"] = "Customer Tutor Requests";
+}
 <div class="container">
-    <h1 class="h3">Customer Tutor Requests</h1>
+    <h1 class="h3">Đơn tìm gia sư của tôi</h1>
 
     <div class="row">
         <div class="col-md-12">
@@ -14,16 +16,17 @@
                         <div class="row w-100">
                             <div class="col-md-9">
                                 <h5 class="mb-1">@item.SubjectName - @item.GradeName</h5>
-                                <p class="mb-1">Students: @item.Students</p>
-                                <small>Request ID: @item.RequestId</small>
+                                <p class="mb-1">Số lượng học sinh: @item.Students</p>
+                                <p class="mb-1">Số lượng học sinh: @item.Students</p>
+                                <small>Mã yêu cầu: @item.RequestId</small>
                                 @if (!string.IsNullOrEmpty(item.AdditionalDetail))
                                 {
-                                    <p class="mt-3 mb-0">Additional Details: @item.AdditionalDetail</p>
+                                    <p class="mt-3 mb-0">Thông tin thêm: @item.AdditionalDetail</p>
                                 }
                             </div>
                             <div class="col-md-3 row">
                                 <div class="col-md-7 d-flex justify-content-center align-items-center">
-                                    <a href="@Url.Action("TutorRequestEdit", "Customer", new{id = item.RequestId})" class="btn btn-sm btn-outline-primary me-2">Details</a>
+                                    <a href="@Url.Action("TutorRequestEdit", "Customer", new{id = item.RequestId})" class="btn btn-sm btn-outline-primary me-2 customstyle-button">Chi tiết</a>
                                 </div>
                                 <div class="col-md-5 d-flex justify-content-end align-items-center">
                                     @if(item.StatusName == AppConfig.RegisterStatus.DENY.ToString().ToLower())

@@ -6,13 +6,13 @@
 }
 
 <div class="container">
-    <h1>Request Detail</h1>
+    <h1>Chi tiết yêu cầu</h1>
     <div class="row">
         <div class="col-sm-5 border-end">
             <h6>Thông tin đơn đăng ký</h6>
             <hr />
             <dl>
-                <dt>Full Name Requester:</dt>
+                <dt>Tên người yêu cầu:</dt>
                 <dd>@Model.FullNameRequester</dd>
                 <dt>Grade Name:</dt>
                 <dd>@Model.GradeName</dd>
@@ -43,9 +43,9 @@
                                         <img src="@item.Avatar" alt="Avatar" class="img-fluid" style="width: 100px; height: 100px;">
                                         <div class="m-lg-2">
                                             <h5 class="card-text fs-6">Gia Sư: @item.FullName</h5>
-                                            <p class="card-text mb-1">Tutor Type: @item.TutorType</p>
-                                            <p class="card-text mb-1">College: @item.College</p>
-                                            <p class="card-text mb-1">Area: @item.Area</p>
+                                            <p class="card-text mb-1">Trình độ gia sư: @item.TutorType</p>
+                                            <p class="card-text mb-1">Trường học: @item.College</p>
+                                            <p class="card-text mb-1">Chuyên ngành: @item.Area</p>
                                         </div>
                                     </div>
                                 </div>

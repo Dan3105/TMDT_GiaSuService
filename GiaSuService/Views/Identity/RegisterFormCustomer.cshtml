@@ -1,13 +1,14 @@
 ﻿@using GiaSuService.Models.UtilityViewModel;
 @model RegisterFormViewModel
 @{
+    ViewData["Title"] = "Register Form Customer";
 }
 
 <h1>Đăng ký tài khoản khách hàng</h1>
 <form asp-action="RegisterFormCustomer" asp-controller="Identity" method="post">
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
-        <input type="text" class="form-control customform-control" id="fullName" placeholder="Enter your full name" asp-for="RegisterForm!.FullName">
+        <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="RegisterForm!.FullName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.FullName, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">

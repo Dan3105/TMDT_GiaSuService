@@ -1,7 +1,9 @@
 ﻿@using GiaSuService.Configs;
 @using GiaSuService.Models.TutorViewModel;
 @model IEnumerable<TutorApplyFormViewModel>
-
+@{
+    ViewData["Title"] = "List Tutor Apply Form";
+}
 <div class="container">
     <h1 class="h3">Danh sách các đơn đã ứng tuyển</h1>
 
@@ -15,25 +17,25 @@
                             <div class="col-md-9">
                                 <h5 class="mb-1">@item.SubjectName - @item.GradeName</h5>
 
-                                <small>Request ID: @item.RequestId</small> @* Chính thức phải ẩn cái này đi *@
+                                <small>Mã yêu cầu: @item.RequestId</small> @* Chính thức phải ẩn cái này đi *@
 
-                                <p class="mb-1">Expired date: @item.ExpiredDate</p>
+                                <p class="mb-1">Ngày hết hạn: @item.ExpiredDate</p>
 
-                                <p class="mb-1">Students: @item.Students</p>
+                                <p class="mb-1">Số lượng học sinh: @item.Students</p>
 
                                 @if (!string.IsNullOrEmpty(item.AdditionalDetail))
                                 {
-                                    <p class="mt-3 mb-0">Additional Details: @item.AdditionalDetail</p>
+                                    <p class="mt-3 mb-0">Thông tin thêm: @item.AdditionalDetail</p>
                                 }
                                 else
                                 {
-                                    <p class="mt-3 mb-0">Additional Details: Không có</p>
+                                    <p class="mt-3 mb-0">Thông tin thêm: Không có</p>
                                 }
                             </div>
                             <div class="col-md-3 row">
                                 <div class="col-md-7 d-flex justify-content-center align-items-center">
                                     <a href="@Url.Action("TutorRequestProfile", "Tutor", new{requestId = item.RequestId, queueStatus = item.StatusName})" 
-                                    class="btn btn-sm btn-outline-primary me-2">Details</a>
+                                    class="btn btn-sm btn-outline-primary me-2 customstyle-button">Chi tiết</a>
                                     
                                     
                                     @* @if (item.StatusName == AppConfig.QueueStatus.PENDING.ToString().ToLower() ||

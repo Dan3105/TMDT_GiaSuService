@@ -4,6 +4,9 @@
 
 @model ProfileViewModel
 @{
+    ViewData["Title"] = "Profile";
+}
+@{
     var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
     bool isEmployee = userRole == AppConfig.EMPLOYEEROLENAME;
 }

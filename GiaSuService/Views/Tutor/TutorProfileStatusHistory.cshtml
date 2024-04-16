@@ -1,14 +1,18 @@
 ﻿@using GiaSuService.Models.TutorViewModel;
 @using GiaSuService.Configs;
 @model IEnumerable<TutorProfileStatusDetailHistoryViewModel>
+@{
+    ViewData["Title"] = "Tutor Profile Status History";
+}
+<h1>Lịch sử chỉnh sửa tài khoản</h1>
 
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Create Date</th>
-            <th>Context</th>
-            <th>Detail</th>
+            <th>Thứ tự</th>
+            <th>Ngày tạo</th>
+            <th>Nội dung</th>
+            <th>Chi tiết</th>
         </tr>
     </thead>
     <tbody>
