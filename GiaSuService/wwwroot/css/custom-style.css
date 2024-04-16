@@ -82,7 +82,10 @@ input.customform-control {
 }
 
 .img {
-    width: 50%;
+    width: 60%;
     display: block;
     margin: auto;
+}
+#imgimg{
+    width: 40%
 }
