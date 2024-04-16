@@ -1,0 +1,71 @@
+﻿@using GiaSuService.Models.TutorViewModel
+@using GiaSuService.Configs;
+@model RequestTutorApplyDetailViewModel
+@{
+    ViewData["Title"] = "Request Detail";
+}
+
+<div class="container">
+    <h1>Request Detail</h1>
+    <div class="row">
+        <div class="col-sm-5 border-end">
+            <h6>Thông tin đơn tìm gia sư</h6>
+            <hr />
+            <dl>
+                <dt>Created Date:</dt>
+                <dd>@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+
+                <dt>Expired Date:</dt>
+                <dd>@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
+
+                <dt>Request Status:</dt>
+                <dd>@Model.RequestStatus</dd>
+
+                <dt>Number of students:</dt>
+                <dd>@Model.NStudent</dd>
+
+                @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
+                {
+                    <dt>Customer name:</dt>
+                    <dd>@Model.CustomerFullName</dd>
+                }
+
+                <dt>Grade Name:</dt>
+                <dd>@Model.GradeName</dd>
+
+                <dt>Subject Name:</dt>
+                <dd>@Model.SubjectName</dd>
+
+                @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
+                {
+                    <dt>Address:</dt>
+                    <dd>@Model.Address</dd>
+                }
+
+                <dt>Location:</dt>
+                <dd>@Model.Location</dd>
+
+                <dt>Additional details:</dt>
+                <dd>@Model.AdditionalDetail</dd>
+            </dl>
+        </div>
+        
+        <hr />
+
+
+    </div>
+    <div class="d-flex justify-content-center">
+
+        @if ( (Model.RequestStatus == AppConfig.FormStatus.APPROVAL.ToString() || 
+               Model.RequestStatus == AppConfig.FormStatus.HANDOVER.ToString()) 
+               &&
+              (Model.QueueStatus == AppConfig.QueueStatus.PENDING.ToString().ToLower() ||
+               Model.QueueStatus == AppConfig.QueueStatus.APPROVAL.ToString().ToLower()) )
+        {
+            <a class="btn btn-danger m-2" href="@Url.Action("CancelApplyRequest", "Tutor", new { requestId=@Model.RequestId})">Huỷ ứng tuyển</a>
+        }
+        
+    </div>
+
+
+</div>

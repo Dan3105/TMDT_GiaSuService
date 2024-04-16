@@ -227,5 +227,27 @@ namespace GiaSuService.Repository
                 .Select(p => p.TutorApply)
                 .ToListAsync();
         }
+
+        public async Task<RequestTutorApplyDetailViewModel?> GetTutorRequestProfile(int requestId)
+        {
+            var result = await _context.RequestTutorForms
+                .AsNoTracking()
+                .Select(p => new RequestTutorApplyDetailViewModel
+                {
+                    RequestId = p.Id,
+                    NStudent = p.Students,
+                    CustomerFullName = p.Customer.FullName,
+                    Address = $"{p.AddressDetail}",
+                    Location = $"{p.District.Name}, {p.District.Province.Name}",
+                    AdditionalDetail = $"{p.AdditionalDetail}",
+                    CreatedDate = p.CreateDate,
+                    RequestStatus = p.Status.Name.ToString(),
+                    ExpiredDate = p.CreateDate,
+                    GradeName = p.Grade.Name,
+                    SubjectName = p.Subject.Name,
+
+                }).FirstOrDefaultAsync(p => p.RequestId == requestId);
+            return result;
+        }
     }
 }

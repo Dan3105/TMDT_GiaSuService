@@ -32,5 +32,6 @@ namespace GiaSuService.Repository.Interface
         public Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetTutorProfilesHistoryDetail(int tutorId);
 
         public Task<List<TutorApplyFormViewModel>> GetListTutorApplyForm(int tutorId);
+        public Task<RequestTutorApplyDetailViewModel?> GetTutorRequestProfile(int requestId);
     }
 }

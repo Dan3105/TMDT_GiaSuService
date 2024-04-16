@@ -184,9 +184,30 @@ namespace GiaSuService.Services
             return new ResponseService { Success = false, Message = "Ứng tuyển thất bại" };
         }
 
+        public async Task<ResponseService> CancelApplyRequest(int tutorId, int requestId)
+        {
+            Status? status = await _statusRepository.GetStatus(AppConfig.QueueStatus.CANCEL.ToString(), AppConfig.queue_status.ToString());
+            if (status == null)
+            {
+                return new ResponseService { Success = false, Message = "Không lấy được trạng thái" };
+            }
+
+            bool isSuccess = await _queueRepository.CancelApplyRequest(tutorId, requestId, status.Id);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Huỷ Ứng tuyển thành công" };
+            }
+            return new ResponseService { Success = false, Message = "Huỷ ứng tuyển thất bại" };
+        }
+
         public async Task<List<TutorApplyFormViewModel>> GetTutorApplyForm(int tutorId)
         {
             return await _tutorRepository.GetListTutorApplyForm(tutorId);
+        }
+
+        public async Task<RequestTutorApplyDetailViewModel?> GetTutorRequestProfileById(int requestId)
+        {
+            return await _tutorRepository.GetTutorRequestProfile(requestId);
         }
     }
 }

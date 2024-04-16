@@ -213,5 +213,48 @@ namespace GiaSuService.Controllers
             var results = await _transactionService.GetListTutorTransaction((int)tutorId);
             return View(results);   
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CancelApplyRequest(int requestId)
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            ResponseService response = await _tutorService.CancelApplyRequest((int)tutorId, requestId);
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+
+            return RedirectToAction("TutorRequestList", "Tutor");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorRequestProfile(int requestId, string queueStatus)
+        {
+            RequestTutorApplyDetailViewModel? thisForm = await _tutorService.GetTutorRequestProfileById(requestId);
+            if (thisForm == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn";
+                return RedirectToAction("TutorRequestList", "Tutor");
+            }
+
+            thisForm.QueueStatus = queueStatus;
+
+            return View(thisForm);
+        }
     }
 }

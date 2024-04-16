@@ -10,6 +10,7 @@ namespace GiaSuService.Repository.Interface
         public bool AddTutorsToQueue(RequestTutorForm form, List<int> ids, int statusDefaultId);
 
         public Task<bool> AddTutorToQueue(int tutorId, int requestId, int statusId);
+        public Task<bool> CancelApplyRequest(int tutorId, int requestId, int statusId);
 
         public Task<bool> SaveChanges();
 

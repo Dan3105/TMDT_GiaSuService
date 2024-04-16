@@ -6,6 +6,7 @@ using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Security.Principal;
 
 namespace GiaSuService.Repository
 {
@@ -54,6 +55,26 @@ namespace GiaSuService.Repository
                 };
 
                 _context.Add(form);
+                return await SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> CancelApplyRequest(int tutorId, int requestId, int statusId)
+        {
+            try
+            {
+                TutorApplyForm? form = await _context.TutorApplyForms.FirstOrDefaultAsync(p => p.TutorRequestId == requestId && p.TutorId == tutorId);
+                if (form == null)
+                {
+                    return false;
+                }
+
+                form.StatusId = statusId;
+                _context.Update(form);
                 return await SaveChanges();
             }
             catch (Exception)

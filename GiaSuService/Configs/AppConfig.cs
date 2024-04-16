@@ -33,6 +33,7 @@ namespace GiaSuService.Configs
             DENY,
             HANDOVER,
             REFUND,
+            CANCEL,
         }
 
         public const string CLAIM_TYPE_AVATAR = "Avatar";
