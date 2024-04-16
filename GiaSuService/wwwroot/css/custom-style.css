@@ -69,3 +69,9 @@ input.customform-control {
     justify-content: center; /* Căn giữa theo chiều ngang */
     align-items: center;
 }
+
+.img {
+    width: 50%;
+    display: block;
+    margin: auto;
+}
