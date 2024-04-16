@@ -9,7 +9,6 @@
                 <h2>Transaction Deposit</h2>
             </div>
             <div class="card-body">
-                <p><strong>Transaction ID:</strong> @Model.TransactionDeposit.TransactionId</p>
                 <p><strong>Employee Name:</strong> @Model.TransactionDeposit.EmployeeName</p>
                 <p><strong>Tutor Name:</strong> @Model.TransactionDeposit.TutorName</p>
                 <p><strong>Create Date:</strong> @Model.TransactionDeposit.CreateDate</p>
@@ -18,12 +17,15 @@
                 <p><strong>Price:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
                 @if (Model.TransactionRefund == null && string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate))
                 {
-                    <div>
-                        <form class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
-                            <input type="hidden" name="TransactionID" value="@Model.TransactionDeposit.TransactionId">
-                            <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button>
-                        </form>
-                    </div>
+                    <form class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
+                        <input type="hidden" name="tutorId" value="@Model.TransactionDeposit.TutorId">
+                        <input type="hidden" name="requestId" value="@Model.TransactionDeposit.RequestId">
+                        <div class="form-group">
+                            <label for="paymentDate">Payment Date and Time:</label>
+                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control" required>
+                        </div>
+                        <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button>
+                    </form>
                 }
             </div>
         </div>
@@ -36,7 +38,6 @@
                 <h2>Transaction Refund</h2>
             </div>
             <div class="card-body">
-                <p><strong>Transaction ID:</strong> @Model.TransactionRefund.TransactionId</p>
                 <p><strong>Employee Name:</strong> @Model.TransactionRefund.EmployeeName</p>
                 <p><strong>Tutor Name:</strong> @Model.TransactionRefund.TutorName</p>
                 <p><strong>Create Date:</strong> @Model.TransactionRefund.CreateDate</p>

@@ -39,7 +39,7 @@ namespace GiaSuService.Repository
                         PaymentAmount = originAmount.PaymentAmount,
                         EmployeeId = emp.Id,
                         TutorId = tutorId,
-                        Context = AppConfig.ContextForRefundTransaction(tutor.FullName, emp.Phone, emp.Phone, originAmount.PaymentAmount),
+                        Context = AppConfig.ContextForRefundTransaction(tutor.FullName, emp.Phone, emp.FullName, originAmount.PaymentAmount),
                         FormId = requestId,
                         PaymentDate = DateTime.Now,
                         TypeTransaction = false
@@ -79,7 +79,6 @@ namespace GiaSuService.Repository
                         Price = p.PaymentAmount,
                         EmployeeName = p.Employee.FullName,
                         TutorName = p.Tutor.FullName,
-                        TransactionId = p.Id,
                         TutorId = p.TutorId,
                         RequestId = p.FormId
                     },
@@ -87,7 +86,6 @@ namespace GiaSuService.Repository
                 })
                 .FirstOrDefaultAsync(p => p.Transaction.TutorId == tutorId && p.Transaction.RequestId == requestId && p.TypeTransaction == isDeposit)
                 )?.Transaction;
-            //throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<TransactionDetailViewModel>> GetTransactionsTutor(int tutorid)
@@ -101,7 +99,6 @@ namespace GiaSuService.Repository
                     Price = p.PaymentAmount,
                     EmployeeName = p.Employee.FullName,
                     TutorName = p.Tutor.FullName,
-                    TransactionId = p.Id,
                     TutorId = p.TutorId,
                     RequestId = p.FormId
                 },
@@ -111,6 +108,21 @@ namespace GiaSuService.Repository
                 .Where(p => p.Transaction.TutorId == tutorid)
                 .Select(p => p.Transaction)
                 .ToListAsync();
+        }
+
+        public async Task<bool> UpdateDepositTransactionPaymentDate(int tutorId, int requestId, DateTime paydate)
+        {
+            try { 
+                await _context.TransactionHistories.
+                    Where(p => p.TypeTransaction && p.TutorId == tutorId && p.FormId == requestId)
+                    .ExecuteUpdateAsync(p => p.SetProperty(o => o.PaymentDate, paydate));
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

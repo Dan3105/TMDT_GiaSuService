@@ -2,7 +2,6 @@
 {
     public class TransactionDetailViewModel
     {
-        public int TransactionId { get; set; }
         public int TutorId { get; set; }
         public int RequestId { get; set; }
         public string EmployeeName { get; set; } = string.Empty;

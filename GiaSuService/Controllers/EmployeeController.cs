@@ -36,7 +36,7 @@ namespace GiaSuService.Controllers
             return Ok();
         }
 
-        
+
         [HttpGet]
         public IActionResult TutorRegisterQueue()
         {
@@ -80,7 +80,7 @@ namespace GiaSuService.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateStatusTutor(ContextReviewingRegister response)
         {
-            
+
             if (response.TutorProfileVM == null || response.TutorProfileVM.TutorId == 0)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = "Error 404";
@@ -88,8 +88,9 @@ namespace GiaSuService.Controllers
             }
 
             var result = await _tutorService.UpdateTutorProfileStatus(response.TutorProfileVM!.TutorId, response.StatusType, response.Context);
-            
-            if (result.Success) {
+
+            if (result.Success)
+            {
                 TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
                 return RedirectToAction("TutorRegisterQueue", "Employee");
             }
@@ -173,7 +174,7 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> TutorProfile(TutorProfileViewModel tutorProfileViewModel)
         {
             ResponseService result = await _profileService.UpdateTutorProfileInEmployee(tutorProfileViewModel);
-            
+
             if (result.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
@@ -182,7 +183,7 @@ namespace GiaSuService.Controllers
             else
             {
                 TempData[AppConfig.MESSAGE_FAIL] = result.Message;
-                return RedirectToAction("TutorProfile", "Employee", new {id = tutorProfileViewModel.TutorId});
+                return RedirectToAction("TutorProfile", "Employee", new { id = tutorProfileViewModel.TutorId });
             }
         }
 
@@ -249,7 +250,7 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = response.Message;
             }
 
-            return RedirectToAction("TutorRequestEditByEmployee", "Employee", new {id = model.RequestId});
+            return RedirectToAction("TutorRequestEditByEmployee", "Employee", new { id = model.RequestId });
         }
 
         public async Task<IActionResult> CancelTutorRequest(TutorRequestProfileEditViewModel model)
@@ -274,7 +275,7 @@ namespace GiaSuService.Controllers
             return RedirectToAction("TutorRequestEditByEmployee", "Employee", new { id = model.RequestId });
         }
 
-		[HttpGet]
+        [HttpGet]
         public IActionResult TutorUpdateQueue()
         {
             return View();
@@ -293,7 +294,7 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> ATutorUpdateForm(int tutorId)
         {
             var viewModel = await _tutorService.GetTutorUpdateRequest(tutorId);
-            if(viewModel == null)
+            if (viewModel == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Hệ thống không lấy được thông tin này";
                 return RedirectToAction("TutorUpdateQueue", "Employee");
@@ -318,13 +319,13 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> TutorApplyQueue(int requestId)
         {
             TutorRequestCardViewModel? tutorCardInfo = await _tutorRequestService.GetTutorrequestDetail(requestId);
-            if(tutorCardInfo == null)
+            if (tutorCardInfo == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Không tìm được đơn này trong hệ thống";
                 return RedirectToAction("TutorRequestList", "Employee");
             }
-            
-            
+
+
             return View(tutorCardInfo);
         }
 
@@ -344,14 +345,14 @@ namespace GiaSuService.Controllers
         {
             var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (accountId == null || accountId == "") 
-                return Ok(new ResponseService { Message = "Vui lòng đăng nhập lại để thực hiện thao tác", Success = false});
+            if (accountId == null || accountId == "")
+                return Ok(new ResponseService { Message = "Vui lòng đăng nhập lại để thực hiện thao tác", Success = false });
 
             int? profileId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.EMPLOYEEROLENAME);
 
             if (profileId == null)
             {
-               
+
                 return Ok(new ResponseService { Message = "Bạn không phải nhân viên để thực hiện thao tác này", Success = false });
             }
 
@@ -386,7 +387,7 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("");
             }
 
-            var response = await _transactionService.CreateRefundService(tutorId, requestId, (int)empId);
+            var response = await _transactionService.CreateRefundTransaction(tutorId, requestId, (int)empId);
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
@@ -399,9 +400,17 @@ namespace GiaSuService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateDepositTransaction(int tutorId, int requestId)
+        public async Task<IActionResult> UpdateDepositTransaction(int tutorId, int requestId, DateTime paymentDate)
         {
-
+            var response = await _transactionService.UpdateDepositPaymentTransaction(tutorId, requestId, paymentDate);
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
             return RedirectToAction("TutorTransactionDetail", "Employee", new { tutorId, requestId });
         }
     }
