@@ -1,6 +1,8 @@
 ﻿@using GiaSuService.Models.EmployeeViewModel;
 @model TutorRequestProfileEditViewModel;
-
+@{
+    ViewData["Title"] = "Tutor Request Form";
+}
 <style>
     .disabled-link {
         pointer-events: none; /* Disable mouse events */
@@ -15,7 +17,7 @@
     </div> *@
     <hr />
 
-    <h1>Tutor Request Form</h1>
+    <h1>Đơn tìm gia sư</h1>
 
     @* <form asp-action="UpdateTutorRequestEdit" asp-controller="Employee" method="post"> *@
     <form asp-controller="Employee" method="post">
@@ -50,7 +52,7 @@
 
         <div class="form-group">
             <label for="subject">Môn học:</label>
-            <select asp-for="SubjectId" class="form-select" id="subject">
+            <select asp-for="SubjectId" class="form-select customform-control" id="subject">
                 @if (Model.Subjects != null)
                 {
                     @foreach (var subject in Model.Subjects)
@@ -68,7 +70,7 @@
 
         <div class="form-group">
             <label for="grade">Khối lớp:</label>
-            <select asp-for="GradeId" class="form-select" id="grade">
+            <select asp-for="GradeId" class="form-select customform-control" id="grade">
                 @if (Model.Grades != null)
                 {
                     @foreach (var grade in Model.Grades)
