@@ -276,5 +276,26 @@ namespace GiaSuService.Controllers
             var result = await _transactionService.GetDetailTutorQueueTransaction(tutorId, requestId);
             return View(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int page)
+        {
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var queries = await _requestFormService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page, (int) tutorId);
+            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries, page, totalPages };
+            return Json(response);
+        }
     }
 }

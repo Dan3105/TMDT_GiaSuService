@@ -144,6 +144,42 @@ namespace GiaSuService.Repository
             return await result.Select(p => p.TutorCard).ToListAsync();
         }
 
+        public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId)
+        {
+            var result = _context.RequestTutorForms
+                .AsNoTracking()
+                .Where(p => !p.TutorApplyForms.Any(taf => taf.TutorId == tutorId))
+                .Select(p => new
+                {
+                    TutorCard = new TutorRequestCardViewModel
+                    {
+                        RequestId = p.Id,
+                        GradeName = p.Grade.Name,
+                        SubjectName = p.Subject.Name,
+                        AdditionalDetail = p.AdditionalDetail ?? string.Empty,
+                        Address = $"{p.District.Name}, {p.District.Province.Name}",
+                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
+                    },
+                    GradeId = p.GradeId,
+                    SubjectId = p.SubjectId,
+                    DistrictId = p.DistrictId,
+                    Status = p.StatusId,
+                    Expired = p.ExpiredDate
+                })
+                .OrderBy(p => p.Expired)
+                .Where(p => p.Status == statusId && p.Expired > DateTime.Now
+                        && (districtId == 0 || p.DistrictId == districtId)
+                        && (gradeId == 0 || p.GradeId == gradeId)
+                        && (subjectId == 0 || p.SubjectId == subjectId)
+                        )
+                .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
+                .Take(AppConfig.ROWS_ACCOUNT_LIST)
+                ;
+
+
+            return await result.Select(p => p.TutorCard).ToListAsync();
+        }
+
         public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)
         {
             return await _context.RequestTutorForms

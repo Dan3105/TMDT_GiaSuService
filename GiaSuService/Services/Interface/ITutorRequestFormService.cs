@@ -15,6 +15,8 @@ namespace GiaSuService.Services.Interface
         public Task<List<TutorRequestQueueViewModel>> GetTutorrequestQueue(AppConfig.FormStatus status, int page);
         public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page);
+        public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+            AppConfig.FormStatus statusName, int page, int tutorId);
         public Task<ResponseService> UpdateStatusTutorRequest(int id, string status);
 
         public Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id);

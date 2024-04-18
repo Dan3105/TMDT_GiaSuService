@@ -129,6 +129,17 @@ namespace GiaSuService.Services
             return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page);
         }
 
+        public async Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+            AppConfig.FormStatus statusName, int page, int tutorId)
+        {
+            var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
+            if (status == null)
+            {
+                return null!;
+            }
+            return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page, tutorId);
+        }
+
         public async Task<ResponseService> UpdateStatusTutorRequest(int id, string status)
         {
             var dbStatus = await _statusRepo.GetStatus(status, AppConfig.form_status);

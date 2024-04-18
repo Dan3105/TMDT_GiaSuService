@@ -91,7 +91,7 @@
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
 
-        $.getJSON("/Home/GetTutorRequestBy", { districtId: selectedIdDistrict, subjectId: selectedIdSubject, gradeId: selectedIdGrade, page: pageNumber })
+        $.getJSON("/Tutor/GetTutorRequestBy", { districtId: selectedIdDistrict, subjectId: selectedIdSubject, gradeId: selectedIdGrade, page: pageNumber })
             .done(function (data) {
                 $("#items-container").empty(); // Clear existing items
 
