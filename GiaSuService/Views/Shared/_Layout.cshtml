@@ -58,82 +58,72 @@
                         </div>
                     </div>
                 }
-
                 <!-- sidebar-header  -->
-                @if (roleName != AppConfig.EMPLOYEEROLENAME)
+                @if(roleName != AppConfig.EMPLOYEEROLENAME)
                 {
-                    <div class="sidebar-menu">
-
-                        <ul>
-                            <li class="header-menu">
-                                <span>Phụ Huynh</span>
-                            </li>
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>Phụ Huynh</span>
+                        </li>
+                        <li class="sidebar">
+                            <a href="@Url.Action("TutorList","Home")">
+                                <i class="fa fa-address-card"></i>
+                                <span>Danh sách gia sư</span>
+                            </a>
+                        </li>
+                        @if(!isAuth || roleName == AppConfig.CUSTOMERROLENAME){
                             <li class="sidebar">
                                 <a href="@Url.Action("TutorRequestForm", "Customer")">
                                     <i class="fa fa-sign-in-alt"></i>
                                     <span>Đăng ký tìm gia sư</span>
                                 </a>
-
                             </li>
-                            <li class="sidebar">
-                                <a href="#">
-                                    <i class="fa fa-credit-card"></i>
-                                    <span>Học phí tham khảo</span>
-                                </a>
-
-                            </li>
-                            
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorList","Home")">
-                                    <i class="fa fa-address-card"></i>
-                                    <span>Danh sách gia sư</span>
-                                </a>
-                            </li>
-
-                            <li class="header-menu">
-                                <span>Gia sư</span>
-                            </li>
-
+                        }
+                        <li class="header-menu">
+                            <span>Gia sư</span>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("TutorRequestList", "Tutor")">
+                                <i class="fa fa-calendar"></i>
+                                <span>Lớp mới cần gia sư</span>
+                            </a>
+                        </li>
+                        @if (roleName == AppConfig.CUSTOMERROLENAME)
+                        {
                             <li>
-                                <a href="@Url.Action("TutorRequestList", "Tutor")">
+                                <a href="@Url.Action("CustomerListTutorRequest", "Customer")">
                                     <i class="fa fa-calendar"></i>
-                                    <span>Lớp mới cần gia sư</span>
+                                    <span>Các đơn tìm gia sư của tôi</span>
                                 </a>
                             </li>
-                            @if (roleName == AppConfig.CUSTOMERROLENAME)
-                            {
-                                <li>
-                                    <a href="@Url.Action("CustomerListTutorRequest", "Customer")">
-                                        <i class="fa fa-calendar"></i>
-                                        <span>Các đơn tìm gia sư của tôi</span>
-                                    </a>
-                                </li>
-                            }
+                        }
 
-                            @if(roleName == AppConfig.TUTORROLENAME)
-                            {
-                                <li>
-                                    <a href="@Url.Action("ListTutorApplyForm", "Tutor")">
-                                        <i class="fa fa-check-circle"></i>
-                                        <span>Các đơn đã ứng tuyển</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")">
-                                        <i class="fa fa-inbox"></i>
-                                        <span>Lịch sử thông tin của tôi</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("TutorTransactionList", "Tutor")">
-                                        <i class="fa fa-history"></i>
-                                        <span>Lịch sử giao dịch</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                        @if(roleName == AppConfig.TUTORROLENAME)
+                        {
+                            <li>
+                                <a href="@Url.Action("ListTutorApplyForm", "Tutor")">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Các đơn đã ứng tuyển</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")">
+                                    <i class="fa fa-inbox"></i>
+                                    <span>Lịch sử thông tin của tôi</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("TutorTransactionList", "Tutor")">
+                                    <i class="fa fa-history"></i>
+                                    <span>Lịch sử giao dịch</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
                 }
+                
                 
                 @if(roleName == AppConfig.EMPLOYEEROLENAME)
                 {
@@ -142,38 +132,56 @@
                             <li class="header-menu">
                                 <span>Nhân viên</span>
                             </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorList", "Employee")">
-                                    <i class="fa fa-address-book"></i>
-                                    <span>Danh sách gia sư</span>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Quản lý gia sư</span>
                                 </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("TutorList", "Employee")">
+                                                <i class="fa fa-address-book"></i>
+                                                <span>Danh sách gia sư</span>
+                                            </a>
+                                        </li>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("TutorRegisterQueue", "Employee")">
+                                                <i class="fa fa-address-card"></i>
+                                                <span>Danh sách yêu cầu tạo tài khoản gia sư</span>
+                                            </a>
+                                        </li>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("TutorUpdateQueue", "Employee")">
+                                                <i class="fa fa-question"></i>
+                                                <span>Danh sách yêu cầu muốn đổi thông tin</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
 
-                            </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorRequestList", "Employee")">
-                                    <i class="fa fa-book"></i>
-                                    <span>Danh sách đơn tìm gia sư</span>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Quản lý đơn tìm gia sư</span>
                                 </a>
-
-                            </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorRegisterQueue", "Employee")">
-                                    <i class="fa fa-address-card"></i>
-                                    <span>Đơn đăng ký gia sư</span>
-                                </a>
-                            </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorRequestQueue", "Employee")">
-                                    <i class="fa fa-envelope"></i>
-                                    <span>Đơn đăng ký tìm gia sư</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorUpdateQueue", "Employee")">
-                                    <i class="fa fa-question"></i>
-                                    <span>Danh sách gia sư muốn đổi thông tin</span>
-                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("TutorRequestQueue", "Employee")">
+                                                <i class="fa fa-envelope"></i>
+                                                <span>Đơn đăng ký tìm gia sư</span>
+                                            </a>
+                                        </li>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("TutorRequestList", "Employee")">
+                                                <i class="fa fa-book"></i>
+                                                <span>Danh sách đơn tìm gia sư</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -187,37 +195,84 @@
                             <li class="header-menu">
                                 <span>Admin</span>
                             </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("EmployeeList", "Admin")">
-                                    <i class="fa fa-list-ol"></i>
-                                    <span>Danh sách nhân viên</span>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Thống kê</span>
                                 </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                Thống kê số tài khoản
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Thống kê số đơn tìm gia sư
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Thống kê số tiền
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Quản lý nhân viên</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("EmployeeList", "Admin")">
+                                                <i class="fa fa-list-ol"></i>
+                                                <span>Danh sách nhân viên</span>
+                                            </a>
 
+                                        </li>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("Register", "Admin")">
+                                                <i class="fa fa-plus"></i>
+                                                <span>Tạo nhân viên</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("Register", "Admin")">
-                                    <i class="fa fa-plus"></i>
-                                    <span>Tạo nhân viên</span>
+
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                    <span>Quản lý học phần</span>
                                 </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("SessionDateManager", "Admin")">
+                                                <i class="fa fa-cog"></i>
+                                                <span>Quản lý loại buổi học</span>
+                                            </a>
+                                        </li>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("SubjectManager", "Admin")">
+                                                <i class="fa fa-wrench"></i>
+                                                <span>Quản lý loại môn học</span>
+                                            </a>
+                                        </li>
+                                        <li class="sidebar">
+                                            <a href="@Url.Action("GradeManager", "Admin")">
+                                                <i class="fa fa-cogs"></i>
+                                                <span>Quản lý loại khối lớp</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("SessionDateManager", "Admin")">
-                                    <i class="fa fa-cog"></i>
-                                    <span>Quản lý loại buổi học</span>
-                                </a>
-                            </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("SubjectManager", "Admin")">
-                                    <i class="fa fa-wrench"></i>
-                                    <span>Quản lý loại môn học</span>
-                                </a> 
-                            </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("GradeManager", "Admin")">
-                                    <i class="fa fa-cogs"></i>
-                                    <span>Quản lý loại khối lớp</span>
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                 }

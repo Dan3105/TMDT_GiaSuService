@@ -280,7 +280,6 @@ body {
     }
 
         .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before {
-            content: "\f111";
             font-family: "Font Awesome 5 Free";
             font-weight: 400;
             font-style: normal;
@@ -480,7 +479,7 @@ body {
 .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown div,
 .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
 .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
-    background: #cbddfc;
+    background: #e9d7e9;
 }
 
 .chiller-theme .sidebar-wrapper .sidebar-menu .header-menu span {

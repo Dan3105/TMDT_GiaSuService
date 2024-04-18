@@ -232,7 +232,7 @@ namespace GiaSuService.Controllers
                 Tutor = new Tutor()
                 {
                     Birth = model.AccountProfile.BirthDate,
-                    FullName = model.AccountProfile.FullName,
+                    FullName = Utility.FormatToCamelCase(model.AccountProfile.FullName),
                     AddressDetail = model.AccountProfile.AddressName,
                     DistrictId = model.AccountProfile.SelectedDistrictId,
                     Gender = model.AccountProfile.Gender,
@@ -241,8 +241,8 @@ namespace GiaSuService.Controllers
                     AcademicYearFrom = model.RegisterTutorProfile.AcademicYearFrom,
                     AcademicYearTo = model.RegisterTutorProfile.AcademicYearto,
                     AdditionalInfo = model.RegisterTutorProfile.AdditionalInfo,
-                    College = model.RegisterTutorProfile.College,
-                    Area = model.RegisterTutorProfile.Area,
+                    College = Utility.FormatToCamelCase(model.RegisterTutorProfile.College),
+                    Area = Utility.FormatToCamelCase(model.RegisterTutorProfile.Area),
                     TutorTypeId = model.RegisterTutorProfile.TypeTutorId,
                 
                     IsActive = true,

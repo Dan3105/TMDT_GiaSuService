@@ -68,7 +68,7 @@ namespace GiaSuService.Services
             bool delSuccess = await _categoryRepo.DeleteSessionDate(id);
             if (delSuccess)
             {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
+                return new ResponseService { Message = "Xóa thành công", Success = true };
             }
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
@@ -77,7 +77,7 @@ namespace GiaSuService.Services
 
         #endregion
 
-        #region CRUD Grade
+        #region CRUD Subject
 
         public async Task<ResponseService> UpdateSubject(SubjectViewModel vm)
         {
@@ -125,19 +125,23 @@ namespace GiaSuService.Services
             bool delSuccess = await _categoryRepo.DeleteSubject(id);
             if (delSuccess)
             {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
+                return new ResponseService { Message = "Xóa thành công", Success = true };
             }
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
         }
 
+        public async Task<List<SubjectViewModel>> GetAllSubjects()
+        {
+            return await _categoryRepo.GetAllSubjects();
+        }
+        #endregion
+
+        #region CRUD Grade
         public async Task<List<GradeViewModel>> GetAllGrades()
         {
             return await _categoryRepo.GetAllGrades();
         }
-        #endregion
-
-        #region CRUD Subject
         public async Task<ResponseService> UpdateGrade(GradeViewModel vm)
         {
             GradeViewModel? grade = await _categoryRepo.GetGradeById(vm.GradeId);
@@ -184,16 +188,12 @@ namespace GiaSuService.Services
             bool delSuccess = await _categoryRepo.DeleteGrade(id);
             if (delSuccess)
             {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
+                return new ResponseService { Message = "Xóa thành công", Success = true };
             }
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
         }
 
-        public async Task<List<SubjectViewModel>> GetAllSubjects()
-        {
-            return await _categoryRepo.GetAllSubjects();
-        }
 
         #endregion
 

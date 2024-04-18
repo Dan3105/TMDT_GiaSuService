@@ -1,4 +1,5 @@
 ﻿using GiaSuService.AppDbContext;
+using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
@@ -157,7 +158,7 @@ namespace GiaSuService.Repository
                             ss.Value++;
                         }
                     }
-                    res.Name = session.SessionName;
+                    res.Name = Utility.FormatToCamelCase(session.SessionName);
                     res.Value = newValue;
                     //res.Value = session.Value;
                     await _context.SaveChangesAsync();
@@ -190,7 +191,7 @@ namespace GiaSuService.Repository
                     }
                     await _context.SaveChangesAsync();
 
-                    SessionDate newData = new SessionDate { Name = session.SessionName, Value = newValue };
+                    SessionDate newData = new SessionDate { Name = Utility.FormatToCamelCase(session.SessionName), Value = newValue };
                     _context.SessionDates.Add(newData);
                     await _context.SaveChangesAsync();
 
@@ -274,7 +275,7 @@ namespace GiaSuService.Repository
                     }
                     await _context.SaveChangesAsync();
 
-                    Subject newData = new Subject { Name = subject.SubjectName, Value = newValue };
+                    Subject newData = new Subject { Name = Utility.FormatToCamelCase(subject.SubjectName), Value = newValue };
                     _context.Subjects.Add(newData);
                     await _context.SaveChangesAsync();
 
@@ -323,7 +324,7 @@ namespace GiaSuService.Repository
                             ss.Value++;
                         }
                     }
-                    res.Name = subject.SubjectName;
+                    res.Name = Utility.FormatToCamelCase(subject.SubjectName);
                     res.Value = newValue;
                     //res.Value = session.Value;
                     await _context.SaveChangesAsync();
@@ -391,7 +392,7 @@ namespace GiaSuService.Repository
                     }
                     await _context.SaveChangesAsync();
 
-                    Grade newData = new Grade { Name = grade.GradeName, Value = newValue, Fee = grade.Fee };
+                    Grade newData = new Grade { Name = Utility.FormatToCamelCase(grade.GradeName), Value = newValue, Fee = grade.Fee };
                     _context.Grades.Add(newData);
                     await _context.SaveChangesAsync();
 
@@ -439,7 +440,7 @@ namespace GiaSuService.Repository
                             ss.Value++;
                         }
                     }
-                    res.Name = grade.GradeName;
+                    res.Name = Utility.FormatToCamelCase(grade.GradeName);
                     res.Value = newValue;
                     res.Fee = grade.Fee;
 

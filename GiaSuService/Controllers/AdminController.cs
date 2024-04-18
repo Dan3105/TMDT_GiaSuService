@@ -2,7 +2,6 @@
 using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
-using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
