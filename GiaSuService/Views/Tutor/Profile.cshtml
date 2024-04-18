@@ -223,6 +223,7 @@
 
     function firstLoad() {
         var selectedProvinceId = "@Model.Form.SelectedProvinceId";
+
         $.ajax({
             url: `/Identity/Provinces`,
             type: 'GET',
@@ -234,9 +235,9 @@
                         option.prop('selected', true);
                     }
                     $("#province").append(option);
-                    getDistricts();
 
                 }
+                getDistricts();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error("Error fetching provinces:", textStatus, errorThrown);
@@ -247,8 +248,9 @@
 
     function getDistricts() {
         var selectedProvinceId = $("#province").val();
+
         var selectedDistrictId = "@Model.Form.SelectedDistrictId";
-        console.log(selectedProvinceId);
+        //console.log(selectedProvinceId);
         $.ajax({
             url: `/Identity/Districts`,
             type: 'GET',
