@@ -214,7 +214,7 @@ namespace GiaSuService.Repository
                         {
                             return false;
                         }
-                        employee.FullName = profile.FullName;
+                        employee.FullName = Utility.FormatToCamelCase(profile.FullName);
                         employee.AddressDetail = profile.AddressDetail;
                         employee.Gender = profile.Gender == "Nam" ? "M" : "F";
                         employee.Birth = profile.BirthDate;
@@ -228,7 +228,7 @@ namespace GiaSuService.Repository
                         {
                             return false;
                         }
-                        customer.FullName = profile.FullName;
+                        customer.FullName = Utility.FormatToCamelCase(profile.FullName);
                         customer.AddressDetail = profile.AddressDetail;
                         customer.Gender = profile.Gender == "Nam" ? "M" : "F";
                         customer.Birth = profile.BirthDate;
@@ -273,7 +273,7 @@ namespace GiaSuService.Repository
                     {
                         throw new NullReferenceException();
                     }
-
+                    
                     string jsonContext = JsonConvert.SerializeObject(modified);
                     TutorStatusDetail request = new TutorStatusDetail()
                     {
@@ -326,15 +326,15 @@ namespace GiaSuService.Repository
                     FrontIdentityCard = p.Identity.FrontIdentityCard,
                     BackIdentityCard = p.Identity.BackIdentityCard,
 
-                    Fullname = p.FullName,
+                    Fullname = Utility.FormatToCamelCase(p.FullName),
                     Gender = p.Gender,
                     AddressDetail = p.AddressDetail,
                     SelectedDistrictId = p.DistrictId,
                     SelectedProvinceId = p.District.ProvinceId,
                     Birth = p.Birth,
 
-                    Area = p.Area,
-                    College = p.College,
+                    Area = Utility.FormatToCamelCase(p.Area),
+                    College = Utility.FormatToCamelCase(p.College),
                     Academicyearfrom = p.AcademicYearFrom,
                     Academicyearto = p.AcademicYearTo,
                     Additionalinfo = p.AdditionalInfo,

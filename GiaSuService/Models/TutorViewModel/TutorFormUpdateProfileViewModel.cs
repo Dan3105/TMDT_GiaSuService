@@ -1,4 +1,5 @@
-﻿using GiaSuService.Models.IdentityViewModel;
+﻿using GiaSuService.Configs;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Models.TutorViewModel
@@ -67,7 +68,7 @@ namespace GiaSuService.Models.TutorViewModel
             diff.TutorId = origin.TutorId;
             diff.IsActive = modified.IsActive;
             if (origin.Fullname != modified.Fullname)
-                diff.Fullname = modified.Fullname;
+                diff.Fullname = Utility.FormatToCamelCase(modified.Fullname);
 
             if (origin.Birth != modified.Birth)
                 diff.Birth = modified.Birth;
@@ -100,10 +101,10 @@ namespace GiaSuService.Models.TutorViewModel
             //    diff.BackIdentityCard = modified.BackIdentityCard;
 
             if (origin.College != modified.College)
-                diff.College = modified.College;
+                diff.College = Utility.FormatToCamelCase(modified.College);
 
             if (origin.Area != modified.Area)
-                diff.Area = modified.Area;
+                diff.Area = Utility.FormatToCamelCase(modified.Area);
 
             if (origin.Additionalinfo != modified.Additionalinfo)
                 diff.Additionalinfo = modified.Additionalinfo;

@@ -164,6 +164,7 @@ namespace GiaSuService.Repository
                         return true;
                     }
 
+                    //APPROVAL CASE
                     if (status.Name.Equals(AppConfig.QueueStatus.APPROVAL.ToString().ToLower()))
                     {
                         var price = (await _context.Grades.FindAsync(tutorQueue.GradeId))?.Fee;
@@ -194,6 +195,7 @@ namespace GiaSuService.Repository
                         //await _context.SaveChangesAsync();
                     }
 
+                    //HANDOVER CASE
                     if (status.Name.Equals(AppConfig.QueueStatus.HANDOVER.ToString().ToLower()))
                     {
                         var statusType = await _context.StatusTypes.FirstOrDefaultAsync(p => p.Type.ToLower().Equals(AppConfig.form_status.ToLower()));
