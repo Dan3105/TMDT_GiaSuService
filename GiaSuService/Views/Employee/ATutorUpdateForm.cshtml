@@ -17,7 +17,7 @@
         { "Email", "Email" },
         { "Phone", "Số điện thoại" },
         { "Gender", "Giới tính" },
-        { "Avatar", "Avatar" },
+        //{ "Avatar", "Avatar" },
         // { "AddressDetail", "Address Detail" },
         { "IdentityCard", "Số Chứng minh thư" },
         // { "FrontIdentityCard", "Front Identity Card" },
@@ -41,51 +41,54 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 border-end border-dark">
-            <h2 >Thông tin ban đầu</h2>
+            <h2>Thông tin ban đầu</h2>
             <ul class="list-unstyled">
                 @foreach (var property in typeof(TutorFormUpdateProfileViewModel).GetProperties())
                 {
                     if (!displayNameMapping.ContainsKey(property.Name)) continue;
                     var originalValue = property.GetValue(Model.Original);
                     var modifiedValue = property.GetValue(Model.Modified);
+                    //if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
+                    // Get the display name from the mapping, if it exists; otherwise, use the property name
+                    var displayName = displayNameMapping[property.Name];
 
-                    if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
+                    if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
                     {
-                        // Get the display name from the mapping, if it exists; otherwise, use the property name
-                        var displayName = displayNameMapping[property.Name];
+                        int originalIntValue;
+                        int modifiedIntValue;
+                        var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
+                        var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
 
-                        if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
+                        if (originalValueParsed && modifiedValueParsed)
                         {
-                            int originalIntValue;
-                            int modifiedIntValue;
-                            var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
-                            var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
-
-                            if (originalValueParsed && modifiedValueParsed)
+                            if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
                             {
-                                if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
-                                {
-                                    <li><strong>@displayName</strong>: <s>@originalValue</s></li>
-                                }
-                                else
-                                {
-                                    <li><strong>@displayName</strong>: @originalValue</li>
-                                }
+                                <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                            }
+                            else
+                            {
+                                <li><strong>@displayName</strong>: @originalValue</li>
                             }
                         }
-                        else if (!originalValue.Equals(modifiedValue))
-                        {
-                            <li><strong>@displayName</strong>: <s>@originalValue</s></li>
-                        }
-                        else
-                        {
-                            <li><strong>@displayName</strong>: @originalValue</li>
-                        }
+                    }
+
+                    else if (modifiedValue == null || string.IsNullOrEmpty(modifiedValue.ToString()))
+                    {
+                        <li><strong>@displayName</strong>: @originalValue</li>
+                    }
+                    else if (!originalValue.Equals(modifiedValue))
+                    {
+                        <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                    }
+                    else
+                    {
+                        <li><strong>@displayName</strong>: @originalValue</li>
                     }
                 }
+
             </ul>
         </div>
-        
+
         <div class="col-md-6">
             <h2>Thông tin sau khi chỉnh sửa</h2>
             <ul class="list-unstyled">
@@ -96,47 +99,49 @@
                     var originalValue = property.GetValue(Model.Original);
                     var modifiedValue = property.GetValue(Model.Modified);
 
-                    if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
+                    // Get the display name from the mapping, if it exists; otherwise, use the property name
+                    var displayName = displayNameMapping[property.Name];
+
+                    if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
                     {
-                        // Get the display name from the mapping, if it exists; otherwise, use the property name
-                        var displayName = displayNameMapping[property.Name];
+                        int originalIntValue;
+                        int modifiedIntValue;
+                        var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
+                        var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
 
-                        if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
+                        if (originalValueParsed && modifiedValueParsed)
                         {
-                            int originalIntValue;
-                            int modifiedIntValue;
-                            var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
-                            var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
-
-                            if (originalValueParsed && modifiedValueParsed)
+                            if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
                             {
-                                if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
-                                {
-                                    <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
-                                }
-                                else
-                                {
-                                    <li><strong>@displayName</strong>: @originalIntValue</li>
-                                }
+                                <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
+                            }
+                            else
+                            {
+                                <li><strong>@displayName</strong>: @originalIntValue</li>
                             }
                         }
-                        else if (!originalValue.Equals(modifiedValue))
-                        {
-                            <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
-                        }
-                        else
-                        {
-                            <li><strong>@displayName</strong>: @modifiedValue</li>
-                        }
+                    }
+                    else if (modifiedValue == null || string.IsNullOrEmpty(modifiedValue.ToString()))
+                    {
+                        <li><strong>@displayName</strong>: @originalValue</li>
+                    }
+                    else if (!originalValue.Equals(modifiedValue))
+                    {
+                        <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
+                    }
+                    else
+                    {
+                        <li><strong>@displayName</strong>: @modifiedValue</li>
                     }
                 }
+
             </ul>
         </div>
     </div>
 
     <form asp-action="UpdateTutorProfileInUpdateQueue" asp-controller="Employee" method="post">
         <div class="form-group row mt-2">
-            <label for="Context" class="form-label fw-bold">Example textarea:</label>
+            <label for="Context" class="form-label fw-bold">Lý do phê duyệt:</label>
             <div class="col-sm-9">
                 <textarea class="form-control" asp-for="Context" rows="4" placeholder="Reason for submitting"></textarea>
             </div>
