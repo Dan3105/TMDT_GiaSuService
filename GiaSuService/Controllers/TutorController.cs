@@ -20,16 +20,18 @@ namespace GiaSuService.Controllers
         private readonly IAddressService _addressService;
         private readonly IProfileService _profileService;
         private readonly ITransactionService _transactionService;
+        private readonly ITutorRequestFormService _requestFormService;
 
 
         public TutorController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService,
-             IProfileService profileService, ITransactionService transactionService)
+             IProfileService profileService, ITransactionService transactionService, ITutorRequestFormService requestFormService)
         {
             _tutorService = tutorService;
             _catalogService = catalogService;
             _addressService = addressService;
             _profileService = profileService;
             _transactionService = transactionService;
+            _requestFormService = requestFormService;
         }
 
         public IActionResult Index()
@@ -215,7 +217,7 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CancelApplyRequest(int requestId)
+        public async Task<IActionResult> CancelApplyRequest(int requestId, string queueStatus)
         {
             var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -229,7 +231,18 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ResponseService response = await _tutorService.CancelApplyRequest((int)tutorId, requestId);
+            ResponseService? response;
+            if (queueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
+            {
+                response = await _requestFormService.UpdateStatusTutorRequest(requestId, AppConfig.FormStatus.APPROVAL.ToString().ToLower());
+                if (!response.Success)
+                {
+                    TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống";
+                    return RedirectToAction("TutorRequestList", "Tutor");
+                }
+            }
+
+            response = await _tutorService.CancelApplyRequest((int)tutorId, requestId);
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
@@ -255,6 +268,13 @@ namespace GiaSuService.Controllers
             thisForm.QueueStatus = queueStatus;
 
             return View(thisForm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorTransactionDetail(int tutorId, int requestId)
+        {
+            var result = await _transactionService.GetDetailTutorQueueTransaction(tutorId, requestId);
+            return View(result);
         }
     }
 }

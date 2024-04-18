@@ -15,9 +15,12 @@
                     <li class="list-group-item d-flex m-3">
                         <div class="row w-100">
                             <div class="col-md-9">
+                                @* Khi release phai an ma don duoi dang input hidden *@
+                                @* <input type="hidden" asp-for="@item.RequestId" /> *@
+
                                 <h5 class="mb-1">@item.SubjectName - @item.GradeName</h5>
 
-                                <small>Mã yêu cầu: @item.RequestId</small> @* Chính thức phải ẩn cái này đi *@
+                                <small>Mã yêu cầu: @item.RequestId</small>
 
                                 <p class="mb-1">Ngày hết hạn: @item.ExpiredDate</p>
 
@@ -55,7 +58,8 @@
                                     {
                                         <span class="badge bg-info rounded-pill ms-auto">@item.StatusName</span>
                                     }
-                                    @if (item.StatusName == AppConfig.QueueStatus.APPROVAL.ToString().ToLower())
+                                    @if (item.StatusName == AppConfig.QueueStatus.APPROVAL.ToString().ToLower() ||
+                                         item.StatusName == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
                                     {
                                         <span class="badge bg-success rounded-pill ms-auto">@item.StatusName</span>
                                     }

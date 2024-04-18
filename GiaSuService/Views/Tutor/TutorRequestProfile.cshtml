@@ -6,66 +6,112 @@
 }
 
 <div class="container">
-    <h1 class="pb-3">Chi tiết yêu cầu</h1>
-    <div class="row">
-        <div class="col-sm-5 border-end">
-            <h5>Thông tin đơn tìm gia sư</h5>
-            <hr />
-            <dl>
-                <dt>Ngày tạo:</dt>
-                <dd>@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+    <h1 class="pb-3">Chi tiết yêu cầu đơn tìm gia sư</h1>
+    <div class="form-group">
+        <label asp-for="CreatedDate">Ngày tạo:</label>
+        <input type="date" asp-for="CreatedDate" class="form-control customform-control"
+                value="@Model.CreatedDate.ToString("yyyy-MM-dd")" disabled />
+    </div>
 
-                <dt>Ngày hết hạn:</dt>
-                <dd>@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
+    <div class="form-group">
+        <label asp-for="ExpiredDate">Ngày hết hạn:</label>
+        <input type="date" asp-for="ExpiredDate" class="form-control customform-control"
+                value="@Model.ExpiredDate.ToString("yyyy-MM-dd")" disabled />
+    </div>
 
-                <dt>Trạng thái yêu cầu:</dt>
-                <dd>@Model.RequestStatus</dd>
+    <div class="form-group">
+        <label asp-for="RequestStatus">Trạng thái đơn tìm gia sư hiện tại:</label>
+        <input type="text" asp-for="RequestStatus" class="form-control customform-control" disabled/>
+    </div>
 
-                <dt>Số lượng học sinh:</dt>
-                <dd>@Model.NStudent</dd>
+    <div class="form-group">
+        <label asp-for="NStudent">Số lượng học sinh:</label>
+        <input type="number" asp-for="NStudent" class="form-control customform-control" disabled />
+    </div>
 
-                @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
-                {
-                    <dt>Tên khách hàng:</dt>
-                    <dd>@Model.CustomerFullName</dd>
-                }
-
-                <dt>Khối lớp:</dt>
-                <dd>@Model.GradeName</dd>
-
-                <dt>Tên môn học:</dt>
-                <dd>@Model.SubjectName</dd>
-
-                @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
-                {
-                    <dt>Địa chỉ chi tiết:</dt>
-                    <dd>@Model.Address</dd>
-                }
-
-                <dt>Địa chỉ:</dt>
-                <dd>@Model.Location</dd>
-
-                <dt>Thông tin thêm:</dt>
-                <dd>@Model.AdditionalDetail</dd>
-            </dl>
+    @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
+    {
+        <div class="form-group">
+            <label asp-for="CustomerFullName">Tên khách hàng:</label>
+            <input type="text" asp-for="CustomerFullName" class="form-control customform-control" disabled />
         </div>
-        
-        <hr />
+    }
 
-
-    </div>
-    <div class="d-flex justify-content-center">
-
-        @if ( (Model.RequestStatus == AppConfig.FormStatus.APPROVAL.ToString() || 
-               Model.RequestStatus == AppConfig.FormStatus.HANDOVER.ToString()) 
-               &&
-              (Model.QueueStatus == AppConfig.QueueStatus.PENDING.ToString().ToLower() ||
-               Model.QueueStatus == AppConfig.QueueStatus.APPROVAL.ToString().ToLower()) )
-        {
-            <a class="btn btn-danger m-2" href="@Url.Action("CancelApplyRequest", "Tutor", new { requestId=@Model.RequestId})">Huỷ ứng tuyển</a>
-        }
-        
+    <div class="form-group">
+        <label asp-for="SubjectName">Tên môn học:</label>
+        <input type="text" asp-for="SubjectName" class="form-control customform-control" disabled />
     </div>
 
+    <div class="form-group">
+        <label asp-for="GradeName">Khối lớp:</label>
+        <input type="text" asp-for="GradeName" class="form-control customform-control" disabled />
+    </div>
+
+    @if (Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
+    {
+        <div class="form-group">
+            <label asp-for="Address">Số nhà, tên đường:</label>
+            <input type="text" asp-for="Address" class="form-control customform-control" disabled />
+        </div>
+    }
+
+    <div class="form-group">
+        <label asp-for="Location">Quận / Huyện:</label>
+        <input type="text" asp-for="Location" class="form-control customform-control" disabled />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdditionalDetail">Thông tin thêm:</label>
+        <input type="text" asp-for="AdditionalDetail" class="form-control customform-control" disabled />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QueueStatus">Trạng thái ứng tuyển:</label>
+        <input type="text" asp-for="QueueStatus" class="form-control customform-control" disabled />
+    </div>
+
+    @if (Model.QueueStatus == AppConfig.QueueStatus.APPROVAL.ToString().ToLower())
+    {
+        <div class="form-group">
+            <label asp-for="Price">Số tiền thế chân: @string.Format("{0:#,0} VNĐ", Model.Price)</label>
+            @* <input type="number" class="form-control customform-control" value="@string.Format("{0:#,0} VNĐ", Model.Price)" disabled /> *@
+        </div>
+    }
+        
+    @if ((Model.RequestStatus != AppConfig.FormStatus.DENY.ToString().ToLower() &&
+          Model.RequestStatus != AppConfig.FormStatus.CANCEL.ToString().ToLower())
+        &&
+        (Model.QueueStatus == AppConfig.QueueStatus.PENDING.ToString().ToLower() ||
+         Model.QueueStatus == AppConfig.QueueStatus.APPROVAL.ToString().ToLower() || 
+         Model.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())   )
+    {
+        <a id="cancelLink" class="btn btn-danger m-2" href="@Url.Action("CancelApplyRequest", "Tutor", new { requestId=@Model.RequestId, queueStatus = Model.QueueStatus})">Huỷ ứng tuyển</a>
+    }
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cancelLink = document.getElementById('cancelLink');
+        if (cancelLink) {
+            cancelLink.addEventListener('click', function (event) {
+                var requestStatus = "@Model.RequestStatus";
+                var queueStatus = "@Model.QueueStatus";
+
+                if (queueStatus == "handover" && queueStatus == requestStatus) {
+                    var confirmation = confirm("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không được hoàn tiền và không thể ứng tuyển lại vào đơn này nữa.");
+                    if (!confirmation) {
+                        event.preventDefault(); // Prevent navigation if user cancels
+                    }
+                }
+                else{
+                    var confirmation = confirm("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không thể ứng tuyển lại vào đơn này nữa.");
+                    if (!confirmation) {
+                        event.preventDefault(); // Prevent navigation if user cancels
+                    }
+                }
+                
+            });
+        }
+    });
+</script>

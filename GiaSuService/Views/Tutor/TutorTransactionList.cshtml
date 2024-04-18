@@ -29,7 +29,9 @@
                 <td>@(!string.IsNullOrEmpty(transaction.PaymentDate) ? transaction.PaymentDate : "Chưa thanh toán")</td>
                 <td>@transaction.Context</td>
                 <td>@transaction.Price</td>
-                <td><a href="#" class="btn btn-outline-info">Thông tin</a></td>
+                <td>
+                    <a href="@Url.Action("TutorTransactionDetail", "Tutor", new{tutorId = transaction.TutorId, requestId = transaction.RequestId})"
+                        class="btn btn-outline-info">Thông tin</a></td>
             </tr>
         }
     </tbody>

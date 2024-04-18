@@ -16,5 +16,6 @@ namespace GiaSuService.Models.TutorViewModel
         public DateTime ExpiredDate { get; set; }
         public string RequestStatus { get; set; } = string.Empty;
         public string QueueStatus { get; set; } = string.Empty;
+        public decimal Price { get; set; }
     }
 }

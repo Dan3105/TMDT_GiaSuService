@@ -245,7 +245,7 @@ namespace GiaSuService.Repository
                     ExpiredDate = p.CreateDate,
                     GradeName = p.Grade.Name,
                     SubjectName = p.Subject.Name,
-
+                    Price = p.Grade.Fee,
                 }).FirstOrDefaultAsync(p => p.RequestId == requestId);
             return result;
         }

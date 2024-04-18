@@ -195,7 +195,7 @@ namespace GiaSuService.Services
             bool isSuccess = await _queueRepository.CancelApplyRequest(tutorId, requestId, status.Id);
             if (isSuccess)
             {
-                return new ResponseService { Success = true, Message = "Huỷ Ứng tuyển thành công" };
+                return new ResponseService { Success = true, Message = "Huỷ ứng tuyển thành công" };
             }
             return new ResponseService { Success = false, Message = "Huỷ ứng tuyển thất bại" };
         }
