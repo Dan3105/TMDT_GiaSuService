@@ -68,7 +68,7 @@ namespace GiaSuService.Services
             bool delSuccess = await _categoryRepo.DeleteSessionDate(id);
             if (delSuccess)
             {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
+                return new ResponseService { Message = "Xóa thành công", Success = true };
             }
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
@@ -115,7 +115,7 @@ namespace GiaSuService.Services
             bool addSuccess = await _categoryRepo.CreateSubject(vm);
             if (addSuccess)
             {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
+                return new ResponseService { Message = "Xóa thành công", Success = true };
             }
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
@@ -184,7 +184,7 @@ namespace GiaSuService.Services
             bool delSuccess = await _categoryRepo.DeleteGrade(id);
             if (delSuccess)
             {
-                return new ResponseService { Message = "Tạo thành công", Success = true };
+                return new ResponseService { Message = "Xóa thành công", Success = true };
             }
 
             return new ResponseService { Message = "Lỗi hệ thống", Success = false };
