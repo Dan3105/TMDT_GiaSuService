@@ -99,6 +99,22 @@
 </div>
 
 <script>
+    // Function to display confirmation dialog before form submission
+    function confirmSubmission(event) {
+        var confirmation = confirm("Are you sure you want to submit the form?");
+        if (!confirmation) {
+            event.preventDefault(); // Prevent form submission if user cancels
+        }
+    }
+
+    // Add event listener to the submit button
+    document.addEventListener('DOMContentLoaded', function () {
+        var submitButton = document.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.addEventListener('click', confirmSubmission);
+        }
+    });
+
     function getDistricts() {
         $("#provincedefault").remove();
 

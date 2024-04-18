@@ -5,6 +5,7 @@ using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GiaSuService.Controllers
 {
@@ -115,6 +116,34 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = result.Message;
             }
             return RedirectToAction("", "Admin");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EmployeeProfile(int employeeId)
+        {
+            var profile = await _profileService.GetProfile(employeeId, AppConfig.EMPLOYEEROLENAME.ToString().ToLower());
+            if (profile == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("EmployeeList", "Admin");
+            }
+
+            return View(profile);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateEmployeeProfile(ProfileViewModel profile)
+        {
+            ResponseService response = await _profileService.UpdateProfile(profile, AppConfig.EMPLOYEEROLENAME.ToString().ToLower());
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = response.Message;
+            }
+            return RedirectToAction("EmployeeProfile", "Admin", new { employeeId = profile.ProfileId});
         }
 
         #region Session Manager
