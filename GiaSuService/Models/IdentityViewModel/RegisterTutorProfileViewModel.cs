@@ -5,7 +5,7 @@ namespace GiaSuService.Models.IdentityViewModel
     public class RegisterAccountProfileViewModel
     {
         [Required(ErrorMessage = "Please enter your full name.")]
-        [StringLength(100, MinimumLength = 10, ErrorMessage = "Full name must be between 3 and 100 characters.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Full name must be between 5 and 100 characters.")]
         public string FullName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Please enter your birth date.")]
