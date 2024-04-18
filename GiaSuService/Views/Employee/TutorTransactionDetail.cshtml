@@ -1,28 +1,30 @@
 ﻿@using GiaSuService.Models.EmployeeViewModel;
 @model TutorTransactionDetailViewModel
-
+@{
+    ViewData["Title"] = "Transaction Deposit";
+}
 <div class="container">
     @if (Model.TransactionDeposit != null)
     {
         <div class="card">
             <div class="card-header">
-                <h2>Transaction Deposit</h2>
+                <h2>Hóa đơn thanh toán</h2>
             </div>
             <div class="card-body">
-                <p><strong>Employee Name:</strong> @Model.TransactionDeposit.EmployeeName</p>
-                <p><strong>Tutor Name:</strong> @Model.TransactionDeposit.TutorName</p>
-                <p><strong>Create Date:</strong> @Model.TransactionDeposit.CreateDate</p>
-                <p><strong>Payment Date:</strong> @(string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate) ? "Chưa thanh toán" : Model.TransactionDeposit.PaymentDate)</p>
-                <p><strong>Context:</strong> @Model.TransactionDeposit.Context</p>
-                <p><strong>Price:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
+                <p><strong>Tên nhân viên:</strong> @Model.TransactionDeposit.EmployeeName</p>
+                <p><strong>Tên gia sư:</strong> @Model.TransactionDeposit.TutorName</p>
+                <p><strong>Ngày tạo đơn:</strong> @Model.TransactionDeposit.CreateDate</p>
+                <p><strong>Ngày thanh toán:</strong> @(string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate) ? "Chưa thanh toán" : Model.TransactionDeposit.PaymentDate)</p>
+                <p><strong>Nội dung:</strong> @Model.TransactionDeposit.Context</p>
+                <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
                 @if (Model.TransactionRefund == null && string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate))
                 {
                     <form class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
                         <input type="hidden" name="tutorId" value="@Model.TransactionDeposit.TutorId">
                         <input type="hidden" name="requestId" value="@Model.TransactionDeposit.RequestId">
                         <div class="form-group">
-                            <label for="paymentDate">Payment Date and Time:</label>
-                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control" required>
+                            <label for="paymentDate">Ngày thanh toán:</label>
+                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control customform-control" required>
                         </div>
                         <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button>
                     </form>
@@ -35,15 +37,15 @@
     {
         <div class="card mt-3">
             <div class="card-header">
-                <h2>Transaction Refund</h2>
+                <h2>Hóa đơn hoàn tiền</h2>
             </div>
             <div class="card-body">
-                <p><strong>Employee Name:</strong> @Model.TransactionRefund.EmployeeName</p>
-                <p><strong>Tutor Name:</strong> @Model.TransactionRefund.TutorName</p>
-                <p><strong>Create Date:</strong> @Model.TransactionRefund.CreateDate</p>
-                <p><strong>Payment Date:</strong> @(string.IsNullOrEmpty(Model.TransactionRefund.PaymentDate) ? "Chưa thanh toán" : Model.TransactionRefund.PaymentDate)</p>
-                <p><strong>Context:</strong> @Model.TransactionRefund.Context</p>
-                <p><strong>Price:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionRefund.Price)</p>
+                <p><strong>Tên nhân viên:</strong> @Model.TransactionRefund.EmployeeName</p>
+                <p><strong>Tên gia sư:</strong> @Model.TransactionRefund.TutorName</p>
+                <p><strong>Ngày tạo đơn:</strong> @Model.TransactionRefund.CreateDate</p>
+                <p><strong>Ngày thanh toán:</strong> @(string.IsNullOrEmpty(Model.TransactionRefund.PaymentDate) ? "Chưa thanh toán" : Model.TransactionRefund.PaymentDate)</p>
+                <p><strong>Nội dung:</strong> @Model.TransactionRefund.Context</p>
+                <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionRefund.Price)</p>
             </div>
         </div>
     }
@@ -52,7 +54,7 @@
         <div class="mt-4 d-flex justify-content-center align-items-center">
             @if(Model.TransactionDeposit != null)
             {
-                <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit.TutorId, requestId=Model.TransactionDeposit.RequestId})" class="btn btn-outline-warning">Tạo hóa đơn hoàn tiền</a>
+                <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit.TutorId, requestId=Model.TransactionDeposit.RequestId})" class="btn btn-outline-danger">Tạo hóa đơn hoàn tiền</a>
             }
             else{<span class="text-danger">Hệ thống không tìm thấy bất cứ hóa đơn nào của gia sư tới đơn tìm này</span>}
         </div>
@@ -65,7 +67,7 @@
         var refundLink = document.getElementById('refundLink');
         if (refundLink) {
             refundLink.addEventListener('click', function (event) {
-                var confirmation = confirm("Are you sure you want to create a refund transaction?");
+                var confirmation = confirm("Bạn có muốn tạo hóa đơn hoàn tiền?");
                 if (!confirmation) {
                     event.preventDefault(); // Prevent the default action (opening the link) if user cancels
                 }
@@ -75,7 +77,7 @@
         var paymentLink = document.getElementById('confirmPayment');
         if (paymentLink) {
             paymentLink.addEventListener('click', function (event) {
-                var confirmation = confirm("Are you sure you want to create a refund transaction?");
+                var confirmation = confirm("Xác nhận đã thanh toán?");
                 if (!confirmation) {
                     event.preventDefault(); // Prevent the default action (opening the link) if user cancels
                 }

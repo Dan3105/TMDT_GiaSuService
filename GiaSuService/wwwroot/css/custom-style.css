@@ -22,13 +22,17 @@ h1 {
     color: var(--sidebar-title-color);
 }
 
-h2{
+h2 {
     font-family: var(--title-font);
     text-align: center;
+    color: var(--sidebar-text-hover-color) !important;
 }
 h5 {
     font-family: var(--title-font);
     text-align: center;
+}
+h6{
+    font-weight: bolder;
 }
 
 .customstyle-button {

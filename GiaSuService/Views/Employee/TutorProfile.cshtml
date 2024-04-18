@@ -1,7 +1,9 @@
 ﻿@using GiaSuService.Models.IdentityViewModel
 
 @model TutorProfileViewModel
-
+@{
+    ViewData["Title"] = "Tutor Profile";
+}
 
 <div class="container">
     <div class="row">
@@ -9,23 +11,23 @@
             <input type="hidden" asp-for="TutorId" />
             <div class="row">
                 <div class="col-md-6 border-end">
-                    <h2>Account Profile</h2>
+                    <h2>Thông tin tài khoản</h2>
                     <hr />
                     <dl class="row">
-                        <dt class="col-sm-4">Full Name:</dt>
+                        <dt class="col-sm-4">Tên đầy đủ:</dt>
                         <dd class="col-sm-8">@Model.Fullname</dd>
-                        <dt class="col-sm-4">Date of Birth:</dt>
+                        <dt class="col-sm-4">Ngày sinh:</dt>
                         <dd class="col-sm-8">@Model.Birth.ToString("dd-MM-yyyy")</dd>
                         <dt class="col-sm-4">Email:</dt>
                         <dd class="col-sm-8">@Model.Email</dd>
-                        <dt class="col-sm-4">Phone:</dt>
+                        <dt class="col-sm-4">Số điện thoại:</dt>
                         <dd class="col-sm-8">@Model.Phone</dd>
                         <div class="form-group">
-                            <label asp-for="@Model.IdentityCard">Identity Card:</label>
+                            <label asp-for="@Model.IdentityCard">Số CCCD/CMND:</label>
                             <input type="text" asp-for="IdentityCard" class="form-control" />
                             <span asp-validation-for="IdentityCard" class="text-danger"></span>
                         </div>
-                        <dt class="col-sm-4">Gender:</dt>
+                        <dt class="col-sm-4">Giới tính:</dt>
                         <dd class="col-sm-8">@Model.Gender</dd>
                         <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
                         <dd class="col-sm-8 row">
@@ -36,7 +38,7 @@
                                 }
                                 else
                                 {
-                                    <span>No front ID card uploaded</span>
+                                    <span>Thiếu mặt trước CCCD</span>
                                 }
                             </div>
                             <div class="col">
@@ -46,16 +48,17 @@
                                 }
                                 else
                                 {
+                                    <span>Thiếu mặt sau CCCD</span>
                                 }
                             </div>
 
                         </dd>
 
-                        <dt class="col-sm-4">Created Date:</dt>
+                        <dt class="col-sm-4">Ngày tạo tài khoản:</dt>
                         <dd class="col-sm-8">
                             @Model.Createdate.ToString("dd-MM-yyyy")
                         </dd>
-                        <dt class="col-sm-4">Address:</dt>
+                        <dt class="col-sm-4">Địa chỉ:</dt>
                         <dd class="col-sm-8">@Model.AddressDetail</dd>
                     </dl>
                 </div>
@@ -68,25 +71,25 @@
                         }
                         else
                         {
-                            <span>No avatar uploaded</span>
+                            <span>Thiếu avatar</span>
                         }
                     </div>
-                    <h2>Tutor Profile</h2>
+                    <h2>Thông tin gia sư</h2>
                     <hr />
                     <dl class="row">
-                        <dt class="col-sm-5">College:</dt>
+                        <dt class="col-sm-5">Trường học:</dt>
                         <dd class="col-sm-7">@Model.College</dd>
-                        <dt class="col-sm-5">Area:</dt>
+                        <dt class="col-sm-5">Chuyên ngành:</dt>
                         <dd class="col-sm-7">@Model.Area</dd>
-                        <dt class="col-sm-5">Additional Info:</dt>
+                        <dt class="col-sm-5">Thông tin thêm:</dt>
                         <dd class="col-sm-7">@Model.Additionalinfo</dd>
-                        <dt class="col-sm-5">Academic Year (From):</dt>
+                        <dt class="col-sm-5">Từ năm:</dt>
                         <dd class="col-sm-7">@Model.Academicyearfrom</dd>
-                        <dt class="col-sm-5">Academic Year (To):</dt>
+                        <dt class="col-sm-5">Đến năm:</dt>
                         <dd class="col-sm-7">@Model.Academicyearto</dd>
-                        <dt class="col-sm-5">Type Tutor:</dt>
+                        <dt class="col-sm-5">Trình độ gia sư:</dt>
                         <dd class="col-sm-7">@Model.TutorType.TypeName</dd>
-                        <dt class="col-sm-5">Form Status:</dt>
+                        <dt class="col-sm-5">Trạng thái đơn:</dt>
                         <dd class="col-sm-7">
                             <b>@Model.Formstatus</b>
                         </dd>
@@ -106,21 +109,21 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="LockEnable">Lock Status:</label>
+                <label asp-for="LockEnable">Trạng thái tài khoản:</label>
                 <div class="form-check form-switch">
                     <input class="form-check-input customformcheck-input" type="checkbox" asp-for="LockEnable" id="lockCheckbox" />
                     <label class="form-check-label" id="lockStatusLabel">
                         @if (@Model.LockEnable)
                         {
-                            <span class="text-danger">Locked User</span>
+                            <span class="text-danger">Khóa tài khoản</span>
                         }
                         else
                         {
-                            <span class="text-success">Active User</span>
+                            <span class="text-success">Đang hoạt động</span>
                         }
                     </label>
                 </div>
-                <button type="submit" class="btn btn-primary customstyle-button">Update Profile</button>
+                <button type="submit" class="btn btn-primary customstyle-button">Cập nhật thông tin</button>
             </div>
         </form>
 
@@ -131,11 +134,11 @@
 
                 checkbox.addEventListener("change", function () {
                     if (checkbox.checked) {
-                        label.textContent = "Lock user";
+                        label.textContent = "Khóa tài khoản";
                         label.classList.add("text-danger");
                         label.classList.remove("text-success");
                     } else {
-                        label.textContent = "Enable user";
+                        label.textContent = "Đang hoat động";
                         label.classList.remove("text-danger");
                         label.classList.add("text-success");
                     }

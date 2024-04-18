@@ -8,9 +8,9 @@
     ViewData["Title"] = "Tutor Apply Request Queue";
 }
 
-<h3>Tutor Apply Request Queue</h3>
+<h2>Hàng chờ đơn ứng tuyển của gia sư</h2>
 
-<div class="container">
+<div class="container pt-4">
     <p class="card-text"><b>Tên lớp:</b> @Model.SubjectName</p>
     <p class="card-text"><b>Khối lớp:</b> @Model.GradeName</p>
     <p class="card-text"><b>Thông tin thêm:</b> @Model.AdditionalDetail</p>
@@ -46,7 +46,7 @@
                     var currentStatus = item.statusQueue.toLowerCase(); 
                     var queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
                     var href = item.isHaveTransaction ? `/Employee/TutorTransactionDetail?tutorId=${item.tutorId}&requestId=${thisRequestId}` : "#";
-                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Detail</a>`
+                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Chi tiết</a>`
 
                     var itemHtml = `<tr>
                                         <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
@@ -56,17 +56,17 @@
                                                 <span>${item.tutorType}</span>
                                             </div>
                                         </td>
-                                        <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Detail</a></td>
+                                        <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Chi tiết</a></td>
                                         <td class="text-center text-capitalize border-end">${item.statusQueue}</td>
                                         <td class="border-end">
                                             <div class="row d-flex align-items-center">
                                                 <div class="col-md-12 col-lg-7">
-                                                           <select class="form-select" id="statusSelect_${item.tutorId}">
+                                                           <select class="form-select customform-control" id="statusSelect_${item.tutorId}">
                                                         ${queueStatuses.map(status => `<option value="${status}" ${currentStatus === status ? 'selected' : ''}>${status.charAt(0).toUpperCase() + status.slice(1)}</option>`).join('')}
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12 col-lg-5">
-                                                        <button type="button" class="btn btn-primary m-1" onclick="updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'statusSelect_${item.tutorId}')">
+                                                        <button type="button" class="btn btn-primary customstyle-button m-1" onclick="updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'statusSelect_${item.tutorId}')">
                                                     Cập nhật
                                                 </button>
                                                 </div>
