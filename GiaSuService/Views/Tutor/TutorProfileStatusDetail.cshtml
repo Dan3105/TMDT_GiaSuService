@@ -56,8 +56,6 @@
                         if (!displayNameMapping.ContainsKey(property.Name)) continue;
                         var modifiedValue = property.GetValue(Model.DetailModified);
 
-                        if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
-                        {
                             // Get the display name from the mapping, if it exists; otherwise, use the property name
                             var displayName = displayNameMapping[property.Name];
 
@@ -74,12 +72,20 @@
                                     }
                                 }
                             }
+                            else if (modifiedValue == null || string.IsNullOrEmpty(modifiedValue.ToString()))
+                            {
+                                <li><strong>@displayName</strong>: </li>
+                            }
+                            @* else if (!originalValue.Equals(modifiedValue))
+                            {
+                                <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                            } *@
                             else
                             {
                                 <li><strong>@displayName</strong>: @modifiedValue</li>
                             }
                         }
-                    }
+                    
                 </ul>
             </div>
             @* <p>@Model.Context</p> *@

@@ -76,6 +76,7 @@ namespace GiaSuService.Repository
                     TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Name)),
                     SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Name)),
                     IsActive = tutor.IsActive ?? false,
+                    IsEnable = !tutor.Account.LockEnable,
                 })
                 .Skip(page * ROWS_ACCOUNT_LIST)
                 .Take(ROWS_ACCOUNT_LIST);

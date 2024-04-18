@@ -7,6 +7,7 @@ using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using static GiaSuService.Configs.AppConfig;
 
@@ -94,10 +95,7 @@ namespace GiaSuService.Services
                     }
                     else if (tutor.Status.Name.Equals(RegisterStatus.UPDATE.ToString().ToLower()))
                     {
-                        if (dbStatus.Name.Equals(RegisterStatus.UPDATE.ToString().ToLower()))
-                        {
-                            isSuccess = await _profileRepository.UpdateTutorProfileByUpdateForm(tutor);
-                        }
+                        isSuccess = await _profileRepository.UpdateTutorProfileByUpdateForm(tutor);
                     }
 
                     tutor.Status = dbStatus;
@@ -157,6 +155,47 @@ namespace GiaSuService.Services
 
                 if (data != null)
                 {
+                    
+
+                    var tutorType = _context.TutorTypes.AsNoTracking();
+                    var districts = _context.Districts.Include(p => p.Province).AsNoTracking();
+                    var grades = _context.Grades.AsNoTracking().OrderBy(p => p.Value);
+                    var sessions = _context.SessionDates.AsNoTracking().OrderBy(p => p.Value);
+                    var subjects = _context.Subjects.AsNoTracking().OrderBy(p => p.Value);
+
+                    if (data.SelectedDistrictId != 0)
+                    {
+                        var mdistrict = (await districts.FirstOrDefaultAsync(p => p.Id == data.SelectedDistrictId));
+                        if (mdistrict == null) { throw new KeyNotFoundException(); }
+                        string modifiedData = string.IsNullOrEmpty(data.AddressDetail) ? data.AddressDetail : data.AddressDetail;
+                        data.FormatAddress = $"{mdistrict.Province.Name}, {mdistrict.Name}, {modifiedData}";
+                    }
+
+                    if (data.SelectedTutorTypeId != 0)
+                    {
+                        data.FormatTutorType = (await tutorType.FirstOrDefaultAsync(p => p.Id == data.SelectedTutorTypeId))?.Name ?? throw new NullReferenceException();
+                    }
+                    if (data.SelectedSessionIds.Any())
+                    {
+                        data.FormatSessions = string.Join(", ", sessions.Where(p =>
+                                                                            data.SelectedSessionIds.Contains(p.Id)).Select(p => p.Name));
+                    }
+                    if (data.SelectedSubjectIds.Any())
+                    {
+                        data.FormatSubjects = string.Join(", ", subjects.Where(p =>
+                                                                            data.SelectedSubjectIds.Contains(p.Id)).Select(p => p.Name));
+                    }
+                    if (data.SelectedGradeIds.Any())
+                    {
+                        data.FormatGrades = string.Join(", ", grades.Where(p =>
+                                                                            data.SelectedGradeIds.Contains(p.Id)).Select(p => p.Name));
+                    }
+                    if (data.SelectedDistricts.Any())
+                    {
+                        data.FormatTeachingArea = string.Join(", ", districts.Where(p =>
+                                                                            data.SelectedDistricts.Contains(p.Id)).Select(p => p.Name));
+
+                    }
                     historyDetail.DetailModified = data;
                 }
 

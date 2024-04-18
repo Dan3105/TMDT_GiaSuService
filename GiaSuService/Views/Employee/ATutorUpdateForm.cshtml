@@ -48,8 +48,7 @@
                     if (!displayNameMapping.ContainsKey(property.Name)) continue;
                     var originalValue = property.GetValue(Model.Original);
                     var modifiedValue = property.GetValue(Model.Modified);
-                    //if (modifiedValue != null && !string.IsNullOrEmpty(modifiedValue.ToString()))
-                    // Get the display name from the mapping, if it exists; otherwise, use the property name
+
                     var displayName = displayNameMapping[property.Name];
 
                     if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))

@@ -19,5 +19,6 @@ namespace GiaSuService.Models.TutorViewModel
         public string AdditionalProfile { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }
+        public bool IsEnable { get; set; }
     }
 }

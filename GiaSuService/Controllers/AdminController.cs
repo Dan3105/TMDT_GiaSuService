@@ -93,7 +93,7 @@ namespace GiaSuService.Controllers
 
                 Employee = new Employee()
                 {
-                    FullName = accountProfile.FullName,
+                    FullName = Utility.FormatToCamelCase(accountProfile.FullName),
                     Birth = accountProfile.BirthDate,
                     Gender = accountProfile.Gender,
                     AddressDetail = accountProfile.AddressName,
