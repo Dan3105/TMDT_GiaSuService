@@ -17,9 +17,14 @@
 
     <h1>Đơn tìm gia sư</h1>
 
-    @* <form asp-action="UpdateTutorRequestEdit" asp-controller="Employee" method="post"> *@
     <form asp-controller="Customer" method="post">
         <input type="hidden" asp-for="RequestId" />
+
+        @if(Model.CurrentStatus != "pending")
+        {
+            <span class="text-danger">Đơn tìm gia sư không thể chỉnh sửa vì đã được duyệt. Vui lòng liên hệ nhân viên trung tâm để chỉnh sửa.</span>
+        }
+
         <div class="form-group">
             <label asp-for="NStudents">Số lượng học sinh:</label>
             <input asp-for="NStudents" type="number" min="1" max="9" class="form-control customform-control" required />
@@ -105,7 +110,6 @@
             </div>
         </div>
 
-        @* <button type="submit" class="btn btn-primary customstyle-button">Cập nhật</button> *@
         <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Customer")" class="btn btn-primary customstyle-button">Cập nhật</button>
         <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Customer")" class="btn btn-danger">Hủy bỏ</button>
     </form>
