@@ -306,5 +306,15 @@ namespace GiaSuService.Controllers
             return RedirectToAction("TutorRequestEdit", "Customer", new { id = model.RequestId });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetTutorsOnQueue(int requestId)
+        {
+            IEnumerable<TutorApplyRequestQueueViewModel> queries = await _tutorRequestFormService.GetTutorsApplyRequestQueue(requestId);
+            TutorApplyRequestViewModel data = new TutorApplyRequestViewModel()
+            {
+                tutors = queries,
+            };
+            return Ok(data);
+        }
     }
 }
