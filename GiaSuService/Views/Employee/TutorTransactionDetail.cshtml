@@ -23,8 +23,8 @@
                         <input type="hidden" name="tutorId" value="@Model.TransactionDeposit.TutorId">
                         <input type="hidden" name="requestId" value="@Model.TransactionDeposit.RequestId">
                         <div class="form-group">
-                            <label for="paymentDate">Payment Date and Time:</label>
-                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control" required>
+                            <label for="paymentDate">Ngày thanh toán:</label>
+                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control customform-control" required>
                         </div>
                         <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button>
                     </form>
@@ -54,7 +54,7 @@
         <div class="mt-4 d-flex justify-content-center align-items-center">
             @if(Model.TransactionDeposit != null)
             {
-                <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit.TutorId, requestId=Model.TransactionDeposit.RequestId})" class="btn btn-outline-warning">Tạo hóa đơn hoàn tiền</a>
+                <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit.TutorId, requestId=Model.TransactionDeposit.RequestId})" class="btn btn-outline-danger">Tạo hóa đơn hoàn tiền</a>
             }
             else{<span class="text-danger">Hệ thống không tìm thấy bất cứ hóa đơn nào của gia sư tới đơn tìm này</span>}
         </div>
@@ -67,7 +67,7 @@
         var refundLink = document.getElementById('refundLink');
         if (refundLink) {
             refundLink.addEventListener('click', function (event) {
-                var confirmation = confirm("Are you sure you want to create a refund transaction?");
+                var confirmation = confirm("Bạn có muốn tạo hóa đơn hoàn tiền?");
                 if (!confirmation) {
                     event.preventDefault(); // Prevent the default action (opening the link) if user cancels
                 }
@@ -77,7 +77,7 @@
         var paymentLink = document.getElementById('confirmPayment');
         if (paymentLink) {
             paymentLink.addEventListener('click', function (event) {
-                var confirmation = confirm("Are you sure you want to create a refund transaction?");
+                var confirmation = confirm("Xác nhận đã thanh toán?");
                 if (!confirmation) {
                     event.preventDefault(); // Prevent the default action (opening the link) if user cancels
                 }

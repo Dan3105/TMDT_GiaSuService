@@ -25,7 +25,7 @@ h1 {
 h2 {
     font-family: var(--title-font);
     text-align: center;
-    color: var(--sidebar-text-hover-color);
+    color: var(--sidebar-text-hover-color) !important;
 }
 h5 {
     font-family: var(--title-font);
