@@ -1,6 +1,8 @@
 ﻿@using GiaSuService.Models.EmployeeViewModel;
 @model TutorRequestProfileEditViewModel;
-
+@{
+    ViewData["Title"] = "Tutor Request Edit";
+}
 <style>
     .disabled-link {
         pointer-events: none; /* Disable mouse events */
@@ -58,7 +60,7 @@
 
         <div class="form-group">
             <label for="subject">Môn học:</label>
-            <select asp-for="SubjectId" class="form-select" id="subject">
+            <select asp-for="SubjectId" class="form-select customform-control" id="subject">
                 @if (Model.Subjects != null)
                 {
                     @foreach (var subject in Model.Subjects)
@@ -78,7 +80,7 @@
 
         <div class="form-group">
             <label for="grade">Khối lớp:</label>
-            <select asp-for="GradeId" class="form-select" id="grade">
+            <select asp-for="GradeId" class="form-select customform-control" id="grade">
                 @if (Model.Grades != null)
                 {
                     @foreach (var grade in Model.Grades)
@@ -297,7 +299,7 @@
                     var currentStatus = item.statusQueue.toLowerCase();
                     var queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
                     var href = item.isHaveTransaction ? `/Employee/TutorTransactionDetail?tutorId=${item.tutorId}&requestId=${thisRequestId}` : "#";
-                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Detail</a>`
+                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Chi tiết</a>`
 
                     var itemHtml = `<tr>
                                             <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
@@ -307,7 +309,7 @@
                                                     <span>Hiện đang là ${item.tutorType}</span>
                                                 </div>
                                             </td>
-                                            <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Detail</a></td>
+                                            <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Chi tiết</a></td>
                                             <td class="text-center text-capitalize border-end">${item.statusQueue}</td>
                                     </tr>`;
                     $("#tutor_container").append(itemHtml);

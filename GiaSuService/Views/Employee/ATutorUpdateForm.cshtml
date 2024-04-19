@@ -142,15 +142,15 @@
         <div class="form-group row mt-2">
             <label for="Context" class="form-label fw-bold">Lý do phê duyệt:</label>
             <div class="col-sm-9">
-                <textarea class="form-control" asp-for="Context" rows="4" placeholder="Reason for submitting"></textarea>
+                <textarea class="form-control customform-control" asp-for="Context" rows="4" placeholder="Nhập lý do phê duyệt"></textarea>
             </div>
 
             <div class="col-sm-3 mt-4 justify-content-end">
                 <div class="col-auto">
                     <input type="hidden" asp-for="Modified.TutorId" />
 
-                    <button type="submit" class="btn btn-primary" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Apply</button>
-                    <button type="submit" class="btn btn-danger" name="statusType" value="@AppConfig.RegisterStatus.DENY.ToString()">Deny</button>
+                    <button type="submit" class="btn btn-primary customstyle-button" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Đồng ý</button>
+                    <button type="submit" class="btn btn-danger" name="statusType" value="@AppConfig.RegisterStatus.DENY.ToString()">Từ chối</button>
 
                 </div>
             </div>

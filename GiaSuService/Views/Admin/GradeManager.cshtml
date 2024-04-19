@@ -16,7 +16,7 @@
                 <th data-width="35" data-width-unit="%" data-field="gradeName">Khối lớp</th>
                 <th data-width="15" data-width-unit="%" data-field="fee">Tiền phí</th>
                 <th data-width="15" data-width-unit="%" data-field="value">Thứ tự</th>
-                <th data-width="35" data-width-unit="%">Action</th>
+                <th data-width="35" data-width-unit="%">Hành động</th>
             </tr>
         </thead>
         <tbody id="data-container">
@@ -76,7 +76,7 @@
             $tr.html(`
                       <td><input type="text" class="form-control" name="gradeName" placeholder="Nhập khối" value="${name}"></td>
                       <td><input type="number" class="form-control" name="fee" placeholder="Nhập phí" step="1000" value="${fee}"></td>
-                      <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
+                      <td><input type="number" class="form-control" min=1 name="value" placeholder="Nhập thứ tự" value="${order}"></td>
                       <td>
                         <button type="button" class="btn btn-success btn-sm submit-edit-button">Đồng ý</button>
                         <button type="button" class="btn btn-secondary btn-sm cancel-edit-button">Hủy bỏ</button>
@@ -156,12 +156,12 @@
             let order = parseInt($tds.eq(2).text()) + 1;
             var newRowHtml = `
                                         <tr>
-                                                <td><input type="text" class="form-control" name="gradeName" placeholder="Enter Name"></td>
-                                                <td><input type="number" step="1000" class="form-control" min=0 name="fee" placeholder="Enter Fee"></td>
+                                                <td><input type="text" class="form-control" name="gradeName" placeholder="Nhập tên khối"></td>
+                                                <td><input type="number" step="1000" class="form-control" min=0 name="fee" placeholder="Nhập phí"></td>
                                                 <td><input type="number" class="form-control" min=1 name="value" placeholder="Enter Order" value="${order}"></td>
                                             <td>
-                                                <button type="button" class="btn btn-success btn-sm submit-add-button">Submit</button>
-                                                <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Cancel</button>
+                                                <button type="button" class="btn btn-success btn-sm submit-add-button">Đồng ý</button>
+                                                <button type="button" class="btn btn-secondary btn-sm cancel-add-button">Hủy bỏ</button>
                                             </td>
                                         </tr>`;
 
