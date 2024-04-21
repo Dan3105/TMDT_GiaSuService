@@ -12,6 +12,7 @@ namespace GiaSuService.Services.Interface
         public Task<Account?> ValidateAccount(string email, string password);
         public Task<ResponseService> CreateAccount(Account account);
         public Task<ResponseService> UpdateAccount(Account account);
+        public Task<ResponseService> UpdatePassword(int accountId, string password);
         public Task<ResponseService> CreateTutorRegisterRequest(Account account, IEnumerable<int> sessionIds, IEnumerable<int> subjectIds, IEnumerable<int> gradeIds,
             IEnumerable<int> districtIds);
         public Task<IEnumerable<Account>> GetAccountsByRole(string role);

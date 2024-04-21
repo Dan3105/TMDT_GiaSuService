@@ -6,6 +6,7 @@ using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -74,6 +75,12 @@ namespace GiaSuService.Controllers
             return View("Index", model);
         }
 
+        [Authorize]
+        private string? GetAccountId()
+        {
+            return User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+
         [HttpGet]
         [Authorize(Policy = AppConfig.PROFILE_POLICY)]
         public async Task<IActionResult> Profile()
@@ -82,7 +89,7 @@ namespace GiaSuService.Controllers
 
             if (userRole == AppConfig.TUTORROLENAME) return RedirectToAction("Profile", "Tutor");
 
-            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+            var accountId = GetAccountId();
             //User not founded
             if (accountId == null || accountId == "" || userRole == null) return RedirectToAction("Index", "Home");
 
@@ -345,6 +352,41 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
             }
             return RedirectToAction("", "Identity");
+        }
+
+        
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Password()
+        {
+            PasswordViewModel model = new();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Password(PasswordViewModel model)
+        {
+            var accountId = GetAccountId();
+            if (accountId == null || accountId == "")
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại hoặc rỗng";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var PasswordHash = Utility.HashPassword(model.Password);
+
+            ResponseService response = await _authService.UpdatePassword(int.Parse(accountId), PasswordHash);
+            if (!response.Success)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Đổi mật khẩu không thành công";
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Đổi mật khẩu thành công";
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }

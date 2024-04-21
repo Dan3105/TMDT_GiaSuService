@@ -204,5 +204,25 @@ namespace GiaSuService.Services
 
             return null;
         }
+
+        public async Task<ResponseService> UpdatePassword(int accountId, string password)
+        {
+            try
+            {
+                bool isSuccess = await _accountRepo.UpdatePassword(accountId, password);
+                if (isSuccess)
+                {
+                    return new ResponseService { Success = true, Message = "Đổi mật khẩu thành công" };
+                }
+                else
+                {
+                    return new ResponseService { Success = true, Message = "Đổi mật khẩu thất bại" };
+                }
+            }
+            catch (Exception)
+            { }
+            return new ResponseService { Success = false, Message = "Lỗi hệ thống, vui lòng thử lại sau ít phút nữa" };
+
+        }
     }
 }

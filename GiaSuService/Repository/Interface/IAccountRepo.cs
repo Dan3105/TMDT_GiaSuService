@@ -8,6 +8,6 @@ namespace GiaSuService.Repository.Interface
         public Task<Account?> GetById(int id);
         public Task<int?> GetRoleId(string roleName);
         public Task<IEnumerable<Account>> GetAccountsByRoleId(int roleId);
-
+        public Task<bool> UpdatePassword(int accountId, string password);
     }
 }

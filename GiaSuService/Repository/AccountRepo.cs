@@ -79,5 +79,15 @@ namespace GiaSuService.Repository
         {
             return await _context.Customers.FirstOrDefaultAsync(p => p.AccountId == accountId);
         }
+
+        public async Task<bool> UpdatePassword(int accountId, string password)
+        {
+            Account? account = await GetById(accountId);
+            if (account == null) return false;
+
+            account.PasswordHash = password;
+            Update(account);
+            return await SaveChanges();
+        }
     }
 }
