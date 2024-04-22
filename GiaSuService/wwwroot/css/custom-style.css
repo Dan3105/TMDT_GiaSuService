@@ -8,6 +8,7 @@
     --sidebar-title-color: #882a8b;
     --sidebar-text-hover-color: #6420AA;
     --bs-body-bg: #F3F8FF;
+    --footer-color: #cab9df;
 }
 
 body {
@@ -35,16 +36,59 @@ h6{
     font-weight: bolder;
 }
 
+.icon-box {
+    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+    padding: 50px 30px;
+    transition: all ease-in-out 0.4s;
+    background: #fff;
+}
+
+    .icon-box .icon {
+        margin-bottom: 10px;
+    }
+
+        .icon-box .icon i {
+            color: #47b2e4;
+            font-size: 36px;
+            transition: 0.3s;
+        }
+
+    .icon-box h4 {
+        font-weight: 500;
+        margin-bottom: 15px;
+        font-size: 24px;
+    }
+
+        .icon-box h4 a {
+            color: #37517e;
+            transition: ease-in-out 0.3s;
+        }
+
+    .icon-box p {
+        line-height: 24px;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    .icon-box:hover {
+        transform: translateY(-10px);
+    }
+
+        .icon-box:hover h4 a {
+            color: #47b2e4;
+        }
+
+
 .customstyle-button {
     background-color: #A85295;
     border: none;
     color: white;
 }
 
-.customstyle-button:hover {
-        background-color: var(--sidebar-text-hover-color);
-        color: #FFF;
-}
+    .customstyle-button:hover {
+            background-color: var(--sidebar-text-hover-color);
+            color: #FFF;
+    }
 
 
 .customformcheck-input {
@@ -64,24 +108,18 @@ h6{
     border: 1px solid var(--box-color);
 }
 
-input.customform-control {
-    width: 100%;
-}
+    input.customform-control {
+        width: 100%;
+    }
 
-.customform-control:disabled, .customform-control[readonly] {
-    background-color: #d3e2ef;
-}
+    .customform-control:disabled, .customform-control[readonly] {
+        background-color: #d3e2ef;
+    }
 
-
-.customform-select {
-    width: contain;
-    font-size: 0.9rem;
-    border: 1px solid var(--box-color);
-}
 
 #pagination {
     display: flex;
-    justify-content: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; 
     align-items: center;
 }
 
@@ -92,4 +130,50 @@ input.customform-control {
 }
 #imgimg{
     width: 40%
+}
+
+#header {
+    height: 50px;
+    /*background-color: var(--footer-color);*/
+    position: fixed;
+}
+
+#header-title{
+    margin-left: 30px;
+}
+
+.toggled #header-title {
+    margin-left: 350px; /* Điều chỉnh khoảng cách dựa trên kích thước sidebar */
+}
+
+#hero {
+    width: 100%;
+    height: 80vh;
+    /*background: #bcd4ed;*/
+    border-color: var(--title-font);
+}
+
+#hero {
+    height: 300px; /* Giảm chiều cao của section */
+    padding: 10px; /* Giảm padding để tiết kiệm không gian */
+}
+
+    #hero h1 {
+        font-family: "Lobster", sans-serif; 
+        color: var(--sidebar-text-hover-color);
+        font-size: 2.5em;
+    }
+
+    #hero h5 {
+        font-family: "Lobster", sans-serif;
+        color: var(--title-font);
+    }
+
+.hero-img img { 
+    max-width: 100%; /* Giảm kích thước hình ảnh */
+}
+
+
+.footer-page {
+    background-color: var(--footer-color);
 }

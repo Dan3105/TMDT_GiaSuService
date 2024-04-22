@@ -103,7 +103,7 @@ body {
 #show-sidebar {
     position: fixed;
     left: 0;
-    top: 10px;
+    top: 50%;
     border-radius: 0 4px 4px 0px;
     width: 35px;
     transition-delay: 0.3s;
@@ -164,6 +164,7 @@ body {
     .sidebar-wrapper .sidebar-brand #close-sidebar {
         cursor: pointer;
         font-size: 20px;
+        top: 50%;
     }
 /*--------------------sidebar-header----------------------*/
 

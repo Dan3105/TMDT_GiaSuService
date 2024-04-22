@@ -15,11 +15,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.4/dist/bootstrap-table.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+</head> 
 <body>
     @{
         bool isAuth = User.Identity?.IsAuthenticated ?? false;
@@ -29,13 +31,23 @@
         string count_query = (TempData["Count"] as string)!;
     }
     <div class="page-wrapper chiller-theme toggled">
-        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
-            <i class="fas fa-bars"></i>
+        <div class="page-wrapper chiller-theme toggled">
+            <div id="header" class="align-content-center">
+                <div id="header-title">
+                    <img src="~/logo.png" alt="" width="60" />
+                </div>
+            </div>
+
+            <a id="show-sidebar" class="btn btn-lg" href="#">
+                <i class="fa fa-angle-right"></i>
         </a>
         <nav id="sidebar" class="sidebar-wrapper">
             <div class="sidebar-content">
                 <div class="sidebar-brand">
-                    <a href="/">Web Thuê Gia sư</a>
+                        <a href="/">
+                            <img src="~/logo.png" class="" alt="" width="20" />
+                            TutorLight
+                        </a>
                     <div id="close-sidebar">
                         <i class="fas fa-times"></i>
                     </div>
@@ -367,21 +379,128 @@
                         @RenderBody()
                     </main>
                 </div>
-                
-                <footer class="text-center">
-                    <div class="mb-2">
-                        <small>
-                            © 2024 made with <i class="fa fa-heart" style="color:red"></i>
-                        </small>
+
+                    <!--
+                                  <footer class="text-center">
+                                      <div class="mb-2">
+                                          <small>
+                                              © 2024 made with <i class="fa fa-heart" style="color:red"></i>
+                                          </small>
+                                      </div>
+                                      <div>
+
+                                      </div>
+                                  </footer>
+                                  -->
+                </div>
+                <!--footer-->
+
+
+
+                <footer class="text-center text-lg-start text-dark footer-page">
+                    <!-- Grid container -->
+                    <div class="container p-2">
+                        <!--Grid row-->
+                        <div class="row my-2">
+                            <!--Grid column-->
+                            <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
+
+                                <div class=" rounded-circle d-flex align-items-center justify-content-center mx-auto" style="background-color: var( --bs-body-bg); width: 110px; height: 110px;">
+                                    <img src="~/logo.png" height="100" alt=""
+                                         loading="lazy" />
+                                </div>
+
+                                <div class="text-center text-dark">
+                                    <p>TutorLight -  Soi Sáng Trí Tuệ, Rạng Rỡ Tương Lai</p>
+                                   
+                                </div>
+
+                                
+
+                            </div>
+                            <!--Grid column-->
+                            <!--Grid column-->
+                            <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
+                                <h5 class="text-uppercase mb-2 text-dark">Mạng xã hội</h5>
+
+                               
+                                <ul class="list-unstyled text-dark text-decoration-none">
+                                    <li>
+                                        <p><i class="fab fa-facebook-square pe-2">Facebook</i><p>
+                                    </li>
+                                    <li>
+                                        <p><i class="fab fa-instagram pe-2">Instagram</i></p>
+                                    </li>
+                                    <li>
+                                        <p><i class="fab fa-youtube pe-2 mb-0">Youtube</i></p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--Grid column-->
+                            <!--Grid column-->
+                            <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
+                                <h5 class="text-uppercase mb-2 text-dark">Về chúng tôi</h5>
+
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="#!" class="text-dark"><i class="fa fa-graduation-cap pe-2"></i>Liên hệ</a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="#!" class="text-dark"><i class="fa fa-graduation-cap pe-2"></i>Chính sách bảo mật</a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="#!" class="text-dark"><i class="fa fa-graduation-cap pe-2 mb-0"></i>Điều khoản</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <!--Grid column-->
+                            <!--Grid column-->
+                            <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
+                                <h5 class="text-uppercase mb-2 text-dark">Liên hệ</h5>
+
+                                <ul class="list-unstyled text-dark">
+                                    <li>
+                                        <p><i class="fas fa-map-marker-alt pe-2"></i>Warsaw, 57 Street, Poland</p>
+                                    </li>
+                                    <li>
+                                        <p><i class="fas fa-phone pe-2"></i>+ 01 234 567 89</p>
+                                    </li>
+                                    <li>
+                                        <p><i class="fas fa-envelope pe-2 mb-0"></i>contact@example.com</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--Grid column-->
+                        </div>
+                        <!--Grid row-->
                     </div>
-                    <div>
-                        
+                    <!-- Grid container -->
+                    <!-- Copyright - Bootstrap Brain Component -->
+                    <div class="pt-2 border-top border-light-subtle" style="background-color: var(--bs-body-bg)">
+                        <div class="container overflow-hidden">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="footer-copyright-wrapper text-center">
+
+                                        &copy; TutorLight 2024. All Rights Reserved.
+                                    </div>
+                                    <div class="credits text-secondary text-center fs-7">
+                                        <small>Built by <a href="https://www.youtube.com/watch?v=YQHsXMglC9A" class="link-secondary text-decoration-none">Group One</a> with <i class="fa fa-heart" style="color:blue"></i></small>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </footer>
-            </div>
-        </main>
-        
-    </div>
+
+
+                <!-- End of .container -->
+                <!--footer-->
+            </main>
+
+        </div>
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
