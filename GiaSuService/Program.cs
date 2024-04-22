@@ -7,6 +7,7 @@ using GiaSuService.Repository.Interface;
 using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -72,6 +73,12 @@ builder.Services.AddAuthorization(o =>
     });
 });
 
+// Size of file upload
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 25 * 1024 * 1024; // 25 MB limit
+});
+
 //Add Repository
 builder.Services.AddTransient<IAccountRepo, AccountRepo>();
 builder.Services.AddTransient<IAddressRepo, AddressRepo>();
@@ -92,6 +99,7 @@ builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<ITutorService, TutorService>();
 builder.Services.AddScoped<ITutorRequestFormService,  TutorRequestFormService>();
 builder.Services.AddScoped<ITransactionService,  TransactionService>();
+builder.Services.AddScoped<IUploadFileService, UploadFileService>();
 builder.Services.AddScoped<IAuthorizationHandler, ShouldBeAdminRequirementAuthorization>();
 var app = builder.Build();
 

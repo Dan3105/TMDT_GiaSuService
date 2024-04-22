@@ -36,6 +36,13 @@ namespace GiaSuService.Configs
             CANCEL,
         }
 
+        public enum UploadFileType
+        {
+            AVATAR,
+            FRONT_IDENTITY_CARD,
+            BACK_IDENTITY_CARD,
+        }
+
         public const string CLAIM_TYPE_AVATAR = "Avatar";
 
         public const string CLAIM_USER = "User";

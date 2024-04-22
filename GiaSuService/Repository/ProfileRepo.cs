@@ -8,6 +8,7 @@ using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using Newtonsoft.Json;
 using GiaSuService.Models.EmployeeViewModel;
+using System.Security.Principal;
 
 namespace GiaSuService.Repository
 {
@@ -620,5 +621,19 @@ namespace GiaSuService.Repository
 
 
         #endregion
+
+        public async Task<bool> UpdateAvatar(int accountId, string imageUrl)
+        {
+            var account = await _context.Accounts.FirstOrDefaultAsync(p => p.Id == accountId);
+
+            if (account == null)
+            {
+                return false;
+            }
+
+            account.Avatar = imageUrl;
+            _context.Accounts.Update(account);
+            return _context.SaveChanges() > 0;
+        }
     }
 }

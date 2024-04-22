@@ -20,13 +20,15 @@ namespace GiaSuService.Controllers
         private readonly IAddressService _addressService;
         private readonly ICatalogService _catalogService;
         private readonly IProfileService _profileService;
+        private readonly IUploadFileService _uploadFileService;
 
-        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, IProfileService profileService)
+        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, IProfileService profileService, IUploadFileService uploadFileService)
         {
             _authService = authService;
             _addressService = addressService;
             _catalogService = catalogService;
             _profileService = profileService;
+            _uploadFileService = uploadFileService;
         }
 
         public IActionResult Index()
@@ -73,6 +75,14 @@ namespace GiaSuService.Controllers
             }
             TempData[AppConfig.MESSAGE_FAIL] = "Incorrect Login";
             return View("Index", model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetUserRole()
+        {
+            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value.ToLower();
+            return Json(userRole);
         }
 
         [Authorize]
@@ -387,6 +397,36 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_SUCCESS] = "Đổi mật khẩu thành công";
             }
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateAvatar(IFormFile file)
+        {
+            ResponseService response = await _uploadFileService.UploadFile(file, AppConfig.UploadFileType.AVATAR);
+
+            if (!response.Success)
+            {
+
+                TempData[AppConfig.MESSAGE_FAIL] = "Cập nhật ảnh đại diện không thành công";
+                return RedirectToAction("Profile", "Identity");
+            }
+
+            var accountId = GetAccountId();
+            //User not founded
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            response = await _profileService.UpdateAvatar(int.Parse(accountId), response.Message);
+            if (response.Success)
+            {
+                TempData[AppConfig.MESSAGE_SUCCESS] = "Cập nhật ảnh đại diện thành công";
+            }
+            else
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Cập nhật ảnh đại diện không thành công";
+            }
+
+            return RedirectToAction("Profile", "Identity");
         }
     }
 }

@@ -4,6 +4,7 @@ using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GiaSuService.Services
 {
@@ -48,6 +49,16 @@ namespace GiaSuService.Services
             }
 
             bool isSuccess = await _profileRepo.UpdateProfile(profile, userRole);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+            }
+            return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
+        }
+
+        public async Task<ResponseService> UpdateAvatar(int accountId, string imageUrl)
+        {
+            bool isSuccess = await _profileRepo.UpdateAvatar(accountId, imageUrl);
             if (isSuccess)
             {
                 return new ResponseService { Success = true, Message = "Cập nhật thành công" };
