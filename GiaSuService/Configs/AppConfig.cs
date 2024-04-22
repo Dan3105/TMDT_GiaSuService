@@ -6,6 +6,8 @@ namespace GiaSuService.Configs
 {
     public class AppConfig
     {
+        public const string connection_string = "TutorConnection";
+
         public const string register_status = "Register";
         public enum RegisterStatus
         {

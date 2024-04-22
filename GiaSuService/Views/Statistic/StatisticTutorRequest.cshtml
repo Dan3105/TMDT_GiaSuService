@@ -1,0 +1,178 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+@model TutorRequestStatisticsViewModel;
+<h1>Thống kê tài khoản</h1>
+<div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <span>Từ ngày: </span>
+                    <input type="date" class="form-control" id="fromDateInput" value="2024-01-03">
+                </div>
+                <div class="col-3">
+                    <span>Đến ngày: </span>
+                    <input type="date" class="form-control" id="toDateInput" value="2024-02-03">
+                </div>
+                <div class="col-3">
+                    <span>Top môn học: </span>
+                    <select class="form-select" id="topKSelect">
+                        <option selected value="3">3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <button onclick="fetchDataAndRenderChart()" class="btn btn-primary mt-3" type="button">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="row col-12">
+            <div class="col-7 border-end mt-2">
+                <canvas id="myChart" class="me-2"></canvas>
+            </div>
+            <div class="col-5 mt-4">
+                <h6>Thống kê đơn</h6>
+                <span id="spanRequestStatistic">Thống kê đơn</span>
+                <dl id="statisRequestInformation" class="row mt-2">
+                    <dt class="col-8">Số lượng đơn được tạo:</dt>
+                    <dd class="col-4"></dd>
+                    <dt class="col-8">Số lượng đơn đã chấp thuận:</dt>
+                    <dd class="col-4"></dd>
+                    <dt class="col-8">Số lượng đơn đã giao:</dt>
+                    <dd class="col-4"></dd>
+                    <dt class="col-8">Số lượng đơn đã từ chối:</dt>
+                    <dd class="col-4"></dd>
+                    <dt class="col-8">Số lượng đơn đã hủy:</dt>
+                    <dd class="col-4"></dd>
+                </dl>
+            </div>
+
+        </div>
+        <div class="col-12">
+            <div id="topKPopularh">Top K Popular Subject</div>
+            
+            <canvas id="orderChart" width="200" height="100"></canvas>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let oldChart;
+    let currentDate = new Date();
+    let previousMonthDate = new Date(currentDate);
+    previousMonthDate.setMonth(currentDate.getMonth() - 1);
+
+    document.getElementById('toDateInput').value = currentDate.toISOString().slice(0, 10);
+    document.getElementById('fromDateInput').value = previousMonthDate.toISOString().slice(0, 10);
+
+    function fetchDataAndRenderChart() {
+        var fromDate = document.getElementById('fromDateInput').value; // Get value from fromDateInput
+        var toDate = document.getElementById('toDateInput').value; // Get value from toDateInput
+        var topK = document.getElementById('topKSelect').value;
+        $.ajax({
+            url: '/Statistic/GetSubjectStatistic',
+            type: 'GET',
+            data: {
+                fromDate: fromDate,
+                toDate: toDate,
+                topK: topK
+            },
+            success: function (dataFromServer) {
+                document.getElementById('spanRequestStatistic').innerHTML =
+                    `Từ ngày ${fromDate} đến ngày ${toDate}`;
+                let statistic = dataFromServer.statis;
+                document.getElementById('statisRequestInformation').innerHTML = 
+                `
+                        <dt class="col-8">Số lượng đơn được tạo:</dt>
+                            <dd class="col-4">${statistic.totalCreated}</dd>
+                        <dt class="col-8">Số lượng đơn đang chờ duyệt:</dt>
+                            <dd class="col-4">${statistic.totalPending}</dd>
+                        <dt class="col-8">Số lượng đơn đã phê duyệt:</dt>
+                            <dd class="col-4">${statistic.totalApproval}</dd>
+                        <dt class="col-8">Số lượng đơn đã từ chối:</dt>
+                                <dd class="col-4">${statistic.totalDeny}</dd>
+                        <dt class="col-8">Số lượng đơn đã giao:</dt>
+                                <dd class="col-4">${statistic.totalHandover}</dd>
+                        <dt class="col-8">Số lượng đơn đã hủy:</dt>
+                            <dd class="col-4">${statistic.totalCancel}</dd>
+                `
+                ;
+                document.getElementById('topKPopularh').innerHTML = `<h3>Top ${topK} môn học được chọn</h3><br>
+                                                                        <span>Từ ${fromDate} đến ${toDate}</span>`
+                
+                renderChartDay(dataFromServer.chart);
+                renderHistogram(dataFromServer.statis);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function renderChartDay(dataFromServer) {
+        // Extracting data for labels and values
+        var labels = dataFromServer.map(function (item) {
+            return item.type_date_year + '-' + item.type_date_month + '-' + item.type_date_day;
+        });
+
+        var values = dataFromServer.map(function (item) {
+            return item.count_request;
+        });
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        if (oldChart) {
+            oldChart.destroy();
+        }
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Request Creation',
+                    data: values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        oldChart = myChart;
+    }
+    function renderHistogram(dataFromServer) {
+        const gradeNames = Object.keys(dataFromServer.topKPopular);
+        const counts = Object.values(dataFromServer.topKPopular);
+
+        // Create a bar chart
+        new Chart(document.getElementById('orderChart'), {
+            type: 'bar',
+            data: {
+                labels: gradeNames,
+                datasets: [{
+                    label: 'Grade Count',
+                    data: counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+    fetchDataAndRenderChart();
+</script>
