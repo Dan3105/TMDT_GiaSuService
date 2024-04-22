@@ -1,0 +1,135 @@
+﻿
+@using GiaSuService.Configs;
+@using GiaSuService.Models.UtilityViewModel;
+@model AccountStatisticsViewModel;
+<h1>Thống kê tài khoản</h1>
+<div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <input type="date" class="form-control" id="fromDateInput" value="2024-01-03">
+                </div>
+                <div class="col-3">
+                    <input type="date" class="form-control" id="toDateInput" value="2024-02-03">
+                </div>
+                <div class="col-3">
+                    <select class="form-select" id="roleSelect">
+                        @foreach(var role in Model.ListRole)
+                        {
+                            @if (role.Value.ToString().ToLower().Equals(AppConfig.CUSTOMERROLENAME.ToLower()))
+                            {
+                                <option selected value="@role.Key">@role.Value.ToString()</option>
+
+                            }
+                            else
+                            {
+                            <option value="@role.Key">@role.Value.ToString()</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-3">
+                    <button onclick="buttonFetch()" class="btn btn-primary" type="button">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="row col-12">
+            <div class="col-8 border-end mt-2">
+                <canvas id="myChart" class="me-2"></canvas>
+            </div>
+            <div class="col-4 mt-4">
+                <dl class="row">
+                    <dt class="col-8">Số lượng nhân viên:</dt>
+                    <dd class="col-4">@Model.TotalEmployee</dd>
+                    <dt class="col-8">Số lượng gia sư:</dt>
+                    <dd class="col-4">@Model.TotalTutor</dd>
+                    <dt class="col-8">Số lượng khách hàng:</dt>
+                    <dd class="col-4">@Model.TotalCustomer</dd>
+                </dl>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let oldChart;
+    let currentDate = new Date();
+    let previousMonthDate = new Date(currentDate);
+    previousMonthDate.setMonth(currentDate.getMonth() - 1);
+
+    document.getElementById('toDateInput').value = currentDate.toISOString().slice(0, 10);
+    document.getElementById('fromDateInput').value = previousMonthDate.toISOString().slice(0, 10);
+
+    function buttonFetch() {
+        var fromDate = document.getElementById('fromDateInput').value; // Get value from fromDateInput
+        var toDate = document.getElementById('toDateInput').value; // Get value from toDateInput
+        var roleSelect = document.getElementById("roleSelect").value;
+        
+        fetchDataAndRenderChart(fromDate, toDate, roleSelect);
+    }
+
+    function fetchDataAndRenderChart(fromDate, toDate, roleSelect) {
+        
+        $.ajax({
+            url: '/Statistic/GetAccountData',
+            type: 'GET',
+            data: {
+                roleId: roleSelect,
+                fromDate: fromDate,
+                toDate: toDate
+            },
+            success: function (dataFromServer) {
+                renderChartDay(dataFromServer);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function renderChartDay(dataFromServer) {
+        // Extracting data for labels and values
+        var labels = dataFromServer.map(function (item) {
+            return item.type_date_year + '-' + item.type_date_month + '-' + item.type_date_day;
+        });
+
+        var values = dataFromServer.map(function (item) {
+            return item.count_account;
+        });
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        if (oldChart) {
+            oldChart.destroy();
+        }
+
+        let selectedIndex = document.getElementById("roleSelect").selectedIndex;
+        let roleSelect = document.getElementById("roleSelect").options[selectedIndex].text;
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: `${roleSelect} account created`,
+                    data: values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        oldChart = myChart;
+    }
+    buttonFetch();
+
+</script>
