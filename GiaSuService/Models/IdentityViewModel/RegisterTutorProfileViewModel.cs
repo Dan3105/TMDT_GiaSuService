@@ -27,7 +27,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public string? ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Please enter your identity card number.")]
-        [RegularExpression(@"^\d{12}$", ErrorMessage = "Identity card must be exactly 12 digits.")]
+        [RegularExpression(@"^\d{10}$|^\d{12}$", ErrorMessage = "Identity card must be exactly 10 or 12 digits.")]
         public string IdentityCard { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Please select your gender.")]
