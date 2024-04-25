@@ -20,15 +20,13 @@ namespace GiaSuService.Controllers
         private readonly IAddressService _addressService;
         private readonly ICatalogService _catalogService;
         private readonly IProfileService _profileService;
-        private readonly IUploadFileService _uploadFileService;
 
-        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, IProfileService profileService, IUploadFileService uploadFileService)
+        public IdentityController(IAuthService authService, IAddressService addressService, ICatalogService catalogService, IProfileService profileService)
         {
             _authService = authService;
             _addressService = addressService;
             _catalogService = catalogService;
             _profileService = profileService;
-            _uploadFileService = uploadFileService;
         }
 
         public IActionResult Index()
@@ -123,12 +121,16 @@ namespace GiaSuService.Controllers
 
         [HttpPost]
         [Authorize(Policy = AppConfig.PROFILE_POLICY)]
-        public async Task<IActionResult> UpdateProfile(ProfileViewModel profile)
+        public async Task<IActionResult> UpdateProfile(ProfileViewModel profile, IFormFile newAvatar, IFormFile frontCard, IFormFile backCard)
         {
             var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
             if (userRole == null) return RedirectToAction("Index", "Home");
 
-            ResponseService response = await _profileService.UpdateProfile(profile, userRole);
+            var accountId = GetAccountId();
+            //User not founded
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            ResponseService response = await _profileService.UpdateProfile(profile, newAvatar, frontCard, backCard, userRole);
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
@@ -137,6 +139,7 @@ namespace GiaSuService.Controllers
             {
                 TempData[AppConfig.MESSAGE_FAIL] = response.Message;
             }
+
             return RedirectToAction("Profile", "Identity");
         }
 
@@ -197,10 +200,10 @@ namespace GiaSuService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterFormTutorPost(FormRegisterTutorRequestViewModel model)
+        public async Task<IActionResult> RegisterFormTutor(FormRegisterTutorRequestViewModel model, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
 
-            if (!ModelState.IsValid)
+            /*if (!ModelState.IsValid)
             {
                 foreach(var valid in ModelState)
                 {
@@ -212,7 +215,7 @@ namespace GiaSuService.Controllers
 
                 TempData[AppConfig.MESSAGE_FAIL] = "Thông tin bị thiếu";
                 return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
-            }
+            }*/
 
             if (model.ListDistrict.Count == 0 || model.ListSessionDate.Count == 0 || model.ListGrade.Count == 0 || model.ListSubject.Count==0)
             {
@@ -226,57 +229,7 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
             }
 
-            int? roleId = await _authService.GetRoleId(AppConfig.TUTORROLENAME);
-            if (roleId == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "WTF Role";
-                return RedirectToAction("", "Home");
-            }
-
-            var listGrade = model.GetGradeSelected.Select(p => p.GradeId);
-            var listSession = model.GetSessionSelected.Select(p => p.SessionId);
-            var listSubject = model.GetSubjectSelected.Select(p => p.SubjectId);
-     
-            Account account = new Account()
-            {
-                Email = model.AccountProfile.Email,
-                Phone = model.AccountProfile.Phone,
-                PasswordHash = Utility.HashPassword(model.AccountProfile.Password),
-                RoleId = (int)roleId,
-                LockEnable = false,
-                Avatar = model.AccountProfile.Avatar,
-                CreateDate = DateTime.Now,
-                Tutor = new Tutor()
-                {
-                    Birth = model.AccountProfile.BirthDate,
-                    FullName = Utility.FormatToCamelCase(model.AccountProfile.FullName),
-                    AddressDetail = model.AccountProfile.AddressName,
-                    DistrictId = model.AccountProfile.SelectedDistrictId,
-                    Gender = model.AccountProfile.Gender,
-                     
-                    //Hoc van
-                    AcademicYearFrom = model.RegisterTutorProfile.AcademicYearFrom,
-                    AcademicYearTo = model.RegisterTutorProfile.AcademicYearto,
-                    AdditionalInfo = model.RegisterTutorProfile.AdditionalInfo,
-                    College = Utility.FormatToCamelCase(model.RegisterTutorProfile.College),
-                    Area = Utility.FormatToCamelCase(model.RegisterTutorProfile.Area),
-                    TutorTypeId = model.RegisterTutorProfile.TypeTutorId,
-                
-                    IsActive = true,
-                    //Isvalid = false,
-
-                    Identity = new IdentityCard()
-                    {
-                        IdentityNumber = model.AccountProfile.IdentityCard,
-                        FrontIdentityCard = model.AccountProfile.FrontIdentityCard,
-                        BackIdentityCard = model.AccountProfile.BackIdentityCard,
-                    }, 
-                }
-                
-            };
-
-            var result = await _authService.CreateTutorRegisterRequest(account, listSession, listSubject, listGrade, 
-                model.ListDistrict);
+            ResponseService result = await _authService.CreateTutorAccount(model, avatar, frontCard, backCard);
             if (result.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
@@ -290,68 +243,28 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RegisterFormCustomer(RegisterAccountProfileViewModel view) 
+        public async Task<IActionResult> RegisterFormCustomer(RegisterAccountProfileViewModel? form = null) 
         {
             var provinces = await _addressService.GetProvinces();
-           
-            RegisterFormViewModel registerFormViewModel = new RegisterFormViewModel()
-            {
-                ProvinceList = provinces,
-                RegisterForm = new RegisterAccountProfileViewModel() { }
-            };
 
-            if (view != null)
-            {
-                registerFormViewModel.RegisterForm = view;
-            }
-            return View(registerFormViewModel);
+            RegisterFormViewModel model = new RegisterFormViewModel();
+            
+            if(form != null) model.RegisterForm = form;
+            model.ProvinceList = provinces;
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterFormCustomer(RegisterFormViewModel form)
+        public async Task<IActionResult> RegisterFormCustomer(RegisterFormViewModel form, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
-            if (!ModelState.IsValid)
+            /*if (!ModelState.IsValid) // What the fuck with this? Valid on form then valid binding for what?
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Lỗi form nhập";
                 return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
-            }
+            }*/
 
-            var roleId = await _authService.GetRoleId(AppConfig.CUSTOMERROLENAME);
-            if (roleId == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???";
-                Console.WriteLine("wtf did i change the name role?");
-                return RedirectToAction("Index", "Home");
-            }
-
-            var accountProfile = form.RegisterForm!;
-            Account account = new Account()
-            {
-                Email = accountProfile.Email,
-                Phone = accountProfile.Phone,
-                PasswordHash = Utility.HashPassword(accountProfile.Password),
-                Avatar = accountProfile.Avatar,
-                CreateDate = DateTime.Now,
-                LockEnable = false,
-                RoleId = (int)roleId,
-                
-                Customer = new Customer()
-                {
-                    FullName = accountProfile.FullName,
-                    Birth = accountProfile.BirthDate,
-                    Gender = accountProfile.Gender,
-                    AddressDetail = accountProfile.AddressName,
-                    DistrictId = accountProfile.SelectedDistrictId,
-
-                    Identity = new IdentityCard()
-                    {
-                        IdentityNumber= accountProfile.IdentityCard,
-                        FrontIdentityCard = accountProfile.FrontIdentityCard,
-                        BackIdentityCard = accountProfile.BackIdentityCard,
-                    }
-                }
-            };
-            ResponseService result = await _authService.CreateAccount(account);
+            ResponseService result = await _authService.CreateAccount(form.RegisterForm, avatar, frontCard, backCard, AppConfig.CUSTOMERROLENAME);
             if (result.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
@@ -363,8 +276,6 @@ namespace GiaSuService.Controllers
             }
             return RedirectToAction("", "Identity");
         }
-
-        
 
         [HttpGet]
         [Authorize]
@@ -399,34 +310,5 @@ namespace GiaSuService.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> UpdateAvatar(IFormFile file)
-        {
-            ResponseService response = await _uploadFileService.UploadFile(file, AppConfig.UploadFileType.AVATAR);
-
-            if (!response.Success)
-            {
-
-                TempData[AppConfig.MESSAGE_FAIL] = "Cập nhật ảnh đại diện không thành công";
-                return RedirectToAction("Profile", "Identity");
-            }
-
-            var accountId = GetAccountId();
-            //User not founded
-            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
-
-            response = await _profileService.UpdateAvatar(int.Parse(accountId), response.Message);
-            if (response.Success)
-            {
-                TempData[AppConfig.MESSAGE_SUCCESS] = "Cập nhật ảnh đại diện thành công";
-            }
-            else
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Cập nhật ảnh đại diện không thành công";
-            }
-
-            return RedirectToAction("Profile", "Identity");
-        }
     }
 }

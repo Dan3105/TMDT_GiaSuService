@@ -1,12 +1,16 @@
 ﻿@using GiaSuService.Models.UtilityViewModel;
 @model RegisterFormViewModel
 @{
-    ViewData["Title"] = "Employee Register";
+    ViewData["Title"] = "Đăng ký tài khoản nhân viên mới";
 }
 
 
 <h1>Tạo tài khoản nhân viên</h1>
-<form asp-action="Register" asp-controller="Admin" method="post" >
+<form asp-action="Register" asp-controller="Admin" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="RegisterForm!.Avatar">
+    <input type="hidden" asp-for="RegisterForm!.FrontIdentityCard" />
+    <input type="hidden" asp-for="RegisterForm!.BackIdentityCard" />
+
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên nhân viên" asp-for="RegisterForm!.FullName">
@@ -35,6 +39,7 @@
         <input type="tel" class="form-control customform-control" id="phone" placeholder="Nhập số điện thoại" asp-for="RegisterForm!.Phone">
         @Html.ValidationMessageFor(model => model.RegisterForm!.Phone, "", new { @class = "text-danger" })
     </div>
+
     <div class="form-group">
         <label for="identityCard">Số CMND/ CCCD:</label>
         <input type="text" class="form-control customform-control" id="identityCard" placeholder="Nhập số CCCD của bạn" asp-for="RegisterForm!.IdentityCard">
@@ -42,19 +47,39 @@
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt trước CMND/ CCCD:</label>
-        <input type="text" class="form-control customform-control" id="frontidentityCard" placeholder="Hình mặt trước của CMND" asp-for="RegisterForm!.FrontIdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.FrontIdentityCard, "", new { @class = "text-danger" })
+        <img id="frontCard" src="@Model.RegisterForm!.FrontIdentityCard" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
+
+        <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
+               name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
+        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newFrontCard')">
+            Chọn ảnh
+        </button>
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt sau CMND/ CCCD:</label>
-        <input type="text" class="form-control customform-control" id="backidentityCard" placeholder="Hình mặt sau của CMND" asp-for="RegisterForm!.BackIdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.BackIdentityCard, "", new { @class = "text-danger" })
+        <img id="backCard" src="@Model.RegisterForm!.BackIdentityCard" width="200" height="150" alt="Hình mặt sau của CMND/CCCD" />
+
+        <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
+               name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
+        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newBackCard')">
+            Chọn ảnh
+        </button>
     </div>
+
     <div class="form-group">
-        <label for="Avatar">Logo:</label>
-        <input type="text" class="form-control customform-control" id="Avatar" placeholder="Nhập logo" asp-for="RegisterForm!.Avatar">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.Avatar, "", new { @class = "text-danger" })
+        <label for="avatar">Ảnh đại diện:</label>
+        <img id="avatar" src="@Model.RegisterForm!.Avatar" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
+
+        <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
+               name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
+        <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newAvatar')">
+            Chọn ảnh
+        </button>
     </div>
+
     <div class="form-group">
         <label for="password">Mật khẩu:</label>
         <input type="password" class="form-control customform-control" id="password" placeholder="Nhập mật khẩu đăng ký" asp-for="RegisterForm!.Password">
@@ -82,7 +107,6 @@
     <div class="form-group">
         <label for="district">Quận/ Huyện:</label>
         <select class="form-select customform-control" id="districtSelectionContainer" asp-for="RegisterForm!.SelectedDistrictId">
-            <option>Chọn quận</option>
         </select>
     </div>
 
@@ -95,6 +119,10 @@
 </form>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        getDistricts(); // Call the getDistricts function when the view is first loaded
+    });
+
     function getDistricts() {
         $("#provincedefault").remove();
 
@@ -103,7 +131,7 @@
             url: `/Identity/Districts`,
             type: 'GET',
             data: { 'provinceId': selectedIdProvince },
-            success: function(data){
+            success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
                 for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
@@ -114,4 +142,29 @@
             }
         });
     }
+
+    // Add event when click button changeImage then show file explorer to choose new image
+    function changeImage(inputId) {
+        var input = document.getElementById(inputId);   //input file id
+        if (input) {
+            input.click(); // Trigger click on file input
+        } else {
+            console.error('File input with id "' + inputId + '" not found.');
+        }
+    }
+
+    // Preview image on image tag after choosing a new image from input tag
+    function previewImage(inputId, imageId) {
+        var input = document.getElementById(inputId);   //input file id
+        var image = document.getElementById(imageId);   //image tag id
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
 </script>

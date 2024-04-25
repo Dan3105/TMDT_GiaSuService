@@ -14,8 +14,7 @@ namespace GiaSuService.Services.Interface
         // This GetProfile function just use to get profile of userRole (customer or employee)
         // param profileId is customerId or employeeId base on userRole
         public Task<ProfileViewModel?> GetProfile(int profileId, string userRole);
-        public Task<ResponseService> UpdateProfile(ProfileViewModel model, string userRole);
-        public Task<ResponseService> UpdateAvatar(int accountId, string imageUrl);
+        public Task<ResponseService> UpdateProfile(ProfileViewModel model, IFormFile avatar, IFormFile front, IFormFile back, string userRole);
         
         public Task<TutorProfileViewModel?> GetTutorProfile(int tutorId);
         public Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model);

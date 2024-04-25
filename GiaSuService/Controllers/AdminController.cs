@@ -65,48 +65,9 @@ namespace GiaSuService.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterFormViewModel model)
+        public async Task<IActionResult> Register(RegisterFormViewModel model, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
-            if(!ModelState.IsValid) {
-                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi form nhập";
-                return RedirectToAction("Register", "Admin", model.RegisterForm);
-            }
-
-            var roleId = await _authService.GetRoleId(AppConfig.EMPLOYEEROLENAME);
-            if(roleId == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Wrong role here wtf ???"; 
-                Console.WriteLine("wtf did i change the name role?");
-                return RedirectToAction("Index", "Home");
-            }
-
-            var accountProfile = model.RegisterForm!;
-            Account account = new Account()
-            {
-                Email = accountProfile.Email,
-                Phone = accountProfile.Phone,
-                LockEnable = false,
-                Avatar = accountProfile.Avatar,
-                RoleId = (int)roleId,
-                CreateDate = DateTime.Now,
-                PasswordHash = Utility.HashPassword(accountProfile.Password),
-
-                Employee = new Employee()
-                {
-                    FullName = Utility.FormatToCamelCase(accountProfile.FullName),
-                    Birth = accountProfile.BirthDate,
-                    Gender = accountProfile.Gender,
-                    AddressDetail = accountProfile.AddressName,
-                    DistrictId = accountProfile.SelectedDistrictId,
-                    Identity = new IdentityCard()
-                    {
-                        IdentityNumber = accountProfile.IdentityCard,
-                        FrontIdentityCard = accountProfile.FrontIdentityCard,
-                        BackIdentityCard = accountProfile.BackIdentityCard,
-                    }
-                }
-            };
-            ResponseService result = await _authService.CreateAccount(account);
+            ResponseService result = await _authService.CreateAccount(model.RegisterForm, avatar, frontCard, backCard, AppConfig.EMPLOYEEROLENAME);
             if (result.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = result.Message;
@@ -118,6 +79,7 @@ namespace GiaSuService.Controllers
             return RedirectToAction("", "Admin");
         }
 
+        #region EmployeeProfile Manager
         [HttpGet]
         public async Task<IActionResult> EmployeeProfile(int employeeId)
         {
@@ -132,9 +94,9 @@ namespace GiaSuService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateEmployeeProfile(ProfileViewModel profile)
+        public async Task<IActionResult> UpdateEmployeeProfile(ProfileViewModel profile, IFormFile newAvatar, IFormFile frontCard, IFormFile backCard)
         {
-            ResponseService response = await _profileService.UpdateProfile(profile, AppConfig.EMPLOYEEROLENAME.ToString().ToLower());
+            ResponseService response = await _profileService.UpdateProfile(profile, newAvatar, frontCard, backCard, AppConfig.EMPLOYEEROLENAME.ToString().ToLower());
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
@@ -145,6 +107,7 @@ namespace GiaSuService.Controllers
             }
             return RedirectToAction("EmployeeProfile", "Admin", new { employeeId = profile.ProfileId});
         }
+        #endregion
 
         #region Session Manager
         [HttpGet]

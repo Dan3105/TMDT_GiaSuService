@@ -3,48 +3,52 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GiaSuService.Models.IdentityViewModel
 {
-    public class ProfileViewModel
+    public class RegisterAccountProfileViewModel
     {
-        public int ProfileId { get; set; }  // employee_id or customer_id
-        public int IdentityId { get; set; }
-        public int AccountId { get; set; }
-
-        public required string Avatar { get; set; } = AppConfig.DEFAULT_AVATAR_URL;
+        public string Avatar { get; set; } = AppConfig.DEFAULT_AVATAR_URL;
 
         [Required(ErrorMessage = "Vui lòng không để trống họ và tên.")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Họ và tên chứa 5-100 ký tự.")]
-        public required string FullName { get; set; }
+        public string FullName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng không để trống email.")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
-        public required string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng không để trống số điện thoại.")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại chỉ bao gồm 10 chữ số.")]
-        public required string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng không để trống ngày sinh.")]
         public DateOnly BirthDate { get; set; }
 
         [Required(ErrorMessage = "Vui lòng chọn giới tính.")]
-        public required string Gender { get; set; }
-
-
-        [Required(ErrorMessage = "Vui lòng không để trống CMND/CCCD.")]
-        [RegularExpression(@"^\d{10}$|^\d{12}$", ErrorMessage = "CMND chỉ gồm 10 chữ số hoặc CCCD chỉ gồm 12 chữ số.")]
-        public required string IdentityCard { get; set; }
-        public required string FrontIdentityCard { get; set; } = AppConfig.DEFAULT_FRONT_IDENTITY_CARD_URL;
-        public required string BackIdentityCard { get; set; } = AppConfig.DEFAULT_BACK_IDENTITY_CARD_URL;
+        public string Gender { get; set; } = string.Empty;
 
         
-        public bool LockStatus { get; set; }
+        [Required(ErrorMessage = "Vui lòng không để trống CMND/CCCD.")]
+        [RegularExpression(@"^\d{10}$|^\d{12}$", ErrorMessage = "CMND chỉ gồm 10 chữ số hoặc CCCD chỉ gồm 12 chữ số.")]
+        public string IdentityCard { get; set; } = string.Empty;
+
+        public string FrontIdentityCard { get; set; } = AppConfig.DEFAULT_FRONT_IDENTITY_CARD_URL;
+        public string BackIdentityCard { get; set; } = AppConfig.DEFAULT_BACK_IDENTITY_CARD_URL;
+
+
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "Mật khẩu mới gồm 6 - 20 ký tự")]
+        public string Password { get; set; } = string.Empty;
+
+        [Compare(nameof(Password), ErrorMessage = "Nhập lại mật khẩu không trùng với mật khẩu.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
 
         [Required(ErrorMessage = "Vui lòng không để trống số nhà, tên đường.")]
         [StringLength(255, ErrorMessage = "Số nhà, tên đường chứa không quá 255 ký tự.")]
-        public required string AddressDetail { get; set; }
-        public int SelectedDistrictId { get; set; }
-        public int SelectedProvinceId { get; set; }
+        public string AddressName { get; set; } = string.Empty;
 
-        public ProfileViewModel() { }
+        [Required]
+        public int SelectedDistrictId { get; set; }
+
+        public RegisterAccountProfileViewModel() { }
     }
 }

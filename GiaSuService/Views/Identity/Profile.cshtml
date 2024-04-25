@@ -8,44 +8,50 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <div style="text-align: center;">
-                <img src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
+    <form method="post" asp-action="UpdateProfile" asp-controller="Identity" enctype="multipart/form-data">
+        <h1>Thông tin tài khoản</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div style="text-align: center;">
+                    <img id="avatar" src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
 
-                <form method="post" asp-controller="Identity" asp-action="UpdateAvatar" enctype="multipart/form-data">
-                    <input type="file" class="form-control customform-control" name="file" accept="image/*" />
-                    <button type="submit" class="btn btn-primary customstyle-button">Đổi ảnh đại diện</button>
-                </form>
-                
+                    <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
+                           name="newAvatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
+
+                    <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
+                            onclick="changeImage('newAvatar')">Chọn ảnh</button>
+                </div>
             </div>
-        </div>
-        <div class="col-md-8">
-            <form method="post" asp-action="UpdateProfile" asp-controller="Identity">
-
-                <h1>Thông tin tài khoản</h1>
-
+            <div class="col-md-8">
                 <input type="hidden" asp-for="AccountId" />
                 <input type="hidden" asp-for="IdentityId" />
                 <input type="hidden" asp-for="ProfileId" />
                 <input type="hidden" asp-for="LockStatus" />
+                @* Ensure if user do not update new image, old image will be kept *@
+                <input type="hidden" asp-for="Avatar" />
+                <input type="hidden" asp-for="FrontIdentityCard" />
+                <input type="hidden" asp-for="BackIdentityCard" />
 
                 <div class="form-group">
                     <label asp-for="FullName">Họ tên:</label>
                     <input type="text" asp-for="FullName" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Email">Email:</label>
                     <input type="text" asp-for="Email" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Phone">Số điện thoại:</label>
                     <input type="text" asp-for="Phone" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="BirthDate">Ngày sinh:</label>
                     <input type="date" asp-for="BirthDate" class="form-control customform-control" style="margin-bottom: 10px;"
-                           value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
+                            value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
+                    @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Gender">Giới tính:</label>
@@ -53,6 +59,7 @@
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
                     </select>
+                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <div class="form-group">
@@ -71,115 +78,148 @@
 
                     <label asp-for="AddressDetail">Số nhà, tên đường:</label>
                     <input type="text" asp-for="AddressDetail" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.AddressDetail, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="IdentityCard">Số CMND/CCCD:</label>
                     <input type="text" asp-for="IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.IdentityCard, "", new { @class = "text-danger" })
                 </div>
                 <div class="row form-group">
                     <div class="col">
-                        <label asp-for="FrontIdentityCard">Mặt trước:</label>
-                        <img src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước" />
+                        <label asp-for="FrontIdentityCard">Mặt trước CMND/ CCCD:</label>
+                        <img id="frontCard" src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước"/>
+
+                        <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
+                                name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
+                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                                onclick="changeImage('newFrontCard')">Chọn ảnh</button>
                     </div>
                     <div class=col>
-                        <label asp-for="BackIdentityCard">Mặt sau:</label>
-                        <img src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau" />
+                        <label asp-for="BackIdentityCard">Mặt sau CMND/ CCCD:</label>
+                        <img id="backCard" src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau"  />
+
+                        <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
+                                name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
+                        <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
+                                onclick="changeImage('newBackCard')">Chọn ảnh</button>
                     </div>
                 </div>
-
-                <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary customstyle-button" style="margin-top: 5px;">Cập nhật</button>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <script>
-
-
-
-            //First loading page
-            document.addEventListener("DOMContentLoaded", function () {
-                getProvinces();
-                setEditMode();
-            });
-
-            function getProvinces() {
-                var selectedProvinceId = "@Model.SelectedProvinceId";
-                $.ajax({
-                    url: `/Identity/Provinces`,
-                    type: 'GET',
-                    success: function (data) {
-                        $("#province").empty();
-                        for (var i = 0; i < data.length; i++) {
-                            var option = $('<option></option>').val(data[i].provinceId).text(data[i].provinceName);
-                            if (data[i].provinceId == selectedProvinceId) {
-                                option.prop('selected', true);
-                            }
-                            $("#province").append(option);
-                        }
-                        getDistricts();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error fetching provinces:", textStatus, errorThrown);
-                    }
-                });
-            }
-
-            function getDistricts() {
-                var selectedProvinceId = $("#province").val();
-                var selectedDistrictId = "@Model.SelectedDistrictId";
-
-                $.ajax({
-                    url: `/Identity/Districts`,
-                    type: 'GET',
-                    data: { 'provinceId': selectedProvinceId },
-                    success: function (data) {
-                        $("#district").empty();
-                        for (var i = 0; i < data.length; i++) {
-                            var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
-                            if (data[i].districtId == selectedDistrictId) {
-                                option.prop('selected', true);
-                            }
-                            $("#district").append(option);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error fetching districts:", textStatus, errorThrown);
-                    }
-                });
-            }
-
-            function setEditMode() {
-                $.ajax({
-                    url: `/Identity/GetUserRole`,
-                    type: 'GET',
-                    success: function (role) {
-                        if (role == 'employee') {
-                            document.querySelectorAll('input').forEach(function (input) {
-                                input.disabled = true;
-                            });
-
-                            document.querySelectorAll('textarea').forEach(function (textarea) {
-                                textarea.disabled = true;
-                            });
-
-                            document.querySelectorAll('select').forEach(function (select) {
-                                select.disabled = true;
-                            });
-
-                            document.querySelectorAll('button').forEach(function (button) {
-                                button.disabled = true;
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error fetching user role:', error);
-                    }
-                });
-            }
-
-        </script>
-    </div>
+        <div style="text-align: center;">
+            <button type="submit" class="btn btn-primary customstyle-button" style="margin-top: 5px;">Cập nhật</button>
+        </div>
+    </form>
 </div>
 
 
+<script>
+    // First loading page
+    document.addEventListener("DOMContentLoaded", function () {
+        getProvinces();
+        setEditMode();
+    });
+
+    function getProvinces() {
+        var selectedProvinceId = "@Model.SelectedProvinceId";
+        $.ajax({
+            url: `/Identity/Provinces`,
+            type: 'GET',
+            success: function (data) {
+                $("#province").empty();
+                for (var i = 0; i < data.length; i++) {
+                    var option = $('<option></option>').val(data[i].provinceId).text(data[i].provinceName);
+                    if (data[i].provinceId == selectedProvinceId) {
+                        option.prop('selected', true);
+                    }
+                    $("#province").append(option);
+                }
+                getDistricts();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching provinces:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    function getDistricts() {
+        var selectedProvinceId = $("#province").val();
+        var selectedDistrictId = "@Model.SelectedDistrictId";
+
+        $.ajax({
+            url: `/Identity/Districts`,
+            type: 'GET',
+            data: { 'provinceId': selectedProvinceId },
+            success: function (data) {
+                $("#district").empty();
+                for (var i = 0; i < data.length; i++) {
+                    var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                    if (data[i].districtId == selectedDistrictId) {
+                        option.prop('selected', true);
+                    }
+                    $("#district").append(option);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching districts:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    function setEditMode() {
+        $.ajax({
+            url: `/Identity/GetUserRole`,
+            type: 'GET',
+            success: function (role) {
+                if (role == 'employee') {
+                    document.querySelectorAll('input').forEach(function (input) {
+                        input.disabled = true;
+                    });
+
+                    document.querySelectorAll('textarea').forEach(function (textarea) {
+                        textarea.disabled = true;
+                    });
+
+                    document.querySelectorAll('select').forEach(function (select) {
+                        select.disabled = true;
+                    });
+
+                    document.querySelectorAll('button').forEach(function (button) {
+                        button.disabled = true;
+                        button.hidden = true;
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching user role:', error);
+            }
+        });
+    }
+
+    // Add event when click button changeImage then show file explorer to choose new image
+    function changeImage(inputId) {
+        var input = document.getElementById(inputId);   //input file id
+        if (input) {
+            input.click(); // Trigger click on file input
+        } else {
+            console.error('File input with id "' + inputId + '" not found.');
+        }
+    }
+
+    // Preview image on image tag after choosing a new image from input tag
+    function previewImage(inputId, imageId) {
+        var input = document.getElementById(inputId);   //input file id
+        var image = document.getElementById(imageId);   //image tag id
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+</script>
