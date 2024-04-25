@@ -159,21 +159,23 @@ h6{
 }
 
     #hero h1 {
-        font-family: "Lobster", sans-serif; 
-        color: var(--sidebar-text-hover-color);
+        font-family: "Lobster", sans-serif;
+        color: var(--sidebar-title-color);
         font-size: 2.5em;
     }
 
     #hero h5 {
         font-family: "Lobster", sans-serif;
         color: var(--title-font);
+        font-weight: lighter;
     }
 
 .hero-img img { 
-    max-width: 100%; /* Giảm kích thước hình ảnh */
+    max-width: 100%; 
 }
 
 
 .footer-page {
     background-color: var(--footer-color);
+ 
 }
