@@ -93,13 +93,48 @@ namespace GiaSuService.Controllers
             }
         }
 
+        [HttpGet]
         public IActionResult StatisticTutorRequest()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult StatisticProfit() {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetChartProfit(string fromDate, string toDate)
+        {
+            try
+            {
+                DateOnly fromDateParse = DateOnly.Parse(fromDate);
+                DateOnly toDateParse = DateOnly.Parse(toDate);
+                DataTable? dataTable = await _statisticService.GetTransactionCreated(fromDateParse, toDateParse);
+                if (dataTable == null)
+                {
+                    throw new ArgumentNullException();
+                }
+                var data = new List<Dictionary<string, object>>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    var dict = new Dictionary<string, object>();
+                    foreach (DataColumn col in dataTable.Columns)
+                    {
+                        dict[col.ColumnName] = row[col];
+                    }
+                    data.Add(dict);
+                }
+
+                TransactionStatisticsViewModel statisticsRequest = await _statisticService.GetStatisticTranssaction(fromDateParse, toDateParse);
+
+                return Json(new { chart = data, statis = statisticsRequest });
+            }
+            catch
+            {
+                return StatusCode(500, "Lỗi hệ thống");
+            }
         }
     }
 }

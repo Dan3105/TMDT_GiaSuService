@@ -56,36 +56,6 @@ namespace GiaSuService.Repository
             
         }
 
-        public async Task<DataTable?> GetProfit(DateOnly fromDate, DateOnly toDate)
-        {
-            try
-            {
-                DataTable dataTable = new DataTable();
-                //string connString = "Host=myserver;Port=5432;Username=myuser;Password=mypass;Database=mydatabase;";
-                string? connString = _configuration.GetConnectionString(AppConfig.connection_string);
-                if (connString == null)
-                {
-                    throw new InvalidOperationException();
-                }
-                string query = $"select * from get_profit('{fromDate}', '{toDate}')";
-
-                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-                    using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn))
-                    {
-                        await Task.Run(() => da.Fill(dataTable));
-                    }
-                }
-
-                return dataTable;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         public async Task<AccountStatisticsViewModel?> GetAccountsCount()
         {
             int? tutorId = (await _context.Roles.FirstOrDefaultAsync(p => p.Name == AppConfig.TUTORROLENAME))?.Id;
@@ -165,6 +135,62 @@ namespace GiaSuService.Repository
             }
                                 
             return result;
+        }
+
+        public async Task<TransactionStatisticsViewModel> QueryStatisticTransactions(DateOnly fromDate, DateOnly toDate)
+        {
+            try
+            {
+                var queryable = _context.TransactionHistories
+                .Select(p => new { p.CreateDate, p.PaymentAmount, p.Status, p.TypeTransaction })
+                .Where(p => p.CreateDate >= new DateTime(fromDate.Year, fromDate.Month, fromDate.Day)
+                                                         && p.CreateDate <= new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59));
+
+                TransactionStatisticsViewModel result = new TransactionStatisticsViewModel()
+                {
+                    TotalTransactions = await queryable.CountAsync(),
+                    TotalTransactionsCancel = await queryable.Where(p => p.Status.Name.Equals(AppConfig.TransactionStatus.CANCEL.ToString().ToLower())).CountAsync(),
+                    TotalTransactionsPaid = await queryable.Where(p => p.Status.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower())).CountAsync(),
+                    TotalTransactionsRefund = await queryable.Where(p => p.TypeTransaction == false).CountAsync(),
+                    TotalTransactionsDeposit = await queryable.Where(p => p.TypeTransaction == true).CountAsync(),
+                };
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+            
+        }
+
+        public async Task<DataTable?> QueryChartDataTransactions(DateOnly fromDate, DateOnly toDate)
+        {
+            try
+            {
+                DataTable dataTable = new DataTable();
+                string? connString = _configuration.GetConnectionString(AppConfig.connection_string);
+                if (connString == null)
+                {
+                    throw new InvalidOperationException();
+                }
+                string query = $"select * from get_profit('{fromDate}', '{toDate}')";
+
+                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+                    using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn))
+                    {
+                        await Task.Run(() => da.Fill(dataTable));
+                    }
+                }
+
+                return dataTable;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

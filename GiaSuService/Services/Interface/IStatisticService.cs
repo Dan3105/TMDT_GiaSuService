@@ -7,7 +7,11 @@ namespace GiaSuService.Services.Interface
     {
         public Task<DataTable?> GetAccountCreateStatistic(int roleId, DateOnly fromDate, DateOnly toDate);
         Task<AccountStatisticsViewModel?> GetStatisticAccount();
+
         Task<DataTable?> GetRequestCreated(DateOnly fromDate, DateOnly toDate);
         Task<TutorRequestStatisticsViewModel> GetStatisticRequest(DateOnly fromDate, DateOnly toDate, int topK);
+
+        Task<DataTable?> GetTransactionCreated(DateOnly fromDate, DateOnly toDate);
+        Task<TransactionStatisticsViewModel> GetStatisticTranssaction(DateOnly fromDate, DateOnly toDate);
     }
 }

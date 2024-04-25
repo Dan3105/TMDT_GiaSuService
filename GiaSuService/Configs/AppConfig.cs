@@ -38,6 +38,14 @@ namespace GiaSuService.Configs
             CANCEL,
         }
 
+        public const string transaction_status = "Transaction";
+        public enum TransactionStatus
+        {
+            PENDING,
+            PAID,
+            CANCEL,
+        }
+
         public enum UploadFileType
         {
             AVATAR,

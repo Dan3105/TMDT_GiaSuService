@@ -36,5 +36,15 @@ namespace GiaSuService.Services
             var result = await _statisticRepo.QueryStatisticRequests(fromDate, toDate, topK);
             return result;
         }
+
+        public async Task<DataTable?> GetTransactionCreated(DateOnly fromDate, DateOnly toDate)
+        {
+            return await _statisticRepo.QueryChartDataTransactions(fromDate, toDate);
+        }
+
+        public async Task<TransactionStatisticsViewModel> GetStatisticTranssaction(DateOnly fromDate, DateOnly toDate)
+        {
+            return await _statisticRepo.QueryStatisticTransactions(fromDate, toDate);
+        }
     }
 }

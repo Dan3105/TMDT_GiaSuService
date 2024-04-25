@@ -460,6 +460,7 @@ public partial class DvgsDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("payment_date");
             entity.Property(e => e.TutorId).HasColumnName("tutor_id");
+            entity.Property(e => e.StatusId).HasColumnName("status_id");
             entity.Property(e => e.TypeTransaction).HasColumnName("type_transaction");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.TransactionHistories)
@@ -476,6 +477,11 @@ public partial class DvgsDbContext : DbContext
                 .HasForeignKey(d => d.TutorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("transaction_history_tutor_id_fkey");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.TransactionHistories)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("transaction_history_status_id_fkey");
         });
 
         modelBuilder.Entity<Tutor>(entity =>

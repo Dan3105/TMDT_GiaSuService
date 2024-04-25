@@ -179,6 +179,13 @@ namespace GiaSuService.Repository
                             throw new NullReferenceException();
                         }
 
+                        var statusPending = await _context.Statuses.FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.TransactionStatus.PENDING.ToString().ToLower())
+                                                                                            && p.StatusType.Type.ToLower().Equals(AppConfig.transaction_status.ToLower()));
+                        if (statusPending == null)
+                        {
+                            throw new NullReferenceException();
+                        }
+
                         TransactionHistory newTransaction = new TransactionHistory()
                         {
                             CreateDate = DateTime.Now,
@@ -187,7 +194,8 @@ namespace GiaSuService.Repository
                             EmployeeId = employeeId,
                             PaymentAmount = (decimal)price,
                             FormId = requestId,
-                            TypeTransaction = AppConfig.DEPOSIT_TYPE
+                            TypeTransaction = AppConfig.DEPOSIT_TYPE,
+                            StatusId = statusPending.Id
                         };
 
                         _context.TransactionHistories.Add(newTransaction);

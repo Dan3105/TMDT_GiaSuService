@@ -20,4 +20,6 @@ public partial class Status
     public virtual ICollection<TutorStatusDetail> TutorStatusDetails { get; set; } = new List<TutorStatusDetail>();
 
     public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
+
+    public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
 }

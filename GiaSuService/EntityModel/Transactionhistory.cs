@@ -23,9 +23,13 @@ public partial class TransactionHistory
 
     public int FormId { get; set; }
 
+    public int StatusId { get; set; }
+
     public virtual Employee Employee { get; set; } = null!;
 
     public virtual RequestTutorForm Form { get; set; } = null!;
 
     public virtual Tutor Tutor { get; set; } = null!;
+
+    public virtual Status Status { get; set; } = null!;
 }

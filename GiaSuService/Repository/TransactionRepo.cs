@@ -33,6 +33,13 @@ namespace GiaSuService.Repository
                     var emp = await _context.Employees.AsNoTracking().Select(p => new { p.Id, p.FullName, p.Account.Phone }).FirstOrDefaultAsync(t => t.Id == empId);
                     if(emp == null) { throw new NullReferenceException(); }
 
+                    var statusPaid = await _context.Statuses.FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower())
+                                                                                            && p.StatusType.Type.ToLower().Equals(AppConfig.transaction_status.ToLower()));
+                    if (statusPaid == null)
+                    {
+                        throw new NullReferenceException();
+                    }
+
                     _context.TransactionHistories.Add(new EntityModel.TransactionHistory
                     {
                         CreateDate = DateTime.Now,
@@ -42,7 +49,8 @@ namespace GiaSuService.Repository
                         Context = AppConfig.ContextForRefundTransaction(tutor.FullName, emp.Phone, emp.FullName, originAmount.PaymentAmount),
                         FormId = requestId,
                         PaymentDate = DateTime.Now,
-                        TypeTransaction = false
+                        TypeTransaction = false,
+                        StatusId = statusPaid.Id,
                     });
 
                     var statusRefund = await _context.Statuses
@@ -112,10 +120,21 @@ namespace GiaSuService.Repository
 
         public async Task<bool> UpdateDepositTransactionPaymentDate(int tutorId, int requestId, DateTime paydate)
         {
-            try { 
+            try {
+
+                var statusPaid = await _context.Statuses.FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower())
+                                                                    && p.StatusType.Type.ToLower().Equals(AppConfig.transaction_status.ToLower()));
+                if (statusPaid == null)
+                {
+                    throw new NullReferenceException();
+                }
+
                 await _context.TransactionHistories.
                     Where(p => p.TypeTransaction && p.TutorId == tutorId && p.FormId == requestId)
-                    .ExecuteUpdateAsync(p => p.SetProperty(o => o.PaymentDate, paydate));
+                    .ExecuteUpdateAsync(p =>
+                        p.SetProperty(o => o.PaymentDate, paydate)
+                         .SetProperty(o => o.StatusId, statusPaid.Id)
+                    );
 
                 return true;
             }
