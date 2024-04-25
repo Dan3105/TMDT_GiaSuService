@@ -10,6 +10,7 @@ namespace GiaSuService.Models.IdentityViewModel
 
         [Required(ErrorMessage = "Vui lòng nhập lại mật khẩu mới.")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "Mật khẩu mới gồm 6 - 20 ký tự")]
+        [Compare(nameof(Password), ErrorMessage = "Nhập lại mật khẩu không trùng với mật khẩu.")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         public PasswordViewModel() { }

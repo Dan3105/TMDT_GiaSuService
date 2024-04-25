@@ -5,7 +5,12 @@
 }
 
 <h1>Đăng ký tài khoản khách hàng</h1>
-<form asp-action="RegisterFormCustomer" asp-controller="Identity" method="post">
+<form asp-action="RegisterFormCustomer" asp-controller="Identity" method="post" enctype="multipart/form-data">
+
+    <input type="hidden" asp-for="RegisterForm!.Avatar">
+    <input type="hidden" asp-for="RegisterForm!.FrontIdentityCard" />
+    <input type="hidden" asp-for="RegisterForm!.BackIdentityCard" />
+
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="RegisterForm!.FullName">
@@ -41,29 +46,46 @@
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt trước CMND/ CCCD:</label>
-        <input type="text" class="form-control customform-control" id="frontidentityCard" placeholder="Hình mặt trước của CMND" asp-for="RegisterForm!.FrontIdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.FrontIdentityCard, "", new { @class = "text-danger" })
+        <img id="frontCard" src="@Model.RegisterForm!.FrontIdentityCard" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
+
+        <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
+               name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
+        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newFrontCard')">
+            Chọn ảnh
+        </button>
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt sau CMND/ CCCD:</label>
-        <input type="text" class="form-control customform-control" id="backidentityCard" placeholder="Hình mặt sau của CMND" asp-for="RegisterForm!.BackIdentityCard">
-        @Html.ValidationMessageFor(model => model.RegisterForm!.BackIdentityCard, "", new { @class = "text-danger" })
+        <img id="backCard" src="@Model.RegisterForm!.BackIdentityCard" width="200" height="150" alt="Hình mặt sau của CMND/CCCD" />
+
+        <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
+               name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
+        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newBackCard')">
+            Chọn ảnh
+        </button>
     </div>
-    <div class="form-group">
+    
+    @* Does need to upload avatar when register new account ? *@
+    @* <div class="form-group">
         <label for="Avatar">Logo:</label>
         <input type="text" class="form-control customform-control" id="Avatar" placeholder="Nhập logo" asp-for="RegisterForm!.Avatar">
         @Html.ValidationMessageFor(model => model.RegisterForm!.Avatar, "", new { @class = "text-danger" })
-    </div>
+    </div> *@
+    
     <div class="form-group">
         <label for="password">Mật khẩu:</label>
         <input type="password" class="form-control customform-control" id="password" placeholder="Nhập mật khẩu đăng ký" asp-for="RegisterForm!.Password">
         @Html.ValidationMessageFor(model => model.RegisterForm!.Password, "", new { @class = "text-danger" })
     </div>
+    
     <div class="form-group">
-        <label for="confirmPassword">Xác nhận mật khẩu:</label>
+        <label for="confirmPassword">Nhập lại mật khẩu:</label>
         <input type="password" class="form-control customform-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" asp-for="RegisterForm!.ConfirmPassword">
         @Html.ValidationMessageFor(model => model.RegisterForm!.ConfirmPassword, "", new { @class = "text-danger" })
     </div>
+
     <div class="form-group">
         <label for="province">Tỉnh/ Thành phố:</label>
         <select class="form-select customform-control" id="province" onchange="getDistricts()">
@@ -88,11 +110,13 @@
         <input type="text" class="form-control customform-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="RegisterForm!.AddressName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.AddressName, "", new { @class = "text-danger" })
     </div>
+    
     <div class="form-group">
         <label for="confirm-box">Đã đọc các <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">điều khoản</a> trước khi đăng ký</label>
         <input class="form-check-input ms-1" id="confirm-box" type="checkbox" id="ConfirmBox" asp-for="ConfirmBox" required />
         <span asp-validation-for="ConfirmBox" class="text-danger"></span>
     </div>
+    
     <button type="submit" class="btn btn-primary customstyle-button">Đăng ký</button>
 </form>
 
@@ -120,4 +144,29 @@
             }
         });
     }
+
+    // Add event when click button changeImage then show file explorer to choose new image
+    function changeImage(inputId) {
+        var input = document.getElementById(inputId);   //input file id
+        if (input) {
+            input.click(); // Trigger click on file input
+        } else {
+            console.error('File input with id "' + inputId + '" not found.');
+        }
+    }
+
+    // Preview image on image tag after choosing a new image from input tag
+    function previewImage(inputId, imageId) {
+        var input = document.getElementById(inputId);   //input file id
+        var image = document.getElementById(imageId);   //image tag id
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
 </script>

@@ -6,7 +6,7 @@ namespace GiaSuService.Models.UtilityViewModel
 {
     public class RegisterFormViewModel
     {
-        public RegisterAccountProfileViewModel? RegisterForm { get; set; }
+        public RegisterAccountProfileViewModel? RegisterForm { get; set; } = new RegisterAccountProfileViewModel();
         public List<ProvinceViewModel> ProvinceList { get; set; } = new List<ProvinceViewModel>();
         public RegisterFormViewModel() { }
         public bool ConfirmBox { get; set; }

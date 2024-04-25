@@ -12,11 +12,13 @@ namespace GiaSuService.Services
     {
         private readonly IProfileRepo _profileRepo;
         private readonly ITutorRepo _tutorRepo;
+        private readonly IUploadFileService _uploadFileService;
 
-        public ProfileService(IProfileRepo profileRepo, ITutorRepo tutorRepo)
+        public ProfileService(IProfileRepo profileRepo, ITutorRepo tutorRepo, IUploadFileService uploadFileService)
         {
             _profileRepo = profileRepo;
             _tutorRepo = tutorRepo;
+            _uploadFileService = uploadFileService;
         }
 
         public async Task<int?> GetProfileId(int accountId, string roleName)
@@ -41,24 +43,35 @@ namespace GiaSuService.Services
             return false;
         }*/
 
-        public async Task<ResponseService> UpdateProfile(ProfileViewModel profile, string userRole)
+        public async Task<ResponseService> UpdateProfile(ProfileViewModel profile, IFormFile avatar, IFormFile front, IFormFile back, string userRole)
         {
             if (profile == null || userRole == null || userRole == "")
             {
                 return new ResponseService { Success = false, Message = "Lỗi cập nhật" };
             }
 
-            bool isSuccess = await _profileRepo.UpdateProfile(profile, userRole);
-            if (isSuccess)
+            if (avatar != null)
             {
-                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+                ResponseService response = await _uploadFileService.UploadFile(avatar, AppConfig.UploadFileType.AVATAR);
+                if (!response.Success) return response;
+                profile.Avatar = response.Message;
             }
-            return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
-        }
 
-        public async Task<ResponseService> UpdateAvatar(int accountId, string imageUrl)
-        {
-            bool isSuccess = await _profileRepo.UpdateAvatar(accountId, imageUrl);
+            if (front != null)
+            {
+                ResponseService response = await _uploadFileService.UploadFile(front, AppConfig.UploadFileType.FRONT_IDENTITY_CARD);
+                if (!response.Success) return response;
+                profile.FrontIdentityCard = response.Message;
+            }
+
+            if (back != null)
+            {
+                ResponseService response = await _uploadFileService.UploadFile(back, AppConfig.UploadFileType.BACK_IDENTITY_CARD);
+                if (!response.Success) return response;
+                profile.BackIdentityCard = response.Message;
+            }
+
+            bool isSuccess = await _profileRepo.UpdateProfile(profile, userRole);
             if (isSuccess)
             {
                 return new ResponseService { Success = true, Message = "Cập nhật thành công" };
