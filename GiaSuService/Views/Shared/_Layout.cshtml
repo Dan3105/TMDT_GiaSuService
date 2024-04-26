@@ -30,14 +30,14 @@
         var fullName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name)?.Value : "";
         string count_query = (TempData["Count"] as string)!;
     }
-    <div class="page-wrapper chiller-theme toggled">
+    
         <div class="page-wrapper chiller-theme toggled">
-            <div id="header" class="align-content-center">
+           <!-- <div id="header" class="align-content-center">
                 <div id="header-title">
                     <img src="~/logo.png" alt="" width="60" />
                 </div>
             </div>
-
+         -->
             <a id="show-sidebar" class="btn btn-lg" href="#">
                 <i class="fa fa-angle-right"></i>
         </a>
@@ -45,7 +45,7 @@
             <div class="sidebar-content">
                 <div class="sidebar-brand">
                         <a href="/">
-                            <img src="~/logo.png" class="" alt="" width="20" />
+                            <img src="~/logo.png" class="" alt="" width="50" />
                             TutorLight
                         </a>
                     <div id="close-sidebar">
@@ -412,15 +412,15 @@
                                 </div>
 
                                 <div class="text-center text-dark">
-                                    <p>TutorLight -  Soi Sáng Trí Tuệ, Rạng Rỡ Tương Lai</p>
-                                   
+                                    <p>TutorLight</p>
+                                 
                                 </div>
 
                                 
 
                             </div>
                             <!--Grid column-->
-                            <!--Grid column-->
+                            <!--
                             <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
                                 <h5 class="text-uppercase mb-2 text-dark">Mạng xã hội</h5>
 
@@ -437,28 +437,27 @@
                                     </li>
                                 </ul>
                             </div>
+                            -->
                             <!--Grid column-->
-                            <!--Grid column-->
-                            <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
-                                <h5 class="text-uppercase mb-2 text-dark">Về chúng tôi</h5>
+                        <div class="col-lg-4 col-md-6 mb-2 mb-md-0">
+                            <h5 class="text-uppercase mb-2 text-dark text-start ">Về chúng tôi</h5>
 
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">
-                                        <a href="#!" class="text-dark"><i class="fa fa-graduation-cap pe-2"></i>Liên hệ</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="#!" class="text-dark"><i class="fa fa-graduation-cap pe-2"></i>Chính sách bảo mật</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="#!" class="text-dark"><i class="fa fa-graduation-cap pe-2 mb-0"></i>Điều khoản</a>
-                                    </li>
-
-                                </ul>
-                            </div>
+                            <ul class="list-unstyled text-dark">
+                                <li>
+                                    <p><i class="fa fa-graduation-cap pe-2"></i>Liên hệ</p>
+                                </li>
+                                <li>
+                                    <p><i class="fa fa-graduation-cap pe-2"></i>Chính sách bảo mật</p>
+                                </li>
+                                <li>
+                                    <p><i class="fa fa-graduation-cap pe-2 mb-0"></i>Điều khoản</p>
+                                </li>
+                            </ul>
+                        </div>
                             <!--Grid column-->
                             <!--Grid column-->
-                            <div class="col-lg-3 col-md-6 mb-2 mb-md-0">
-                                <h5 class="text-uppercase mb-2 text-dark">Liên hệ</h5>
+                            <div class="col-lg-4 col-md-6 mb-2 mb-md-0">
+                            <h5 class="text-uppercase mb-2 text-dark text-start">Liên hệ</h5>
 
                                 <ul class="list-unstyled text-dark">
                                     <li>
@@ -472,28 +471,32 @@
                                     </li>
                                 </ul>
                             </div>
-                            <!--Grid column-->
+                     
+
                         </div>
-                        <!--Grid row-->
-                    </div>
-                    <!-- Grid container -->
-                    <!-- Copyright - Bootstrap Brain Component -->
-                    <div class="pt-2 border-top border-light-subtle" style="background-color: var(--bs-body-bg)">
+                   
                         <div class="container overflow-hidden">
                             <div class="row">
                                 <div class="col">
                                     <div class="footer-copyright-wrapper text-center">
-
-                                        &copy; TutorLight 2024. All Rights Reserved.
+                                        <small>
+                                            &copy; TutorLight 2024. All Rights Reserved.
+                                        </small>
                                     </div>
-                                    <div class="credits text-secondary text-center fs-7">
-                                        <small>Built by <a href="https://www.youtube.com/watch?v=YQHsXMglC9A" class="link-secondary text-decoration-none">Group One</a> with <i class="fa fa-heart" style="color:blue"></i></small>
-                                    </div>
-
+                                    <!--
+                                                        <div class="credits text-secondary text-center fs-7">
+                                            <small>Built by <a href="https://www.youtube.com/watch?v=YQHsXMglC9A" class="link-secondary text-decoration-none">Group One</a> with <i class="fa fa-heart" style="color:blue"></i></small>
+                                        </div>
+                                        -->
                                 </div>
                             </div>
                         </div>
                     </div>
+                        <!--Grid row-->
+             
+                    <!-- Grid container -->
+                   
+                 
                 </footer>
 
 
