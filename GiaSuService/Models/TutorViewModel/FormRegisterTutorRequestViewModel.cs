@@ -30,10 +30,10 @@ namespace GiaSuService.Models.TutorViewModel
 
     public class RegisterTutorProfile
     {
-        [Required(ErrorMessage = "Please")]
+        [Required(ErrorMessage = "Vui lòng nhập tên trường")]
         public string College { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Please")]
+        [Required(ErrorMessage = "Vui lòng nhập chuyên ngành")]
         public string Area { get; set; } = string.Empty;
 
         public int TypeTutorId { get; set; }

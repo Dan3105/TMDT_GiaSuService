@@ -1,7 +1,7 @@
 ﻿@using GiaSuService.Models.UtilityViewModel;
 @model RegisterFormViewModel
 @{
-    ViewData["Title"] = "Register Form Customer";
+    ViewData["Title"] = "Trang đăng ký tài khoản khách hàng";
 }
 
 <h1>Đăng ký tài khoản khách hàng</h1>
@@ -45,26 +45,30 @@
         @Html.ValidationMessageFor(model => model.RegisterForm!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="identityCard">Mặt trước CMND/ CCCD:</label>
-        <img id="frontCard" src="@Model.RegisterForm!.FrontIdentityCard" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
+        <label for="frontCard">Mặt trước CMND/ CCCD:</label>
+        <img id="frontCard" src="@Model.RegisterForm!.FrontIdentityCard" width="200" height="150" alt="" />
 
         <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
-               name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
+               name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard', 'frontCardMsg')" />
         <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
                 onclick="changeImage('newFrontCard')">
             Chọn ảnh
         </button>
+
+        <span id="frontCardMsg" style="display: block" class="text-danger">Vui lòng upload mặt trước của CMND/CCCD</span>
     </div>
     <div class="form-group">
-        <label for="identityCard">Mặt sau CMND/ CCCD:</label>
-        <img id="backCard" src="@Model.RegisterForm!.BackIdentityCard" width="200" height="150" alt="Hình mặt sau của CMND/CCCD" />
+        <label for="backCard">Mặt sau CMND/ CCCD:</label>
+        <img id="backCard" src="@Model.RegisterForm!.BackIdentityCard" width="200" height="150" alt="" />
 
         <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
-               name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
+               name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard', 'backCardMsg')" />
         <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
                 onclick="changeImage('newBackCard')">
             Chọn ảnh
         </button>
+
+        <span id="backCardMsg" style="display: block" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
     </div>
     
     @* Does need to upload avatar when register new account ? *@
@@ -117,12 +121,31 @@
         <span asp-validation-for="ConfirmBox" class="text-danger"></span>
     </div>
     
-    <button type="submit" class="btn btn-primary customstyle-button">Đăng ký</button>
+    <button type="submit"  class="btn btn-primary customstyle-button">Đăng ký</button>
 </form>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         getDistricts(); // Call the getDistricts function when the view is first loaded
+    });
+
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("form").submit(function (event) {
+            // Check if both newFrontCard and newBackCard have files uploaded
+            var frontCardInput = document.getElementById('newFrontCard');
+            var backCardInput = document.getElementById('newBackCard');
+
+            if (!frontCardInput.files || frontCardInput.files.length === 0 || !backCardInput.files || backCardInput.files.length === 0) {
+                // Files not uploaded, prevent form submission
+                event.preventDefault(); // Prevent the default form submission
+                alert('Vui lòng kiểm tra mặt trước và mặt sau CMND/CCCD.'); // Show an alert or message
+                return false; // Stop form submission
+            }
+
+            // Proceed with form submission if files are uploaded
+            return true;
+        });
     });
 
     function getDistricts() {
@@ -156,9 +179,10 @@
     }
 
     // Preview image on image tag after choosing a new image from input tag
-    function previewImage(inputId, imageId) {
+    function previewImage(inputId, imageId, imageMsgId) {
         var input = document.getElementById(inputId);   //input file id
         var image = document.getElementById(imageId);   //image tag id
+        var msg = document.getElementById(imageMsgId);   //image message upload id
 
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -166,6 +190,7 @@
                 image.src = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
+            msg.style.display = 'none';
         }
     }
 

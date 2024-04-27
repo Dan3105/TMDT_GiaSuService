@@ -84,7 +84,7 @@ namespace GiaSuService.Services
             return await _profileRepo.GetTutorProfile(profileId);
         }
 
-        public async Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel profile)
+        public async Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel profile, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
             profile.Form.SelectedDistricts = profile.DistrictSelected;
             profile.Form.SelectedGradeIds = profile.GradeSelected;
@@ -96,6 +96,28 @@ namespace GiaSuService.Services
             {
                 return new ResponseService { Success = true, Message = "Không tìm thấy thông tin gia sư trong hệ thống" }; 
             }
+
+            if (avatar != null)
+            {
+                ResponseService response = await _uploadFileService.UploadFile(avatar, AppConfig.UploadFileType.AVATAR);
+                if (!response.Success) return response;
+                profile.Form.Avatar = response.Message;
+            }
+
+            if (frontCard != null)
+            {
+                ResponseService response = await _uploadFileService.UploadFile(frontCard, AppConfig.UploadFileType.FRONT_IDENTITY_CARD);
+                if (!response.Success) return response;
+                profile.Form.FrontIdentityCard = response.Message;
+            }
+
+            if (backCard != null)
+            {
+                ResponseService response = await _uploadFileService.UploadFile(backCard, AppConfig.UploadFileType.BACK_IDENTITY_CARD);
+                if (!response.Success) return response;
+                profile.Form.BackIdentityCard = response.Message;
+            }
+
             TutorFormUpdateProfileViewModel? diff = TutorFormUpdateProfileViewModel.CompareDifference(origin, profile.Form);
             bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(diff);
             if (isSuccess)

@@ -91,10 +91,9 @@ namespace GiaSuService.Controllers
 
         [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(TutorUpdateRequestViewModel profile)
+        public async Task<IActionResult> UpdateProfile(TutorUpdateRequestViewModel profile, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
-
-            ResponseService response = await _profileService.CreateRequestTutorProfile(profile);
+            ResponseService response = await _profileService.CreateRequestTutorProfile(profile, avatar, frontCard, backCard);
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
@@ -150,12 +149,18 @@ namespace GiaSuService.Controllers
             return View(data);
         }
 
+
+        [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpGet]
         public async Task<IActionResult> ApplyRequest(int requestId)
         {
             var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+            if (accountId == null || accountId == "")
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("TutorRequestList", "Tutor");
+            }
 
             int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
 
@@ -278,19 +283,20 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int page)
         {
             var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+            int? tutorId = null;
 
-            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
-
-            if (tutorId == null)
+            if (accountId == null || accountId == "") { }
+            else
             {
-                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
-                return RedirectToAction("Index", "Home");
+                tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
             }
+
+            if (tutorId == null) tutorId = 0;
 
             var queries = await _requestFormService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page, (int) tutorId);
             int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);

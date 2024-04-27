@@ -1,9 +1,17 @@
 ﻿@using GiaSuService.Models.TutorViewModel;
+@using System.Security.Claims;
+@using GiaSuService.Configs;
+
 @model TutorRequestListViewModel;
 
 @{
     ViewData["Title"] = "Tutor Request List";
 }
+
+@{
+    var roleName = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+}
+
 <div class="container">
     <div class="row align-items-center justify-content-center">
         <div class="col-sm-6 d-flex justify-content-center mb-2">
@@ -85,11 +93,12 @@
     }
 
     var currentPage = 0;
-
+    
     function loadItems(pageNumber) {
         var selectedIdDistrict = $('#districtSelectionContainer').val();
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
+        var roleName = "@roleName";
 
         $.getJSON("/Tutor/GetTutorRequestBy", { districtId: selectedIdDistrict, subjectId: selectedIdSubject, gradeId: selectedIdGrade, page: pageNumber })
             .done(function (data) {
@@ -104,6 +113,7 @@
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
                     var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
+                
                     var itemHtml = `
                                 <div class="col-md-4 col-sm-6 mb-3">
                                     <div class="card">
@@ -118,8 +128,11 @@
                                                 <p class="card-text"><b>Các khung giờ có thể dạy:</b> ${item.sessionsCanTeach}</p>
                                         </div>
 
-                                                <div class="d-flex justify-content-end m-2">
-                                                    <a href="#" class="btn btn-primary customstyle-button" onclick="registerRequest(${item.requestId})">Đăng ký ứng tuyển</a>
+                                        <div class="d-flex justify-content-end m-2">
+                                            ${roleName === "customer"
+                                                ? ``
+                                                : `<a href="#" class="register-btn btn btn-primary customstyle-button" onclick="registerRequest(${item.requestId})">Đăng ký ứng tuyển</a>`
+                                            }    
                                         </div>
                                     </div>
 

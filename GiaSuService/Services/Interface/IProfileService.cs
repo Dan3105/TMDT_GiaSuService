@@ -20,6 +20,6 @@ namespace GiaSuService.Services.Interface
         public Task<ResponseService> UpdateTutorProfileInEmployee(TutorProfileViewModel model);
 
         public Task<TutorFormUpdateProfileViewModel?> GetTutorFormUpdateById(int tutorId);
-        public Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel model);
+        public Task<ResponseService> CreateRequestTutorProfile(TutorUpdateRequestViewModel model, IFormFile avatar, IFormFile frontCard, IFormFile backCard);
     }
 }

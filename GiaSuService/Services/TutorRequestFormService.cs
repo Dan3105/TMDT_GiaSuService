@@ -137,6 +137,10 @@ namespace GiaSuService.Services
             {
                 return null!;
             }
+            if(tutorId == 0)
+            {
+                return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page);
+            }
             return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page, tutorId);
         }
 

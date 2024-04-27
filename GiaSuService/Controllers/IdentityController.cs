@@ -121,7 +121,7 @@ namespace GiaSuService.Controllers
 
         [HttpPost]
         [Authorize(Policy = AppConfig.PROFILE_POLICY)]
-        public async Task<IActionResult> UpdateProfile(ProfileViewModel profile, IFormFile newAvatar, IFormFile frontCard, IFormFile backCard)
+        public async Task<IActionResult> UpdateProfile(ProfileViewModel profile, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
             var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
             if (userRole == null) return RedirectToAction("Index", "Home");
@@ -130,7 +130,7 @@ namespace GiaSuService.Controllers
             //User not founded
             if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
 
-            ResponseService response = await _profileService.UpdateProfile(profile, newAvatar, frontCard, backCard, userRole);
+            ResponseService response = await _profileService.UpdateProfile(profile, avatar, frontCard, backCard, userRole);
             if (response.Success)
             {
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;

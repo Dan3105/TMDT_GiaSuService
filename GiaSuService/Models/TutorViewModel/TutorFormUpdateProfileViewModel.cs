@@ -82,8 +82,8 @@ namespace GiaSuService.Models.TutorViewModel
             if (origin.Gender != modified.Gender)
                 diff.Gender = modified.Gender;
 
-            //if (origin.Avatar != modified.Avatar)
-            //    diff.Avatar = modified.Avatar;
+            if (origin.Avatar != modified.Avatar)
+                diff.Avatar = modified.Avatar;
 
             if (origin.AddressDetail != modified.AddressDetail)
                 diff.AddressDetail = modified.AddressDetail;
@@ -94,11 +94,11 @@ namespace GiaSuService.Models.TutorViewModel
             if (origin.IdentityCard != modified.IdentityCard)
                 diff.IdentityCard = modified.IdentityCard;
 
-            //if (origin.FrontIdentityCard != modified.FrontIdentityCard)
-            //    diff.FrontIdentityCard = modified.FrontIdentityCard;
+            if (origin.FrontIdentityCard != modified.FrontIdentityCard)
+                diff.FrontIdentityCard = modified.FrontIdentityCard;
 
-            //if (origin.BackIdentityCard != modified.BackIdentityCard)
-            //    diff.BackIdentityCard = modified.BackIdentityCard;
+            if (origin.BackIdentityCard != modified.BackIdentityCard)
+                diff.BackIdentityCard = modified.BackIdentityCard;
 
             if (origin.College != modified.College)
                 diff.College = Utility.FormatToCamelCase(modified.College);
@@ -140,11 +140,11 @@ namespace GiaSuService.Models.TutorViewModel
                    viewModel.Phone != string.Empty ||
                    viewModel.Gender != string.Empty ||
                    viewModel.Birth != null ||
-                   //viewModel.Avatar != string.Empty ||
+                   viewModel.Avatar != string.Empty ||
                    viewModel.AddressDetail != string.Empty ||
                    viewModel.IdentityCard != string.Empty ||
-                   //viewModel.FrontIdentityCard != string.Empty ||
-                   //viewModel.BackIdentityCard != string.Empty ||
+                   viewModel.FrontIdentityCard != string.Empty ||
+                   viewModel.BackIdentityCard != string.Empty ||
                    viewModel.College != string.Empty ||
                    viewModel.Area != string.Empty ||
                    viewModel.Additionalinfo != null ||

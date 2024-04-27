@@ -17,11 +17,13 @@
                 }
             </select>
         </div>
+
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select class="form-select customform-select" id="districtSelectionContainer">
                 <option value="0">Chọn quận</option>
             </select>
         </div>
+        
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select class="form-select customform-select" id="subject">
                 @if (Model.SubjectList != null)
@@ -34,6 +36,7 @@
                 }
             </select>
         </div>
+        
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select class="form-select customform-select" id="grade">
                 @if (Model.GradeList != null)
@@ -46,12 +49,15 @@
                 }
             </select>
         </div>
+        
         <div class="col-sm-4 d-flex justify-content-center mb-2">
             <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Tìm kiếm</button>
         </div>
+    
     </div>
     <hr />
 
+    @* Load list tutor request to this *@
     <div id="items-container" class="row">
     </div>
 
@@ -157,5 +163,6 @@
             }
         });
     };
+
     loadItems(currentPage);
 </script>

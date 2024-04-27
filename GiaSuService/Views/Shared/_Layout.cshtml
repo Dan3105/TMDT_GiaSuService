@@ -24,7 +24,7 @@
 </head> 
 <body>
     @{
-        bool isAuth = User.Identity?.IsAuthenticated ?? false;
+        bool isAuth = User.Identity?.IsAuthenticated ?? false; /* when having user login */
         var roleName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value : "";
         var avatar = isAuth ? User.Claims.FirstOrDefault(p => p.Type == AppConfig.CLAIM_TYPE_AVATAR)?.Value : "";
         var fullName = isAuth ? User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name)?.Value : "";
@@ -43,6 +43,7 @@
         </a>
         <nav id="sidebar" class="sidebar-wrapper">
             <div class="sidebar-content">
+                @* Showing logo and website name *@
                 <div class="sidebar-brand">
                         <a href="/">
                             <img src="~/logo.png" class="" alt="" width="50" />
@@ -52,7 +53,10 @@
                         <i class="fas fa-times"></i>
                     </div>
                 </div>
-                @if(isAuth)
+
+
+                @* Showing account short profile when having user login *@
+                @if (isAuth) 
                 {
                     <div class="sidebar-header">
                         <div class="user-pic">
@@ -71,70 +75,75 @@
                         </div>
                     </div>
                 }
+                
+
                 <!-- sidebar-header  -->
                 @if(roleName != AppConfig.EMPLOYEEROLENAME)
                 {
-                <div class="sidebar-menu">
-                    <ul>
-                        <li class="header-menu">
-                            <span>Phụ Huynh</span>
-                        </li>
-                        <li class="sidebar">
-                            <a href="@Url.Action("TutorList","Home")">
-                                <i class="fa fa-address-card"></i>
-                                <span>Danh sách gia sư</span>
-                            </a>
-                        </li>
-                        @if(!isAuth || roleName == AppConfig.CUSTOMERROLENAME){
-                            <li class="sidebar">
-                                <a href="@Url.Action("TutorRequestForm", "Customer")">
-                                    <i class="fa fa-sign-in-alt"></i>
-                                    <span>Đăng ký tìm gia sư</span>
-                                </a>
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li class="header-menu">
+                                <span>Phụ Huynh</span>
                             </li>
-                        }
-                        <li class="header-menu">
-                            <span>Gia sư</span>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("TutorRequestList", "Tutor")">
-                                <i class="fa fa-calendar"></i>
-                                <span>Lớp mới cần gia sư</span>
-                            </a>
-                        </li>
-                        @if (roleName == AppConfig.CUSTOMERROLENAME)
-                        {
-                            <li>
-                                <a href="@Url.Action("CustomerListTutorRequest", "Customer")">
-                                    <i class="fa fa-calendar"></i>
-                                    <span>Các đơn tìm gia sư của tôi</span>
-                                </a>
-                            </li>
-                        }
 
-                        @if(roleName == AppConfig.TUTORROLENAME)
-                        {
-                            <li>
-                                <a href="@Url.Action("ListTutorApplyForm", "Tutor")">
-                                    <i class="fa fa-check-circle"></i>
-                                    <span>Các đơn đã ứng tuyển</span>
+                            <li class="sidebar">
+                                <a href="@Url.Action("TutorList","Home")">
+                                    <i class="fa fa-address-card"></i>
+                                    <span>Danh sách gia sư</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")">
-                                    <i class="fa fa-inbox"></i>
-                                    <span>Lịch sử thông tin của tôi</span>
-                                </a>
+                            @if(!isAuth || roleName == AppConfig.CUSTOMERROLENAME){
+                                <li class="sidebar">
+                                    <a href="@Url.Action("TutorRequestForm", "Customer")">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <span>Đăng ký tìm gia sư</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (roleName == AppConfig.CUSTOMERROLENAME)
+                            {
+                                <li>
+                                    <a href="@Url.Action("CustomerListTutorRequest", "Customer")">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>Các đơn tìm gia sư của tôi</span>
+                                    </a>
+                                </li>
+                            }
+
+
+                            <li class="header-menu">
+                                <span>Gia sư</span>
                             </li>
                             <li>
-                                <a href="@Url.Action("TutorTransactionList", "Tutor")">
-                                    <i class="fa fa-history"></i>
-                                    <span>Lịch sử giao dịch</span>
+                                <a href="@Url.Action("TutorRequestList", "Tutor")">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>Các đơn mới cần gia sư</span>
                                 </a>
                             </li>
-                        }
-                    </ul>
-                </div>
+                            
+                            @if(roleName == AppConfig.TUTORROLENAME)
+                            {
+                                <li>
+                                    <a href="@Url.Action("ListTutorApplyForm", "Tutor")">
+                                        <i class="fa fa-check-circle"></i>
+                                        <span>Các đơn đã ứng tuyển</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")">
+                                        <i class="fa fa-inbox"></i>
+                                        <span>Lịch sử thông tin của tôi</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("TutorTransactionList", "Tutor")">
+                                        <i class="fa fa-history"></i>
+                                        <span>Lịch sử giao dịch</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 }
                 
                 
@@ -145,6 +154,8 @@
                             <li class="header-menu">
                                 <span>Nhân viên</span>
                             </li>
+
+                            @* Quản lý gia sư *@
                             <li class="sidebar-dropdown">
                                 <a href="#">
                                     <i class="fa fa-graduation-cap"></i>
@@ -174,6 +185,7 @@
                                 </div>
                             </li>
 
+                            @* Quản lý các đơn tìm gia sư *@
                             <li class="sidebar-dropdown">
                                 <a href="#">
                                     <i class="fa fa-search"></i>
@@ -201,6 +213,7 @@
 
                 }
                 
+
                 @if(roleName == AppConfig.ADMINROLENAME)
                 {
                     <div class="sidebar-menu">
@@ -208,6 +221,8 @@
                             <li class="header-menu">
                                 <span>Admin</span>
                             </li>
+
+                            @* Thống kê *@
                             <li class="sidebar-dropdown">
                                 <a href="#">
                                     <i class="fa fa-align-left"></i>
@@ -236,6 +251,8 @@
                                     </ul>
                                 </div>
                             </li>
+
+                            @* Quản lý nhân viên *@
                             <li class="sidebar-dropdown">
                                 <a href="#">
                                     <i class="fa fa-laptop"></i>
@@ -260,6 +277,7 @@
                                 </div>
                             </li>
 
+                            @* Quản lý học phần *@
                             <li class="sidebar-dropdown">
                                 <a href="#">
                                     <i class="fa fa-graduation-cap"></i>
@@ -293,6 +311,8 @@
                     </div>
                 }
                 
+
+                @* Account profile manager *@
                 @if(isAuth)
                 {
                     <div class="sidebar-menu">
@@ -349,6 +369,7 @@
                         </ul>
                     </div>
                 }
+
 
                 <!-- sidebar-menu  -->
             </div>

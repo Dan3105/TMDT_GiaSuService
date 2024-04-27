@@ -30,14 +30,17 @@ namespace GiaSuService.Models.IdentityViewModel
         [RegularExpression(@"^\d{10}$|^\d{12}$", ErrorMessage = "CMND chỉ gồm 10 chữ số hoặc CCCD chỉ gồm 12 chữ số.")]
         public string IdentityCard { get; set; } = string.Empty;
 
-        public string FrontIdentityCard { get; set; } = AppConfig.DEFAULT_FRONT_IDENTITY_CARD_URL;
-        public string BackIdentityCard { get; set; } = AppConfig.DEFAULT_BACK_IDENTITY_CARD_URL;
+        [Required(ErrorMessage = "Vui lòng tải ảnh mặt trước CMND/CCCD.")]
+        public string FrontIdentityCard { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Vui lòng tải ảnh mặt sau CMND/CCCD.")]
+        public string BackIdentityCard { get; set; } = string.Empty;
 
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "Mật khẩu mới gồm 6 - 20 ký tự")]
         public string Password { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Vui lòng nhập lại mật khẩu.")]
         [Compare(nameof(Password), ErrorMessage = "Nhập lại mật khẩu không trùng với mật khẩu.")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
