@@ -209,6 +209,18 @@ namespace GiaSuService.Services
 
         public async Task<ResponseService> ApplyRequest(int tutorId, int requestId)
         {
+            var curr_status = await _statusRepository.GetLatestStatusInTutorRegister(tutorId);
+            if (curr_status == null)
+            {
+                return new ResponseService { Success = false, Message = "Không lấy được trạng thái gia sư hiện tại" };
+            }
+
+            // Check if tutor status is approval then can apply, else cannot apply
+            if (curr_status != RegisterStatus.APPROVAL.ToString().ToLower())
+            {
+                return new ResponseService { Success = false, Message = "Gia sư không có quyền đăng ký ứng tuyển. Vui lòng chờ nhân viên duyệt." };
+            }
+
             Status? status = await _statusRepository.GetStatus(AppConfig.QueueStatus.PENDING.ToString(), AppConfig.queue_status.ToString());
             if(status == null)
             {
