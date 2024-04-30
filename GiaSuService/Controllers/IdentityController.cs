@@ -258,12 +258,6 @@ namespace GiaSuService.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterFormCustomer(RegisterFormViewModel form, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
-            /*if (!ModelState.IsValid) // What the fuck with this? Valid on form then valid binding for what?
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi form nhập";
-                return RedirectToAction("RegisterFormCustomer", "Identity", form.RegisterForm);
-            }*/
-
             ResponseService result = await _authService.CreateAccount(form.RegisterForm, avatar, frontCard, backCard, AppConfig.CUSTOMERROLENAME);
             if (result.Success)
             {

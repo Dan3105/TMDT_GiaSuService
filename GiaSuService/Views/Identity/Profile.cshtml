@@ -11,17 +11,7 @@
     <form method="post" asp-action="UpdateProfile" asp-controller="Identity" enctype="multipart/form-data">
         <h1>Thông tin tài khoản</h1>
         <div class="row">
-            <div class="col-md-4">
-                <div style="text-align: center;">
-                    <img id="avatar" src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
-
-                    <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
-                           name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
-
-                    <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
-                            onclick="changeImage('newAvatar')">Chọn ảnh</button>
-                </div>
-            </div>
+            @* AccountProfile *@
             <div class="col-md-8">
                 <input type="hidden" asp-for="AccountId" />
                 <input type="hidden" asp-for="IdentityId" />
@@ -50,7 +40,7 @@
                 <div class="form-group">
                     <label asp-for="BirthDate">Ngày sinh:</label>
                     <input type="date" asp-for="BirthDate" class="form-control customform-control" style="margin-bottom: 10px;"
-                            value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
+                           value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
                     @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
@@ -85,27 +75,44 @@
                     <input type="text" asp-for="IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
                     @Html.ValidationMessageFor(model => model.IdentityCard, "", new { @class = "text-danger" })
                 </div>
-                <div class="row form-group">
-                    <div class="col">
-                        <label asp-for="FrontIdentityCard">Mặt trước CMND/ CCCD:</label>
-                        <img id="frontCard" src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước"/>
+                <div class="form-group">
+                    <label asp-for="FrontIdentityCard" class="customstyle-label">Mặt trước CMND/ CCCD:</label>
+                    <img id="frontCard" src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước" />
 
-                        <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
-                                name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
-                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
-                                onclick="changeImage('newFrontCard')">Chọn ảnh</button>
-                    </div>
-                    <div class=col>
-                        <label asp-for="BackIdentityCard">Mặt sau CMND/ CCCD:</label>
-                        <img id="backCard" src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau"  />
+                    <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
+                           name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
+                    <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                            onclick="changeImage('newFrontCard')">
+                        Chọn ảnh
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BackIdentityCard" class="customstyle-label">Mặt sau CMND/ CCCD:</label>
+                    <img id="backCard" src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau" />
 
-                        <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
-                                name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
-                        <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
-                                onclick="changeImage('newBackCard')">Chọn ảnh</button>
-                    </div>
+                    <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
+                           name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
+                    <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
+                            onclick="changeImage('newBackCard')">
+                        Chọn ảnh
+                    </button>
                 </div>
             </div>
+
+            @* Avatar *@
+            <div class="col-md-4" style="margin-top: 25px">
+                <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <img id="avatar" src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
+                    <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
+                            name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
+
+                    <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
+                            onclick="changeImage('newAvatar')">
+                        Chọn ảnh
+                    </button>
+                </div>
+            </div>
+
         </div>
 
         <div style="text-align: center;">

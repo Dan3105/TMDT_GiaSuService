@@ -78,11 +78,19 @@ h6{
             color: #47b2e4;
         }
 
+div.form-group {
+    margin-bottom: 10px;
+}
+
+.customstyle-label{
+    margin-right: 10px;
+}
 
 .customstyle-button {
     background-color: #A85295;
     border: none;
     color: white;
+    margin-left: 10px;
 }
 
     .customstyle-button:hover {

@@ -45,8 +45,8 @@
         @Html.ValidationMessageFor(model => model.RegisterForm!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        <label for="frontCard">Mặt trước CMND/ CCCD:</label>
-        <img id="frontCard" src="@Model.RegisterForm!.FrontIdentityCard" width="200" height="150" alt="" />
+        <label for="frontCard" class="customstyle-label">Mặt trước CMND/ CCCD:</label>
+        <img id="frontCard" src="@Model.RegisterForm!.FrontIdentityCard" width="200" height="150" alt="Chưa upload ảnh" />
 
         <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
                name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard', 'frontCardMsg')" />
@@ -55,20 +55,20 @@
             Chọn ảnh
         </button>
 
-        <span id="frontCardMsg" style="display: block" class="text-danger">Vui lòng upload mặt trước của CMND/CCCD</span>
+        <span id="frontCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt trước của CMND/CCCD</span>
     </div>
     <div class="form-group">
-        <label for="backCard">Mặt sau CMND/ CCCD:</label>
-        <img id="backCard" src="@Model.RegisterForm!.BackIdentityCard" width="200" height="150" alt="" />
+        <label for="backCard" class="customstyle-label">Mặt sau CMND/ CCCD:</label>
+        <img id="backCard" src="@Model.RegisterForm!.BackIdentityCard" width="200" height="150" alt="Chưa upload ảnh" />
 
         <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
                name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard', 'backCardMsg')" />
-        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+        <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
                 onclick="changeImage('newBackCard')">
             Chọn ảnh
         </button>
 
-        <span id="backCardMsg" style="display: block" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
+        <span id="backCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
     </div>
     
     @* Does need to upload avatar when register new account ? *@
@@ -132,14 +132,31 @@
     $(document).ready(function () {
         // Add a submit event listener to the form
         $("form").submit(function (event) {
+            var canSubmit = true;
+
             // Check if both newFrontCard and newBackCard have files uploaded
             var frontCardInput = document.getElementById('newFrontCard');
             var backCardInput = document.getElementById('newBackCard');
 
-            if (!frontCardInput.files || frontCardInput.files.length === 0 || !backCardInput.files || backCardInput.files.length === 0) {
-                // Files not uploaded, prevent form submission
-                event.preventDefault(); // Prevent the default form submission
-                alert('Vui lòng kiểm tra mặt trước và mặt sau CMND/CCCD.'); // Show an alert or message
+            var frontCardMsg = document.getElementById('frontCardMsg');
+            var backCardMsg = document.getElementById('backCardMsg');
+
+            if (!frontCardInput.files || frontCardInput.files.length === 0) {
+                frontCardMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!backCardInput.files || backCardInput.files.length === 0) {
+                backCardMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!canSubmit) {
+                event.preventDefault(); // Prevent form submission
+
+                // Show an alert or message
+                alert('Vui lòng kiểm tra lại các dữ liệu đã nhập ở trên.'); 
+
                 return false; // Stop form submission
             }
 

@@ -6,7 +6,8 @@
 @{
     ViewData["Title"] = "Trang đăng ký tài khoản gia sư";
 }
-<h1>Đăng ký làm gia sư</h1>
+
+<h1>Đăng ký tài khoản gia sư</h1>
 
 <form asp-action="RegisterFormTutor" asp-controller="Identity" method="post" enctype="multipart/form-data">
     @* ----------------------------------Account Information------------------------------------------ *@
@@ -14,6 +15,22 @@
     <input type="hidden" asp-for="AccountProfile!.FrontIdentityCard" />
     <input type="hidden" asp-for="AccountProfile!.BackIdentityCard" />
 
+    @* Avatar *@
+    <div class="form-group">
+        <label for="Avatar" class="customstyle-label">Ảnh đại diện:</label>
+        <img id="avatar" src="" width="200" height="200" alt="Chưa upload ảnh" />
+
+        <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
+               name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar', 'avatarMsg')" />
+        <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newAvatar')">
+            Chọn ảnh
+        </button>
+
+        <span id="avatarMsg" style="display: none" class="text-danger">Vui lòng upload ảnh đại diện</span>
+    </div>
+
+    @* Name, Birthday, Gender *@
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="AccountProfile!.FullName">
@@ -32,39 +49,32 @@
         </select>
         @Html.ValidationMessageFor(model => model.AccountProfile!.Gender, "", new { @class = "text-danger" })
     </div>
+
+    @* Email *@
     <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" class="form-control customform-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Email, "", new { @class = "text-danger" })
     </div>
+    
+    @* Phone *@
     <div class="form-group">
         <label for="phone">Số điện thoại:</label>
         <input type="tel" class="form-control customform-control" id="phone" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Phone, "", new { @class = "text-danger" })
     </div>
+
+    @* Identity card number *@
     <div class="form-group">
         <label for="identityCard">CCCD/CMND:</label>
         <input type="text" class="form-control customform-control" id="identityCard" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
         @Html.ValidationMessageFor(model => model.AccountProfile!.IdentityCard, "", new { @class = "text-danger" })
     </div>
-
+    
+    @* Identity card image *@
     <div class="form-group">
-        <label for="Avatar">Ảnh đại diện</label>
-        <img id="avatar" src="" width="200" height="150" alt="" />
-
-        <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
-               name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar', 'avatarMsg')" />
-        <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
-                onclick="changeImage('newAvatar')">
-            Chọn ảnh
-        </button>
-
-        <span id="avatarMsg" style="display: block" class="text-danger">Vui lòng upload ảnh đại diện</span>
-    </div>
-
-    <div class="form-group">
-        <label for="identityCard">Mặt trước CMND/ CCCD:</label>
-        <img id="frontCard" src="@Model.AccountProfile!.FrontIdentityCard" width="200" height="150" alt="" />
+        <label for="identityCard" class="customstyle-label">Mặt trước CMND/ CCCD:</label>
+        <img id="frontCard" src="@Model.AccountProfile!.FrontIdentityCard" width="200" height="150" alt="Chưa upload ảnh" />
 
         <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
                name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard', 'frontCardMsg')" />
@@ -73,22 +83,24 @@
             Chọn ảnh
         </button>
 
-        <span id="frontCardMsg" style="display: block" class="text-danger">Vui lòng upload mặt trước của CMND/CCCD</span>
+        <span id="frontCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt trước của CMND/CCCD</span>
     </div>
     <div class="form-group">
-        <label for="identityCard">Mặt sau CMND/ CCCD:</label>
-        <img id="backCard" src="@Model.AccountProfile!.BackIdentityCard" width="200" height="150" alt="" />
+        <label for="identityCard" class="customstyle-label">Mặt sau CMND/ CCCD:</label>
+        <img id="backCard" src="@Model.AccountProfile!.BackIdentityCard" width="200" height="150" alt="Chưa upload ảnh" />
 
         <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
                name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard', 'backCardMsg')" />
-        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+        <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
                 onclick="changeImage('newBackCard')">
             Chọn ảnh
         </button>
 
-        <span id="frontCardMsg" style="display: block" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
+        <span id="frontCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
     </div>
 
+
+    @* Password *@
     <div class="form-group">
         <label for="password">Mật khẩu:</label>
         <input type="password" class="form-control customform-control" id="password" placeholder="Nhập mật khẩu của bạn" asp-for="AccountProfile!.Password">
@@ -100,6 +112,7 @@
         @Html.ValidationMessageFor(model => model.AccountProfile!.ConfirmPassword, "", new { @class = "text-danger" })
     </div>   
     
+    @* Province, District, AddressDetail *@
     <div class="form-group">
         <label for="province">Tỉnh:</label>
         <select class="form-select customform-control" id="province" onchange="getDistricts()">
@@ -124,6 +137,7 @@
         <input type="text" class="form-control customform-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="AccountProfile!.AddressName">
         @Html.ValidationMessageFor(model => model.AccountProfile!.AddressName, "", new { @class = "text-danger" })
     </div>
+
 
     @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
     <div class="form-group">
@@ -155,7 +169,7 @@
     </div>
     <div class="form-group">
         <label for="addressName">Loại gia sư:</label>
-        <select class="form-control customform-control" id="gender" asp-for="RegisterTutorProfile!.TypeTutorId">
+        <select class="form-control customform-control" id="typeTutor" asp-for="RegisterTutorProfile!.TypeTutorId">
             @if (Model.ListTutorType != null)
             {
                 <option id="provincedefault">-Công việc hiện tại-</option>
@@ -273,20 +287,42 @@
         });
     }
 
+    // Validate again some field cannot check in model
     $(document).ready(function () {
         // Add a submit event listener to the form
         $("form").submit(function (event) {
+            var canSubmit = true;
+
             // Check if both newFrontCard and newBackCard have files uploaded
             var avatarInput = document.getElementById('newAvatar');
             var frontCardInput = document.getElementById('newFrontCard');
             var backCardInput = document.getElementById('newBackCard');
 
-            if (!avatarInput.files || avatarInput.files.length === 0 ||
-                !frontCardInput.files || frontCardInput.files.length === 0 || 
-                !backCardInput.files || backCardInput.files.length === 0) {
-                // Files not uploaded, prevent form submission
-                event.preventDefault(); // Prevent the default form submission
-                alert('Vui lòng kiểm tra ảnh đại diện, mặt trước và mặt sau CMND/CCCD.'); // Show an alert or message
+            var avatarMsg = document.getElementById('avatarMsg');
+            var frontCardMsg = document.getElementById('frontCardMsg');
+            var backCardMsg = document.getElementById('backCardMsg');
+
+            if (!avatarInput.files || avatarInput.files.length === 0){
+                avatarMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!frontCardInput.files || frontCardInput.files.length === 0) {
+                frontCardMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!backCardInput.files || backCardInput.files.length === 0) {
+                backCardMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!canSubmit) {
+                event.preventDefault(); // Prevent form submission
+
+                // Show an alert or message
+                alert('Vui lòng kiểm tra lại các dữ liệu đã nhập ở trên.'); 
+
                 return false; // Stop form submission
             }
 

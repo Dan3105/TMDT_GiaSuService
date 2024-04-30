@@ -72,6 +72,18 @@ namespace GiaSuService.Services
                     return new ResponseService { Success = false, Message = "Lỗi form đăng ký rỗng" };
                 }
 
+                ResponseService rs = await CheckEmailExist(accountProfile.Email);
+                if (rs.Success)
+                {
+                    return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
+                }
+
+                rs = await CheckEmailExist(accountProfile.Phone);
+                if (rs.Success)
+                {
+                    return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
+                }
+
                 var roleId = await GetRoleId(accountRole);
                 if (roleId == null)
                 {
