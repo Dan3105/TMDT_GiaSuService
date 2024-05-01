@@ -1,4 +1,7 @@
-﻿@using GiaSuService.Models.IdentityViewModel
+﻿@{
+    ViewData["Title"] = "Employee Profile";
+}
+@using GiaSuService.Models.IdentityViewModel
 
 @model ProfileViewModel
 
@@ -14,7 +17,7 @@
                 <input type="hidden" asp-for="AccountId" />
 
                 <div class="form-group">
-                    <label asp-for="FullName">Full Name:</label>
+                    <label asp-for="FullName">Tên:</label>
                     <span class="form-text text-muted">@Model.FullName</span>
                 </div>
                 <div class="form-group">
@@ -22,23 +25,23 @@
                     <span class="form-text text-muted">@Model.Email</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Phone">Phone:</label>
+                    <label asp-for="Phone">Số điện thoại:</label>
                     <span class="form-text text-muted">@Model.Phone</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="BirthDate">Birth Date:</label>
+                    <label asp-for="BirthDate">Ngày sinh:</label>
                     <span class="form-text text-muted">@Model.BirthDate.ToString("dd/MM/yyyy")</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Gender">Gender:</label>
+                    <label asp-for="Gender">Giới tính:</label>
                     <span class="form-text text-muted">@Model.Gender</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="AddressDetail">Address:</label>
+                    <label asp-for="AddressDetail">Địa chỉ:</label>
                     <span class="form-text text-muted">@Model.AddressDetail</span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="IdentityCard">Identity Card:</label>
+                    <label asp-for="IdentityCard">Số CCCD/ CMND:</label>
                     <input type="text" asp-for="IdentityCard" class="form-control" />
                     <span asp-validation-for="IdentityCard" class="text-danger"></span>
                 </div>
@@ -66,7 +69,7 @@
                         </label>
                     </div>
                 </div> *@
-                <button type="submit" class="btn btn-primary customstyle-button">Update Profile</button>
+                <button type="submit" class="btn btn-primary customstyle-button">Cập nhật</button>
             </form>
         </div>
 

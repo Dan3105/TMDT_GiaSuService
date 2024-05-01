@@ -1,21 +1,24 @@
-﻿<h1>Thống kê tài khoản</h1>
+﻿@{
+    ViewData["Title"] = "Statistic Profit";
+}
+<h1>Thống kê tài khoản</h1>
 <div>
     <div class="row">
         <div class="col-12">
             <div class="row">
                 <div class="col-3">
                     <span>Từ ngày: </span>
-                    <input type="date" class="form-control" id="fromDateInput" value="2024-01-03">
+                    <input type="date" class="form-control customform-control" id="fromDateInput" value="2024-01-03">
                 </div>
                 <div class="col-3">
                     <span>Đến ngày: </span>
-                    <input type="date" class="form-control" id="toDateInput" value="2024-02-03">
+                    <input type="date" class="form-control customform-control" id="toDateInput" value="2024-02-03">
                 </div>
                 <div class="col-3">
                     
                 </div>
                 <div class="col-3">
-                    <button onclick="fetchDataAndRenderChart()" class="btn btn-primary mt-3" type="button">Submit</button>
+                    <button onclick="fetchDataAndRenderChart()" class="btn btn-primary mt-3 customstyle-button" type="button">Thống kê</button>
                 </div>
             </div>
         </div>
