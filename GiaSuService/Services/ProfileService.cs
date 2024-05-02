@@ -45,8 +45,9 @@ namespace GiaSuService.Services
                 return new ResponseService { Success = false, Message = "Lỗi cập nhật" };
             }
 
-            #region Check_email_or_phone_exist
-            ResponseService rs = await _authService.CheckEmailExist(profile.Email);
+            #region Check_if_change_email_or_phone_then_check_exist
+            
+            /*ResponseService rs = await _authService.CheckEmailExist(profile.Email);
             if (rs.Success)
             {
                 return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
@@ -56,7 +57,7 @@ namespace GiaSuService.Services
             if (rs.Success)
             {
                 return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
-            }
+            }*/
             #endregion
 
             #region Upload_image

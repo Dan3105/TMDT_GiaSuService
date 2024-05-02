@@ -103,30 +103,32 @@
                     <input type="text" asp-for="IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
                     @Html.ValidationMessageFor(model => model.IdentityCard, "", new { @class = "text-danger" })
                 </div>
-                <div class="row form-group">
-                    <div class="col">
-                        <label asp-for="FrontIdentityCard">Mặt trước CMND/ CCCD:</label>
-                        <img id="frontCard" src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước" />
+
+                <div class="form-group" style="display:flex; flex-direction: row; justify-content: space-evenly">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        <label asp-for="FrontIdentityCard" class="customstyle-label">Mặt trước CMND/ CCCD:</label>
+                        <img id="frontCard" src="@Model.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
 
                         <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
                                name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
-                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
+                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button" style="margin-top:10px"
                                 onclick="changeImage('newFrontCard')">
                             Chọn ảnh
                         </button>
                     </div>
-                    <div class=col>
-                        <label asp-for="BackIdentityCard">Mặt sau CMND/ CCCD:</label>
-                        <img id="backCard" src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau" />
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        <label asp-for="BackIdentityCard" class="customstyle-label">Mặt sau CMND/ CCCD:</label>
+                        <img id="backCard" src="@Model.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
 
                         <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
                                name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
-                        <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
+                        <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button" style="margin-top:10px"
                                 onclick="changeImage('newBackCard')">
                             Chọn ảnh
                         </button>
                     </div>
                 </div>
+
             </div>
         </div>
 

@@ -79,7 +79,7 @@
                 <div class="form-group" style="display:flex; flex-direction: row; justify-content: space-evenly">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         <label asp-for="FrontIdentityCard" class="customstyle-label">Mặt trước CMND/ CCCD:</label>
-                        <img id="frontCard" src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước" />
+                        <img id="frontCard" src="@Model.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
 
                         <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
                                name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
@@ -90,7 +90,7 @@
                     </div>
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         <label asp-for="BackIdentityCard" class="customstyle-label">Mặt sau CMND/ CCCD:</label>
-                        <img id="backCard" src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau" />
+                        <img id="backCard" src="@Model.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
 
                         <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
                                name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
