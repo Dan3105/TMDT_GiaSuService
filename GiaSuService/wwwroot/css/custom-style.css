@@ -156,19 +156,17 @@ div.form-group {
 
 #hero {
     width: 100%;
-    height: 80vh;
+    height: 50vh;
     /*background: #bcd4ed;*/
     border-color: var(--title-font);
-}
-
-#hero {
-    height: 300px; /* Giảm chiều cao của section */
-    padding: 10px; /* Giảm padding để tiết kiệm không gian */
+    padding: 10px;
+    background-color: #084298;
+    color: var(--sidebar-background-color);
 }
 
     #hero h1 {
         font-family: "Lobster", sans-serif;
-        color: var(--sidebar-title-color);
+        color: var(--bs-body-bg);
         font-size: 2.5em;
     }
 
