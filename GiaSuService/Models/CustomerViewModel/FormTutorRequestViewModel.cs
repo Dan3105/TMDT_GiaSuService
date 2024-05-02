@@ -19,6 +19,7 @@ namespace GiaSuService.Models.CustomerViewModel
     public class TutorRequestProfile
     {
         [Required]
+        [Range(1, 5, ErrorMessage = "Số lượng học sinh phải lớn hơn 1 và bé hơn 6")]
         public int NStudents { get; set; }
 
         public string? AdditionalDetail { get; set; } = string.Empty;
