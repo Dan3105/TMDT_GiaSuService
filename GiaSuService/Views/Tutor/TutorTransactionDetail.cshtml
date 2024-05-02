@@ -22,9 +22,9 @@
                         <input type="hidden" name="requestId" value="@Model.TransactionDeposit.RequestId">
                         <div class="form-group">
                             <label for="paymentDate">Ngày giờ thanh toán:</label>
-                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control" required>
+                            <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control" disabled required>
                         </div>
-                        <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button>
+                        @* <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Đã thanh toán</button> *@
                     </form>
                 }
             </div>
