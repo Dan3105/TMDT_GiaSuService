@@ -202,21 +202,6 @@ namespace GiaSuService.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterFormTutor(FormRegisterTutorRequestViewModel model, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
-
-            /*if (!ModelState.IsValid)
-            {
-                foreach(var valid in ModelState)
-                {
-                    if(valid.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
-                    {
-                        //Console.WriteLine(valid.Value);
-                    }
-                }
-
-                TempData[AppConfig.MESSAGE_FAIL] = "Thông tin bị thiếu";
-                return RedirectToAction("RegisterFormTutor", "Identity", model.AccountProfile);
-            }*/
-
             if (model.ListDistrict.Count == 0 || model.ListSessionDate.Count == 0 || model.ListGrade.Count == 0 || model.ListSubject.Count==0)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Thông tin lựa chọn bị thiếu";

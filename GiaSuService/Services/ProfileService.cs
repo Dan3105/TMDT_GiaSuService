@@ -10,12 +10,14 @@ namespace GiaSuService.Services
 {
     public class ProfileService : IProfileService
     {
+        private readonly IAuthService _authService;
         private readonly IProfileRepo _profileRepo;
         private readonly ITutorRepo _tutorRepo;
         private readonly IUploadFileService _uploadFileService;
 
-        public ProfileService(IProfileRepo profileRepo, ITutorRepo tutorRepo, IUploadFileService uploadFileService)
+        public ProfileService(IAuthService authService, IProfileRepo profileRepo, ITutorRepo tutorRepo, IUploadFileService uploadFileService)
         {
+            _authService = authService;
             _profileRepo = profileRepo;
             _tutorRepo = tutorRepo;
             _uploadFileService = uploadFileService;
@@ -36,13 +38,6 @@ namespace GiaSuService.Services
             return await _profileRepo.GetProfile(profileId, userRole);
         }
 
-        // Kiểm tra tài khoản thay đổi email, sdt, cccd có đc hay ko?
-        /*private async Task<ResponseService> CheckDuplicated(string email, string phone, string identitycard)
-        {
-
-            return false;
-        }*/
-
         public async Task<ResponseService> UpdateProfile(ProfileViewModel profile, IFormFile avatar, IFormFile front, IFormFile back, string userRole)
         {
             if (profile == null || userRole == null || userRole == "")
@@ -50,6 +45,21 @@ namespace GiaSuService.Services
                 return new ResponseService { Success = false, Message = "Lỗi cập nhật" };
             }
 
+            #region Check_email_or_phone_exist
+            ResponseService rs = await _authService.CheckEmailExist(profile.Email);
+            if (rs.Success)
+            {
+                return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
+            }
+
+            rs = await _authService.CheckEmailExist(profile.Phone);
+            if (rs.Success)
+            {
+                return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
+            }
+            #endregion
+
+            #region Upload_image
             if (avatar != null)
             {
                 ResponseService response = await _uploadFileService.UploadFile(avatar, AppConfig.UploadFileType.AVATAR);
@@ -70,6 +80,7 @@ namespace GiaSuService.Services
                 if (!response.Success) return response;
                 profile.BackIdentityCard = response.Message;
             }
+            #endregion
 
             bool isSuccess = await _profileRepo.UpdateProfile(profile, userRole);
             if (isSuccess)

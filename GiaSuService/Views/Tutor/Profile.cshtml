@@ -91,7 +91,33 @@
                     <label asp-for="Form.IdentityCard">Số CMND/CCCD:</label>
                     <input type="text" asp-for="Form.IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
                 </div>
-                <div class="row form-group">
+
+                <div class="form-group" style="display:flex; flex-direction: row; justify-content: space-evenly">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        <label for="identityCard">Mặt trước CMND/ CCCD:</label>
+                        <img id="frontCard" src="@Model.Form.FrontIdentityCard" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
+
+                        <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
+                               name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
+                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button" style="margin-top:10px"
+                                onclick="changeImage('newFrontCard')">
+                            Chọn ảnh
+                        </button>
+                    </div>
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        <label for="identityCard">Mặt sau CMND/ CCCD:</label>
+                        <img id="backCard" src="@Model.Form.BackIdentityCard" width="200" height="150" alt="Hình mặt sau của CMND/CCCD" />
+
+                        <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
+                               name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
+                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button" style="margin-top:10px"
+                                onclick="changeImage('newBackCard')">
+                            Chọn ảnh
+                        </button>
+                    </div>
+                </div>
+
+                <@* div class="row form-group">
                     <div class="col">
                         <label for="identityCard">Mặt trước CMND/ CCCD:</label>
                         <img id="frontCard" src="@Model.Form.FrontIdentityCard" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
@@ -114,7 +140,7 @@
                             Chọn ảnh
                         </button>
                     </div>
-                </div>
+                </div> *@
 
                 @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
                 <div class="form-group">

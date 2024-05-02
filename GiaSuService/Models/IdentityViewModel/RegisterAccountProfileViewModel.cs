@@ -27,7 +27,7 @@ namespace GiaSuService.Models.IdentityViewModel
 
         
         [Required(ErrorMessage = "Vui lòng không để trống CMND/CCCD.")]
-        [RegularExpression(@"^\d{10}$|^\d{12}$", ErrorMessage = "CMND chỉ gồm 10 chữ số hoặc CCCD chỉ gồm 12 chữ số.")]
+        [RegularExpression(@"^\d{9}$|^\d{12}$", ErrorMessage = "CMND chỉ gồm 9 chữ số hoặc CCCD chỉ gồm 12 chữ số.")]
         public string IdentityCard { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng tải ảnh mặt trước CMND/CCCD.")]

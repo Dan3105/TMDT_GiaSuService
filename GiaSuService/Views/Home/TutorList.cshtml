@@ -1,7 +1,15 @@
 ﻿@using GiaSuService.Models.TutorViewModel
+@using GiaSuService.Configs;
+@using System.Security.Claims;
 @model TutorCardListViewModel
 @{
-    ViewData["Title"] = "Tutor List";
+    ViewData["Title"] = "Danh sách gia sư";
+}
+
+@{
+    bool isAuth = User.Identity?.IsAuthenticated ?? false; /* when having user login */
+    var roleName = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+    var customerRoleName = AppConfig.CUSTOMERROLENAME;
 }
 
 <div class="container">
@@ -95,6 +103,10 @@
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
 
+        var isAuth = "@isAuth";
+        var roleName = "@roleName";
+        var customerRoleName = "@customerRoleName";
+
         $.getJSON("/Home/GetTutorsBy", { districtId: selectedIdDistrict, gradeId: selectedIdGrade, subjectId: selectedIdSubject, page: pageNumber })
             .done(function (data) {
                 console.log(data);
@@ -133,7 +145,11 @@
                                         <p class="card-text"><b>Khu vực dạy:</b> ${item.teachingArea}</p>
                                         <p class="card-text"><b>Thông tin thêm:</b> ${item.additionalProfile}</p>
                                         <div class="d-flex justify-content-center">
-                                                    <a class="btn btn-primary customstyle-button" href="/Customer/TutorRequestForm?tutorId=${item.id}">Chọn gia sư</a>
+                                            ${isAuth === "False" || roleName === customerRoleName
+                                                ? `<a class="btn btn-primary customstyle-button" href="/Customer/TutorRequestForm?tutorId=${item.id}">Chọn gia sư</a>`
+                                                : ``
+                                            }
+                                                       
                                         </div>
                                     </div>
                                 </div>

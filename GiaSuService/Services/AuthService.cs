@@ -72,6 +72,7 @@ namespace GiaSuService.Services
                     return new ResponseService { Success = false, Message = "Lỗi form đăng ký rỗng" };
                 }
 
+                #region Check_email_or_phone_exist
                 ResponseService rs = await CheckEmailExist(accountProfile.Email);
                 if (rs.Success)
                 {
@@ -83,6 +84,7 @@ namespace GiaSuService.Services
                 {
                     return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
                 }
+                #endregion
 
                 var roleId = await GetRoleId(accountRole);
                 if (roleId == null)
@@ -90,6 +92,7 @@ namespace GiaSuService.Services
                     return new ResponseService { Success = false, Message = "Lỗi hệ thống, vui lòng thử lại sau giây lát" };
                 }
 
+                #region Upload_image
                 if (avatar != null)
                 {
                     ResponseService response = await _uploadFileService.UploadFile(avatar, AppConfig.UploadFileType.AVATAR);
@@ -110,7 +113,9 @@ namespace GiaSuService.Services
                     if (!response.Success) return response;
                     accountProfile.BackIdentityCard = response.Message;
                 }
+                #endregion
 
+                #region Create_account
                 Account account = new Account();
                 if(accountRole == AppConfig.CUSTOMERROLENAME)
                 {
@@ -169,6 +174,7 @@ namespace GiaSuService.Services
                         }
                     };
                 }
+                #endregion
 
                 _accountRepo.Create(account);
                 var isSuccess = await _accountRepo.SaveChanges();
@@ -191,12 +197,27 @@ namespace GiaSuService.Services
                     return new ResponseService { Success = false, Message = "Lỗi form đăng ký rỗng" };
                 }
 
+                #region Check_email_or_phone_exist
+                ResponseService rs = await CheckEmailExist(model.AccountProfile.Email);
+                if (rs.Success)
+                {
+                    return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
+                }
+
+                rs = await CheckEmailExist(model.AccountProfile.Phone);
+                if (rs.Success)
+                {
+                    return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
+                }
+                #endregion
+
                 var roleId = await GetRoleId(AppConfig.TUTORROLENAME);
                 if (roleId == null)
                 {
                     return new ResponseService { Success = false, Message = "Lỗi hệ thống, vui lòng thử lại sau giây lát" };
                 }
 
+                #region Upload_image
                 if (avatar != null)
                 {
                     ResponseService response = await _uploadFileService.UploadFile(avatar, AppConfig.UploadFileType.AVATAR);
@@ -217,11 +238,13 @@ namespace GiaSuService.Services
                     if (!response.Success) return response;
                     model.AccountProfile.BackIdentityCard = response.Message;
                 }
+                #endregion
 
                 var listGrade = model.GetGradeSelected.Select(p => p.GradeId);
                 var listSession = model.GetSessionSelected.Select(p => p.SessionId);
                 var listSubject = model.GetSubjectSelected.Select(p => p.SubjectId);
 
+                #region Create_account
                 Account account = new Account()
                 {
                     Email = model.AccountProfile.Email,
@@ -259,6 +282,7 @@ namespace GiaSuService.Services
                     }
 
                 };
+                #endregion
 
                 var result = await CreateTutorRegisterRequest(account, listSession, listSubject, listGrade,
                     model.ListDistrict);
