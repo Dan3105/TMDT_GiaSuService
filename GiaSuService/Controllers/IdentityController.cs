@@ -71,7 +71,7 @@ namespace GiaSuService.Controllers
                 }
                 return RedirectToAction("", "Home");
             }
-            TempData[AppConfig.MESSAGE_FAIL] = "Incorrect Login";
+            TempData[AppConfig.MESSAGE_FAIL] = "Đăng nhập thất bại!";
             return View("Index", model);
         }
 
