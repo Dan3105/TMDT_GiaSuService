@@ -115,7 +115,9 @@
         <input type="text" class="form-control customform-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="RegisterForm!.AddressName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.AddressName, "", new { @class = "text-danger" })
     </div>
+    <div style="text-align: center !important;">
     <button type="submit" class="btn btn-primary customstyle-button">Tạo tài khoản</button>
+    </div>
 </form>
 
 <script>
