@@ -56,9 +56,13 @@
     </div>
 
     <div id="pagination">
-        <i id="prev-page" class="fas fa-chevron-left px-2" disabled></i>
+        <button id="prev-page" class="border-0">
+            <i class="fas fa-chevron-left px-2"></i>
+        </button>
         <span id="current-page" class="px-2">Trang 1</span>
-        <i id="next-page" class="fas fa-chevron-right px-2"></i>
+        <button id="next-page" class="border-0">
+            <i id="next-page" class="fas fa-chevron-right px-2"></i>
+        </button>
     </div>
 </div>
 
@@ -97,8 +101,9 @@
                 $("#current-page").text(`Trang ${data.page + 1}`);
 
                 // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
+                $("#next-page").prop("disabled", data.page === data.totalPages);
                 $("#prev-page").prop("disabled", data.page === 0);
+                currentPage=data.page;
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
                     var spanActive = item.lockStatus ? `<span class="text-danger">Tạm đóng</span>` : `<span class="text-success">Hoạt động</span>`;
@@ -165,5 +170,5 @@
             }
         });
     };
-    loadItems(currentPage);
+    updateNewList();
 </script>

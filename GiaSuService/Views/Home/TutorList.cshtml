@@ -70,9 +70,13 @@
     </div>
     -->
     <div id="pagination">
-        <i id="prev-page" class="fas fa-chevron-left px-2" disabled></i>
+        <button id="prev-page" class="border-0">
+            <i class="fas fa-chevron-left px-2"></i>
+        </button>
         <span id="current-page" class="px-2">Trang 1</span>
-        <i id="next-page" class="fas fa-chevron-right px-2"></i>
+        <button id="next-page" class="border-0" >
+            <i class="fas fa-chevron-right px-2"></i>
+        </button>
     </div>
 
 </div>
@@ -109,15 +113,17 @@
 
         $.getJSON("/Home/GetTutorsBy", { districtId: selectedIdDistrict, gradeId: selectedIdGrade, subjectId: selectedIdSubject, page: pageNumber })
             .done(function (data) {
-                console.log(data);
                 $("#items-container").empty(); // Clear existing items
 
                 // Update page information
                 $("#current-page").text(`Trang ${data.page + 1}`);
 
+                //console.log(data.page === data.totalPages);
                 // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page === data.totalPages - 1);
+                $("#next-page").prop("disabled", data.page === data.totalPages);
                 $("#prev-page").prop("disabled", data.page === 0);
+                
+                currentPage = data.page;
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
                     //console.log(item);
@@ -161,26 +167,25 @@
          }
 
     function updateNewList() {
-        
-        currentPage = 0;
         // Load initial page
         loadItems(currentPage);
 
-        // Handle "Next Page" button click
         $("#next-page").click(function () {
+            console.log('hi');
             if (!$(this).prop("disabled")) {
-                currentPage++;
+                currentPage = currentPage + 1;
                 loadItems(currentPage);
             }
         });
 
-        // (Optional) Handle "Previous Page" button click (implement similar logic)
         $("#prev-page").click(function () {
+            console.log('hi');
+
             if (!$(this).prop("disabled")) {
-                currentPage--;
+                currentPage = currentPage - 1;
                 loadItems(currentPage);
             }
         });
     };
-    loadItems(currentPage);
+    updateNewList();
 </script>

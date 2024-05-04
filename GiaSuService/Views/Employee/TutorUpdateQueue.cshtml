@@ -22,9 +22,13 @@
     </table>
 
     <div id="pagination">
-        <i id="prev-page" class="fas fa-chevron-left px-2" disabled></i>
+    <button class="border-0" id="prev-page">
+        <i class="fas fa-chevron-left px-2" disabled></i>
+    </button>
         <span id="current-page" class="px-2">Trang 1</span>
-        <i id="next-page" class="fas fa-chevron-right px-2"></i>
+    <button class="border-0" id="next-page">
+        <i class="fas fa-chevron-right px-2"></i>
+    </button>
     </div>
 </div>
 
@@ -41,8 +45,10 @@
                     $("#current-page").text(`Trang ${data.page + 1}`);
                     console.log(data.page, data.totalPages);
                     // Disable "Next Page" button if at the last page
-                    $("#next-page").prop("disabled", data.page === data.totalPages - 1);
+                    $("#next-page").prop("disabled", data.page === data.totalPages);
                     $("#prev-page").prop("disabled", data.page === 0);
+
+                    currentPage = data.page;
                     // Dynamically add items to the view
                     $.each(data.queries, function (index, item) {
                         //console.log(item);

@@ -67,9 +67,13 @@
     </div>
 
     <div id="pagination">
-        <i id="prev-page" class="fas fa-chevron-left px-2" disabled></i>
-        <span id="current-page" class="px-2">Trang 1</span>
-        <i id="next-page" class="fas fa-chevron-right px-2"></i>
+        <button id="prev-page" class="border-0">
+            <i class="fas fa-chevron-left px-2"></i>
+        </button>
+        <span id="current-page" classs="px-2">Trang 1</span>
+        <button id="next-page" class="border-0">
+            <i class="fas fa-chevron-right px-2"></i>
+        </button>
     </div>
 </div>
 
@@ -113,8 +117,9 @@
                 $("#current-page").text(`Page ${data.page + 1}`);
 
                 // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page === data.totalPages - 1);
+                $("#next-page").prop("disabled", data.page === data.totalPages);
                 $("#prev-page").prop("disabled", data.page === 0);
+                currentPage = data.page;
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
                     var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
@@ -155,7 +160,6 @@
     }
 
     function updateNewList() {
-
         currentPage = 0;
         // Load initial page
         loadItems(currentPage);
@@ -163,7 +167,7 @@
         // Handle "Next Page" button click
         $("#next-page").click(function () {
             if (!$(this).prop("disabled")) {
-                currentPage++;
+                currentPage = currentPage + 1;
                 loadItems(currentPage);
             }
         });
@@ -171,10 +175,10 @@
         // (Optional) Handle "Previous Page" button click (implement similar logic)
         $("#prev-page").click(function () {
             if (!$(this).prop("disabled")) {
-                currentPage--;
+                currentPage = currentPage - 1;
                 loadItems(currentPage);
             }
         });
     };
-    loadItems(currentPage);
+    updateNewList();
 </script>
