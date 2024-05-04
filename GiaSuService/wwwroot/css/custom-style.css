@@ -93,10 +93,10 @@ div.form-group {
     margin-left: 10px;
 }
 
-    .customstyle-button:hover {
-            background-color: var(--sidebar-text-hover-color);
-            color: #FFF;
-    }
+.customstyle-button:hover {
+    background-color: var(--sidebar-text-hover-color);
+    color: #FFF;
+}
 
 
 .customformcheck-input {
@@ -160,7 +160,7 @@ div.form-group {
     /*background: #bcd4ed;*/
     border-color: var(--title-font);
     padding: 10px;
-    background-color: #084298;
+    background-color: #1a498f;
     color: var(--sidebar-background-color);
 }
 
@@ -183,5 +183,6 @@ div.form-group {
 
 .footer-page {
     background-color: var(--footer-color);
+    min-height: 25vh;
  
 }
