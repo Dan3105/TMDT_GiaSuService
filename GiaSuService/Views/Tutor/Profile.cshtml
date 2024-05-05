@@ -10,7 +10,7 @@
 
 <div class="container">
     <form method="post" asp-action="UpdateProfile" asp-controller="Tutor" enctype="multipart/form-data">
-        <h1>Thông tin tài khoản</h1>
+        <h1>Đơn cập nhật thông tin gia sư</h1>
         <div class="row">
             <div class="col-md-4">
                 <div style="text-align: center;">            
@@ -116,31 +116,6 @@
                         </button>
                     </div>
                 </div>
-
-                <@* div class="row form-group">
-                    <div class="col">
-                        <label for="identityCard">Mặt trước CMND/ CCCD:</label>
-                        <img id="frontCard" src="@Model.Form.FrontIdentityCard" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
-
-                        <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
-                               name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
-                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
-                                onclick="changeImage('newFrontCard')">
-                            Chọn ảnh
-                        </button>
-                    </div>
-                    <div class=col>
-                        <label for="identityCard">Mặt sau CMND/ CCCD:</label>
-                        <img id="backCard" src="@Model.Form.BackIdentityCard" width="200" height="150" alt="Hình mặt sau của CMND/CCCD" />
-
-                        <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
-                               name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
-                        <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
-                                onclick="changeImage('newBackCard')">
-                            Chọn ảnh
-                        </button>
-                    </div>
-                </div> *@
 
                 @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
                 <div class="form-group">

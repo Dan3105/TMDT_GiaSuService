@@ -3,6 +3,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Repository.Interface
 {
@@ -13,9 +14,9 @@ namespace GiaSuService.Repository.Interface
         public Task<List<RequestTutorForm>> GetAll();
         public Task<List<RequestTutorForm>> GetByFilter(int subjectId, 
             int gradeId, int districtId);
-        public Task<List<TutorRequestQueueViewModel>> GetTutorRequestQueueByStatus(int statusId, int page);
-        public Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page);
-        public Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId);
+        public Task<PageTutorRequestQueueListViewModel> GetTutorRequestQueueByStatus(int statusId, int page);
+        public Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page);
+        public Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId);
         public Task<TutorRequestCardViewModel?> GetTutorRequestCardById(int requestId);
 
         public Task<TutorRequestProfileViewModel?> GetTutorRequestProfile(int id);

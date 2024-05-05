@@ -16,6 +16,7 @@
                 <th>Email</th>
                 <th>Trạng thái tài khoản</th>
                 <th>Hình ảnh</th>
+                <th>Ngày tạo</th>
                 <th>Chỉnh sửa</th>
             </tr>
         </thead>
@@ -46,10 +47,11 @@
 
                     // Update page information
                     $("#current-page").text(`Trang ${data.page + 1}`);
-
+                    console.log(data.page, data.totalPages)
                     // Disable "Next Page" button if at the last page
-                    $("#next-page").prop("disabled", data.page === data.totalPages);
+                    $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
                     $("#prev-page").prop("disabled", data.page === 0);
+                    currentPage = data.page;
                     // Dynamically add items to the view
                     $.each(data.accounts, function (index, item) {
                         //console.log(item);
@@ -70,6 +72,10 @@
                                 </a>
 
                             </td>
+
+                            <td>
+                                ${item.createDate}
+                            </td>
                         </tr>
                             `;
                         $("#items-container").append(itemHtml);
@@ -83,16 +89,14 @@
         // Handle "Next Page" button click
         $("#next-page").click(function () {
             if (!$(this).prop("disabled")) {
-                currentPage++;
-                loadItems(currentPage);
+                loadItems(currentPage + 1);
             }
         });
 
         // (Optional) Handle "Previous Page" button click (implement similar logic)
         $("#prev-page").click(function () {
             if (!$(this).prop("disabled")) {
-                currentPage--;
-                loadItems(currentPage);
+                loadItems(currentPage - 1);
             }
         });
     });

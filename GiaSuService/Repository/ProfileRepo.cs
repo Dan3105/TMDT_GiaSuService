@@ -54,15 +54,18 @@ namespace GiaSuService.Repository
             IQueryable<AccountListViewModel> query = _context.Employees
                 .AsNoTracking()
                 .Where(p => p.Account.RoleId != 1)
-                .Select(p => new AccountListViewModel()
+                .Select(p =>new
+                { Account=new AccountListViewModel()
                 {
                     Email = p.Account.Email,
                     FullName = p.FullName,
                     Id = p.Id,
                     ImageUrl = p.Account.Avatar,
                     LockStatus = p.Account.LockEnable,
-                })
-                .OrderBy(p => p.Id)
+                    CreateDate = p.Account.CreateDate.ToString("dd/MM/yyyy"),
+                }, p.Account.CreateDate})
+                .OrderByDescending(p => p.CreateDate)
+                .Select(p => p.Account)
                 ;
 
             query = query.Skip(crrPage * AppConfig.ROWS_ACCOUNT_LIST)
@@ -71,6 +74,11 @@ namespace GiaSuService.Repository
             return await query.ToListAsync();
         }
 
+
+        public async Task<int> GetCountEmployeeList()
+        {
+            return await _context.Employees.AsNoTracking().Where(p => p.Account.RoleId != 1).CountAsync();
+        }
 
         #region Get_Profile_View_Model_Employee_Customer_Tutor
         public async Task<ProfileViewModel?> GetProfile(int profileId, string role)
@@ -635,5 +643,6 @@ namespace GiaSuService.Repository
             _context.Accounts.Update(account);
             return _context.SaveChanges() > 0;
         }
+
     }
 }

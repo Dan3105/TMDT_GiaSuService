@@ -169,5 +169,10 @@ namespace GiaSuService.Services
         {
             return _profileRepo.GetTutorFormUpdateProfile(tutorId);
         }
+
+        public Task<int> GetCountEmployeeList()
+        {
+            return _profileRepo.GetCountEmployeeList();
+        }
     }
 }

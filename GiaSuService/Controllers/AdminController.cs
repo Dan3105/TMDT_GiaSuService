@@ -1,11 +1,9 @@
 ﻿using GiaSuService.Configs;
-using GiaSuService.EntityModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace GiaSuService.Controllers
 {
@@ -27,7 +25,7 @@ namespace GiaSuService.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("", "Home");
         }
 
         [HttpGet]
@@ -40,7 +38,9 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> GetEmployeePage(int page)
         {
             List<AccountListViewModel> accounts = await _profileService.GetEmployeeList(page);
-            int totalPages = (int)Math.Ceiling((double)accounts.Count / AppConfig.ROWS_ACCOUNT_LIST);
+            int totalAccounts = await _profileService.GetCountEmployeeList();
+            
+            int totalPages = (int)Math.Ceiling((double)totalAccounts / (double)AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { accounts, page, totalPages };
             return Json(response);
         }

@@ -10,6 +10,7 @@ namespace GiaSuService.Services.Interface
         public Task<int?> GetProfileId(int accountId, string roleName);
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int page);
+        public Task<int> GetCountEmployeeList();
         
         // This GetProfile function just use to get profile of userRole (customer or employee)
         // param profileId is customerId or employeeId base on userRole

@@ -62,13 +62,7 @@
     <hr />
     <div id="items-container" class="row d-flex justify-content-center">
     </div>
-    <!--
-       <div id="pagination">
-        <button id="prev-page" disabled>Trước</button>
-        <span id="current-page" class=" px-2">Trang 1</span>
-        <button id="next-page">Tiếp</button>
-    </div>
-    -->
+
     <div id="pagination">
         <button id="prev-page" class="border-0">
             <i class="fas fa-chevron-left px-2"></i>
@@ -118,11 +112,9 @@
                 // Update page information
                 $("#current-page").text(`Trang ${data.page + 1}`);
 
-                //console.log(data.page === data.totalPages);
-                // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page === data.totalPages);
+                console.log(data.totalPages, data.page);
+                $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
                 $("#prev-page").prop("disabled", data.page === 0);
-                
                 currentPage = data.page;
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
@@ -171,7 +163,6 @@
         loadItems(currentPage);
 
         $("#next-page").click(function () {
-            console.log('hi');
             if (!$(this).prop("disabled")) {
                 currentPage = currentPage + 1;
                 loadItems(currentPage);
@@ -179,8 +170,6 @@
         });
 
         $("#prev-page").click(function () {
-            console.log('hi');
-
             if (!$(this).prop("disabled")) {
                 currentPage = currentPage - 1;
                 loadItems(currentPage);

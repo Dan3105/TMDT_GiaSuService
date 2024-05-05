@@ -3,6 +3,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Services.Interface
 {
@@ -12,10 +13,10 @@ namespace GiaSuService.Services.Interface
         public Task<ResponseService> CreateForm(RequestTutorForm form, List<int> sessionList, List<int> tutorList);
         public Task<bool> UpdateForm(RequestTutorForm form, List<int> sessionList, string statusName);
 
-        public Task<List<TutorRequestQueueViewModel>> GetTutorrequestQueue(AppConfig.FormStatus status, int page);
-        public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+        public Task<PageTutorRequestQueueListViewModel> GetTutorrequestQueue(AppConfig.FormStatus status, int page);
+        public Task<PageTutorRequestListViewModel> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page);
-        public Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+        public Task<PageTutorRequestListViewModel> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page, int tutorId);
         public Task<ResponseService> UpdateStatusTutorRequest(int id, string status);
 

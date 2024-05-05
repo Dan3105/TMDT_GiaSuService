@@ -2,6 +2,7 @@
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using static GiaSuService.Configs.AppConfig;
 
 namespace GiaSuService.Services.Interface
@@ -12,10 +13,10 @@ namespace GiaSuService.Services.Interface
         public Task<List<AccountListViewModel>> GetTutorAccountsByFilter(
             int subjectId, int districtId, int gradeId, int page);
 
-        public Task<List<TutorCardViewModel>> GetTutorCardsByFilter(
+        public Task<PageCardListViewModel> GetTutorCardsByFilter(
             int subjectId, int districtId, int gradeId, int page);
 
-        public Task<List<TutorRegisterViewModel>> GetRegisterTutoByStatus(int page, RegisterStatus status);
+        public Task<PageTutorRegisterListViewModel> GetRegisterTutoByStatus(int page, RegisterStatus status);
         public Task<TutorProfileViewModel?> GetTutorprofileById(int id);
         public Task<List<TutorCardViewModel>> GetSubTutors(List<int> ids);
 

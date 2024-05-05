@@ -3,6 +3,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +47,9 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTutorRegisterQueue(int page)
         {
-            List<TutorRegisterViewModel> queries = await _tutorService.GetRegisterTutoByStatus(page, AppConfig.RegisterStatus.PENDING);
-            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
+            var queries = await _tutorService.GetRegisterTutoByStatus(page, AppConfig.RegisterStatus.PENDING);
+            int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
 
@@ -107,9 +108,9 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTutorRequestOnPending(int page)
         {
-            List<TutorRequestQueueViewModel> queries = await _tutorRequestService.GetTutorrequestQueue(AppConfig.FormStatus.PENDING, page);
-            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
+            var queries = await _tutorRequestService.GetTutorrequestQueue(AppConfig.FormStatus.PENDING, page);
+            int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
 
@@ -284,9 +285,9 @@ namespace GiaSuService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTutorUpdateForms(int page)
         {
-            List<TutorRegisterViewModel> queries = await _tutorService.GetRegisterTutoByStatus(page, AppConfig.RegisterStatus.UPDATE);
-            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
+            PageTutorRegisterListViewModel queries = await _tutorService.GetRegisterTutoByStatus(page, AppConfig.RegisterStatus.UPDATE);
+            int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
 

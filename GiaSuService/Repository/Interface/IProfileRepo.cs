@@ -12,6 +12,7 @@ namespace GiaSuService.Repository.Interface
         public Task<IdentityCard?> GetIdentitycard(string identityNumber);
 
         public Task<List<AccountListViewModel>> GetEmployeeList(int crrPage);
+        public Task<int> GetCountEmployeeList();
 
         public Task<ProfileViewModel?> GetProfile(int profileId, string role);
         public Task<TutorProfileViewModel?> GetTutorProfile(int tutorId);

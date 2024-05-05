@@ -63,8 +63,8 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> GetTutorsBy(int districtId, int gradeId, int subjectId, int page)
         {
             var queries = await _tutorService.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
-            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
+            int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
 
@@ -72,8 +72,8 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int page)
         {
             var queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page);
-            int totalPages = (int)Math.Ceiling((double)queries.Count / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
+            int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
     }

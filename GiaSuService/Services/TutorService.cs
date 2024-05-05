@@ -4,6 +4,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
@@ -35,16 +36,16 @@ namespace GiaSuService.Services
             return tutorprofiles;
         }
 
-        public async Task<List<TutorCardViewModel>> GetTutorCardsByFilter(
+        public async Task<PageCardListViewModel> GetTutorCardsByFilter(
            int subjectId, int districtId, int gradeId, int page)
         {
-            IEnumerable<TutorCardViewModel> tutorprofiles = await _tutorRepository.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
-            return tutorprofiles.ToList();
+            var tutorprofiles = await _tutorRepository.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
+            return tutorprofiles;
         }
 
-        public async Task<List<TutorRegisterViewModel>> GetRegisterTutoByStatus(int page, RegisterStatus status)
+        public async Task<PageTutorRegisterListViewModel> GetRegisterTutoByStatus(int page, RegisterStatus status)
         {
-            List<TutorRegisterViewModel> tutorprofiles = await _tutorRepository.GetRegisterTutorOnPending(page, status);
+            var tutorprofiles = await _tutorRepository.GetRegisterTutorOnPending(page, status);
             return tutorprofiles;
         }
 

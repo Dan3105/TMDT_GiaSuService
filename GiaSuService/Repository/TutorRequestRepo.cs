@@ -4,6 +4,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -63,9 +64,9 @@ namespace GiaSuService.Repository
             return filteredForms;
         }
 
-        public async Task<List<TutorRequestQueueViewModel>> GetTutorRequestQueueByStatus(int statusId, int page)
+        public async Task<PageTutorRequestQueueListViewModel> GetTutorRequestQueueByStatus(int statusId, int page)
         {
-            return await _context.RequestTutorForms
+            var query = _context.RequestTutorForms
                 .AsNoTracking()
                 .Select(p => new
                 {
@@ -83,11 +84,16 @@ namespace GiaSuService.Repository
                     StatusId = p.StatusId
                 })
                 .Where(p => p.ExpiredDate > DateTime.Now && p.StatusId == statusId)
-                .OrderByDescending(p => p.CreatedDate)
-                .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
+                ;
+            ;
+            var result = new PageTutorRequestQueueListViewModel();
+            result.TotalElement = await query.CountAsync();
+            result.list = await query.OrderByDescending(p => p.CreatedDate).Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
                 .Take(AppConfig.ROWS_ACCOUNT_LIST)
                 .Select(p => p.TutorRequest)
                 .ToListAsync();
+
+            return result;
         }
 
         public async Task<TutorRequestProfileViewModel?> GetTutorRequestProfile(int id)
@@ -109,9 +115,10 @@ namespace GiaSuService.Repository
             return result;
         }
 
-        public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page)
+        public async Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page)
         {
-            var result = _context.RequestTutorForms
+            var result = new PageTutorRequestListViewModel { };
+            var queries = _context.RequestTutorForms
                 .AsNoTracking()
                 .Select(p => new
                 {
@@ -131,22 +138,25 @@ namespace GiaSuService.Repository
                     Expired = p.ExpiredDate
                 })
                 .OrderBy(p => p.Expired)
-                .Where(p => p.Status == statusId && p.Expired > DateTime.Now 
-                        && (districtId == 0 || p.DistrictId == districtId) 
-                        && (gradeId == 0 || p.GradeId == gradeId) 
+                .Where(p => p.Status == statusId && p.Expired > DateTime.Now
+                        && (districtId == 0 || p.DistrictId == districtId)
+                        && (gradeId == 0 || p.GradeId == gradeId)
                         && (subjectId == 0 || p.SubjectId == subjectId)
-                        )
-                .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
-                .Take(AppConfig.ROWS_ACCOUNT_LIST)
-                ;
-                
+                        );
 
-            return await result.Select(p => p.TutorCard).ToListAsync();
+            result.TotalElement = await queries.CountAsync();
+            result.list = await queries.Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
+                        .Take(AppConfig.ROWS_ACCOUNT_LIST).Select(p => p.TutorCard).ToListAsync()
+                            ;
+
+
+            return result;
         }
 
-        public async Task<List<TutorRequestCardViewModel>> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId)
+        public async Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId)
         {
-            var result = _context.RequestTutorForms
+            var result = new PageTutorRequestListViewModel();
+            var queries = _context.RequestTutorForms
                 .AsNoTracking()
                 .Where(p => !p.TutorApplyForms.Any(taf => taf.TutorId == tutorId))
                 .Select(p => new
@@ -172,12 +182,13 @@ namespace GiaSuService.Repository
                         && (gradeId == 0 || p.GradeId == gradeId)
                         && (subjectId == 0 || p.SubjectId == subjectId)
                         )
-                .Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
-                .Take(AppConfig.ROWS_ACCOUNT_LIST)
+                
                 ;
 
-
-            return await result.Select(p => p.TutorCard).ToListAsync();
+            result.TotalElement = await queries.CountAsync();
+            result.list = await queries.Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
+                        .Take(AppConfig.ROWS_ACCOUNT_LIST).Select(p => p.TutorCard).ToListAsync();
+            return result;
         }
 
         public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)

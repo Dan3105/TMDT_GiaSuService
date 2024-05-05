@@ -4,6 +4,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.TutorViewModel;
+using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -106,7 +107,7 @@ namespace GiaSuService.Services
             }
         }
 
-        public async Task<List<TutorRequestQueueViewModel>> GetTutorrequestQueue(AppConfig.FormStatus statusName, int page)
+        public async Task<PageTutorRequestQueueListViewModel> GetTutorrequestQueue(AppConfig.FormStatus statusName, int page)
         {
             var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
             if(status == null)
@@ -118,7 +119,7 @@ namespace GiaSuService.Services
         }
 
         [AllowAnonymous]
-        public async Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+        public async Task<PageTutorRequestListViewModel> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page)
         {
             var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
@@ -129,7 +130,7 @@ namespace GiaSuService.Services
             return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page);
         }
 
-        public async Task<List<TutorRequestCardViewModel>> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+        public async Task<PageTutorRequestListViewModel> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page, int tutorId)
         {
             var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
