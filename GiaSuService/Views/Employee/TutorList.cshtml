@@ -48,7 +48,7 @@
             </select>
         </div>
         <div class="col-sm-4 d-flex justify-content-center mb-2">
-            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Tìm kiếm</button>
+            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList">Tìm kiếm</button>
         </div>
     </div>
     <hr />
@@ -137,6 +137,7 @@
                                                              <span class="text-success ${!item.isEnable ? 'd-none' : ''}">Đã kích hoạt</span>
                                                                  <span class="text-danger ${item.isEnable ? 'd-none' : ''}">Đã khóa</span>
                                                 </p>
+                                                <p><b>Ngày tạo: </b> ${item.createDate}</p>
                                             <div class="d-flex justify-content-center">
                                                     <a class="btn btn-primary customstyle-button" href="/Employee/TutorProfile?id=${item.id}">Thông tin chi tiết</a>
                                             </div>

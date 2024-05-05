@@ -79,6 +79,7 @@ namespace GiaSuService.Repository
                     SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Name)),
                     IsActive = tutor.IsActive ?? false,
                     IsEnable = !tutor.Account.LockEnable,
+                    CreateDate = tutor.Account.CreateDate.ToString("dd/MM/yyyy")
                 });
             var result = new PageCardListViewModel();
             result.TotalElement = await query.CountAsync();

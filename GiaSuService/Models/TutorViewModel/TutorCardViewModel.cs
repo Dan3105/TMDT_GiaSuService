@@ -20,5 +20,7 @@ namespace GiaSuService.Models.TutorViewModel
 
         public bool IsActive { get; set; }
         public bool IsEnable { get; set; }
+
+        public string CreateDate { get; set; } = string.Empty;
     }
 }
