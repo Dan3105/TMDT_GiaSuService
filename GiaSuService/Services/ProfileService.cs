@@ -131,7 +131,11 @@ namespace GiaSuService.Services
             }
 
             TutorFormUpdateProfileViewModel? diff = TutorFormUpdateProfileViewModel.CompareDifference(origin, profile.Form);
-            bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(diff);
+            if(diff == null)
+            {
+                return new ResponseService { Success = false, Message = "Bạn chưa thay đổi thông tin nào" };
+            }
+            bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(origin, profile.Form);
             if (isSuccess)
             {
                 return new ResponseService { Success = true, Message = "Cập nhật thành công" };

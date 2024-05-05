@@ -11,24 +11,20 @@
     // Define a dictionary to map property names to display names
     Dictionary<string, string> displayNameMapping = new Dictionary<string, string>()
     {
-        // { "TutorId", "Tutor ID" },
         { "Fullname", "Họ Tên" },
         { "Birth", "Năm sinh" },
         { "Email", "Email" },
         { "Phone", "Số điện thoại" },
         { "Gender", "Giới tính" },
-        //{ "Avatar", "Avatar" },
-        // { "AddressDetail", "Address Detail" },
+        { "Avatar", "Avatar" },
         { "IdentityCard", "Số Chứng minh thư" },
-        // { "FrontIdentityCard", "Front Identity Card" },
-        // { "BackIdentityCard", "Back Identity Card" },
+        { "FrontIdentityCard", "Front Identity Card" },
+        { "BackIdentityCard", "Back Identity Card" },
         { "College", "Đại học" },
         { "Area", "Chuyên ngành" },
-        // { "IsActive", "Is Active" },
         { "Additionalinfo", "Thông tin thêm" },
         { "Academicyearfrom", "Năm bắt đầu học" },
         { "Academicyearto", "Năm tốt nghiệp" },
-        // { "SelectedTutorTypeId", "Selected Tutor Type ID" },
         { "FormatAddress", "Địa chỉ" },
         { "FormatTutorType", "Loại gia sư" },
         { "FormatTeachingArea", "Các khu vực có thể dạy" },
@@ -51,29 +47,11 @@
 
                     var displayName = displayNameMapping[property.Name];
 
-                    if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
+                    if(property.Name.Equals("Avatar")
+                    || property.Name.Equals("FrontIdentityCard")
+                    || property.Name.Equals("BackIdentityCard"))
                     {
-                        int originalIntValue;
-                        int modifiedIntValue;
-                        var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
-                        var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
-
-                        if (originalValueParsed && modifiedValueParsed)
-                        {
-                            if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
-                            {
-                                <li><strong>@displayName</strong>: <s>@originalValue</s></li>
-                            }
-                            else
-                            {
-                                <li><strong>@displayName</strong>: @originalValue</li>
-                            }
-                        }
-                    }
-
-                    else if (modifiedValue == null || string.IsNullOrEmpty(modifiedValue.ToString()))
-                    {
-                        <li><strong>@displayName</strong>: @originalValue</li>
+                        <li><strong>@displayName</strong>:<br /><img width="250" src="@originalValue" alt="image prepresent" /></li>
                     }
                     else if (!originalValue.Equals(modifiedValue))
                     {
@@ -101,32 +79,15 @@
                     // Get the display name from the mapping, if it exists; otherwise, use the property name
                     var displayName = displayNameMapping[property.Name];
 
-                    if ((originalValue is int || originalValue is short) && (modifiedValue is int || modifiedValue is short))
+                    if (property.Name.Equals("Avatar")
+                    || property.Name.Equals("FrontIdentityCard")
+                    || property.Name.Equals("BackIdentityCard"))
                     {
-                        int originalIntValue;
-                        int modifiedIntValue;
-                        var originalValueParsed = int.TryParse(originalValue.ToString(), out originalIntValue);
-                        var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
-
-                        if (originalValueParsed && modifiedValueParsed)
-                        {
-                            if (originalIntValue != modifiedIntValue && modifiedIntValue != 0)
-                            {
-                                <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
-                            }
-                            else
-                            {
-                                <li><strong>@displayName</strong>: @originalIntValue</li>
-                            }
-                        }
+                        <li><strong>@displayName</strong>: <br/> <img width="250" src="@modifiedValue" alt="image prepresent" /></li>
                     }
-                    else if (modifiedValue == null || string.IsNullOrEmpty(modifiedValue.ToString()))
+                    else if (!modifiedValue.Equals(originalValue))
                     {
-                        <li><strong>@displayName</strong>: @originalValue</li>
-                    }
-                    else if (!originalValue.Equals(modifiedValue))
-                    {
-                        <li><strong>@displayName</strong>: <strong>@modifiedValue</strong></li>
+                        <li><strong>@displayName</strong>: <b>@modifiedValue</b></li>
                     }
                     else
                     {

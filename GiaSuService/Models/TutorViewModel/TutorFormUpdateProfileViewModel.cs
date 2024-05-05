@@ -67,7 +67,7 @@ namespace GiaSuService.Models.TutorViewModel
             }
             diff.TutorId = origin.TutorId;
             diff.IsActive = modified.IsActive;
-            if (origin.Fullname != modified.Fullname)
+            if (origin.Fullname != Utility.FormatToCamelCase(modified.Fullname))
                 diff.Fullname = Utility.FormatToCamelCase(modified.Fullname);
 
             if (origin.Birth != modified.Birth)
@@ -100,10 +100,10 @@ namespace GiaSuService.Models.TutorViewModel
             if (origin.BackIdentityCard != modified.BackIdentityCard)
                 diff.BackIdentityCard = modified.BackIdentityCard;
 
-            if (origin.College != modified.College)
+            if (origin.College != Utility.FormatToCamelCase(modified.College))
                 diff.College = Utility.FormatToCamelCase(modified.College);
 
-            if (origin.Area != modified.Area)
+            if (origin.Area != Utility.FormatToCamelCase(modified.Area))
                 diff.Area = Utility.FormatToCamelCase(modified.Area);
 
             if (origin.Additionalinfo != modified.Additionalinfo)
@@ -118,17 +118,29 @@ namespace GiaSuService.Models.TutorViewModel
             if (origin.SelectedTutorTypeId != modified.SelectedTutorTypeId)
                 diff.SelectedTutorTypeId = modified.SelectedTutorTypeId;
 
-            if (!origin.SelectedSubjectIds.SequenceEqual(modified.SelectedSubjectIds))
+            if (!AreListsEqual(origin.SelectedSubjectIds, modified.SelectedSubjectIds))
                 diff.SelectedSubjectIds = modified.SelectedSubjectIds;
 
-            if (!origin.SelectedSessionIds.SequenceEqual(modified.SelectedSessionIds))
+            if (!AreListsEqual(origin.SelectedSessionIds, modified.SelectedSessionIds))
                 diff.SelectedSessionIds = modified.SelectedSessionIds;
 
-            if (!origin.SelectedDistricts.SequenceEqual(modified.SelectedDistricts))
+            if (!AreListsEqual(origin.SelectedDistricts, modified.SelectedDistricts))
                 diff.SelectedDistricts = modified.SelectedDistricts;
 
             // Check if any property is different, if yes, return the diff object, else return null
             return IsAnyPropertyDifferent(diff) ? diff : null;
+        }
+
+        private static bool AreListsEqual(IEnumerable<int> list1, IEnumerable<int> list2)
+        {
+            // Check if there are any elements in list1 that are not in list2
+            var diff1 = list1.Except(list2);
+
+            // Check if there are any elements in list2 that are not in list1
+            var diff2 = list2.Except(list1);
+
+            // If both differences are empty, lists are equal
+            return !diff1.Any() && !diff2.Any();
         }
 
         private static bool IsAnyPropertyDifferent(TutorFormUpdateProfileViewModel viewModel)

@@ -10,5 +10,6 @@ namespace GiaSuService.Models.TutorViewModel
         public DateTime Date { set; get; }
 
         public TutorFormUpdateProfileViewModel? DetailModified { set; get; }
+        public TutorFormUpdateProfileViewModel? DetailOriginal { set; get; }
     }
 }

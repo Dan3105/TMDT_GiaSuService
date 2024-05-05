@@ -260,13 +260,8 @@ namespace GiaSuService.Repository
             return false;
         }
 
-        public async Task<bool> UpdateRequestTutorProfile(TutorFormUpdateProfileViewModel? modified)
+        public async Task<bool> UpdateRequestTutorProfile(TutorFormUpdateProfileViewModel original, TutorFormUpdateProfileViewModel modified)
         {
-            if(modified == null)
-            {
-                return true;
-            }
-
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -283,7 +278,7 @@ namespace GiaSuService.Repository
                         throw new NullReferenceException();
                     }
                     
-                    string jsonContext = JsonConvert.SerializeObject(modified);
+                    string jsonContext = JsonConvert.SerializeObject(original);
                     TutorStatusDetail request = new TutorStatusDetail()
                     {
                         Context = jsonContext,
@@ -304,9 +299,15 @@ namespace GiaSuService.Repository
 
                         await _context.SaveChangesAsync();
                     }
-                    _context.Tutors
-                        .Where(x => x.Id == exitsTutor.TutorId)
-                        .ExecuteUpdate(x => x.SetProperty(p => p.StatusId, status.Id));
+
+                    var tutorChanged = await _context.Tutors.Include(p => p.Identity)
+                                                .Include(p => p.Account)
+                                                .Include(p => p.Status).FirstOrDefaultAsync(p => p.Id == original.TutorId);
+                    if(tutorChanged == null) { throw new NullReferenceException(); }
+                    tutorChanged.StatusId = status.Id;
+                    await UpdateProperties(tutorChanged, modified);
+                    
+                    _context.Tutors.Update(tutorChanged);
 
                     await _context.SaveChangesAsync();
                     transaction.Commit();
@@ -375,17 +376,17 @@ namespace GiaSuService.Repository
                 return null;
             }
 
-            var currentTutorUser = await GetTutorFormUpdateProfile(getHistoryStatus.TutorId);
-            if (currentTutorUser == null)
+            var latestModified = await GetTutorFormUpdateProfile(getHistoryStatus.TutorId);
+            if (latestModified == null)
             {
                 return null;
             }
             try
             {
                 var jsonContext = getHistoryStatus.Context;
-                TutorFormUpdateProfileViewModel? data = JsonConvert.DeserializeObject<TutorFormUpdateProfileViewModel>(jsonContext);
+                TutorFormUpdateProfileViewModel? origin = JsonConvert.DeserializeObject<TutorFormUpdateProfileViewModel>(jsonContext);
 
-                if(data == null)
+                if(origin == null)
                 {
                     return null;
                 }
@@ -398,54 +399,54 @@ namespace GiaSuService.Repository
 
                 DifferenceUpdateRequestFormViewModel result = new DifferenceUpdateRequestFormViewModel();
                 #region original handler
-                result.Original = currentTutorUser;
-                var district = (await districts.FirstOrDefaultAsync(p => p.Id == result.Original.SelectedDistrictId));
+                result.Original = origin;
+                var district = await districts.FirstOrDefaultAsync(p => p.Id == result.Original.SelectedDistrictId);
                 if(district == null) { throw new KeyNotFoundException(); }
-                result.Original.FormatAddress = $"{district.Province.Name}, {district.Name}, {currentTutorUser.AddressDetail}";
-                result.Original.FormatTutorType = (await tutorType.FirstOrDefaultAsync(p => p.Id == currentTutorUser.SelectedTutorTypeId))?.Name ?? throw new NullReferenceException();
-                result.Original.FormatSessions = string.Join(", ", sessions.Where(p => 
-                                                                    currentTutorUser.SelectedSessionIds.Contains(p.Id)).Select(p => p.Name));
+                result.Original.FormatAddress = $"{district.Province.Name}, {district.Name}, {origin.AddressDetail}";
+                result.Original.FormatTutorType = (await tutorType.FirstOrDefaultAsync(p => p.Id == origin.SelectedTutorTypeId))?.Name ?? throw new NullReferenceException();
+                result.Original.FormatSessions = string.Join(", ", sessions.Where(p =>
+                                                                    origin.SelectedSessionIds.Contains(p.Id)).Select(p => p.Name));
                 result.Original.FormatSubjects = string.Join(", ", subjects.Where(p =>
-                                                                    currentTutorUser.SelectedSubjectIds.Contains(p.Id)).Select(p => p.Name));
+                                                                    origin.SelectedSubjectIds.Contains(p.Id)).Select(p => p.Name));
                 result.Original.FormatGrades = string.Join(", ", grades.Where(p =>
-                                                                    currentTutorUser.SelectedGradeIds.Contains(p.Id)).Select(p => p.Name));
+                                                                    origin.SelectedGradeIds.Contains(p.Id)).Select(p => p.Name));
                 result.Original.FormatTeachingArea = string.Join(", ", districts.Where(p =>
-                                                                    currentTutorUser.SelectedDistricts.Contains(p.Id)).Select(p => p.Name));
+                                                                    origin.SelectedDistricts.Contains(p.Id)).Select(p => p.Name));
                 #endregion
 
                 #region modified handler
-                result.Modified = data;
-                if (data.SelectedDistrictId != 0)
+                result.Modified = latestModified;
+                if (latestModified.SelectedDistrictId != 0)
                 {
-                    var mdistrict = (await districts.FirstOrDefaultAsync(p => p.Id == data.SelectedDistrictId));
+                    var mdistrict = (await districts.FirstOrDefaultAsync(p => p.Id == latestModified.SelectedDistrictId));
                     if(mdistrict == null) { throw new KeyNotFoundException(); }
-                    string modifiedData = string.IsNullOrEmpty(data.AddressDetail) ? currentTutorUser.AddressDetail : data.AddressDetail;
+                    string modifiedData = string.IsNullOrEmpty(latestModified.AddressDetail) ? latestModified.AddressDetail : latestModified.AddressDetail;
                     result.Modified.FormatAddress = $"{mdistrict.Province.Name}, {mdistrict.Name}, {modifiedData }";
                 }
 
-                if(data.SelectedTutorTypeId != 0)
+                if(latestModified.SelectedTutorTypeId != 0)
                 {
-                    result.Modified.FormatTutorType = (await tutorType.FirstOrDefaultAsync(p => p.Id == data.SelectedTutorTypeId))?.Name ?? throw new NullReferenceException();
+                    result.Modified.FormatTutorType = (await tutorType.FirstOrDefaultAsync(p => p.Id == latestModified.SelectedTutorTypeId))?.Name ?? throw new NullReferenceException();
                 }
-                if(data.SelectedSessionIds.Any())
+                if(latestModified.SelectedSessionIds.Any())
                 {
                     result.Modified.FormatSessions = string.Join(", ", sessions.Where(p =>
-                                                                        data.SelectedSessionIds.Contains(p.Id)).Select(p => p.Name));
+                                                                        latestModified.SelectedSessionIds.Contains(p.Id)).Select(p => p.Name));
                 }
-                if(data.SelectedSubjectIds.Any())
+                if(latestModified.SelectedSubjectIds.Any())
                 {
                     result.Modified.FormatSubjects = string.Join(", ", subjects.Where(p =>
-                                                                        data.SelectedSubjectIds.Contains(p.Id)).Select(p => p.Name));
+                                                                        latestModified.SelectedSubjectIds.Contains(p.Id)).Select(p => p.Name));
                 }
-                if(data.SelectedGradeIds.Any())
+                if(latestModified.SelectedGradeIds.Any())
                 {
                     result.Modified.FormatGrades = string.Join(", ", grades.Where(p =>
-                                                                        data.SelectedGradeIds.Contains(p.Id)).Select(p => p.Name));
+                                                                        latestModified.SelectedGradeIds.Contains(p.Id)).Select(p => p.Name));
                 }
-                if(data.SelectedDistricts.Any())
+                if(latestModified.SelectedDistricts.Any())
                 {
                     result.Modified.FormatTeachingArea = string.Join(", ", districts.Where(p =>
-                                                                        data.SelectedDistricts.Contains(p.Id)).Select(p => p.Name));
+                                                                        latestModified.SelectedDistricts.Contains(p.Id)).Select(p => p.Name));
 
                 }
                 #endregion
@@ -455,39 +456,6 @@ namespace GiaSuService.Repository
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        public async Task<bool> UpdateTutorProfileByUpdateForm(Tutor original)
-        {
-            var getLatestStatus = await _context.TutorStatusDetails
-                                .Include(p => p.Status)
-                                .AsNoTracking()
-                                .OrderByDescending(p => p.CreateDate)
-                                .FirstOrDefaultAsync(p => p.TutorId == original.Id);
-            if (getLatestStatus == null || getLatestStatus.Status.Name.ToLower() != AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
-            {
-                return false;
-            }
-
-            try
-            {
-                var jsonContext = getLatestStatus.Context;
-                TutorFormUpdateProfileViewModel? modified = JsonConvert.DeserializeObject<TutorFormUpdateProfileViewModel>(jsonContext);
-
-                if (modified == null)
-                {
-                    return false;
-                }
-
-                await UpdateProperties(original, modified);
-                _context.Tutors.Update(original);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
             }
         }
 

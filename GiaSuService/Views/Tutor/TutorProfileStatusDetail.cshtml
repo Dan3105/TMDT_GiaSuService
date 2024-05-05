@@ -10,7 +10,6 @@
     // Define a dictionary to map property names to display names
     Dictionary<string, string> displayNameMapping = new Dictionary<string, string>()
     {
-        // { "TutorId", "Tutor ID" },
         { "Fullname", "Họ Tên" },
         { "Birth", "Năm sinh" },
         { "Email", "Email" },
@@ -23,11 +22,9 @@
         { "BackIdentityCard", "Back Identity Card" },
         { "College", "Đại học" },
         { "Area", "Chuyên ngành" },
-        // { "IsActive", "Is Active" },
         { "Additionalinfo", "Thông tin thêm" },
         { "Academicyearfrom", "Năm bắt đầu học" },
         { "Academicyearto", "Năm tốt nghiệp" },
-        // { "SelectedTutorTypeId", "Selected Tutor Type ID" },
         { "FormatAddress", "Địa chỉ" },
         { "FormatTutorType", "Loại gia sư" },
         { "FormatTeachingArea", "Các khu vực có thể dạy" },
@@ -44,53 +41,69 @@
             <dt>@Model.Date</dt>
         </dl>
     </div>
-    <div>
+    <div class="row">
+        <div class="col-md-6 border-end border-dark">
+            <h2>Thông tin ban đầu</h2>
+            <ul class="list-unstyled">
+                @foreach (var property in typeof(TutorFormUpdateProfileViewModel).GetProperties())
+                {
+                    if (!displayNameMapping.ContainsKey(property.Name)) continue;
+                    var originalValue = property.GetValue(Model.DetailOriginal);
+                    var modifiedValue = property.GetValue(Model.DetailModified);
 
-        @if(Model.DetailModified is not null)
-        {
-            <div class="">
-                <h2>Các thông tin đã thay đổi</h2>
-                <ul class="list-unstyled">
-                    @foreach (var property in typeof(TutorFormUpdateProfileViewModel).GetProperties())
+                    var displayName = displayNameMapping[property.Name];
+
+                    if (property.Name.Equals("Avatar")
+                    || property.Name.Equals("FrontIdentityCard")
+                    || property.Name.Equals("BackIdentityCard"))
                     {
-                        if (!displayNameMapping.ContainsKey(property.Name)) continue;
-                        var modifiedValue = property.GetValue(Model.DetailModified);
+                        <li><strong>@displayName</strong>:<br /><img width="250" src="@originalValue" alt="image prepresent" /></li>
+                    }
+                    else if (!originalValue.Equals(modifiedValue))
+                    {
+                        <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                    }
+                    else
+                    {
+                        <li><strong>@displayName</strong>: @originalValue</li>
+                    }
+                }
 
-                            // Get the display name from the mapping, if it exists; otherwise, use the property name
-                            var displayName = displayNameMapping[property.Name];
+            </ul>
+        </div>
 
-                            if (modifiedValue is int || modifiedValue is short)
-                            {
-                                int modifiedIntValue;
-                                var modifiedValueParsed = int.TryParse(modifiedValue.ToString(), out modifiedIntValue);
+        <div class="col-md-6">
+            <h2>Thông tin hiện tại</h2>
+            <ul class="list-unstyled">
+                @foreach (var property in typeof(TutorFormUpdateProfileViewModel).GetProperties())
+                {
+                    if (!displayNameMapping.ContainsKey(property.Name)) continue;
 
-                                if (modifiedValueParsed)
-                                {
-                                    if (modifiedIntValue != 0)
-                                    {
-                                        <li><strong>@displayName</strong>: @modifiedIntValue</li>
-                                    }
-                                }
-                            }
-                            else if (modifiedValue == null || string.IsNullOrEmpty(modifiedValue.ToString()))
-                            {
-                                <li><strong>@displayName</strong>: </li>
-                            }
-                            @* else if (!originalValue.Equals(modifiedValue))
-                            {
-                                <li><strong>@displayName</strong>: <s>@originalValue</s></li>
-                            } *@
-                            else
-                            {
-                                <li><strong>@displayName</strong>: @modifiedValue</li>
-                            }
-                        }
-                    
-                </ul>
-            </div>
-            @* <p>@Model.Context</p> *@
+                    var originalValue = property.GetValue(Model.DetailOriginal);
+                    var modifiedValue = property.GetValue(Model.DetailModified);
 
-        }
+                    // Get the display name from the mapping, if it exists; otherwise, use the property name
+                    var displayName = displayNameMapping[property.Name];
+
+                    if (property.Name.Equals("Avatar")
+                    || property.Name.Equals("FrontIdentityCard")
+                    || property.Name.Equals("BackIdentityCard"))
+                    {
+                        <li><strong>@displayName</strong>: <br /> <img width="250" src="@modifiedValue" alt="image prepresent" /></li>
+                    }
+                    else if (!modifiedValue.Equals(originalValue))
+                    {
+                        <li><strong>@displayName</strong>: <b>@modifiedValue</b></li>
+                    }
+                    else
+                    {
+                        <li><strong>@displayName</strong>: @modifiedValue</li>
+                    }
+
+                }
+
+            </ul>
+        </div>
     </div>
     <div>
         <a href="@Url.Action("TutorProfileStatusHistory", "Tutor")" class="btn btn-info customstyle-button">Quay lại</a>

@@ -90,14 +90,10 @@ namespace GiaSuService.Services
                     }
 
                     bool isSuccess = false;
-                    if (tutor.Status.Name.Equals(RegisterStatus.PENDING.ToString().ToLower()))
-                    {
-                        isSuccess = await _tutorRepository.UpdateTutor(tutor);
-                    }
-                    else if (tutor.Status.Name.Equals(RegisterStatus.UPDATE.ToString().ToLower()))
-                    {
-                        isSuccess = await _profileRepository.UpdateTutorProfileByUpdateForm(tutor);
-                    }
+                    //if (tutor.Status.Name.Equals(RegisterStatus.PENDING.ToString().ToLower()))
+                    //{
+                    //    isSuccess = await _tutorRepository.UpdateTutor(tutor);
+                    //}
 
                     tutor.Status = dbStatus;
                     tutor.TutorStatusDetails.Add(new TutorStatusDetail
@@ -144,63 +140,20 @@ namespace GiaSuService.Services
 
         public async Task<TutorProfileStatusDetailHistoryViewModel?> GetAStatusTutorHistory(int historyId)
         {
-            var historyDetail = await _tutorRepository.GetATutorProfileHistoryDetail(historyId);
+            var historyDetail = await _profileRepository.GetTutorsDifferenceProfile(historyId);
             if(historyDetail == null)
             {
                 return null;
             }
             try
             {
-                var jsonContext = historyDetail.Context;
-                TutorFormUpdateProfileViewModel? data = JsonConvert.DeserializeObject<TutorFormUpdateProfileViewModel>(jsonContext);
-
-                if (data != null)
+                TutorProfileStatusDetailHistoryViewModel result = new TutorProfileStatusDetailHistoryViewModel
                 {
-                    
-
-                    var tutorType = _context.TutorTypes.AsNoTracking();
-                    var districts = _context.Districts.Include(p => p.Province).AsNoTracking();
-                    var grades = _context.Grades.AsNoTracking().OrderBy(p => p.Value);
-                    var sessions = _context.SessionDates.AsNoTracking().OrderBy(p => p.Value);
-                    var subjects = _context.Subjects.AsNoTracking().OrderBy(p => p.Value);
-
-                    if (data.SelectedDistrictId != 0)
-                    {
-                        var mdistrict = (await districts.FirstOrDefaultAsync(p => p.Id == data.SelectedDistrictId));
-                        if (mdistrict == null) { throw new KeyNotFoundException(); }
-                        string modifiedData = string.IsNullOrEmpty(data.AddressDetail) ? data.AddressDetail : data.AddressDetail;
-                        data.FormatAddress = $"{mdistrict.Province.Name}, {mdistrict.Name}, {modifiedData}";
-                    }
-
-                    if (data.SelectedTutorTypeId != 0)
-                    {
-                        data.FormatTutorType = (await tutorType.FirstOrDefaultAsync(p => p.Id == data.SelectedTutorTypeId))?.Name ?? throw new NullReferenceException();
-                    }
-                    if (data.SelectedSessionIds.Any())
-                    {
-                        data.FormatSessions = string.Join(", ", sessions.Where(p =>
-                                                                            data.SelectedSessionIds.Contains(p.Id)).Select(p => p.Name));
-                    }
-                    if (data.SelectedSubjectIds.Any())
-                    {
-                        data.FormatSubjects = string.Join(", ", subjects.Where(p =>
-                                                                            data.SelectedSubjectIds.Contains(p.Id)).Select(p => p.Name));
-                    }
-                    if (data.SelectedGradeIds.Any())
-                    {
-                        data.FormatGrades = string.Join(", ", grades.Where(p =>
-                                                                            data.SelectedGradeIds.Contains(p.Id)).Select(p => p.Name));
-                    }
-                    if (data.SelectedDistricts.Any())
-                    {
-                        data.FormatTeachingArea = string.Join(", ", districts.Where(p =>
-                                                                            data.SelectedDistricts.Contains(p.Id)).Select(p => p.Name));
-
-                    }
-                    historyDetail.DetailModified = data;
-                }
-
-                return historyDetail;
+                    DetailOriginal = historyDetail.Original,
+                    DetailModified = historyDetail.Modified,
+                };
+                    //historyDetail.DetailModified = data;
+                return result;
             }
 
             catch (Exception) {
