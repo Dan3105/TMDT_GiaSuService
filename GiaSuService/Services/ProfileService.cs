@@ -138,7 +138,7 @@ namespace GiaSuService.Services
             bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(origin, profile.Form);
             if (isSuccess)
             {
-                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+                return new ResponseService { Success = true, Message = "Cập nhật thành công, vui lòng chờ nhân viên phê duyệt" };
             }
             return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
         }
