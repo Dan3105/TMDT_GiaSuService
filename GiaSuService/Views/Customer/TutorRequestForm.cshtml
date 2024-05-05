@@ -2,7 +2,7 @@
 
 @model FormTutorRequestViewModel
 @{
-    ViewData["Title"] = "Tutor Request Form";
+    ViewData["Title"] = "Đơn tìm gia sư";
 }
 
 <div class="container">
@@ -93,8 +93,9 @@
                 }
             </div>
         </div>
-
-        <button type="submit" class="btn btn-primary customstyle-button">Gửi</button>
+        <div style="text-align: center !important;">
+        <button type="submit" class="btn btn-primary customstyle-button w-50">Gửi đơn</button>
+        </div>
     </form>
 </div>
 
@@ -159,7 +160,7 @@
                             </div>
 
                             <div class="d-flex justify-content-center align-items-center mb-3">
-                                 <a onclick="deleteTutor(${item.id})" class="btn btn-primary")">Hủy chọn</a>
+                                 <a onclick="deleteTutor(${item.id})" class="btn btn-danger")">Hủy chọn</a>
                             </div>
                         </div>
                     </div>

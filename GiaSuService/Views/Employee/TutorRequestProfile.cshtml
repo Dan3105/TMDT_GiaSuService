@@ -2,7 +2,7 @@
 @using GiaSuService.Configs;
 @model TutorRequestProfileViewModel
 @{
-    ViewData["Title"] = "Request Detail";
+    ViewData["Title"] = "Chi tiết yêu cầu";
 }
 
 <div class="container">
@@ -64,8 +64,8 @@
         
     </div>
     <div class="d-flex justify-content-center">
-        <a class="btn btn-primary m-2" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formId=@Model.FormId, statusName=AppConfig.FormStatus.APPROVAL.ToString()})">Chấp nhận</a>
         <a class="btn btn-danger m-2" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formid=@Model.FormId, statusName=AppConfig.FormStatus.DENY.ToString()})">Từ chối duyệt</a>
+        <a class="btn btn-primary m-2 customstyle-button" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formId=@Model.FormId, statusName=AppConfig.FormStatus.APPROVAL.ToString()})">Chấp nhận</a>
     </div>
 
 

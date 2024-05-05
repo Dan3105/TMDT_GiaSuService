@@ -2,25 +2,25 @@
 @model TutorProfileViewModel
 
 @{
-    ViewData["Title"] = "Profile Details";
+    ViewData["Title"] = "Chi tiết tài khoản";
 }
 <div class="container">
     <div class="row">
         <div class="col-md-6 border-end">
-            <h2>Account Profile</h2>
+            <h2>Thông tin tài khoản</h2>
             <hr />
             <dl class="row">
-                <dt class="col-sm-4">Full Name:</dt>
+                <dt class="col-sm-4">Tên:</dt>
                 <dd class="col-sm-8">@Model.Fullname</dd>
-                <dt class="col-sm-4">Date of Birth:</dt>
+                <dt class="col-sm-4">Ngày sinh:</dt>
                 <dd class="col-sm-8">@Model.Birth.ToString("dd-MM-yyyy")</dd>
                 <dt class="col-sm-4">Email:</dt>
                 <dd class="col-sm-8">@Model.Email</dd>
-                <dt class="col-sm-4">Phone:</dt>
+                <dt class="col-sm-4">Số điện thoại:</dt>
                 <dd class="col-sm-8">@Model.Phone</dd>
-                <dt class="col-sm-4">Identity Card:</dt>
+                <dt class="col-sm-4">Số CCCD/ CMND:</dt>
                 <dd class="col-sm-8">@Model.IdentityCard</dd>
-                <dt class="col-sm-4">Gender:</dt>
+                <dt class="col-sm-4">Giới tính:</dt>
                 <dd class="col-sm-8">@Model.Gender</dd>
                 <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
                 <dd class="col-sm-8 row">
@@ -31,7 +31,7 @@
                         }
                         else
                         {
-                            <span>No front ID card uploaded</span>
+                            <span>Thiếu mặt trước CCCD/ CMND</span>
                         }
                     </div>
                     <div class="col">
@@ -41,17 +41,17 @@
                         }
                         else
                         {
-                            <span>No back ID card uploaded</span>
+                            <span>Thiếu mặt sau CCCD/ CMND</span>
                         }
                     </div>
 
                 </dd>
 
-                <dt class="col-sm-4">Created Date:</dt>
+                <dt class="col-sm-4">Ngày tạo:</dt>
                 <dd class="col-sm-8">
                     @Model.Createdate.ToString("dd-MM-yyyy")
                 </dd>
-                <dt class="col-sm-4">Address:</dt>
+                <dt class="col-sm-4">Địa chỉ:</dt>
                 <dd class="col-sm-8">@Model.AddressDetail</dd>
             </dl>
         </div>
@@ -64,25 +64,25 @@
                 }
                 else
                 {
-                    <span>No avatar uploaded</span>
+                    <span>Chưa tải lên ảnh đại diện</span>
                 }
             </div>
-            <h2>Tutor Profile</h2>
+            <h2>Thông tin gia sư</h2>
             <hr />
             <dl class="row">
-                <dt class="col-sm-4">College:</dt>
+                <dt class="col-sm-4">Trường học:</dt>
                 <dd class="col-sm-8">@Model.College</dd>
-                <dt class="col-sm-4">Area:</dt>
+                <dt class="col-sm-4">Chuyên ngành:</dt>
                 <dd class="col-sm-8">@Model.Area</dd>
-                <dt class="col-sm-4">Additional Info:</dt>
+                <dt class="col-sm-4">Thông tin thêm:</dt>
                 <dd class="col-sm-8">@Model.Additionalinfo</dd>
-                <dt class="col-sm-4">Academic Year (From):</dt>
+                <dt class="col-sm-4">Từ năm:</dt>
                 <dd class="col-sm-8">@Model.Academicyearfrom</dd>
-                <dt class="col-sm-4">Academic Year (To):</dt>
+                <dt class="col-sm-4">Đến năm:</dt>
                 <dd class="col-sm-8">@Model.Academicyearto</dd>
-                <dt class="col-sm-4">Type Tutor:</dt>
+                <dt class="col-sm-4">Loại gia sư:</dt>
                 @* <dd class="col-sm-8">@Model.TypeTutor</dd> *@
-                <dt class="col-sm-4">Form Status:</dt>
+                <dt class="col-sm-4">Tình trạng đơn:</dt>
                 <dd class="col-sm-8">
                     <b>@Model.Formstatus</b>
                 </dd>

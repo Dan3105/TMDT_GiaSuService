@@ -1,12 +1,12 @@
 ﻿@using GiaSuService.Models.TutorViewModel;
 @model TutorRequestListViewModel;
 @{
-    ViewData["Title"] = "Tutor Request List";
+    ViewData["Title"] = "Danh sách đơn tìm gia sư";
 }
 <div class="container">
     <div class="row align-items-center justify-content-center">
         <div class="col-sm-6 d-flex justify-content-center mb-2">
-            <select id="province" class="form-select customform-select" onchange="getDistricts()">
+            <select id="province" class="form-select customform-control" onchange="getDistricts()">
                 @if (Model.ProvinceList != null)
                 {
                     <option value="0" id="provincedefault">Chọn tỉnh</option>
@@ -19,13 +19,13 @@
         </div>
 
         <div class="col-sm-6 d-flex justify-content-center mb-2">
-            <select class="form-select customform-select" id="districtSelectionContainer">
+            <select class="form-select customform-control" id="districtSelectionContainer">
                 <option value="0">Chọn quận</option>
             </select>
         </div>
         
         <div class="col-sm-6 d-flex justify-content-center mb-2">
-            <select class="form-select customform-select" id="subject">
+            <select class="form-select customform-control" id="subject">
                 @if (Model.SubjectList != null)
                 {
                     <option value="0" id="provincedefault">Chọn môn học</option>
@@ -38,7 +38,7 @@
         </div>
         
         <div class="col-sm-6 d-flex justify-content-center mb-2">
-            <select class="form-select customform-select" id="grade">
+            <select class="form-select customform-control" id="grade">
                 @if (Model.GradeList != null)
                 {
                     <option value="0" id="provincedefault">Chọn khối lớp</option>
