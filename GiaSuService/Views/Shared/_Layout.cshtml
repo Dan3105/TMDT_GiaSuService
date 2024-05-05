@@ -320,12 +320,24 @@
                             <li class="header-menu">
                                 <span>Tài khoản</span>
                             </li>
-                            <li class="sidebar">
-                                <a href="@Url.Action("Profile", "Identity")">
-                                    <i class="fa fa-info-circle"></i>
-                                    <span>Thông tin tài khoản</span>
-                                </a>
-                            </li>
+                            @if (roleName == AppConfig.TUTORROLENAME)
+                            {
+                                <li class="sidebar">
+                                    <a href="@Url.Action("Profile", "Identity")">
+                                        <i class="fa fa-info-circle"></i>
+                                        <span>Cập nhật thông tin gia sư</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="sidebar">
+                                    <a href="@Url.Action("Profile", "Identity")">
+                                        <i class="fa fa-info-circle"></i>
+                                        <span>Thông tin tài khoản</span>
+                                    </a>
+                                </li>
+                            }
                             <li class="sidebar">
                                 <a href="@Url.Action("Password", "Identity")">
                                     <i class="fa fa-unlock-alt"></i>
