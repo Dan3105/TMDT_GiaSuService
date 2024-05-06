@@ -293,9 +293,10 @@ namespace GiaSuService.Repository
                     if(modified.IsActive != exitsTutor.IsActive)
                     {
                         _context.Tutors
+                            .Where(p => p.Id == modified.TutorId)
                             .ExecuteUpdate(x => x 
-                            .SetProperty(p => p.IsActive, modified.IsActive)
-                            .SetProperty(p => p.StatusId, status.Id));
+                            .SetProperty(p => p.IsActive, modified.IsActive))
+                            ;
 
                         await _context.SaveChangesAsync();
                     }
