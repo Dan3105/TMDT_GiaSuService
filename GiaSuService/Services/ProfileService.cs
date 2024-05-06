@@ -131,14 +131,14 @@ namespace GiaSuService.Services
             }
 
             TutorFormUpdateProfileViewModel? diff = TutorFormUpdateProfileViewModel.CompareDifference(origin, profile.Form);
-            if(diff == null)
+            if(diff == null && origin.IsActive == profile.Form.IsActive)
             {
                 return new ResponseService { Success = false, Message = "Bạn chưa thay đổi thông tin nào" };
             }
             bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(origin, profile.Form);
             if (isSuccess)
             {
-                return new ResponseService { Success = true, Message = "Cập nhật thành công, vui lòng chờ nhân viên phê duyệt" };
+                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
             }
             return new ResponseService { Success = false, Message = "Cập nhật thất bại" };
         }
