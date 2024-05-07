@@ -11,6 +11,22 @@
     <form method="post" asp-action="UpdateProfile" asp-controller="Identity" enctype="multipart/form-data">
         <h1>Thông tin tài khoản</h1>
         <div class="row">
+            @* Avatar *@
+            <div class="col-md-4" style="margin-top: 25px">
+                <input type="hidden" asp-for="Avatar" />
+
+                <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <img id="avatar" src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
+                    <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
+                           name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
+
+                    <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
+                            onclick="changeImage('newAvatar')">
+                        Chọn ảnh
+                    </button>
+                </div>
+            </div>
+
             @* AccountProfile *@
             <div class="col-md-8">
                 <input type="hidden" asp-for="AccountId" />
@@ -18,7 +34,7 @@
                 <input type="hidden" asp-for="ProfileId" />
                 <input type="hidden" asp-for="LockStatus" />
                 @* Ensure if user do not update new image, old image will be kept *@
-                <input type="hidden" asp-for="Avatar" />
+                
                 <input type="hidden" asp-for="FrontIdentityCard" />
                 <input type="hidden" asp-for="BackIdentityCard" />
 
@@ -101,45 +117,7 @@
                     </div>
                 </div>
 
-                @* <div class="form-group">
-                    <label asp-for="FrontIdentityCard" class="customstyle-label">Mặt trước CMND/ CCCD:</label>
-                    <img id="frontCard" src="@Model.FrontIdentityCard" width="200" height="150" alt="Mặt trước" />
-
-                    <input id="newFrontCard" type="file" class="form-control customform-control" style="display: none;"
-                           name="frontCard" accept="image/*" onchange="previewImage('newFrontCard', 'frontCard')" />
-                    <button type="button" id="changeFrontCard" class="btn btn-primary customstyle-button"
-                            onclick="changeImage('newFrontCard')">
-                        Chọn ảnh
-                    </button>
-                </div> *@
-                @* <div class="form-group">
-                    <label asp-for="BackIdentityCard" class="customstyle-label">Mặt sau CMND/ CCCD:</label>
-                    <img id="backCard" src="@Model.BackIdentityCard" width="200" height="150" alt="Mặt sau" />
-
-                    <input id="newBackCard" type="file" class="form-control customform-control" style="display: none;"
-                           name="backCard" accept="image/*" onchange="previewImage('newBackCard', 'backCard')" />
-                    <button type="button" id="changeBackCard" class="btn btn-primary customstyle-button"
-                            onclick="changeImage('newBackCard')">
-                        Chọn ảnh
-                    </button>
-                </div> *@
-
             </div>
-
-            @* Avatar *@
-            <div class="col-md-4" style="margin-top: 25px">
-                <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
-                    <img id="avatar" src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
-                    <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
-                            name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
-
-                    <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
-                            onclick="changeImage('newAvatar')">
-                        Chọn ảnh
-                    </button>
-                </div>
-            </div>
-
         </div>
 
         <div style="text-align: center;">
@@ -148,12 +126,24 @@
     </form>
 </div>
 
+<!-- Include the loading panel -->
+<partial name="_LoadingPanel" />
+
 
 <script>
     // First loading page
     document.addEventListener("DOMContentLoaded", function () {
         getProvinces();
         setEditMode();
+    });
+
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("form").submit(function (event) {
+            document.getElementById('loadingPanel').style.display = 'flex';
+            // Proceed with form submission if files are uploaded
+            return true;
+        });
     });
 
     function getProvinces() {

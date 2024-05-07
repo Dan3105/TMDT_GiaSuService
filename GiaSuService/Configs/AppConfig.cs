@@ -77,7 +77,7 @@ namespace GiaSuService.Configs
 
         public const string TUTOR_SELECTED_COOKIE = "tutors_cookie";
 
-        public const string DEFAULT_AVATAR_URL = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
+        public const string DEFAULT_AVATAR_URL = "https://icons.veryicon.com/png/o/miscellaneous/rookie-official-icon-gallery/225-default-avatar.png";
         public const string DEFAULT_FRONT_IDENTITY_CARD_URL = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
         public const string DEFAULT_BACK_IDENTITY_CARD_URL = "https://micpa.org/images/site/enews-images/cat8.jpg?sfvrsn=48f27c5e_2";
 

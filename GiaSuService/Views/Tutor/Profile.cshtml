@@ -13,8 +13,8 @@
         <h1>Đơn cập nhật thông tin gia sư</h1>
         <div class="row">
             <div class="col-md-4">
-                <div style="text-align: center;">            
-                    <img id="avatar" src="@Model.Form.Avatar" width="200" height="150" alt="Ảnh đại diện" />
+                <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <img id="avatar" src="@Model.Form.Avatar" style="width: 200px; height: 200px;  margin-bottom: 10px;" alt="Ảnh đại diện" />
 
                     <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
                            name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
@@ -211,17 +211,28 @@
             </div>
 
             <div style="text-align: center;">
-                <button type="submit" class="btn btn-primary customstyle-button" style="margin-top: 5px;">Cập nhật</button>
+                <button type="submit" class="btn btn-primary customstyle-button" style="margin-top: 5px;">Cập nhật</butto>
             </div>
         </div>
     </form>
 </div>
 
+<!-- Include the loading panel -->
+<partial name="_LoadingPanel" />
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         firstLoad(); // Call the getProvinces function when the view is first loaded
         changeActiveStatus();
+    });
+
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("form").submit(function (event) {
+            document.getElementById('loadingPanel').style.display = 'flex';
+            // Proceed with form submission if files are uploaded
+            return true;
+        });
     });
 
     function changeActiveStatus() {

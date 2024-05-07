@@ -126,6 +126,9 @@
     </div>
 </form>
 
+<!-- Include the loading panel -->
+<partial name="_LoadingPanel" />
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         getDistricts(); // Call the getDistricts function when the view is first loaded
@@ -162,6 +165,7 @@
                 return false; // Stop form submission
             }
 
+            document.getElementById('loadingPanel').style.display = 'flex';
             // Proceed with form submission if files are uploaded
             return true;
         });

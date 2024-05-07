@@ -11,8 +11,9 @@
     <form method="post" asp-action="UpdateEmployeeProfile" asp-controller="Admin" enctype="multipart/form-data">
         <h1>Thông tin tài khoản nhân viên</h1>
         <div class="row">
+            @* Avatar *@
             <div class="col-md-4">
-                <div style="text-align: center;">
+                <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                     <img id="avatar" src="@Model.Avatar" alt="Ảnh đại diện của @Model.FullName" class="img-thumbnail" style="width: 200px; height: 200px;  margin-bottom: 10px;" />
 
                     <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
@@ -24,6 +25,8 @@
                     </button>
                 </div>
             </div>
+
+            @* AccountProfile *@
             <div class="col-md-8">
                 <input type="hidden" asp-for="AccountId" />
                 <input type="hidden" asp-for="IdentityId" />
@@ -138,6 +141,8 @@
     </form>
 </div>
 
+<!-- Include the loading panel -->
+<partial name="_LoadingPanel" />
 
 <script>
     // First loading page
@@ -157,6 +162,15 @@
                 label.classList.remove("text-danger");
                 label.classList.add("text-success");
             }
+        });
+    });
+
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("form").submit(function (event) {
+            document.getElementById('loadingPanel').style.display = 'flex';
+            // Proceed with form submission if files are uploaded
+            return true;
         });
     });
 

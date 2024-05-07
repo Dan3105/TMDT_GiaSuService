@@ -12,72 +12,48 @@
             <hr/>
             <dl class="row">
 
+                <dt class="col-sm-4">Ngày tạo:</dt>
+                <dd class="col-sm-8">
+                    @Model.TutorProfileVM.Createdate.ToString("dd-MM-yyyy")
+                </dd>
+
                 <dt class="col-sm-4">Họ và tên:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Fullname</dd>
 
-                <dt class="col-sm-4">Ngày sinh:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.Birth.ToString("dd-MM-yyyy")</dd>
                 <dt class="col-sm-4">Email:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Email</dd>
 
                 <dt class="col-sm-4">Số điện thoại:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Phone</dd>
 
-                <dt class="col-sm-4">Số CCCD/ CMND:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.IdentityCard</dd>
-
+                <dt class="col-sm-4">Ngày sinh:</dt>
+                <dd class="col-sm-8">@Model.TutorProfileVM.Birth.ToString("dd-MM-yyyy")</dd>
+                
                 <dt class="col-sm-4">Giới tính:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.Gender</dd>
 
-                <dt class="col-sm-4">Hai mặt CCCD:</dt>
-                <dd class="col-sm-8 row">
-                    <div class="col">
-                        @if (!string.IsNullOrEmpty(Model.TutorProfileVM.FrontIdentityCard))
-                        {
-                            <img src="@Model.TutorProfileVM.Avatar" alt="Front ID Card" class="img-thumbnail" />
-                        }
-                        else
-                        {
-
-                            <span>Chưa tải lên mặt trước CCCD</span>
-                        }
-                    </div>
-                    <div class="col">
-                        @if (!string.IsNullOrEmpty(Model.TutorProfileVM.BackIdentityCard))
-                        {
-                            <img src="@Model.TutorProfileVM.Avatar" alt="Back ID Card" class="img-thumbnail" />
-                        }
-                        else
-                        {
-
-                            <span>Chưa tải lên mặt sau CCCD</span>
-                        }
-                    </div>
-
-                </dd>
-
-
-                <dt class="col-sm-4">Ngày tạo:</dt>
-                <dd class="col-sm-8">
-                        @Model.TutorProfileVM.Createdate.ToString("dd-MM-yyyy")
-                </dd>
+                <dt class="col-sm-4">Số CCCD/ CMND:</dt>
+                <dd class="col-sm-8">@Model.TutorProfileVM.IdentityCard</dd>
 
                 <dt class="col-sm-4">Địa chỉ:</dt>
                 <dd class="col-sm-8">@Model.TutorProfileVM.AddressDetail</dd>
+
+                <dt class="col-sm-4">CMND/CCCD mặt trước:</dt>
+                <dd class="col-sm-8">
+                    <img id="frontCard" src="@Model.TutorProfileVM.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
+                </dd>
+
+                <dt class="col-sm-4">CMND/CCCD mặt sau:</dt>
+                <dd class="col-sm-8">
+                    <img id="backCard" src="@Model.TutorProfileVM.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
+                </dd>
+                
             </dl>
         </div>
 
         <div class="col-md-6">
             <div class="d-flex justify-content-center">
-                @if (!string.IsNullOrEmpty(Model.TutorProfileVM.Avatar))
-                {
-                    <img src="@Model.TutorProfileVM.Avatar" alt="Avatar" class="img-thumbnail" />
-                }
-                else
-                {
-
-                    <span>Chưa tải lên avatar</span>
-                }
+                <img src="@Model.TutorProfileVM.Avatar" style="width: 200px; height: 200px;" alt="Avatar" class="img-thumbnail" />
             </div>
 
             <h2>Thông tin gia sư</h2>

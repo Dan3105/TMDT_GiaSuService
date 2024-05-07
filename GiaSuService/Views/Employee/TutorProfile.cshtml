@@ -14,81 +14,69 @@
                     <h2>Thông tin tài khoản</h2>
                     <hr />
                     <dl class="row">
-                        <dt class="col-sm-4">Tên đầy đủ:</dt>
-                        <dd class="col-sm-8">@Model.Fullname</dd>
-                        <dt class="col-sm-4">Ngày sinh:</dt>
-                        <dd class="col-sm-8">@Model.Birth.ToString("dd-MM-yyyy")</dd>
-                        <dt class="col-sm-4">Email:</dt>
-                        <dd class="col-sm-8">@Model.Email</dd>
-                        <dt class="col-sm-4">Số điện thoại:</dt>
-                        <dd class="col-sm-8">@Model.Phone</dd>
-                        <div class="form-group">
-                            <label asp-for="@Model.IdentityCard">Số CCCD/CMND:</label>
-                            <input type="text" asp-for="IdentityCard" class="form-control" />
-                            <span asp-validation-for="IdentityCard" class="text-danger"></span>
-                        </div>
-                        <dt class="col-sm-4">Giới tính:</dt>
-                        <dd class="col-sm-8">@Model.Gender</dd>
-                        <dt class="col-sm-4">Hai mặt Chứng minh thư:</dt>
-                        <dd class="col-sm-8 row">
-                            <div class="col">
-                                @if (!string.IsNullOrEmpty(Model.FrontIdentityCard))
-                                {
-                                    <img src="@Model.Avatar" alt="Front ID Card" class="img-thumbnail" />
-                                }
-                                else
-                                {
-                                    <span>Thiếu mặt trước CCCD</span>
-                                }
-                            </div>
-                            <div class="col">
-                                @if (!string.IsNullOrEmpty(Model.BackIdentityCard))
-                                {
-                                    <img src="@Model.Avatar" alt="Back ID Card" class="img-thumbnail" />
-                                }
-                                else
-                                {
-                                    <span>Thiếu mặt sau CCCD</span>
-                                }
-                            </div>
-
-                        </dd>
-
-                        <dt class="col-sm-4">Ngày tạo tài khoản:</dt>
+                        <dt class="col-sm-4">Ngày tạo:</dt>
                         <dd class="col-sm-8">
                             @Model.Createdate.ToString("dd-MM-yyyy")
                         </dd>
+
+                        <dt class="col-sm-4">Họ và tên:</dt>
+                        <dd class="col-sm-8">@Model.Fullname</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Số điện thoại:</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+
+                        <dt class="col-sm-4">Ngày sinh:</dt>
+                        <dd class="col-sm-8">@Model.Birth.ToString("dd-MM-yyyy")</dd>
+
+                        <dt class="col-sm-4">Giới tính:</dt>
+                        <dd class="col-sm-8">@Model.Gender</dd>
+
+                        <dt class="col-sm-4">Số CCCD/ CMND:</dt>
+                        <dd class="col-sm-8">@Model.IdentityCard</dd>
+
                         <dt class="col-sm-4">Địa chỉ:</dt>
                         <dd class="col-sm-8">@Model.AddressDetail</dd>
+
+                        <dt class="col-sm-4">CMND/CCCD mặt trước:</dt>
+                        <dd class="col-sm-8">
+                            <img id="frontCard" src="@Model.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
+                        </dd>
+
+                        <dt class="col-sm-4">CMND/CCCD mặt sau:</dt>
+                        <dd class="col-sm-8">
+                            <img id="backCard" src="@Model.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
+                        </dd>
                     </dl>
                 </div>
 
                 <div class="col-md-6">
                     <div class="d-flex justify-content-center">
-                        @if (!string.IsNullOrEmpty(Model.Avatar))
-                        {
-                            <img src="@Model.Avatar" alt="Avatar" class="img-thumbnail" />
-                        }
-                        else
-                        {
-                            <span>Thiếu avatar</span>
-                        }
+                        <img src="@Model.Avatar" style="width: 200px; height: 200px;" alt="Avatar" class="img-thumbnail" />
                     </div>
                     <h2>Thông tin gia sư</h2>
                     <hr />
                     <dl class="row">
                         <dt class="col-sm-5">Trường học:</dt>
                         <dd class="col-sm-7">@Model.College</dd>
+
                         <dt class="col-sm-5">Chuyên ngành:</dt>
                         <dd class="col-sm-7">@Model.Area</dd>
+
                         <dt class="col-sm-5">Thông tin thêm:</dt>
                         <dd class="col-sm-7">@Model.Additionalinfo</dd>
+
                         <dt class="col-sm-5">Từ năm:</dt>
                         <dd class="col-sm-7">@Model.Academicyearfrom</dd>
+
                         <dt class="col-sm-5">Đến năm:</dt>
                         <dd class="col-sm-7">@Model.Academicyearto</dd>
+
                         <dt class="col-sm-5">Trình độ gia sư:</dt>
-                        <dd class="col-sm-7">@Model.TutorType.TypeName</dd>
+                        <dd class="col-sm-7">@Model.TutorType?.TypeName</dd>
+
                         <dt class="col-sm-5">Trạng thái đơn:</dt>
                         <dd class="col-sm-7">
                             <b>@Model.Formstatus</b>
@@ -97,7 +85,7 @@
                         <dd class="col-sm-7">
                             @if (@Model.IsActive)
                             {
-                                <b class="text-success">Họat động</b>
+                                <b class="text-success">Đang hoạt động</b>
                             }
                             else
                             {

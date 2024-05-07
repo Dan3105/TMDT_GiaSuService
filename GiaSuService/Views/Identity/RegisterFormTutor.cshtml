@@ -96,7 +96,7 @@
             Chọn ảnh
         </button>
 
-        <span id="frontCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
+        <span id="backCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
     </div>
 
 
@@ -253,6 +253,9 @@
     </div>
 </form>
 
+<!-- Include the loading panel -->
+<partial name="_LoadingPanel" />
+
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -328,6 +331,7 @@
                 return false; // Stop form submission
             }
 
+            document.getElementById('loadingPanel').style.display = 'flex';
             // Proceed with form submission if files are uploaded
             return true;
         });

@@ -12,6 +12,18 @@
     <input type="hidden" asp-for="RegisterForm!.BackIdentityCard" />
 
     <div class="form-group">
+        <label for="avatar">Ảnh đại diện:</label>
+        <img id="avatar" src="@Model.RegisterForm!.Avatar" width="150" height="150" alt="Hình mặt trước của CMND/CCCD" />
+
+        <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
+               name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
+        <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
+                onclick="changeImage('newAvatar')">
+            Chọn ảnh
+        </button>
+    </div>
+
+    <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên nhân viên" asp-for="RegisterForm!.FullName">
         @Html.ValidationMessageFor(model => model.RegisterForm!.FullName, "", new { @class = "text-danger" })
@@ -55,6 +67,8 @@
                 onclick="changeImage('newFrontCard')">
             Chọn ảnh
         </button>
+
+        <span id="frontCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt trước của CMND/CCCD</span>
     </div>
     <div class="form-group">
         <label for="identityCard">Mặt sau CMND/ CCCD:</label>
@@ -66,18 +80,8 @@
                 onclick="changeImage('newBackCard')">
             Chọn ảnh
         </button>
-    </div>
 
-    <div class="form-group">
-        <label for="avatar">Ảnh đại diện:</label>
-        <img id="avatar" src="@Model.RegisterForm!.Avatar" width="200" height="150" alt="Hình mặt trước của CMND/CCCD" />
-
-        <input id="newAvatar" type="file" class="form-control customform-control" style="display: none;"
-               name="avatar" accept="image/*" onchange="previewImage('newAvatar', 'avatar')" />
-        <button type="button" id="changeAvatar" class="btn btn-primary customstyle-button"
-                onclick="changeImage('newAvatar')">
-            Chọn ảnh
-        </button>
+        <span id="backCardMsg" style="display: none" class="text-danger">Vui lòng upload mặt sau của CMND/CCCD</span>
     </div>
 
     <div class="form-group">
@@ -116,9 +120,12 @@
         @Html.ValidationMessageFor(model => model.RegisterForm!.AddressName, "", new { @class = "text-danger" })
     </div>
     <div style="text-align: center !important;">
-    <button type="submit" class="btn btn-primary customstyle-button w-50">Tạo tài khoản</button>
+        <button type="submit" class="btn btn-primary customstyle-button w-50">Tạo tài khoản</button>
     </div>
 </form>
+
+<!-- Include the loading panel -->
+<partial name="_LoadingPanel" />
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -145,6 +152,43 @@
         });
     }
 
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("form").submit(function (event) {
+            var canSubmit = true;
+
+            // Check if both newFrontCard and newBackCard have files uploaded
+            var frontCardInput = document.getElementById('newFrontCard');
+            var backCardInput = document.getElementById('newBackCard');
+
+            var frontCardMsg = document.getElementById('frontCardMsg');
+            var backCardMsg = document.getElementById('backCardMsg');
+
+            if (!frontCardInput.files || frontCardInput.files.length === 0) {
+                frontCardMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!backCardInput.files || backCardInput.files.length === 0) {
+                backCardMsg.style.display = "block";
+                canSubmit = false;
+            }
+
+            if (!canSubmit) {
+                event.preventDefault(); // Prevent form submission
+
+                // Show an alert or message
+                alert('Vui lòng kiểm tra lại các dữ liệu đã nhập ở trên.');
+
+                return false; // Stop form submission
+            }
+
+            document.getElementById('loadingPanel').style.display = 'flex';
+            // Proceed with form submission if files are uploaded
+            return true;
+        });
+    });
+
     // Add event when click button changeImage then show file explorer to choose new image
     function changeImage(inputId) {
         var input = document.getElementById(inputId);   //input file id
@@ -166,6 +210,7 @@
                 image.src = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
+            msg.style.display = 'none';
         }
     }
 

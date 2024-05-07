@@ -35,7 +35,7 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployeePage(int page)
+        public async Task<IActionResult> GetEmployeePage(int page = 0)
         {
             List<AccountListViewModel> accounts = await _profileService.GetEmployeeList(page);
             int totalAccounts = await _profileService.GetCountEmployeeList();
@@ -76,7 +76,7 @@ namespace GiaSuService.Controllers
             {
                 TempData[AppConfig.MESSAGE_FAIL] = result.Message;
             }
-            return RedirectToAction("", "Admin");
+            return RedirectToAction("EmployeeList", "Admin") ;
         }
 
         #region EmployeeProfile Manager
