@@ -18,39 +18,53 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> StatisticAccount()
+        public IActionResult StatisticAccount()
         {
-            AccountStatisticsViewModel? data = await _statisticService.GetStatisticAccount();
-            if(data is null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Hệ thống không lấy được data";
-                return RedirectToAction("", "");
-            }
-            return View(data);
+            
+            return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAccountData(int roleId, string fromDate, string toDate) 
+        public async Task<IActionResult> GetAnalystForEachRole()
+        {
+            AccountStatisticsViewModel? data = await _statisticService.GetStatisticAccount();
+            if (data is null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Hệ thống không lấy được data";
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountData(string type, string fromDate, string toDate) 
         {
             try
             {
-                DateOnly fromDateParse = DateOnly.Parse(fromDate);
-                DateOnly toDateParse = DateOnly.Parse(toDate);
-                DataTable? dataTable = await _statisticService.GetAccountCreateStatistic(roleId, fromDateParse, toDateParse);
-                if (dataTable == null)
+                AccountRegisterStatisticsViewModel? data = null;
+                if(!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate)){
+                    DateOnly fromDateParse = DateOnly.Parse(fromDate);
+                    DateOnly toDateParse = DateOnly.Parse(toDate);
+                    data = await _statisticService.GetAccountCreateStatistic(type, fromDateParse, toDateParse);
+                }
+                else
+                {
+                    data = await _statisticService.GetAccountCreateStatistic(type, DateOnly.MinValue, DateOnly.MinValue);
+                }
+                if (data == null)
                 {
                     throw new ArgumentNullException();
                 }
-                var data = new List<Dictionary<string, object>>();
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    var dict = new Dictionary<string, object>();
-                    foreach (DataColumn col in dataTable.Columns)
-                    {
-                        dict[col.ColumnName] = row[col];
-                    }
-                    data.Add(dict);
-                }
+                //var data = new List<Dictionary<string, object>>();
+                //foreach (DataRow row in dataTable.Rows)
+                //{
+                //    var dict = new Dictionary<string, object>();
+                //    foreach (DataColumn col in dataTable.Columns)
+                //    {
+                //        dict[col.ColumnName] = row[col];
+                //    }
+                //    data.Add(dict);
+                //}
 
                 return Json(data);
             }

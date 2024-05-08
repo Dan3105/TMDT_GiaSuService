@@ -16,9 +16,9 @@ namespace GiaSuService.Services
             _statusRepo = statusRepo;
         }
 
-        public async Task<DataTable?> GetAccountCreateStatistic(int roleId, DateOnly fromDate, DateOnly toDate)
+        public async Task<AccountRegisterStatisticsViewModel?> GetAccountCreateStatistic(string type, DateOnly fromDate, DateOnly toDate)
         {
-            return await _statisticRepo.QueryStatisticAccount(roleId, fromDate, toDate);
+            return await _statisticRepo.QueryStatisticAccount(type, fromDate, toDate);
         }
 
         public async Task<AccountStatisticsViewModel?> GetStatisticAccount()

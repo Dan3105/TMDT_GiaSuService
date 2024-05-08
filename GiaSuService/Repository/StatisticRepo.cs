@@ -4,8 +4,13 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using Npgsql;
 using System.Data;
+using System.Globalization;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace GiaSuService.Repository
 {
@@ -27,33 +32,140 @@ namespace GiaSuService.Repository
             return rolesDictionary;
         }
 
-        public async Task<DataTable?> QueryStatisticAccount(int roleId, DateOnly fromDate, DateOnly toDate)
+        public async Task<AccountRegisterStatisticsViewModel?> QueryStatisticAccount(string typeDate, DateOnly fromDate, DateOnly toDate)
         {
             try
             {
-                DataTable dataTable = new DataTable();
-                string? connString = _configuration.GetConnectionString(AppConfig.connection_string);
-                if (connString == null)
-                {
-                    throw new InvalidOperationException();
-                }
-                string query = $"select * from get_account_created({roleId}, '{fromDate}', '{toDate}')";
+                AccountRegisterStatisticsViewModel response = new AccountRegisterStatisticsViewModel();
+                var query = _context.Accounts.Select(p => new { CreateDate = p.CreateDate, p.Role.Name });
 
-                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
+                if (typeDate == "this_month")
                 {
-                    await conn.OpenAsync();
-                    using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn))
+                    var get_month = DateAndTime.Month(DateTime.Now);
+                    var get_year = DateAndTime.Month(DateTime.Now);
+                    DateTime start_date = new DateTime(get_year, get_month, 1);
+                    DateTime next_date = new DateTime(get_year, get_month + 1, 1).AddDays(-1);
+
+                    var register = await query
+                                            .Where(p => p.CreateDate >= start_date && p.CreateDate <= next_date)
+                                            .Select(p => new {CreateDateOnly=DateOnly.FromDateTime(p.CreateDate), p.Name})
+                                            .GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new
+                                            {
+                                                CreatedDate = p.Key,
+                                                RoleCounts = p
+                                                    .GroupBy(account => account.Name) // Within each date group, group by Role
+                                                    .Select(roleGroup => new
+                                                    {
+                                                        Role = roleGroup.Key,
+                                                        Count = roleGroup.Count() // Count the number of accounts in each role group
+                                                    })
+                                            })
+                                            .ToDictionaryAsync(
+                                                p => p.CreatedDate,
+                                                p => p.RoleCounts.ToDictionary(
+                                                    p => p.Role,
+                                                    p => p.Count
+                                                    )
+                                            );
+
+                    response.jsonRegisterStatisc = JsonConvert.SerializeObject(register);
+                    return response;
+                }
+
+                if (typeDate == "this_week")
+                {
+                    var get_week = DateAndTime.Weekday(DateTime.Now); //Min: 0, Max: 6
+                    var diff_date_start = DateTime.Now.AddDays(- get_week + 1); // 4: -> 5
+                    var diff_date_end = DateTime.Now.AddDays(6 - get_week); // 
+
+                    var start_date = diff_date_start;
+                    var end_date = diff_date_end.AddDays(1).AddSeconds(-1);
+
+                    var register = await query
+                                            .Where(p => p.CreateDate >= start_date && p.CreateDate <= end_date)
+                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.Name })
+                                            .GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new
+                                            {
+                                                CreatedDate = p.Key,
+                                                RoleCounts = p
+                                                .GroupBy(account => account.Name) // Within each date group, group by Role
+                                                .Select(roleGroup => new
+                                                {
+                                                    Role = roleGroup.Key,
+                                                    Count = roleGroup.Count() // Count the number of accounts in each role group
+                                                })
+                                            })
+                                        .ToDictionaryAsync(
+                                            p => p.CreatedDate,
+                                            p => p.RoleCounts.ToDictionary(
+                                                p => p.Role,
+                                                p => p.Count
+                                                )
+                                        );
+
+                    // Map day of the week to its name
+                    var dayOfWeekNames = new Dictionary<int, string>
                     {
-                        await Task.Run(() => da.Fill(dataTable));
-                    }
+                        { 0, "Sunday" },
+                        { 1, "Monday" },
+                        { 2, "Tuesday" },
+                        { 3, "Wednesday" },
+                        { 4, "Thursday" },
+                        { 5, "Friday" },
+                        { 6, "Saturday" }
+                    };
+
+                    var registerWithWeekDayName = register
+                        .ToDictionary(
+                            kvp => dayOfWeekNames[(int)kvp.Key.DayOfWeek],
+                            kvp => kvp.Value
+                        );
+
+                    response.jsonRegisterStatisc = JsonConvert.SerializeObject(registerWithWeekDayName);
+                    return response;
                 }
 
-                return dataTable;
+                if (typeDate == "custom")
+                {
+                    var start_fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day);
+                    var next_toDate =  new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+                    var register = await query
+                                        .Where(p => p.CreateDate >= start_fromDate && p.CreateDate <= next_toDate)
+                                        .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.Name })
+                                        .GroupBy(p => p.CreateDateOnly)
+                                        .Select(p => new
+                                        {
+                                            CreatedDate = p.Key,
+                                            RoleCounts = p
+                                                .GroupBy(account => account.Name) // Within each date group, group by Role
+                                                .Select(roleGroup => new
+                                                {
+                                                    Role = roleGroup.Key,
+                                                    Count = roleGroup.Count() // Count the number of accounts in each role group
+                                                })
+                                        })
+                                        .ToDictionaryAsync(
+                                            p => p.CreatedDate,
+                                            p => p.RoleCounts.ToDictionary(
+                                                p => p.Role,
+                                                p => p.Count
+                                                )
+                                        );
+
+                    response.jsonRegisterStatisc = JsonConvert.SerializeObject(register);
+                    return response;
+                }
+
+                return null;
+
             }
-            catch {
+            catch
+            {
                 return null;
             }
-            
+
         }
 
         public async Task<AccountStatisticsViewModel?> GetAccountsCount()
@@ -61,16 +173,59 @@ namespace GiaSuService.Repository
             int? tutorId = (await _context.Roles.FirstOrDefaultAsync(p => p.Name == AppConfig.TUTORROLENAME))?.Id;
             int? customerId = (await _context.Roles.FirstOrDefaultAsync(p => p.Name == AppConfig.CUSTOMERROLENAME))?.Id;
             int? employeeId = (await _context.Roles.FirstOrDefaultAsync(p => p.Name == AppConfig.EMPLOYEEROLENAME))?.Id;
-            if(tutorId is null || customerId is null || employeeId is null)
+            if (tutorId is null || customerId is null || employeeId is null)
             {
                 return null;
             }
 
             AccountStatisticsViewModel statistic = new AccountStatisticsViewModel();
-            statistic.TotalTutor = _context.Accounts.Where(p => p.RoleId == (int)tutorId).Count();
-            statistic.TotalCustomer = _context.Accounts.Where(p => p.RoleId == (int)customerId).Count();
-            statistic.TotalEmployee = _context.Accounts.Where(p => p.RoleId == (int)employeeId).Count();
-            statistic.ListRole = await GetRoles();
+            var queryTutor = _context.Accounts
+                .Select(p => new { p.RoleId, p.LockEnable })
+                .Where(p => p.RoleId == (int)tutorId)
+                .GroupBy(p => p.LockEnable);
+            statistic.jsonTutorStatisc = JsonConvert.SerializeObject(new StatisticViewModel
+            {
+                labels = await queryTutor.Select(g => g.Key.ToString()).ToListAsync(),
+                data = await queryTutor.Select(g => g.Count()).ToListAsync(),
+            });
+
+            var queryEmp = _context.Accounts
+                .Select(p => new { p.RoleId, p.LockEnable })
+                .Where(p => p.RoleId == (int)employeeId)
+                .GroupBy(p => p.LockEnable);
+            statistic.jsonEmployeeStatisc = JsonConvert.SerializeObject(new StatisticViewModel
+            {
+                labels = await queryEmp.Select(g => g.Key.ToString()).ToListAsync(),
+                data = await queryEmp.Select(g => g.Count()).ToListAsync(),
+            });
+
+            var queryCustomer = _context.Accounts
+                .Select(p => new { p.RoleId, p.LockEnable })
+                .Where(p => p.RoleId == (int)customerId)
+                .GroupBy(p => p.LockEnable);
+            statistic.jsonCustomerStatisc = JsonConvert.SerializeObject(new StatisticViewModel
+            {
+                labels = await queryCustomer.Select(g => g.Key.ToString()).ToListAsync(),
+                data = await queryCustomer.Select(g => g.Count()).ToListAsync(),
+            });
+
+            var queryTutorStatus = _context.Tutors
+                .Select(p => new { p.IsActive, p.Status.Name });
+            var queryTutorStatusAccount = queryTutorStatus.GroupBy(p => p.Name);
+            statistic.jsonTutorStatusStatisc = JsonConvert.SerializeObject(new StatisticViewModel
+            {
+                labels = await queryTutorStatusAccount.Select(g => g.Key.ToString()).ToListAsync(),
+                data = await queryTutorStatusAccount.Select(g => g.Count()).ToListAsync()
+            });
+
+            var queryTutorStatusActive = queryTutorStatus
+                .Where(p => p.Name.Equals(AppConfig.RegisterStatus.APPROVAL.ToString().ToLower()))
+                .GroupBy(p => p.IsActive);
+            statistic.jsonTutorActiveStatisc = JsonConvert.SerializeObject(new StatisticViewModel
+            {
+                labels = await queryTutorStatusActive.Select(g => g.Key.ToString()!).ToListAsync(),
+                data = await queryTutorStatusActive.Select(g => g.Count()).ToListAsync()
+            });
             return statistic;
         }
 
@@ -108,7 +263,7 @@ namespace GiaSuService.Repository
         {
 
             var queryable = _context.RequestTutorForms
-                .Select(p => new {p.CreateDate, p.Status.Name, p.Status.Id, SubjectName=p.Subject.Name})
+                .Select(p => new { p.CreateDate, p.Status.Name, p.Status.Id, SubjectName = p.Subject.Name })
                 .Where(p => p.CreateDate >= new DateTime(fromDate.Year, fromDate.Month, fromDate.Day)
                                                          && p.CreateDate <= new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59));
             var result = new TutorRequestStatisticsViewModel();
@@ -133,7 +288,7 @@ namespace GiaSuService.Repository
             {
 
             }
-                                
+
             return result;
         }
 
@@ -161,7 +316,7 @@ namespace GiaSuService.Repository
             {
                 throw new Exception();
             }
-            
+
         }
 
         public async Task<DataTable?> QueryChartDataTransactions(DateOnly fromDate, DateOnly toDate)

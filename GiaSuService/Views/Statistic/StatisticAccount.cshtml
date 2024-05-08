@@ -1,137 +1,486 @@
 ﻿@{
     ViewData["Title"] = "Thống kế số tài khoản được tạo";
 }
-@using GiaSuService.Configs;
-@using GiaSuService.Models.UtilityViewModel;
-@model AccountStatisticsViewModel;
+
 <h1>Thống kê tài khoản</h1>
 <div>
-    <div class="row">
-        <div class="col-12">
-            <div class="row">
-                <div class="col-3">
-                    <input type="date" class="form-control customform-control" id="fromDateInput" value="2024-01-03">
+    <section class="py-3 py-md-5">
+        <h3>Thống kê số tài khoản</h3>
+        <div class="container">
+            <div class="row justify-content-center">
+                @* Tutor *@
+                <div class="col-xl-4 col-md-12 mb-3">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="card-title widget-card-title mb-3">
+                                                Gia sư
+                                            </h5>
+                                            <p>Số lượng: <label class="card-subtitle" id="totalTutor">10000</label></p>
+                                        </div>
+                                        <div class="col-6" style="height:150px">
+                                            <canvas id="chartTutor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <input type="date" class="form-control customform-control" id="toDateInput" value="2024-02-03">
-                </div>
-                <div class="col-3">
-                    <select class="form-select customform-control" id="roleSelect">
-                        @foreach(var role in Model.ListRole)
-                        {
-                            @if (role.Value.ToString().ToLower().Equals(AppConfig.CUSTOMERROLENAME.ToLower()))
-                            {
-                                <option selected value="@role.Key">@role.Value.ToString()</option>
 
-                            }
-                            else
-                            {
-                            <option value="@role.Key">@role.Value.ToString()</option>
-                            }
-                        }
-                    </select>
+                @* Employee *@
+                <div class="col-xl-4 col-md-12 mb-3">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="card-title widget-card-title mb-3">
+                                                Nhân viên
+                                            </h5>
+                                            <p>Số lượng: <label class="card-subtitle" id="totalEmp">10000</label></p>
+                                        </div>
+                                        <div class="col-6" style="height:150px">
+                                            <canvas id="chartEmp"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <button onclick="buttonFetch()" class="btn btn-primary customstyle-button" type="button">Thống kê</button>
+
+                @* Customer *@
+                <div class="col-xl-4 col-md-12 mb-3">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="card-title widget-card-title mb-3">
+                                                Khách hàng
+                                            </h5>
+                                            <p>Số lượng: <label class="card-subtitle" id="totalCustomer">10000</label></p>
+                                        </div>
+                                        <div class="col-6" style="height:150px">
+                                            <canvas id="chartCustomer"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Account All Role *@
+                <div class="col-xl-6 col-md-12 mb-3">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="card-title widget-card-title mb-3">Tổng số tài khoản</h5>
+                                            <p>Số lượng: <label class="card-subtitle" id="totalAccounts">10000</label></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <canvas id="chartAccount"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Tutor Status Statistic *@
+                <div class="col-xl-6 col-md-12 mb-3">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="card-title widget-card-title mb-3">Trạng thái các tài khoản gia sư</h5>
+                                        </div>
+                                        <div class="col-6">
+                                            <canvas id="chartTutorStatus"></canvas>
+                                        </div>
+                                        <div class="col-6">
+                                            <canvas id="chartTutorActive"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row col-12">
-            <div class="col-8 border-end mt-2">
-                <canvas id="myChart" class="me-2"></canvas>
+    </section>
+    <section>
+        <div class="container">
+            <h3>Thống kê tài khoản được tạo</h3>
+            <div class="row bg-light border-1">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-3">
+                            <select id="typeStatistic" class="form-select">
+                                <option selected value="this_week">Trong tuần này</option>
+                                <option value="this_month">Trong tháng này</option>
+                                <option value="custom">Chọn từ ngày</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <input type="date" class="form-control customform-control" id="fromDateInput">
+                        </div>
+                        <div class="col-3">
+                            <input type="date" class="form-control customform-control" id="toDateInput">
+                        </div>
+                        <div class="col-3">
+                            <button onclick="buttonFetch()" class="btn btn-primary customstyle-button" type="button">Thống kê</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-12">
+                    <div class="col-8 border-end mt-2">
+                        <canvas id="chartRegister" width="400" height="200"></canvas>
+                    </div>
+                    <div class="col-4 mt-4" id="statisticForChart">
+                        <p>Số tài khoản khách hàng được tạo: ${}</p>
+                        <p>Tài khoản khách hàng <br /> ${tăng} so với %{}%<span>{}%</span></p> 
+                        <hr />
+                        <p>Số tài khoản gia sư được tạo: ${}</p>
+                        <p>Tài khoản gia sư <br /> ${tăng} so với %{}%<span>{}%</span></p>
+                        <hr />
+                        <p>Số tài khoản nhân viên trong: ${}</p>
+                        <p>Tài khoản nhân viên <br /> ${tăng} so với %{}%<span>{}%</span></p>
+                    </div>
+                </div>
             </div>
-            <div class="col-4 mt-4">
-                <dl class="row">
-                    <dt class="col-8">Số lượng nhân viên:</dt>
-                    <dd class="col-4">@Model.TotalEmployee</dd>
-                    <dt class="col-8">Số lượng gia sư:</dt>
-                    <dd class="col-4">@Model.TotalTutor</dd>
-                    <dt class="col-8">Số lượng khách hàng:</dt>
-                    <dd class="col-4">@Model.TotalCustomer</dd>
-                </dl>
-            </div>
-            
         </div>
-    </div>
+    </section>
 </div>
 
 
 <script>
-    let oldChart;
-    let currentDate = new Date();
-    let previousMonthDate = new Date(currentDate);
-    previousMonthDate.setMonth(currentDate.getMonth() - 1);
+    //Init
+    const selectElement = document.getElementById('typeStatistic');
+    const fromDateInput = document.getElementById('fromDateInput');
+    const toDateInput = document.getElementById('toDateInput');
 
-    document.getElementById('toDateInput').value = currentDate.toISOString().slice(0, 10);
-    document.getElementById('fromDateInput').value = previousMonthDate.toISOString().slice(0, 10);
+    // Initially hide the input fields
+    fromDateInput.style.display = 'none';
+    toDateInput.style.display = 'none';
 
-    function buttonFetch() {
-        var fromDate = document.getElementById('fromDateInput').value; // Get value from fromDateInput
-        var toDate = document.getElementById('toDateInput').value; // Get value from toDateInput
-        var roleSelect = document.getElementById("roleSelect").value;
-        
-        fetchDataAndRenderChart(fromDate, toDate, roleSelect);
+    // Event listener for select change
+    selectElement.addEventListener('change', function () {
+        const selectedValue = this.value;
+        if (selectedValue === 'custom') {
+            // Show the input fields
+            fromDateInput.style.display = 'block';
+            toDateInput.style.display = 'block';
+        } else {
+            // Hide the input fields
+            fromDateInput.style.display = 'none';
+            toDateInput.style.display = 'none';
+        }
+    });
+
+    fetch(`/Statistic/GetAnalystForEachRole`, {
+        method: 'GET',
+        body: JSON.stringify(),
+        headers: { 'Content-Type': 'application/json' }
+    })
+        .then(response => response.json())
+        .then(data => {
+
+            // Use data (which should be the parsed JSON response)
+            var dataCustomer = JSON.parse(data.jsonCustomerStatisc);
+            var dataTutor = JSON.parse(data.jsonTutorStatisc);
+            var dataEmployee = JSON.parse(data.jsonEmployeeStatisc);
+            // Color background
+            var colorBGAccount = ['#46BFBD', '#F7464A'];
+            var colorBGHoverAccount = ['#5AD3D1', '#FF5A5E'];
+
+            //labels and data
+            var labelAccountSet = data => {
+                return data.labels.map(value => {
+                    if (value === 'False') {
+                        return 'Hợp lệ';
+                    } else {
+                        return 'Bị khóa';
+                    }
+                });
+            };
+
+            updateChartAndHtag("totalCustomer", "chartCustomer", dataCustomer.data, labelAccountSet(dataCustomer), dataCustomer.total, "this is title", colorBGAccount, colorBGHoverAccount, 'bottom');
+            updateChartAndHtag("totalTutor", "chartTutor", dataTutor.data, labelAccountSet(dataTutor), dataTutor.total, "this is title", colorBGAccount, colorBGHoverAccount, 'bottom');
+            updateChartAndHtag("totalEmp", "chartEmp", dataEmployee.data, labelAccountSet(dataEmployee), dataEmployee.total, "this is title", colorBGAccount, colorBGHoverAccount, 'bottom');
+
+            updateChartAndHtag("totalAccounts",
+                "chartAccount",
+                [dataTutor.total, dataCustomer.total, dataEmployee.total],
+                ["Gia sư", "Phụ huynh", "Nhân viên"],
+                dataTutor.total + dataCustomer.total + dataEmployee.total,
+                "This is title and Thuy Vy set it",
+                ['#20BDBE', '#FF9933', '#AA87FF'],
+                ['#42C7D9', '#FFB347', '#C3A0FF'],
+                'right'
+            );
+
+            var dataTutorStatus = JSON.parse(data.jsonTutorStatusStatisc);
+            // console.log(dataTutorStatus);
+            var labelTutorStatusSet = data => {
+                return data.labels.map(value => {
+                    if (value === 'pending') {
+                        return 'Đang chờ duyệt';
+                    } else if (value === 'deny') {
+                        return 'Bị từ chối';
+                    } else if (value === 'update') {
+                        return 'Chờ cập nhật';
+                    } else {
+                        return 'Được phê duyệt';
+                    }
+                });
+            };
+
+            updateChartAndHtag("",
+                "chartTutorStatus",
+                dataTutorStatus.data,
+                labelTutorStatusSet(dataTutorStatus),
+                0,
+                "This is title and Thuy Vy set it",
+                ['#A2C480', '#CEEBF3', '#F7464A', '#99D4FF'],
+                ['#C3D9A5', '#D9F2F7', '#FF5A5E', '#B3F0FF'],
+                'right'
+            );
+
+            var dataTutorActive = JSON.parse(data.jsonTutorActiveStatisc);
+            var labelTutorActiveSet = data => {
+                return data.labels.map(value => {
+                    if (value === 'True') {
+                        return 'Còn hoạt động';
+                    } else {
+                        return 'Dừng hoạt động';
+                    }
+                })
+            }
+            updateChartAndHtag("",
+                "chartTutorActive",
+                dataTutorActive.data,
+                labelTutorActiveSet(dataTutorActive),
+                0,
+                "This is title and Thuy Vy set it",
+                ['#F7464A', '#A2C480'],
+                ['#FF5A5E', '#C3D9A5'],
+                'right'
+            );
+
+        });
+
+    function updateChartAndHtag(idHtag, idChart, data, label, total, title, bgColor, bgHoverColor, position) {
+        // Update the h4 tag content
+        if (idHtag !== "") {
+            document.getElementById(idHtag).textContent = total;
+        }
+
+        // Prepare chart data with label conversion
+        const chartData = {
+            labels: label,
+            datasets: [{
+                data: data,
+                backgroundColor: bgColor,
+                hoverBackgroundColor: bgHoverColor
+            }]
+        };
+
+        // Create or update the chart
+        const ctx = document.getElementById(idChart).getContext('2d');
+        const existingChart = Chart.getChart(ctx);
+
+        if (existingChart) {
+            existingChart.data = chartData;
+            existingChart.update(); // Update existing chart with new data
+        } else {
+            const myChart = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: position,
+                        },
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    }
+                }
+            });
+        }
     }
+    let currentChart = null;
+    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    function fetchDataAndRenderChart(fromDate, toDate, roleSelect) {
-        
+    function getChartData(type, fromDate, toDate) {
         $.ajax({
             url: '/Statistic/GetAccountData',
             type: 'GET',
             data: {
-                roleId: roleSelect,
+                type: type,
                 fromDate: fromDate,
                 toDate: toDate
             },
-            success: function (dataFromServer) {
-                renderChartDay(dataFromServer);
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
+            success: function (data) {
+                const jsonData = JSON.parse(data.jsonRegisterStatisc);
+                // console.log(jsonData);
+                const roles = ['customer', 'employee', 'tutor'];
+                const colors = ['#ff6384', '#36a2eb', '#cc65fe'];
 
-    function renderChartDay(dataFromServer) {
-        // Extracting data for labels and values
-        var labels = dataFromServer.map(function (item) {
-            return item.type_date_year + '-' + item.type_date_month + '-' + item.type_date_day;
-        });
+                // CAR
+                const totalCustomers = document.getElementById("totalCustomer").textContent;
+                const totalTutors = document.getElementById("totalTutor").textContent;
+                const totalEmployee = document.getElementById("totalEmp").textContent;
 
-        var values = dataFromServer.map(function (item) {
-            return item.count_account;
-        });
+                const [customerRegisters, customerCAR] = calculateCARForRole(jsonData, totalCustomers, "customer");
+                const [tutorRegisters, tutorCAR] = calculateCARForRole(jsonData, totalTutors, "tutor");
+                const [employeeRegisters, employeeCAR] = calculateCARForRole(jsonData, totalEmployee, "employee");
 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        if (oldChart) {
-            oldChart.destroy();
-        }
+                // Tạo HTML với các giá trị được gán
+                const htmlTemplate = `
+                          <p>Tổng số tài khoản: ${customerRegisters}</p>
+                          <p>Tốc độ tăng trưởng khách hàng mới: ${customerCAR}%</p>
+                      <hr />
+                          <p>Tổng số tài khoản: ${tutorRegisters}</p>
+                          <p>Tốc độ tăng trưởng gia sư: ${tutorCAR}%</p>
+                      <hr />
+                          <p>Tổng số tài khoản: ${employeeRegisters}</p>
+                          <p>Tốc độ tăng trưởng nhân viên ${employeeCAR}%</p>
+                    `;
 
-        let selectedIndex = document.getElementById("roleSelect").selectedIndex;
-        let roleSelect = document.getElementById("roleSelect").options[selectedIndex].text;
+                // Get the div element
+                const statisticForChartDiv = document.getElementById("statisticForChart");
 
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: `${roleSelect} account created`,
-                    data: values,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                // Check if the div element exists
+                if (statisticForChartDiv) {
+                    // Clear the content inside the div
+                    statisticForChartDiv.innerHTML = '';
+
+                    // Set the HTML template as the content of the div
+                    statisticForChartDiv.innerHTML = htmlTemplate;
+                } else {
+                    console.log("Element with ID 'statisticForChart' not found.");
                 }
+
+                // let datasets = []; // Use let to allow reassignment
+                var histogramData = {};
+                if (type !== 'this_week') {
+                    histogramData = roles.map((role, index) => ({
+                        label: role,
+                        data: Object.keys(jsonData).map(date => jsonData[date][role] || 0),
+                        backgroundColor: colors[index],
+                        borderWidth: 1
+                    }));
+
+
+
+                } else {
+                    const weeklyData = new Map(); // Store weekly data separately
+                    daysOfWeek.forEach(day => {
+                        if (jsonData.hasOwnProperty(day)) {
+                            weeklyData.set(day, { "customer": jsonData[day].customer || 0, "employee": jsonData[day].employee || 0, "tutor": jsonData[day].tutor || 0 });
+                        } else {
+                            weeklyData.set(day, { "customer": 0, "employee": 0, "tutor": 0 });
+                        }
+                    });
+
+                    const mappedData = Array.from(weeklyData.values(), data => data || 0);
+
+                    histogramData = roles.map((role, index) => ({
+                        label: role,
+                        data: Array.from(weeklyData.values(), data => data[role] || 0),
+                        backgroundColor: colors[index],
+                        borderWidth: 1
+                    }));
+
+                }
+
+
+                function createChart() {
+
+                    if (currentChart != undefined) {
+                        currentChart.destroy();
+                    }
+                    console.log(`Label is ${daysOfWeek}\nData is ${histogramData}`);
+                    const ctx = document.getElementById('chartRegister').getContext('2d');
+                    currentChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: type !== 'this_week' ? Object.keys(jsonData) : daysOfWeek, // Use daysOfWeek for 'this_week' case
+                            datasets: histogramData // Use datasets for 'this_week' case
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Thuy Vy set'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks:
+                                    {
+                                        precision: 0,
+                                        stepSize: 1
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: true // Hide legend for 'this_week' case
+                            }
+                        }
+                    });
+                }
+
+                // Initial chart creation
+                createChart();
             }
         });
-        oldChart = myChart;
     }
+
+
+    function buttonFetch() {
+        const type = selectElement.value;
+        const fromDate = fromDateInput.value;
+        const toDate = toDateInput.value;
+
+        getChartData(type, fromDate, toDate);
+    }
+
     buttonFetch();
 
+    function calculateCARForRole(jsonData, totalClients, role) {
+        let acquisitionCount = 0;
+        for (const date in jsonData) {
+            if (jsonData.hasOwnProperty(date)) {
+                const entry = jsonData[date];
+                // Check if the role exists in the entry
+                if (role in entry) {
+                    acquisitionCount += 1;
+                }
+            }
+        }
+        const CAR = (acquisitionCount / totalClients) * 100;
+        return [
+            acquisitionCount,
+            CAR.toFixed(2)
+        ]; // Return CAR rounded to 2 decimal places
+    }
 </script>
