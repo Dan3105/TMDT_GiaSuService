@@ -230,5 +230,14 @@ namespace GiaSuService.Controllers
             return Ok(mess);
         }
         #endregion
+
+        #region Transaction List
+        [HttpGet]
+        public IActionResult TransactionList()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }

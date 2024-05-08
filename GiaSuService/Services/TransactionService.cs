@@ -100,5 +100,13 @@ namespace GiaSuService.Services
                 return new ResponseService { Message = "Format ngày không chính xác", Success = false };
             }
         }
+
+        public async Task<PageTransactionListViewModel> GetListTransaction(
+            AppConfig.TransactionFilterStatus payStatus,
+            AppConfig.TransactionFilterType transactionType,
+            int currPage)
+        {
+            return await _transactionRepo.GetListTransaction(payStatus, transactionType, currPage);
+        }
     }
 }

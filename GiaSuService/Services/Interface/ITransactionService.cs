@@ -11,5 +11,11 @@ namespace GiaSuService.Services.Interface
 
         public Task<ResponseService> UpdateDepositPaymentTransaction(int tutorId, int requestId, DateTime paymentDate);
         public Task<IEnumerable<TransactionDetailViewModel>> GetListTutorTransaction(int tutorId);
+
+
+        public Task<PageTransactionListViewModel> GetListTransaction(
+            AppConfig.TransactionFilterStatus payStatus,
+            AppConfig.TransactionFilterType transactionType,
+            int currPage);
     }
 }

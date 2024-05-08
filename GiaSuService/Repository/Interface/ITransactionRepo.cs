@@ -1,4 +1,5 @@
-﻿using GiaSuService.Models.UtilityViewModel;
+﻿using GiaSuService.Configs;
+using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Repository.Interface
 {
@@ -9,5 +10,11 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> UpdateDepositTransactionPaymentDate(int tutorId, int requestId, DateTime datetime);
 
         public Task<IEnumerable<TransactionDetailViewModel>> GetTransactionsTutor(int tutorid);
+
+
+        public Task<PageTransactionListViewModel> GetListTransaction(
+            AppConfig.TransactionFilterStatus payStatus,
+            AppConfig.TransactionFilterType transactionType, 
+            int currPage);
     }
 }

@@ -1,8 +1,11 @@
 ﻿
 using GiaSuService.AppDbContext;
 using GiaSuService.Configs;
+using GiaSuService.EntityModel;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace GiaSuService.Repository
@@ -143,5 +146,63 @@ namespace GiaSuService.Repository
                 return false;
             }
         }
+
+        public async Task<PageTransactionListViewModel> GetListTransaction(
+            AppConfig.TransactionFilterStatus payStatus,
+            AppConfig.TransactionFilterType transactionType,
+            int currPage)
+        {
+            var result = new PageTransactionListViewModel();
+
+            // Get list transaction
+            var query = _context.TransactionHistories
+                .AsNoTracking()
+                .Select(p => new
+                {
+                    Transaction = new TransactionCardViewModel
+                    {
+                        TransactionId = p.Id,
+                        CreateDate = p.CreateDate.ToString("HH:mm:ss dd/MM/yyyy"),
+                        Price = p.PaymentAmount,
+                        EmployeeName = p.Employee.FullName,
+                        TransactionType = (p.TypeTransaction ? AppConfig.TransactionFilterType.PAID.ToString() 
+                                                                : AppConfig.TransactionFilterType.REFUND.ToString()),
+                        PayStatus = p.PaymentDate != null ? AppConfig.TransactionFilterStatus.PAID.ToString() :
+                                                            AppConfig.TransactionFilterStatus.UNPAID.ToString(),
+                    },
+                    p.CreateDate,
+                    p.PaymentDate
+                })
+                .OrderByDescending(p => p.CreateDate)
+                .Select(p => p.Transaction)
+                ;
+
+            // Filter transaction status
+            if (payStatus == AppConfig.TransactionFilterStatus.PAID)
+            {
+                query = query.Where(p => p.PayStatus == AppConfig.TransactionFilterStatus.PAID.ToString());
+            }
+            else if (payStatus == AppConfig.TransactionFilterStatus.UNPAID)
+            {
+                query = query.Where(p => p.PayStatus == AppConfig.TransactionFilterStatus.UNPAID.ToString());
+            }
+
+            // Filter transaction type
+            if (transactionType == AppConfig.TransactionFilterType.PAID)
+            {
+                query = query.Where(p => p.TransactionType == AppConfig.TransactionFilterType.PAID.ToString());
+            }
+            else if (transactionType == AppConfig.TransactionFilterType.REFUND)
+            {
+                query = query.Where(p => p.TransactionType == AppConfig.TransactionFilterType.REFUND.ToString());
+            }
+
+            result.TotalElement = await query.CountAsync();
+            result.list = await query.Skip(currPage * AppConfig.ROWS_ACCOUNT_LIST)
+                        .Take(AppConfig.ROWS_ACCOUNT_LIST).ToListAsync();
+
+            return result;
+        }
+
     }
 }

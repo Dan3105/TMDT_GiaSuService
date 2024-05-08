@@ -46,6 +46,20 @@ namespace GiaSuService.Configs
             CANCEL,
         }
 
+        public enum TransactionFilterStatus
+        {
+            ALL,
+            PAID,
+            UNPAID,
+        }
+
+        public enum TransactionFilterType
+        {
+            ALL,
+            PAID,
+            REFUND,
+        }
+
         public enum UploadFileType
         {
             AVATAR,

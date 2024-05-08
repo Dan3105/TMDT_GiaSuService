@@ -31,4 +31,10 @@ namespace GiaSuService.Models.UtilityViewModel
         public int TotalElement;
     }
 
+
+    public class PageTransactionListViewModel
+    {
+        public List<TransactionCardViewModel> list = new List<TransactionCardViewModel>();
+        public int TotalElement;
+    }
 }

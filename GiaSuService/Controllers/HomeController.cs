@@ -1,8 +1,10 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Models;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Models.UtilityViewModel;
+using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +18,16 @@ namespace GiaSuService.Controllers
         private readonly ICatalogService _catalogService;
         private readonly IAddressService _addressService;
         private readonly ITutorRequestFormService _tutorRequestService;
+        private readonly ITransactionService _transactionService;
 
-        public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService, ITutorRequestFormService tutorRequestService)
+        public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService, 
+            ITutorRequestFormService tutorRequestService, ITransactionService transactionService)
         {
             _tutorService = tutorService;
             _catalogService = catalogService;
             _addressService = addressService;
             _tutorRequestService = tutorRequestService;
+            _transactionService = transactionService;
         }
 
         public IActionResult Index()
@@ -74,6 +79,30 @@ namespace GiaSuService.Controllers
             var queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page);
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries=queries.list, page, totalPages };
+            return Json(response);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetSubjects()
+        {
+            var obj = await _catalogService.GetAllSubjects();
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListTransaction(int payStatus = 0, int transactionType = 0, int page = 0)
+        {
+            AppConfig.TransactionFilterStatus status = (payStatus == 1 ? AppConfig.TransactionFilterStatus.PAID :
+                                                        (payStatus == 2 ? AppConfig.TransactionFilterStatus.UNPAID : AppConfig.TransactionFilterStatus.ALL));
+
+            AppConfig.TransactionFilterType type = (transactionType == 1 ? AppConfig.TransactionFilterType.PAID :
+                                                    (transactionType == 2 ? AppConfig.TransactionFilterType.REFUND : AppConfig.TransactionFilterType.ALL));
+
+
+            var queries = await _transactionService.GetListTransaction(status, type, page);
+            int totalPages = (int)Math.Ceiling((double)queries.TotalElement / (double)AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries = queries.list, page, totalPages };
             return Json(response);
         }
     }
