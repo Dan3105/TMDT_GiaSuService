@@ -5,7 +5,7 @@ namespace GiaSuService.Services.Interface
 {
     public interface IStatisticService
     {
-        public Task<DataTable?> GetAccountCreateStatistic(int roleId, DateOnly fromDate, DateOnly toDate);
+        public Task<AccountRegisterStatisticsViewModel?> GetAccountCreateStatistic(string type, DateOnly fromDate, DateOnly toDate);
         Task<AccountStatisticsViewModel?> GetStatisticAccount();
 
         Task<DataTable?> GetRequestCreated(DateOnly fromDate, DateOnly toDate);
