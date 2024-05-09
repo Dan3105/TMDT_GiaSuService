@@ -1,184 +1,312 @@
 ﻿@{
     ViewData["Title"] = "Thống kê đơn tìm gia sư";
 }
-<h1>Thống kê số đơn tìm gia sư</h1>
-<div>
-    <h3>Thông kê số đơn đã tạo</h3>
+@using GiaSuService.Models.UtilityViewModel;
+@model TutorRequestStatisticsViewModel;
+
+
+<div class="container">
     <div class="row">
         <div class="col-12">
-            <div class="row">
-                <div class="col-3">
-                    <span>Từ ngày: </span>
-                    <input type="date" class="form-control customform-control" id="fromDateInput" value="2024-01-03">
+            <section>
+                <h3>Thống kê đơn tìm gia sư</h3>
+                <div class="row">
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="card widget-card border-light shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center flex-column">
+                                    <p>
+                                        <b>Số đơn tìm gia sư đang chờ duyệt</b>
+                                    </p>
+                                    <label>@Model.TotalPending</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="card widget-card border-light shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center flex-column">
+                                    <p>
+                                        <b>Số đơn tìm gia sư  được chấp thuận</b>
+                                    </p>
+                                    <label>@Model.TotalApproval</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="card widget-card border-light shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center flex-column">
+                                    <p>
+                                        <b>Số đơn tìm gia sư bị từ chối</b>
+                                    </p>
+                                    <label>@Model.TotalDeny</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="card widget-card border-light shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center flex-column">
+                                    <p>
+                                        <b>Số đơn tìm gia sư đã giao</b>
+                                    </p>
+                                    <label>@Model.TotalHandover</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="card widget-card border-light shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center flex-column">
+                                    <p>
+                                        <b>Số đơn tìm gia sư đã bị hủy</b>
+                                    </p>
+                                    <label>@Model.TotalCancel</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="card widget-card border-light shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center flex-column">
+                                    <p>
+                                        <b>Số đơn tìm gia sư đã hết hạn</b>
+                                    </p>
+                                    <label>@Model.TotalExpired</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <span>Đến ngày: </span>
-                    <input type="date" class="form-control customform-control" id="toDateInput" value="2024-02-03">
-                </div>
-                <div class="col-3">
-                    <span>Top môn học: </span>
-                    <select class="form-select customform-control" id="topKSelect">
-                        <option selected value="3">3</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                    </select>
-                </div>
-                <div class="col-3">
-                    <button onclick="fetchDataAndRenderChart()" class="btn btn-primary mt-3 customstyle-button" type="button">Thống kê</button>
-                </div>
-            </div>
+            </section>
         </div>
-        <div class="row col-12">
-            <div class="col-7 border-end mt-2">
-                <canvas id="myChart" class="me-2"></canvas>
-            </div>
-            <div class="col-5 mt-4">
-                <h6>Thống kê đơn</h6>
-                <span id="spanRequestStatistic">Thống kê đơn</span>
-                <dl id="statisRequestInformation" class="row mt-2">
-                    <dt class="col-8">Số lượng đơn được tạo:</dt>
-                    <dd class="col-4"></dd>
-                    <dt class="col-8">Số lượng đơn đã chấp thuận:</dt>
-                    <dd class="col-4"></dd>
-                    <dt class="col-8">Số lượng đơn đã giao:</dt>
-                    <dd class="col-4"></dd>
-                    <dt class="col-8">Số lượng đơn đã từ chối:</dt>
-                    <dd class="col-4"></dd>
-                    <dt class="col-8">Số lượng đơn đã hủy:</dt>
-                    <dd class="col-4"></dd>
-                </dl>
+        <div class="col-12">
+            <h3>Biểu đồ thống kê số đơn được tạo</h3>
+            <div class="col-12 mb-2">
+                <div class="row">
+                    <div class="col-12 mb-3 row">
+                        <div class="col-3">
+                            <select id="typeStatistic" class="form-select">
+                                <option value="this_week">Trong tuần này</option>
+                                <option selected value="this_month">Trong tháng này</option>
+                                <option value="custom">Chọn từ ngày</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <input type="date" class="form-control customform-control" id="fromDateInput">
+                        </div>
+                        <div class="col-3">
+                            <input type="date" class="form-control customform-control" id="toDateInput">
+                        </div>
+                        <div class="col-3">
+                            <button onclick="buttonFetch()" class="btn btn-primary customstyle-button" type="button">Thống kê</button>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-6 col-sm-12 d-flex flex-column align-items-center">
+                        <h5>Biểu đồ số đơn tìm gia sư được tạo</h5>
+                        <label id="totalQuery">(Tổng số đơn: 0)</label>
+                        <canvas id="chartCreateRequest" width="400" height="200"></canvas>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <h5>Tổng quan trạng thái các đơn tìm</h5>
+                        <canvas id="chartStatusRequest" width="300" height="300"></canvas>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <h5>Biểu đồ các môn học được chọn nhiều nhất</h5>
+                        <canvas id="chartTopSubject" width="300" height="300">
+                            
+                        </canvas>
+                        
+                    </div>
+                </div>
+
             </div>
 
         </div>
-        <div class="row mt-3">
-            <div class="col-lg-8">
-                <div id="topKPopularh">Top K Popular Subject</div>
-                <canvas id="orderChart"></canvas>
-            </div>
-        </div>
-
     </div>
 </div>
 
-
 <script>
-    let oldChart;
-    let currentDate = new Date();
-    let previousMonthDate = new Date(currentDate);
-    previousMonthDate.setMonth(currentDate.getMonth() - 1);
+    //Init
+    const selectElement = document.getElementById('typeStatistic');
+    const fromDateInput = document.getElementById('fromDateInput');
+    const toDateInput = document.getElementById('toDateInput');
 
-    document.getElementById('toDateInput').value = currentDate.toISOString().slice(0, 10);
-    document.getElementById('fromDateInput').value = previousMonthDate.toISOString().slice(0, 10);
+    // Initially hide the input fields
+    fromDateInput.style.display = 'none';
+    toDateInput.style.display = 'none';
 
-    function fetchDataAndRenderChart() {
-        var fromDate = document.getElementById('fromDateInput').value; // Get value from fromDateInput
-        var toDate = document.getElementById('toDateInput').value; // Get value from toDateInput
-        var topK = document.getElementById('topKSelect').value;
+    // Event listener for select change
+    selectElement.addEventListener('change', function () {
+        const selectedValue = this.value;
+        if (selectedValue === 'custom') {
+            // Show the input fields
+            fromDateInput.style.display = 'block';
+            toDateInput.style.display = 'block';
+        } else {
+            // Hide the input fields
+            fromDateInput.style.display = 'none';
+            toDateInput.style.display = 'none';
+        }
+    });
+
+    buttonFetch();
+    function buttonFetch() {
+        const type = selectElement.value;
+        const fromDate = fromDateInput.value;
+        const toDate = toDateInput.value;
+
         $.ajax({
-            url: '/Statistic/GetSubjectStatistic',
+            url: '/Statistic/StatisticTutorRequestCreate',
             type: 'GET',
             data: {
+                type: type,
                 fromDate: fromDate,
-                toDate: toDate,
-                topK: topK
+                toDate: toDate
             },
-            success: function (dataFromServer) {
-                document.getElementById('spanRequestStatistic').innerHTML =
-                    `Từ ngày ${fromDate} đến ngày ${toDate}`;
-                let statistic = dataFromServer.statis;
-                document.getElementById('statisRequestInformation').innerHTML = 
-                `
-                        <dt class="col-8">Số lượng đơn được tạo:</dt>
-                            <dd class="col-4">${statistic.totalCreated}</dd>
-                        <dt class="col-8">Số lượng đơn đang chờ duyệt:</dt>
-                            <dd class="col-4">${statistic.totalPending}</dd>
-                        <dt class="col-8">Số lượng đơn đã phê duyệt:</dt>
-                            <dd class="col-4">${statistic.totalApproval}</dd>
-                        <dt class="col-8">Số lượng đơn đã từ chối:</dt>
-                                <dd class="col-4">${statistic.totalDeny}</dd>
-                        <dt class="col-8">Số lượng đơn đã giao:</dt>
-                                <dd class="col-4">${statistic.totalHandover}</dd>
-                        <dt class="col-8">Số lượng đơn đã hủy:</dt>
-                            <dd class="col-4">${statistic.totalCancel}</dd>
-                `
-                ;
-                document.getElementById('topKPopularh').innerHTML = `<h3>Top ${topK} môn học được chọn</h3><br>
-                                                                        <span>Từ ${fromDate} đến ${toDate}</span>`
-                
-                renderChartDay(dataFromServer.chart);
-                renderHistogram(dataFromServer.statis);
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
+            success: function (data) {
+                let dataTutorRequest = JSON.parse(data.jsonTutorRequestCreate);
+                let dataTutorRequestStatus = JSON.parse(data.jsonTutorRequestStatus);
+                let dataTutorRequestSubject = JSON.parse(data.jsonTutorRequestSubject);
 
-    function renderChartDay(dataFromServer) {
-        // Extracting data for labels and values
-        var labels = dataFromServer.map(function (item) {
-            return item.type_date_year + '-' + item.type_date_month + '-' + item.type_date_day;
-        });
+                const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-        var values = dataFromServer.map(function (item) {
-            return item.count_request;
-        });
+                function generateLineChart(data, idChart, label = null) {
+                    const dates = Object.keys(data);
+                    const counts = Object.values(data);
 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        if (oldChart) {
-            oldChart.destroy();
-        }
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Số đơn đã tạo',
-                    data: values,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                    const ctx = document.getElementById(idChart).getContext('2d');
+                    const existingChart = Chart.getChart(ctx);
+                    if (existingChart) {
+                        existingChart.destroy();
                     }
-                }
-            }
-        });
-        oldChart = myChart;
-    }
-    function renderHistogram(dataFromServer) {
-        const gradeNames = Object.keys(dataFromServer.topKPopular);
-        const counts = Object.values(dataFromServer.topKPopular);
-
-        // Create a bar chart
-        new Chart(document.getElementById('orderChart'), {
-            type: 'bar',
-            data: {
-                labels: gradeNames,
-                datasets: [{
-                    label: 'Số khối',
-                    data: counts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1,
-                    barPercentage: 0.5,
-                    categoryPercentage: 0.5 
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
+                    const myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: label ? label : dates,
+                            datasets: [{
+                                data: counts,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false // Hide the legend
+                                },
+                                title: {
+                                    display: false,
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks:
+                                    {
+                                        precision: 0,
+                                        stepSize: 1
+                                    }
+                                }
+                            }
                         }
-                    }]
+                    });
                 }
+
+                const colors = ['#003f5c', '#2f4b7c', '#665191', '#a05195', '#d45087', '#f95d6a', '#ff7c43', '#ffa600'];
+
+                function drawPieChart(data, canvasId, maxItems = 5) {
+                    if (Object.keys(data).length === 0) {
+                        const canvas = document.getElementById(canvasId);
+                        canvas.style.display = 'none'; // Hide canvas element
+                        const label = document.createElement('label');
+                        label.classList.add('text-danger', 'text-center');
+                        label.textContent = "Biểu đồ không có vì không có đơn nào được tạo";
+                        canvas.parentNode.replaceChild(label, canvas);
+                        return; // Exit the function
+                    }
+
+                    const labels = Object.keys(data);
+                    const values = Object.values(data);
+                    // console.log(labels, values);
+                    // Sort data by values in descending order
+                    const sortedData = labels.map((label, index) => ({ label, value: values[index] }))
+                        .sort((a, b) => b.value - a.value);
+
+                    // If there are more than maxItems, aggregate the rest into 'Other' category
+                    const otherSum = sortedData.slice(maxItems)
+                        .reduce((acc, curr) => acc + curr.value, 0);
+
+                    const topData = sortedData.slice(0, maxItems);
+                    if (otherSum > 0) {
+                        topData.push({ label: 'Other', value: otherSum });
+                    }
+
+                    const topLabels = topData.map(item => item.label);
+                    const topValues = topData.map(item => item.value);
+
+                    const ctx = document.getElementById(canvasId).getContext('2d');
+                    const existingChart = Chart.getChart(ctx);
+
+                    if (existingChart) {
+                        existingChart.destroy(); // Update existing chart with new data
+                    }
+                    const myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: topLabels,
+                            datasets: [{
+                                data: topValues,
+                                backgroundColor: colors.slice(0, topLabels.length),
+                                borderColor: 'rgba(255, 255, 255, 1)', // Border color for each slice
+                                borderWidth: 0.6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                }
+                            }
+                        }
+                    });
+
+
+                }
+                
+                //Calculate total
+                const total = Object.values(dataTutorRequest).reduce((acc, crr) => acc += crr, 0);
+                document.getElementById('totalQuery').innerHTML = `(Tổng số đơn được tạo: ${total})`;
+                
+                //Draw Line Chart and Pie Chart
+                if (type === "this_week") {
+                    let chartData = new Map();
+                    daysOfWeek.forEach(p => {
+                        chartData.set(p, dataTutorRequest.hasOwnProperty(p) ? dataTutorRequest[p] : 0);
+                    });
+                    generateLineChart(chartData, 'chartCreateRequest', daysOfWeek);
+                }
+                else {
+                    generateLineChart(dataTutorRequest, 'chartCreateRequest');
+                }
+
+                console.log(dataTutorRequestStatus);
+                drawPieChart(dataTutorRequestStatus, 'chartStatusRequest', 6);
+                drawPieChart(dataTutorRequestSubject, 'chartTopSubject', 5);
             }
         });
     }
-    fetchDataAndRenderChart();
+
+
 </script>

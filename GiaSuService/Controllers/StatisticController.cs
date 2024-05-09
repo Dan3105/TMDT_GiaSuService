@@ -1,6 +1,7 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
 using GiaSuService.Models.UtilityViewModel;
+using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,16 +56,6 @@ namespace GiaSuService.Controllers
                 {
                     throw new ArgumentNullException();
                 }
-                //var data = new List<Dictionary<string, object>>();
-                //foreach (DataRow row in dataTable.Rows)
-                //{
-                //    var dict = new Dictionary<string, object>();
-                //    foreach (DataColumn col in dataTable.Columns)
-                //    {
-                //        dict[col.ColumnName] = row[col];
-                //    }
-                //    data.Add(dict);
-                //}
 
                 return Json(data);
             }
@@ -81,7 +72,7 @@ namespace GiaSuService.Controllers
             {
                 DateOnly fromDateParse = DateOnly.Parse(fromDate);
                 DateOnly toDateParse = DateOnly.Parse(toDate);
-                DataTable? dataTable = await _statisticService.GetRequestCreated(fromDateParse, toDateParse);
+                DataTable? dataTable = null; //await _statisticService.GetRequestCreated(fromDateParse, toDateParse);
                 if (dataTable == null)
                 {
                     throw new ArgumentNullException();
@@ -97,7 +88,7 @@ namespace GiaSuService.Controllers
                     data.Add(dict);
                 }
 
-                TutorRequestStatisticsViewModel statisticsRequest = await _statisticService.GetStatisticRequest(fromDateParse, toDateParse, topK);
+                TutorRequestStatisticsViewModel statisticsRequest = await _statisticService.GetStatisticRequest();
                 
                 return Json(new {chart=data, statis=statisticsRequest});
             }
@@ -108,9 +99,39 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatisticTutorRequest()
+        public async Task<IActionResult> StatisticTutorRequest()
         {
-            return View();
+            TutorRequestStatisticsViewModel viewModel = await _statisticService.GetStatisticRequest();
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> StatisticTutorRequestCreate(string type, string fromDate, string toDate)
+        {
+            try
+            {
+                TutorRequestStatisticCreateViewModel? data = null;
+                if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+                {
+                    DateOnly fromDateParse = DateOnly.Parse(fromDate);
+                    DateOnly toDateParse = DateOnly.Parse(toDate);
+                    data = await _statisticService.GetRequestCreated(type, fromDateParse, toDateParse);
+                }
+                else
+                {
+                    data = await _statisticService.GetRequestCreated(type, DateOnly.MinValue, DateOnly.MinValue);
+                }
+                if (data == null)
+                {
+                    throw new ArgumentNullException();
+                }
+
+                return Json(data);
+            }
+            catch
+            {
+                return StatusCode(500, "Lỗi hệ thống");
+            }
         }
 
         [HttpGet]

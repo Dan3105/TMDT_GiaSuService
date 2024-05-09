@@ -4,6 +4,7 @@ using GiaSuService.EntityModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Npgsql;
@@ -42,7 +43,7 @@ namespace GiaSuService.Repository
                 if (typeDate == "this_month")
                 {
                     var get_month = DateAndTime.Month(DateTime.Now);
-                    var get_year = DateAndTime.Month(DateTime.Now);
+                    var get_year = DateAndTime.Year(DateTime.Now);
                     DateTime start_date = new DateTime(get_year, get_month, 1);
                     DateTime next_date = new DateTime(get_year, get_month + 1, 1).AddDays(-1);
 
@@ -229,67 +230,210 @@ namespace GiaSuService.Repository
             return statistic;
         }
 
-        public async Task<DataTable?> QueryStatisticRequestsCreate(DateOnly fromDate, DateOnly toDate)
+        public async Task<TutorRequestStatisticsViewModel> QueryStatisticRequests()
         {
-            try
-            {
-                DataTable dataTable = new DataTable();
-                //string connString = "Host=myserver;Port=5432;Username=myuser;Password=mypass;Database=mydatabase;";
-                string? connString = _configuration.GetConnectionString(AppConfig.connection_string);
-                if (connString == null)
-                {
-                    throw new InvalidOperationException();
-                }
-                string query = $"select * from get_requests('{fromDate}', '{toDate}')";
-
-                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-                    using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn))
-                    {
-                        await Task.Run(() => da.Fill(dataTable));
-                    }
-                }
-
-                return dataTable;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public async Task<TutorRequestStatisticsViewModel> QueryStatisticRequests(DateOnly fromDate, DateOnly toDate, int topK)
-        {
-
-            var queryable = _context.RequestTutorForms
-                .Select(p => new { p.CreateDate, p.Status.Name, p.Status.Id, SubjectName = p.Subject.Name })
-                .Where(p => p.CreateDate >= new DateTime(fromDate.Year, fromDate.Month, fromDate.Day)
-                                                         && p.CreateDate <= new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59));
-            var result = new TutorRequestStatisticsViewModel();
-            result.TotalCreated = await queryable.CountAsync();
-            result.TotalPending = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.PENDING.ToString().ToLower())).CountAsync();
-            result.TotalApproval = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.APPROVAL.ToString().ToLower())).CountAsync();
-            result.TotalDeny = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.DENY.ToString().ToLower())).CountAsync();
-            result.TotalHandover = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.HANDOVER.ToString().ToLower())).CountAsync();
-            result.TotalCancel = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.CANCEL.ToString().ToLower())).CountAsync();
 
             try
             {
-                var resultList = await queryable.ToListAsync();
-                result.TopKPopular = resultList
-                                        .GroupBy(p => p.SubjectName)
-                                        .OrderByDescending(p => p.Count())
-                                        .Take(topK)
-                                        .ToDictionary(p => p.Key, g => g.Count());
+                var queryable = _context.RequestTutorForms
+                    .Select(p => new { p.CreateDate, p.ExpiredDate, p.Status.Name, p.Status.Id, SubjectName = p.Subject.Name });
+               
+                var result = new TutorRequestStatisticsViewModel();
+                //result.TotalCreated = await queryable.CountAsync();
+                result.TotalPending = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.PENDING.ToString().ToLower()) && p.ExpiredDate > DateTime.Now).CountAsync();
+                result.TotalApproval = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.APPROVAL.ToString().ToLower())).CountAsync();
+                result.TotalDeny = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.DENY.ToString().ToLower())).CountAsync();
+                result.TotalHandover = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.HANDOVER.ToString().ToLower())).CountAsync();
+                result.TotalCancel = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.CANCEL.ToString().ToLower())).CountAsync();
+                result.TotalExpired = await queryable.Where(p => p.Name.Equals(AppConfig.FormStatus.APPROVAL.ToString().ToLower()) && p.ExpiredDate <= DateTime.Now).CountAsync();
 
+                return result;
             }
             catch (Exception)
             {
-
+                return new TutorRequestStatisticsViewModel();
             }
 
-            return result;
+        }
+
+        public async Task<TutorRequestStatisticCreateViewModel?> QueryStatisticRequestsCreate(string type, DateOnly from, DateOnly to)
+        {
+            try
+            {
+                TutorRequestStatisticCreateViewModel result = new TutorRequestStatisticCreateViewModel();
+                var query = _context.RequestTutorForms.Select(p => new { p.CreateDate, StatusName=p.Status.Name, p.ExpiredDate, 
+                                                    SubjectName=p.Subject.Name});
+
+                if (type == "this_month")
+                {
+                    var get_month = DateAndTime.Month(DateTime.Now);
+                    var get_year = DateAndTime.Year(DateTime.Now);
+                    DateTime start_date = new DateTime(get_year, get_month, 1);
+                    DateTime next_date = new DateTime(get_year, get_month + 1, 1).AddDays(-1);
+
+                    var queryThisMonth = query
+                                            .Where(p => p.CreateDate >= start_date && p.CreateDate <= next_date);
+
+                    var requestCreate = await queryThisMonth
+                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new
+                                            {
+                                                CreatedDate = p.Key,
+                                                Count = p.Count(),
+                                            })
+                                            .ToDictionaryAsync(
+                                                p => p.CreatedDate,
+                                                p => p.Count
+                                            );
+
+                    var requestStatus = await queryThisMonth
+                                            .Select(p => new { p.StatusName }).GroupBy(p => p.StatusName)
+                                            .Select(p => new
+                                            {
+                                                StatusName = p.Key,
+                                                Count = p.Count()
+                                            }).ToDictionaryAsync(
+                                                p => p.StatusName,
+                                                p => p.Count
+                                            );
+
+                    var requestSubject = await queryThisMonth
+                                              .Select(p => new { p.SubjectName }).GroupBy(p => p.SubjectName)
+                                                .Select(p => new
+                                                {
+                                                    SubjectName = p.Key,
+                                                    Count = p.Count()
+                                                }).ToDictionaryAsync(
+                                                    p => p.SubjectName,
+                                                    p => p.Count
+                                                );
+                    result.jsonTutorRequestCreate = JsonConvert.SerializeObject(requestCreate);
+                    result.jsonTutorRequestStatus = JsonConvert.SerializeObject(requestStatus);
+                    result.jsonTutorRequestSubject = JsonConvert.SerializeObject(requestSubject);
+                    return result;
+                }
+
+                if (type == "this_week")
+                {
+                    var get_week = DateAndTime.Weekday(DateTime.Now); //Min: 0, Max: 6
+                    var diff_date_start = DateTime.Now.AddDays(-get_week + 1); // 4: -> 5
+                    var diff_date_end = DateTime.Now.AddDays(6 - get_week); // 
+
+                    var start_date = diff_date_start;
+                    var end_date = diff_date_end.AddDays(1).AddSeconds(-1);
+                    var queryThisMonth = query
+                                            .Where(p => p.CreateDate >= start_date && p.CreateDate <= end_date);
+
+                    var requestCreate = await queryThisMonth
+                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new
+                                            {
+                                                CreatedDate = p.Key,
+                                                Count = p.Count(),
+                                            })
+                                            .ToDictionaryAsync(
+                                                p => p.CreatedDate,
+                                                p => p.Count
+                                            );
+
+                    var requestStatus = await queryThisMonth
+                                            .Select(p => new { p.StatusName }).GroupBy(p => p.StatusName)
+                                            .Select(p => new
+                                            {
+                                                StatusName = p.Key,
+                                                Count = p.Count()
+                                            }).ToDictionaryAsync(
+                                                p => p.StatusName,
+                                                p => p.Count
+                                            );
+
+                    var requestSubject = await queryThisMonth
+                                              .Select(p => new { p.SubjectName }).GroupBy(p => p.SubjectName)
+                                                .Select(p => new
+                                                {
+                                                    SubjectName = p.Key,
+                                                    Count = p.Count()
+                                                }).ToDictionaryAsync(
+                                                    p => p.SubjectName,
+                                                    p => p.Count
+                                                );
+                    
+                    // Map day of the week to its name
+                    var dayOfWeekNames = new Dictionary<int, string>
+                    {
+                        { 0, "Sunday" },
+                        { 1, "Monday" },
+                        { 2, "Tuesday" },
+                        { 3, "Wednesday" },
+                        { 4, "Thursday" },
+                        { 5, "Friday" },
+                        { 6, "Saturday" }
+                    };
+
+                    var registerWithWeekDayName = requestCreate
+                        .ToDictionary(
+                            kvp => dayOfWeekNames[(int)kvp.Key.DayOfWeek],
+                            kvp => kvp.Value
+                        );
+
+                    result.jsonTutorRequestCreate = JsonConvert.SerializeObject(registerWithWeekDayName);
+                    result.jsonTutorRequestStatus = JsonConvert.SerializeObject(requestStatus);
+                    result.jsonTutorRequestSubject = JsonConvert.SerializeObject(requestSubject);
+                    //result.jsonTutorCreate = JsonConvert.SerializeObject(registerWithWeekDayName);
+                    return result;
+                }
+
+                if (type == "custom")
+                {
+                    var start_fromDate = new DateTime(from.Year, from.Month, from.Day);
+                    var next_toDate = new DateTime(to.Year, to.Month, to.Day, 23, 59, 59);
+                    var queryCustom = query
+                                        .Where(p => p.CreateDate >= start_fromDate && p.CreateDate <= next_toDate);
+
+                    var requestCreate = await queryCustom
+                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new
+                                            {
+                                                CreatedDate = p.Key,
+                                                Count = p.Count(),
+                                            })
+                                            .ToDictionaryAsync(
+                                                p => p.CreatedDate,
+                                                p => p.Count
+                                            );
+
+                    var requestStatus = await queryCustom
+                                            .Select(p => new { p.StatusName }).GroupBy(p => p.StatusName)
+                                            .Select(p => new
+                                            {
+                                                StatusName = p.Key,
+                                                Count = p.Count()
+                                            }).ToDictionaryAsync(
+                                                p => p.StatusName,
+                                                p => p.Count
+                                            );
+
+                    var requestSubject = await queryCustom
+                                              .Select(p => new { p.SubjectName }).GroupBy(p => p.SubjectName)
+                                                .Select(p => new
+                                                {
+                                                    SubjectName = p.Key,
+                                                    Count = p.Count()
+                                                }).ToDictionaryAsync(
+                                                    p => p.SubjectName,
+                                                    p => p.Count
+                                                );
+                    result.jsonTutorRequestCreate = JsonConvert.SerializeObject(requestCreate);
+                    result.jsonTutorRequestStatus = JsonConvert.SerializeObject(requestStatus);
+                    result.jsonTutorRequestSubject = JsonConvert.SerializeObject(requestSubject);
+                    return result;
+                }
+            }
+            catch
+            {
+
+            }
+            return null;
         }
 
         public async Task<TransactionStatisticsViewModel> QueryStatisticTransactions(DateOnly fromDate, DateOnly toDate)

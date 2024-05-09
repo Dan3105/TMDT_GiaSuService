@@ -2,13 +2,18 @@
 {
     public class TutorRequestStatisticsViewModel
     {
-        public int TotalCreated { get; set; }
+        public int TotalExpired { get; set; } = 0;
         public int TotalPending { get; set; } = 0;
         public int TotalApproval { get; set; } = 0;
         public int TotalDeny { get; set; } = 0;
         public int TotalHandover { get; set; } = 0;
         public int TotalCancel { get; set; } = 0;
+    }
 
-        public Dictionary<string, int> TopKPopular { get; set; } = new Dictionary<string, int>();
+    public class TutorRequestStatisticCreateViewModel
+    {
+        public string jsonTutorRequestCreate { get; set; } = string.Empty;
+        public string jsonTutorRequestStatus { get; set; } = string.Empty;
+        public string jsonTutorRequestSubject { get; set; } = string.Empty;
     }
 }

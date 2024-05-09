@@ -7,8 +7,10 @@ namespace GiaSuService.Repository.Interface
     {
         public Task<AccountStatisticsViewModel?> GetAccountsCount(); 
         public Task<AccountRegisterStatisticsViewModel?> QueryStatisticAccount(string typeDate, DateOnly fromDate, DateOnly toDate);
-        Task<DataTable?> QueryStatisticRequestsCreate(DateOnly fromDate, DateOnly toDate);
-        Task<TutorRequestStatisticsViewModel> QueryStatisticRequests(DateOnly fromDate, DateOnly toDate, int topK);
+
+        Task<TutorRequestStatisticCreateViewModel?> QueryStatisticRequestsCreate(string type, DateOnly from, DateOnly to);
+        Task<TutorRequestStatisticsViewModel> QueryStatisticRequests();
+        
         Task<TransactionStatisticsViewModel> QueryStatisticTransactions(DateOnly fromDate, DateOnly toDate);
         Task<DataTable?> QueryChartDataTransactions(DateOnly fromDate, DateOnly toDate);
     }

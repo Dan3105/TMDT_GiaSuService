@@ -26,14 +26,14 @@ namespace GiaSuService.Services
             return await _statisticRepo.GetAccountsCount();
         }
 
-        public async Task<DataTable?> GetRequestCreated(DateOnly fromDate, DateOnly toDate)
+        public async Task<TutorRequestStatisticCreateViewModel?> GetRequestCreated(string type, DateOnly fromDate, DateOnly toDate)
         {
-            return await _statisticRepo.QueryStatisticRequestsCreate(fromDate, toDate);
+            return await _statisticRepo.QueryStatisticRequestsCreate(type, fromDate, toDate);
         }
 
-        public async Task<TutorRequestStatisticsViewModel> GetStatisticRequest(DateOnly fromDate, DateOnly toDate, int topK)
+        public async Task<TutorRequestStatisticsViewModel> GetStatisticRequest()
         {
-            var result = await _statisticRepo.QueryStatisticRequests(fromDate, toDate, topK);
+            var result = await _statisticRepo.QueryStatisticRequests();
             return result;
         }
 

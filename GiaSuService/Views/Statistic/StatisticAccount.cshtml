@@ -280,7 +280,7 @@
                 ['#FF5A5E', '#C3D9A5'],
                 'right'
             );
-
+            buttonFetch();
         });
 
     function updateChartAndHtag(idHtag, idChart, data, label, total, title, bgColor, bgHoverColor, position) {
@@ -325,7 +325,6 @@
             });
         }
     }
-    let currentChart = null;
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     function getChartData(type, fromDate, toDate) {
@@ -378,7 +377,6 @@
                     console.log("Element with ID 'statisticForChart' not found.");
                 }
 
-                // let datasets = []; // Use let to allow reassignment
                 var histogramData = {};
                 if (type !== 'this_week') {
                     histogramData = roles.map((role, index) => ({
@@ -414,12 +412,14 @@
 
                 function createChart() {
 
-                    if (currentChart != undefined) {
-                        currentChart.destroy();
-                    }
                     console.log(`Label is ${daysOfWeek}\nData is ${histogramData}`);
                     const ctx = document.getElementById('chartRegister').getContext('2d');
-                    currentChart = new Chart(ctx, {
+                    const existingChart = Chart.getChart(ctx);
+
+                    if (existingChart) {
+                        existingChart.destroy(); // Update existing chart with new data
+                    }
+                    const currentChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: type !== 'this_week' ? Object.keys(jsonData) : daysOfWeek, // Use daysOfWeek for 'this_week' case
@@ -464,7 +464,6 @@
         getChartData(type, fromDate, toDate);
     }
 
-    buttonFetch();
 
     function calculateCARForRole(jsonData, totalClients, role) {
         let acquisitionCount = 0;
@@ -473,6 +472,8 @@
                 const entry = jsonData[date];
                 // Check if the role exists in the entry
                 if (role in entry) {
+                    console.log(role);
+                    //check entry count not this shit
                     acquisitionCount += 1;
                 }
             }
