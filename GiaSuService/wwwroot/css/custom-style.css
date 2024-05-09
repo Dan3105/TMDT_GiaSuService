@@ -90,7 +90,7 @@ div.form-group {
     background-color: #A85295;
     border: none;
     color: white;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 }
 
 .customstyle-button:hover {
