@@ -1,11 +1,13 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.UtilityViewModel;
 
 namespace GiaSuService.Services.Interface
 {
     public interface ICatalogService
     {
+        Task<List<StatusNamePair>> GetAllStatus(string statusType);
         Task<List<TutorTypeViewModel>> GetAllTutorType();
 
         // CRUD operations for Sessions

@@ -106,7 +106,7 @@ namespace GiaSuService.Repository
                     FullNameRequester = p.Customer.FullName,
                     AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.AdditionalDetail}",
                     CreatedDate = p.CreateDate,
-                    CurrentStatus = p.Status.Name.ToString(),
+                    CurrentStatus = p.Status.VietnameseName.ToString(),
                     ExpiredDate = p.CreateDate,
                     GradeName = p.Grade.Name,
                     SubjectName = p.Subject.Name,

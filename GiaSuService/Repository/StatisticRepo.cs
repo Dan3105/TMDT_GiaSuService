@@ -211,11 +211,11 @@ namespace GiaSuService.Repository
             });
 
             var queryTutorStatus = _context.Tutors
-                .Select(p => new { p.IsActive, p.Status.Name });
-            var queryTutorStatusAccount = queryTutorStatus.GroupBy(p => p.Name);
+                .Select(p => new { p.IsActive, p.Status.VietnameseName, p.Status.Name });
+            var queryTutorStatusAccount = queryTutorStatus.GroupBy(p => p.VietnameseName);
             statistic.jsonTutorStatusStatisc = JsonConvert.SerializeObject(new StatisticViewModel
             {
-                labels = await queryTutorStatusAccount.Select(g => g.Key.ToString()).ToListAsync(),
+                labels = await queryTutorStatusAccount.Select(g => g.Key).ToListAsync(),
                 data = await queryTutorStatusAccount.Select(g => g.Count()).ToListAsync()
             });
 
@@ -261,7 +261,7 @@ namespace GiaSuService.Repository
             try
             {
                 TutorRequestStatisticCreateViewModel result = new TutorRequestStatisticCreateViewModel();
-                var query = _context.RequestTutorForms.Select(p => new { p.CreateDate, StatusName=p.Status.Name, p.ExpiredDate, 
+                var query = _context.RequestTutorForms.Select(p => new { p.CreateDate, StatusName=p.Status.VietnameseName, p.ExpiredDate, 
                                                     SubjectName=p.Subject.Name});
 
                 if (type == "this_month")

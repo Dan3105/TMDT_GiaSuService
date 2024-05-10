@@ -310,9 +310,11 @@ namespace GiaSuService.Controllers
         public async Task<IActionResult> GetTutorsOnQueue(int requestId)
         {
             IEnumerable<TutorApplyRequestQueueViewModel> queries = await _tutorRequestFormService.GetTutorsApplyRequestQueue(requestId);
+            List<StatusNamePair> statusList = await _catalogService.GetAllStatus(AppConfig.queue_status);
             TutorApplyRequestViewModel data = new TutorApplyRequestViewModel()
             {
                 tutors = queries,
+                queriesStatus = statusList
             };
             return Ok(data);
         }

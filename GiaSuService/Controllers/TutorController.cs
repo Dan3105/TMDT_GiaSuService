@@ -300,7 +300,7 @@ namespace GiaSuService.Controllers
 
             var queries = await _requestFormService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page, (int) tutorId);
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
-            var response = new { queries, page, totalPages };
+            var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
     }

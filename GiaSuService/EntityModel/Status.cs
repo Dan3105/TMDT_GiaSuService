@@ -9,6 +9,8 @@ public partial class Status
 
     public string Name { get; set; } = null!;
 
+    public string VietnameseName { get; set; } = null!;
+
     public int StatusTypeId { get; set; }
 
     public virtual ICollection<RequestTutorForm> RequestTutorForms { get; set; } = new List<RequestTutorForm>();

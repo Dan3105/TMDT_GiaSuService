@@ -10,4 +10,7 @@
 
         //public decimal TotalTransactionsFee { get; set; }
     }
-}
+
+    
+
+    }
