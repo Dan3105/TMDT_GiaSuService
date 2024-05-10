@@ -220,3 +220,7 @@ div.form-group {
         transform: rotate(360deg);
     }
 }
+
+.filter-content {
+    margin-left: 10px;
+}
