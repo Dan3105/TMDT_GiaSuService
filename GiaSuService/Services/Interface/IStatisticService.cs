@@ -11,7 +11,7 @@ namespace GiaSuService.Services.Interface
         Task<TutorRequestStatisticCreateViewModel?> GetRequestCreated(string type, DateOnly fromDate, DateOnly toDate);
         Task<TutorRequestStatisticsViewModel> GetStatisticRequest();
 
-        Task<DataTable?> GetTransactionCreated(DateOnly fromDate, DateOnly toDate);
-        Task<TransactionStatisticsViewModel> GetStatisticTranssaction(DateOnly fromDate, DateOnly toDate);
+        Task<TransactionStatisticByDateViewModel?> GetTransactionCreated(string type, DateOnly fromDate, DateOnly toDate);
+        Task<TransactionStatisticsViewModel?> GetStatisticTranssaction();
     }
 }

@@ -37,14 +37,14 @@ namespace GiaSuService.Services
             return result;
         }
 
-        public async Task<DataTable?> GetTransactionCreated(DateOnly fromDate, DateOnly toDate)
+        public async Task<TransactionStatisticByDateViewModel?> GetTransactionCreated(string type, DateOnly fromDate, DateOnly toDate)
         {
-            return await _statisticRepo.QueryChartDataTransactions(fromDate, toDate);
+            return await _statisticRepo.QueryChartTransactionsByDate(type, fromDate, toDate);
         }
 
-        public async Task<TransactionStatisticsViewModel> GetStatisticTranssaction(DateOnly fromDate, DateOnly toDate)
+        public async Task<TransactionStatisticsViewModel?> GetStatisticTranssaction()
         {
-            return await _statisticRepo.QueryStatisticTransactions(fromDate, toDate);
+            return await _statisticRepo.QueryStatisticTransactions();
         }
     }
 }

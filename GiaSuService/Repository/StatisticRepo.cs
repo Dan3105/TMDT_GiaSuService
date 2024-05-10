@@ -436,55 +436,202 @@ namespace GiaSuService.Repository
             return null;
         }
 
-        public async Task<TransactionStatisticsViewModel> QueryStatisticTransactions(DateOnly fromDate, DateOnly toDate)
+        public async Task<TransactionStatisticByDateViewModel?> QueryChartTransactionsByDate(string typeDate, DateOnly fromDate, DateOnly toDate)
         {
             try
             {
-                var queryable = _context.TransactionHistories
-                .Select(p => new { p.CreateDate, p.PaymentAmount, p.Status, p.TypeTransaction })
-                .Where(p => p.CreateDate >= new DateTime(fromDate.Year, fromDate.Month, fromDate.Day)
-                                                         && p.CreateDate <= new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59));
+                TransactionStatisticByDateViewModel response = new TransactionStatisticByDateViewModel();
+                var query = _context.TransactionHistories.Select(p => new {p.CreateDate, p.TypeTransaction, p.Status.VietnameseName, p.Status.Name, p.PaymentAmount });
 
-                TransactionStatisticsViewModel result = new TransactionStatisticsViewModel()
+                if (typeDate == "this_month")
                 {
-                    TotalTransactions = await queryable.CountAsync(),
-                    TotalTransactionsCancel = await queryable.Where(p => p.Status.Name.Equals(AppConfig.TransactionStatus.CANCEL.ToString().ToLower())).CountAsync(),
-                    TotalTransactionsPaid = await queryable.Where(p => p.Status.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower())).CountAsync(),
-                    TotalTransactionsRefund = await queryable.Where(p => p.TypeTransaction == false).CountAsync(),
-                    TotalTransactionsDeposit = await queryable.Where(p => p.TypeTransaction == true).CountAsync(),
-                };
+                    var get_month = DateAndTime.Month(DateTime.Now);
+                    var get_year = DateAndTime.Year(DateTime.Now);
+                    DateTime start_date = new DateTime(get_year, get_month, 1);
+                    DateTime next_date = new DateTime(get_year, get_month + 1, 1).AddDays(-1);
+                    var queryThisMonth = query
+                                            .Where(p => p.CreateDate >= start_date && p.CreateDate <= next_date
+                                                        );
+                    response.JsonTransactionType = JsonConvert.SerializeObject(await queryThisMonth.Select(p => p.TypeTransaction)
+                        .GroupBy(p => p)
+                        .ToDictionaryAsync(p => p.Key, p => p.Count()));
+
+                    response.JsonTransactionStatus = JsonConvert.SerializeObject(await queryThisMonth.Select(p => p.VietnameseName)
+                        .GroupBy(p => p)
+                        .ToDictionaryAsync(p => p.Key, p => p.Count()));
+
+                    var queryPaided = queryThisMonth.Where(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower()));
+
+                    response.TotalDeposit = await queryThisMonth.Where(p => p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                    response.TotalRefund = await queryThisMonth.Where(p => !p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                    response.TotalProfit = response.TotalDeposit - response.TotalRefund;
+
+                    response.JsonTransaction = JsonConvert.SerializeObject(await queryPaided
+                                                .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.TypeTransaction, p.PaymentAmount })
+                                                .GroupBy(p =>p.CreateDateOnly )
+                                                .Select(p => new
+                                                {
+                                                    p.Key,
+                                                    Transaction = p
+                                                    .GroupBy(g => g.TypeTransaction) // Within each date group, group by Role
+                                                    .Select(g => new
+                                                    {
+                                                        Type = g.Key,
+                                                        Sum = g.Sum(p => p.PaymentAmount) // Count the number of accounts in each role group
+                                                    })
+                                                }).ToDictionaryAsync(
+                                                    p => p.Key, 
+                                                    p => p.Transaction.ToDictionary(p => p.Type, p => p.Sum)
+                                                    ));
+                    
+
+                    return response;
+                }
+
+                if (typeDate == "this_week")
+                {
+                    var get_week = DateAndTime.Weekday(DateTime.Now); //Min: 0, Max: 6
+                    var diff_date_start = DateTime.Now.AddDays(-get_week + 1); // 4: -> 5
+                    var diff_date_end = DateTime.Now.AddDays(6 - get_week); // 
+
+                    var start_date = diff_date_start;
+                    var end_date = diff_date_end.AddDays(1).AddSeconds(-1);
+
+                    var queryThisMonth = query
+                                            .Where(p => p.CreateDate >= start_date && p.CreateDate <= end_date
+                                                        );
+                    response.JsonTransactionType = JsonConvert.SerializeObject(await queryThisMonth.Select(p => p.TypeTransaction)
+                        .GroupBy(p => p)
+                        .ToDictionaryAsync(p => p.Key, p => p.Count()));
+
+                    response.JsonTransactionStatus = JsonConvert.SerializeObject(await queryThisMonth.Select(p => p.VietnameseName)
+                        .GroupBy(p => p)
+                        .ToDictionaryAsync(p => p.Key, p => p.Count()));
+
+                    var queryPaided = queryThisMonth.Where(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower()));
+
+                    response.TotalDeposit = await queryThisMonth.Where(p => p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                    response.TotalRefund = await queryThisMonth.Where(p => !p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                    response.TotalProfit = response.TotalDeposit - response.TotalRefund;
+
+                    var result = await queryPaided
+                                                .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.TypeTransaction, p.PaymentAmount })
+                                                .GroupBy(p => p.CreateDateOnly)
+                                                .Select(p => new
+                                                {
+                                                    p.Key,
+                                                    Transaction = p
+                                                    .GroupBy(g => g.TypeTransaction) // Within each date group, group by Role
+                                                    .Select(g => new
+                                                    {
+                                                        Type = g.Key,
+                                                        Sum = g.Sum(p => p.PaymentAmount) // Count the number of accounts in each role group
+                                                    })
+                                                }).ToDictionaryAsync(
+                                                    p => p.Key,
+                                                    p => p.Transaction.ToDictionary(p => p.Type, p => p.Sum)
+                                                    );
+
+                    // Map day of the week to its name
+                    var dayOfWeekNames = new Dictionary<int, string>
+                     {
+                         { 0, "Sunday" },
+                         { 1, "Monday" },
+                         { 2, "Tuesday" },
+                         { 3, "Wednesday" },
+                         { 4, "Thursday" },
+                         { 5, "Friday" },
+                         { 6, "Saturday" }
+                     };
+
+                    var registerWithWeekDayName = result
+                        .ToDictionary(
+                            kvp => dayOfWeekNames[(int)kvp.Key.DayOfWeek],
+                            kvp => kvp.Value
+                        );
+
+                    response.JsonTransaction = JsonConvert.SerializeObject(registerWithWeekDayName);
+                    return response;
+                }
+
+                if (typeDate == "custom")
+                {
+                    var start_fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day);
+                    var next_toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+                    var queryThisMonth = query
+                                            .Where(p => p.CreateDate >= start_fromDate && p.CreateDate <= next_toDate
+                                                        );
+                    response.JsonTransactionType = JsonConvert.SerializeObject(await queryThisMonth.Select(p => p.TypeTransaction)
+                        .GroupBy(p => p)
+                        .ToDictionaryAsync(p => p.Key, p => p.Count()));
+
+                    response.JsonTransactionStatus = JsonConvert.SerializeObject(await queryThisMonth.Select(p => p.VietnameseName)
+                        .GroupBy(p => p)
+                        .ToDictionaryAsync(p => p.Key, p => p.Count()));
+
+                    var queryPaided = queryThisMonth.Where(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower()));
+
+                    response.TotalDeposit = await queryThisMonth.Where(p => p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                    response.TotalRefund = await queryThisMonth.Where(p => !p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                    response.TotalProfit = response.TotalDeposit - response.TotalRefund;
+
+                    response.JsonTransaction = JsonConvert.SerializeObject(await queryPaided
+                                                .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.TypeTransaction, p.PaymentAmount })
+                                                .GroupBy(p => p.CreateDateOnly)
+                                                .Select(p => new
+                                                {
+                                                    p.Key,
+                                                    Transaction = p
+                                                    .GroupBy(g => g.TypeTransaction) // Within each date group, group by Role
+                                                    .Select(g => new
+                                                    {
+                                                        Type = g.Key,
+                                                        Sum = g.Sum(p => p.PaymentAmount) // Count the number of accounts in each role group
+                                                    })
+                                                }).ToDictionaryAsync(
+                                                    p => p.Key,
+                                                    p => p.Transaction.ToDictionary(p => p.Type, p => p.Sum)
+                                                    ));
+
+                    return response;
+                }
+
+                return null;
+
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        
+        public async Task<TransactionStatisticsViewModel?> QueryStatisticTransactions()
+        {
+            try
+            {
+                var query = _context.TransactionHistories.Select(p => new { p.CreateDate, p.TypeTransaction, p.Status.VietnameseName, p.Status.Name, p.PaymentAmount });
+                TransactionStatisticsViewModel result = new TransactionStatisticsViewModel();
+                var paid_query = query.Where(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower()));
+                result.TotalTransactions = await query.CountAsync();
+                result.TotalDeposit = await paid_query.Where(p => p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                result.TotalRefund = await paid_query.Where(p => !p.TypeTransaction).SumAsync(p => p.PaymentAmount);
+                result.TotalProfit = result.TotalDeposit - result.TotalRefund;
+
+                result.JsonTransactionType = JsonConvert.SerializeObject(
+                                            await query.Select(p => p.TypeTransaction)
+                                                    .GroupBy(p => p)
+                                                    .Select(p => new { p.Key, Count = p.Count() })
+                                                    .ToDictionaryAsync(p => p.Key, p => p.Count)
+                                                    );
+
+                result.JsonTransactionStatus = JsonConvert.SerializeObject(
+                                            await query.Select(p => p.VietnameseName)
+                                                    .GroupBy(p => p)
+                                                    .Select(p => new { p.Key, Count = p.Count() })
+                                                    .ToDictionaryAsync(p => p.Key, p => p.Count)
+                                                    );
 
                 return result;
-            }
-            catch (Exception)
-            {
-                throw new Exception();
-            }
-
-        }
-
-        public async Task<DataTable?> QueryChartDataTransactions(DateOnly fromDate, DateOnly toDate)
-        {
-            try
-            {
-                DataTable dataTable = new DataTable();
-                string? connString = _configuration.GetConnectionString(AppConfig.connection_string);
-                if (connString == null)
-                {
-                    throw new InvalidOperationException();
-                }
-                string query = $"select * from get_profit('{fromDate}', '{toDate}')";
-
-                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-                    using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn))
-                    {
-                        await Task.Run(() => da.Fill(dataTable));
-                    }
-                }
-
-                return dataTable;
             }
             catch
             {

@@ -140,31 +140,39 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetChartProfit(string fromDate, string toDate)
+        public async Task<IActionResult> GetChartProfitByDate(string type, string fromDate, string toDate)
         {
             try
             {
-                DateOnly fromDateParse = DateOnly.Parse(fromDate);
-                DateOnly toDateParse = DateOnly.Parse(toDate);
-                DataTable? dataTable = await _statisticService.GetTransactionCreated(fromDateParse, toDateParse);
-                if (dataTable == null)
+                if(!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
                 {
-                    throw new ArgumentNullException();
+                    DateOnly fromDateParse = DateOnly.Parse(fromDate);
+                    DateOnly toDateParse = DateOnly.Parse(toDate);
+                    TransactionStatisticByDateViewModel? data = await _statisticService.GetTransactionCreated(type, fromDateParse, toDateParse);
+                    return Json(data);
                 }
-                var data = new List<Dictionary<string, object>>();
-                foreach (DataRow row in dataTable.Rows)
+                else
                 {
-                    var dict = new Dictionary<string, object>();
-                    foreach (DataColumn col in dataTable.Columns)
-                    {
-                        dict[col.ColumnName] = row[col];
-                    }
-                    data.Add(dict);
+                    TransactionStatisticByDateViewModel? data = await _statisticService.GetTransactionCreated(type, DateOnly.MinValue, DateOnly.MinValue);
+                    return Json(data);
                 }
+            }
+            catch
+            {
+                return StatusCode(500, "Lỗi hệ thống");
+            }
+        }
 
-                TransactionStatisticsViewModel statisticsRequest = await _statisticService.GetStatisticTranssaction(fromDateParse, toDateParse);
-
-                return Json(new { chart = data, statis = statisticsRequest });
+        [HttpGet]
+        public async Task<IActionResult> GetChartDashboard()
+        {
+            try
+            {
+                TransactionStatisticsViewModel? statisticsRequest = await _statisticService.GetStatisticTranssaction();
+                if(statisticsRequest == null) {
+                    throw new NullReferenceException();
+                }
+                return Json(statisticsRequest);
             }
             catch
             {
