@@ -122,7 +122,7 @@ namespace GiaSuService.Repository
                     {
                         Avatar = p.Tutor.Account.Avatar,
                         FullName = p.Tutor.FullName,
-                        StatusQueue = p.Status.Name,
+                        StatusQueue = p.Status.VietnameseName,
                         TutorId = p.TutorId,
                         TutorType = p.Tutor.TutorType.Name,
                     },

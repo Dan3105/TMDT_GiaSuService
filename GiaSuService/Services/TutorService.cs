@@ -51,8 +51,9 @@ namespace GiaSuService.Services
 
         public async Task<TutorProfileViewModel?> GetTutorprofileById(int id)
         {
-            string? current_status = await _statusRepository.GetLatestStatusInTutorRegister(id);
-            if (current_status == null)
+            string? current_status = await _statusRepository.GetLatestStatusInTutorRegister(id, false);
+            string? current_vn_status = await _statusRepository.GetLatestStatusInTutorRegister(id, true);
+            if (current_status == null || current_vn_status == null)
             {
                 return null;
             }
@@ -63,6 +64,7 @@ namespace GiaSuService.Services
             }
 
             tutorprofile.Formstatus = current_status;
+            tutorprofile.FormVietnameseStatusName = current_vn_status;
             return tutorprofile;
         }
 
@@ -163,7 +165,7 @@ namespace GiaSuService.Services
 
         public async Task<ResponseService> ApplyRequest(int tutorId, int requestId)
         {
-            var curr_status = await _statusRepository.GetLatestStatusInTutorRegister(tutorId);
+            var curr_status = await _statusRepository.GetLatestStatusInTutorRegister(tutorId, false);
             if (curr_status == null)
             {
                 return new ResponseService { Success = false, Message = "Không lấy được trạng thái gia sư hiện tại" };

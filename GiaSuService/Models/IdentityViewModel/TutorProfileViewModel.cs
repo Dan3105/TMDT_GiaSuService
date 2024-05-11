@@ -37,6 +37,7 @@ namespace GiaSuService.Models.IdentityViewModel
         public TutorTypeViewModel? TutorType { get; set; }
 
         public string Formstatus { get; set; } = string.Empty;
+        public string FormVietnameseStatusName { get; set; } = string.Empty;
         #endregion
 
 

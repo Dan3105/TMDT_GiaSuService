@@ -393,6 +393,7 @@ public partial class DvgsDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("name");
             entity.Property(e => e.StatusTypeId).HasColumnName("status_type_id");
+            entity.Property(e => e.VietnameseName).HasColumnName("vietnamese_name");
 
             entity.HasOne(d => d.StatusType).WithMany(p => p.Statuses)
                 .HasForeignKey(d => d.StatusTypeId)

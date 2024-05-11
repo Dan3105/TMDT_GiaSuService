@@ -126,17 +126,22 @@ namespace GiaSuService.Repository
         public async Task<PageTutorRegisterListViewModel> GetRegisterTutorOnPending(int page, RegisterStatus status)
         {
             var query = _context.Tutors.AsNoTracking()
-                .Select(p => new TutorRegisterViewModel
+                .Select(p => new
                 {
-                    Id = p.Id,
-                    Area = p.Area,
-                    College = p.College,
-                    CreateDate = DateOnly.FromDateTime(p.Account.CreateDate),
-                    CurrentStatus = p.TutorType.Name,
-                    FullName = p.FullName,
-                    StatusQuery = p.Status.Name
+                    View = new TutorRegisterViewModel
+                    {
+                        Id = p.Id,
+                        Area = p.Area,
+                        College = p.College,
+                        CreateDate = DateOnly.FromDateTime(p.Account.CreateDate),
+                        CurrentStatus = p.TutorType.Name,
+                        FullName = p.FullName,
+                        StatusQuery = p.Status.VietnameseName
+                    },
+                    StatusName = p.Status.Name
                 })
-                .Where(p => p.StatusQuery.ToLower() == status.ToString().ToLower());
+                .Where(p => p.StatusName.ToLower() == status.ToString().ToLower())
+                .Select(p => p.View);
 
 
             var result = new PageTutorRegisterListViewModel { };
@@ -192,13 +197,15 @@ namespace GiaSuService.Repository
         public async Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetTutorProfilesHistoryDetail(int tutorId)
         {
             return await _context.TutorStatusDetails.Where(p => p.TutorId == tutorId)
-                .OrderBy(p => p.CreateDate)
+                .OrderByDescending(p => p.CreateDate)
                 .Select(p => new TutorProfileStatusDetailHistoryViewModel   
                 {
                     HistoryId = p.Id,
                     StatusType = p.Status.Name,
                     Context = p.Context,
                     Date = p.CreateDate,
+                    StatusVNamese = p.Status.VietnameseName,
+
                 }).ToListAsync();
         }
 

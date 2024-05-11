@@ -1,5 +1,6 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.EntityModel;
+using GiaSuService.Models.EmployeeViewModel;
 using GiaSuService.Models.UtilityViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
@@ -9,10 +10,12 @@ namespace GiaSuService.Services
     public class CatalogService : ICatalogService
     {
         private readonly ICategoryRepo _categoryRepo;
+        private readonly IStatusRepo _statusRepo;
 
-        public CatalogService(ICategoryRepo categoryRepo)
+        public CatalogService(ICategoryRepo categoryRepo, IStatusRepo statusRepo)
         {
             _categoryRepo = categoryRepo;
+            _statusRepo = statusRepo;
         }
 
         #region CRUD Session
@@ -207,6 +210,12 @@ namespace GiaSuService.Services
         {
             return await _categoryRepo.GetTutorTypeById(tutorTypeId);
         }
+
         #endregion
+        
+        public async Task<List<StatusNamePair>> GetAllStatus(string statusType)
+        {
+            return await _statusRepo.GetAllStatus(statusType);
+        }
     }
 }

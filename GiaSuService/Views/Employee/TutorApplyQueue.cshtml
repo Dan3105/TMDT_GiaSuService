@@ -44,7 +44,7 @@
                 $("#tutor_container").empty();
                 $.each(response.tutors, function (index, item) {
                     var currentStatus = item.statusQueue.toLowerCase(); 
-                    var queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
+                    var queueStatuses = response.queriesStatus;
                     var href = item.isHaveTransaction ? `/Employee/TutorTransactionDetail?tutorId=${item.tutorId}&requestId=${thisRequestId}` : "#";
                     var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Chi tiết</a>`
 
@@ -62,7 +62,7 @@
                                             <div class="row d-flex align-items-center">
                                                 <div class="col-md-12 col-lg-7">
                                                            <select class="form-select customform-control" id="statusSelect_${item.tutorId}">
-                                                        ${queueStatuses.map(status => `<option value="${status}" ${currentStatus === status ? 'selected' : ''}>${status.charAt(0).toUpperCase() + status.slice(1)}</option>`).join('')}
+                                                        ${queueStatuses.map(status => `<option value="${status.name}" ${currentStatus === status.name ? 'selected' : ''}>${status.vietnameseName}</option>`).join('')}
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12 col-lg-5">

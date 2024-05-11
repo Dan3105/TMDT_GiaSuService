@@ -12,6 +12,7 @@
             <th>Thứ tự</th>
             <th>Ngày tạo</th>
             <th>Nội dung</th>
+            <th>Trạng thái</th>
             <th>Chi tiết</th>
         </tr>
     </thead>
@@ -30,6 +31,9 @@
                     {
                         <span>@item.Context</span>
                     }
+                </td>
+                <td>
+                    @item.StatusVNamese
                 </td>
                 <td>
                     @if (item.StatusType == AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
