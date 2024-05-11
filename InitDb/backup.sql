@@ -480,7 +480,7 @@ CREATE TABLE public.request_tutor_form (
     status_id integer NOT NULL,
     district_id integer NOT NULL,
     customer_id integer NOT NULL,
-    CONSTRAINT tutorrequestform_students_check CHECK (((students > 0) AND (students < 5)))
+    CONSTRAINT tutorrequestform_students_check CHECK (((students > 0) AND (students < 6)))
 );
 
 
