@@ -20,6 +20,7 @@
                                                 Gia sư
                                             </h5>
                                             <p>Số lượng: <label class="card-subtitle" id="totalTutor">10000</label></p>
+                                            <i class="fa fa-graduation-cap" style="font-size: 64px; left: 20px;"></i>
                                         </div>
                                         <div class="col-6" style="height:150px">
                                             <canvas id="chartTutor"></canvas>
@@ -43,6 +44,7 @@
                                                 Nhân viên
                                             </h5>
                                             <p>Số lượng: <label class="card-subtitle" id="totalEmp">10000</label></p>
+                                            <i class="fas fa-user-tie" style="font-size: 64px; left: 20px;"></i>
                                         </div>
                                         <div class="col-6" style="height:150px">
                                             <canvas id="chartEmp"></canvas>
@@ -66,6 +68,8 @@
                                                 Khách hàng
                                             </h5>
                                             <p>Số lượng: <label class="card-subtitle" id="totalCustomer">10000</label></p>
+                                            <i class="fas fa-users" style="font-size: 64px; left: 20px;"></i>
+
                                         </div>
                                         <div class="col-6" style="height:150px">
                                             <canvas id="chartCustomer"></canvas>
@@ -86,6 +90,7 @@
                                         <div class="col-6">
                                             <h5 class="card-title widget-card-title mb-3">Tổng số tài khoản</h5>
                                             <p>Số lượng: <label class="card-subtitle" id="totalAccounts">10000</label></p>
+                                            <i class="fas fa-user-circle" style="font-size: 88px; left: 20px;"></i>
                                         </div>
                                         <div class="col-6">
                                             <canvas id="chartAccount"></canvas>
@@ -125,11 +130,11 @@
     <section>
         <div class="container">
             <h3>Thống kê tài khoản được tạo</h3>
-            <div class="row bg-light border-1">
+            <div class="row bg-white border-1">
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-3">
-                            <select id="typeStatistic" class="form-select">
+                        <div class="col-3 mt-3">
+                            <select id="typeStatistic" class="form-select customform-control">
                                 <option selected value="this_week">Trong tuần này</option>
                                 <option value="this_month">Trong tháng này</option>
                                 <option value="custom">Chọn từ ngày</option>
@@ -141,7 +146,7 @@
                         <div class="col-3">
                             <input type="date" class="form-control customform-control" id="toDateInput">
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 mt-3">
                             <button onclick="buttonFetch()" class="btn btn-primary customstyle-button" type="button">Thống kê</button>
                         </div>
                     </div>
@@ -218,16 +223,16 @@
                 });
             };
 
-            updateChartAndHtag("totalCustomer", "chartCustomer", dataCustomer.data, labelAccountSet(dataCustomer), dataCustomer.total, "this is title", colorBGAccount, colorBGHoverAccount, 'bottom');
-            updateChartAndHtag("totalTutor", "chartTutor", dataTutor.data, labelAccountSet(dataTutor), dataTutor.total, "this is title", colorBGAccount, colorBGHoverAccount, 'bottom');
-            updateChartAndHtag("totalEmp", "chartEmp", dataEmployee.data, labelAccountSet(dataEmployee), dataEmployee.total, "this is title", colorBGAccount, colorBGHoverAccount, 'bottom');
+            updateChartAndHtag("totalCustomer", "chartCustomer", dataCustomer.data, labelAccountSet(dataCustomer), dataCustomer.total, "Trạng thái của khách hàng", colorBGAccount, colorBGHoverAccount, 'bottom');
+            updateChartAndHtag("totalTutor", "chartTutor", dataTutor.data, labelAccountSet(dataTutor), dataTutor.total, "Trạng thái của gia sư", colorBGAccount, colorBGHoverAccount, 'bottom');
+            updateChartAndHtag("totalEmp", "chartEmp", dataEmployee.data, labelAccountSet(dataEmployee), dataEmployee.total, "Trạng thái của nhân viên", colorBGAccount, colorBGHoverAccount, 'bottom');
 
             updateChartAndHtag("totalAccounts",
                 "chartAccount",
                 [dataTutor.total, dataCustomer.total, dataEmployee.total],
                 ["Gia sư", "Phụ huynh", "Nhân viên"],
                 dataTutor.total + dataCustomer.total + dataEmployee.total,
-                "This is title and Thuy Vy set it",
+                "Phân loại tài khoản",
                 ['#20BDBE', '#FF9933', '#AA87FF'],
                 ['#42C7D9', '#FFB347', '#C3A0FF'],
                 'right'
@@ -254,7 +259,7 @@
                 dataTutorStatus.data,
                 labelTutorStatusSet(dataTutorStatus),
                 0,
-                "This is title and Thuy Vy set it",
+                "Trạng thái yêu cầu tạo tài khoản gia sư",
                 ['#A2C480', '#CEEBF3', '#F7464A', '#99D4FF'],
                 ['#C3D9A5', '#D9F2F7', '#FF5A5E', '#B3F0FF'],
                 'right'
@@ -275,7 +280,7 @@
                 dataTutorActive.data,
                 labelTutorActiveSet(dataTutorActive),
                 0,
-                "This is title and Thuy Vy set it",
+                "Trạng thái hoạt động",
                 ['#F7464A', '#A2C480'],
                 ['#FF5A5E', '#C3D9A5'],
                 'right'
@@ -326,7 +331,6 @@
         }
     }
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     function getChartData(type, fromDate, toDate) {
         $.ajax({
             url: '/Statistic/GetAccountData',
@@ -354,13 +358,13 @@
                 // Tạo HTML với các giá trị được gán
                 const htmlTemplate = `
                           <p>Tổng số tài khoản: ${customerRegisters}</p>
-                          <p>Tốc độ tăng trưởng khách hàng mới: ${customerCAR}%</p>
+                               <p><i class="fas fa-chart-line p-2"></i>Tốc độ tăng trưởng khách hàng mới: ${customerCAR}%</p>
                       <hr />
                           <p>Tổng số tài khoản: ${tutorRegisters}</p>
-                          <p>Tốc độ tăng trưởng gia sư: ${tutorCAR}%</p>
+                                 <p><i class="fas fa-chart-line p-2"></i>Tốc độ tăng trưởng gia sư: ${tutorCAR}%</p>
                       <hr />
                           <p>Tổng số tài khoản: ${employeeRegisters}</p>
-                          <p>Tốc độ tăng trưởng nhân viên ${employeeCAR}%</p>
+                              <p><i class="fas fa-chart-line p-2"></i>Tốc độ tăng trưởng nhân viên ${employeeCAR}%</p>
                     `;
 
                 // Get the div element
@@ -430,7 +434,7 @@
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: 'Thuy Vy set'
+                                    text: 'Số tài khoản được tạo'
                                 }
                             },
                             scales: {
