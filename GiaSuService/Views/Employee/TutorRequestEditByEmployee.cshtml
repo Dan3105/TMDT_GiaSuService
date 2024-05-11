@@ -104,7 +104,7 @@
         </div>
 
         @* <button type="submit" class="btn btn-primary customstyle-button">Cập nhật</button> *@
-        <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-danger">Hủy bỏ</button>
+        <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-outline-danger">Hủy bỏ</button>
         <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Employee")" class="btn btn-primary customstyle-button">Cập nhật</button>
     </form>
 </div>
@@ -225,7 +225,7 @@
                                 </div>
 
                                 <div class="d-flex justify-content-center align-items-center mb-3">
-                                     <a onclick="deleteTutor(${item.id})" class="btn btn-primary")">Hủy chọn</a>
+                                     <a onclick="deleteTutor(${item.id})" class="btn btn-danger")">Hủy chọn</a>
                                 </div>
                             </div>
                         </div>

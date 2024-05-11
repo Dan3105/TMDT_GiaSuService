@@ -109,9 +109,9 @@
             <div class="col-sm-3 mt-4 justify-content-end">
                 <div class="col-auto">
                     <input type="hidden" asp-for="Modified.TutorId" />
-
+                    <button type="submit" class="btn btn-outline-danger" name="statusType" value="@AppConfig.RegisterStatus.DENY.ToString()">Từ chối</button>
                     <button type="submit" class="btn btn-primary customstyle-button" name="statusType" value="@AppConfig.RegisterStatus.APPROVAL.ToString()">Đồng ý</button>
-                    <button type="submit" class="btn btn-danger" name="statusType" value="@AppConfig.RegisterStatus.DENY.ToString()">Từ chối</button>
+                  
 
                 </div>
             </div>
