@@ -15,7 +15,7 @@
 
     <h1>Đơn đăng ký tìm gia sư</h1>
 
-    <form asp-action="SubmitTutorRequest" asp-controller="Customer" method="post">
+    <form id="myForm" asp-action="SubmitTutorRequest" asp-controller="Customer" method="post">
         <div class="form-group">
             <label asp-for="Profile.NStudents">Số lượng học sinh:</label>
             <input asp-for="Profile.NStudents" type="number" min="1" max="9" class="form-control customform-control" required />
@@ -99,22 +99,59 @@
     </form>
 </div>
 
-<script>
-    // Function to display confirmation dialog before form submission
-    function confirmSubmission(event) {
-        var confirmation = confirm("Bạn chắc chắn muốn gửi đơn này?");
-        if (!confirmation) {
-            event.preventDefault(); // Prevent form submission if user cancels
-        }
-    }
+<!-- Include the confirmation dialog -->
+<partial name="_ConfirmationDialog" />
 
+<script>
     // Add event listener to the submit button
     document.addEventListener('DOMContentLoaded', function () {
         var submitButton = document.querySelector('button[type="submit"]');
         if (submitButton) {
-            submitButton.addEventListener('click', confirmSubmission);
+            submitButton.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                confirmSubmission().then(function (confirmed) {
+                    if (confirmed) {
+                        // User confirmed, manually trigger form submission
+                        var form = document.getElementById('myForm');
+                        if (form) form.submit();
+                    } else {
+                        // User canceled
+                        document.getElementById('confirmationDialog').style.display = 'none';
+                    }
+                });
+            });
         }
     });
+
+    // Function to display confirmation dialog and return a Promise
+    function confirmSubmission() {
+        return new Promise(function (resolve) {
+            showConfirmationDialog("Bạn chắc chắn muốn gửi đơn này?", function (result) {
+                resolve(result); // Resolve the Promise with user's choice
+            });
+        });
+    }
+
+    function showConfirmationDialog(message, callback) {
+        const confirmDialog = document.getElementById('confirmationDialog');
+        const confirmMsg = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYes');
+        const confirmNoBtn = document.getElementById('confirmNo');
+
+        confirmMsg.textContent = message; // Update message content
+
+        confirmYesBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(true); // Callback with true when user clicks 'Yes'
+        });
+
+        confirmNoBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(false); // Callback with false when user clicks 'No'
+        });
+
+        document.getElementById('confirmationDialog').style.display = 'flex';
+    }
 
     function getDistricts() {
         $("#provincedefault").remove();

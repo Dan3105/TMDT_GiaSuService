@@ -90,28 +90,68 @@
 
 </div>
 
+<!-- Include the confirmation dialog -->
+<partial name="_ConfirmationDialog" />
+
 <script>
+
+    // Add event listener to the submit button
     document.addEventListener('DOMContentLoaded', function () {
         var cancelLink = document.getElementById('cancelLink');
         if (cancelLink) {
-            cancelLink.addEventListener('click', function (event) {
-                var requestStatus = "@Model.RequestStatus";
-                var queueStatus = "@Model.QueueStatus";
+            cancelLink.addEventListener('click', async function (event) {
+                event.preventDefault(); // Prevent default link behavior
 
-                if (queueStatus == "handover" && queueStatus == requestStatus) {
-                    var confirmation = confirm("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không được hoàn tiền và không thể ứng tuyển lại vào đơn này nữa.");
-                    if (!confirmation) {
-                        event.preventDefault(); // Prevent navigation if user cancels
-                    }
+                var confirmed = await confirmSubmission(); // Wait for user confirmation
+                if (confirmed) {
+                    // User confirmed, proceed with link navigation
+                    window.location.href = this.href;
+                } else {
+                    // User canceled
+                    document.getElementById('confirmationDialog').style.display = 'none';
                 }
-                else{
-                    var confirmation = confirm("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không thể ứng tuyển lại vào đơn này nữa.");
-                    if (!confirmation) {
-                        event.preventDefault(); // Prevent navigation if user cancels
-                    }
-                }
-                
             });
         }
     });
+
+    // Function to display confirmation dialog and return a Promise
+    function confirmSubmission() {
+        return new Promise(function (resolve) {
+            var requestStatus = "@Model.RequestStatus";
+            var queueStatus = "@Model.QueueStatus";
+
+            if (queueStatus == "handover" && queueStatus == requestStatus) {
+                showConfirmationDialog("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không được hoàn tiền và không thể ứng tuyển lại vào đơn này nữa.", function (result) {
+                    resolve(result); // Resolve the Promise with user's choice
+                });
+            }
+            else {
+                showConfirmationDialog("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không thể ứng tuyển lại vào đơn này nữa.", function (result) {
+                    resolve(result); // Resolve the Promise with user's choice
+                });
+            }
+        });
+    }
+
+    function showConfirmationDialog(message, callback) {
+        const confirmDialog = document.getElementById('confirmationDialog');
+        const confirmMsg = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYes');
+        const confirmNoBtn = document.getElementById('confirmNo');
+
+        confirmMsg.textContent = message; // Update message content
+
+        confirmYesBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(true); // Callback with true when user clicks 'Yes'
+        });
+
+        confirmNoBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(false); // Callback with false when user clicks 'No'
+        });
+
+        document.getElementById('confirmationDialog').style.display = 'flex';
+    }
+
 </script>
