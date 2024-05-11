@@ -122,7 +122,7 @@
                 // console.log('total pages ' + data.totalPages);
 
                 // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
+                $("#next-page").prop("disabled", data.page + 1 === data.totalPages || data.totalPages === 0);
                 $("#prev-page").prop("disabled", data.page === 0);
 
                 // Dynamically add items to the view

@@ -48,7 +48,7 @@
             </select>
         </div>
         <div class="col-sm-4 d-flex justify-content-center mb-2">
-            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList">Tìm kiếm</button>
+            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Tìm kiếm</button>
         </div>
     </div>
     <hr />
@@ -56,17 +56,24 @@
     </div>
 
     <div id="pagination">
-        <button id="prev-page" class="border-0">
+        <button id="prev-page" class="border-0" onclick="prevPage()">
             <i class="fas fa-chevron-left px-2"></i>
         </button>
+
         <span id="current-page" class="px-2">Trang 1</span>
-        <button id="next-page" class="border-0">
-            <i id="next-page" class="fas fa-chevron-right px-2"></i>
+
+        <button id="next-page" class="border-0" onclick="nextPage()">
+            <i class="fas fa-chevron-right px-2"></i>
         </button>
     </div>
 </div>
 
 <script>
+    // First loading page
+    document.addEventListener("DOMContentLoaded", function () {
+        updateNewList();
+    });
+
     function getDistricts() {
 
         var selectedIdProvince = $("#province").val();
@@ -86,6 +93,7 @@
             }
         });
     }
+    
     var currentPage = 0;
     function loadItems(pageNumber) {
         var selectedIdDistrict = $('#districtSelectionContainer').val();
@@ -98,12 +106,14 @@
                 $("#items-container").empty(); // Clear existing items
 
                 // Update page information
-                $("#current-page").text(`Trang ${data.page + 1}`);
+                $("#current-page").text(`Trang ${pageNumber + 1}`);
+                // console.log('total pages ' + data.totalPages);
 
                 // Disable "Next Page" button if at the last page
-                $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
+                $("#next-page").prop("disabled", data.page + 1 === data.totalPages || data.totalPages === 0);
                 $("#prev-page").prop("disabled", data.page === 0);
-                currentPage=data.page;
+                
+                //currentPage=data.page;
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
                     var spanActive = item.lockStatus ? `<span class="text-danger">Tạm đóng</span>` : `<span class="text-success">Hoạt động</span>`;
@@ -149,27 +159,25 @@
                 });
             });
     }
+    
     function updateNewList() {
-
         currentPage = 0;
         // Load initial page
         loadItems(currentPage);
-
-        // Handle "Next Page" button click
-        $("#next-page").click(function () {
-            if (!$(this).prop("disabled")) {
-                currentPage++;
-                loadItems(currentPage);
-            }
-        });
-
-        // (Optional) Handle "Previous Page" button click (implement similar logic)
-        $("#prev-page").click(function () {
-            if (!$(this).prop("disabled")) {
-                currentPage--;
-                loadItems(currentPage);
-            }
-        });
     };
-    updateNewList();
+
+    function prevPage() {
+        if (!$("#prev-page").prop("disabled")) {
+            currentPage--;
+            loadItems(currentPage);
+        }
+    }
+
+    function nextPage() {
+        if (!$("#next-page").prop("disabled")) {
+            currentPage++;
+            loadItems(currentPage);
+        }
+    }
+
 </script>

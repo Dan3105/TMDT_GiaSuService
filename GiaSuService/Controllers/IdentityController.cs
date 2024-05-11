@@ -133,6 +133,22 @@ namespace GiaSuService.Controllers
             ResponseService response = await _profileService.UpdateProfile(profile, avatar, frontCard, backCard, userRole);
             if (response.Success)
             {
+                var identity = User.Identity as ClaimsIdentity;
+                if (identity != null)
+                {
+                    // Update avatar claim
+                    var avatarClaim = identity.FindFirst(AppConfig.CLAIM_TYPE_AVATAR);
+                    if (avatarClaim != null)
+                    {
+                        identity.RemoveClaim(avatarClaim);
+                        // Assuming profile.Avatar contains the new avatar URL or identifier
+                        identity.AddClaim(new Claim(AppConfig.CLAIM_TYPE_AVATAR, profile.Avatar));
+                    }
+
+                    // Update user session with modified claims
+                    await HttpContext.SignInAsync(AppConfig.AUTHSCHEME, new ClaimsPrincipal(identity));
+                }
+
                 TempData[AppConfig.MESSAGE_SUCCESS] = response.Message;
             }
             else
