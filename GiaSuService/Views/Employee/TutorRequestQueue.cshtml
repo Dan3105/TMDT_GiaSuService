@@ -43,7 +43,7 @@
                     $("#current-page").text(`Trang ${data.page + 1}`);
 
                     // Disable "Next Page" button if at the last page
-                    $("#next-page").prop("disabled", data.page + 1 === data.totalPages);
+                    $("#next-page").prop("disabled", data.page + 1 === data.totalPages || data.totalPages === 0);
                     $("#prev-page").prop("disabled", data.page === 0);
                     currentPage = data.page;
                     // Dynamically add items to the view

@@ -45,6 +45,8 @@
                     var originalValue = property.GetValue(Model.Original);
                     var modifiedValue = property.GetValue(Model.Modified);
 
+                    if (modifiedValue == null || originalValue == null) continue;
+
                     var displayName = displayNameMapping[property.Name];
 
                     if(property.Name.Equals("Avatar")
@@ -75,6 +77,7 @@
 
                     var originalValue = property.GetValue(Model.Original);
                     var modifiedValue = property.GetValue(Model.Modified);
+                    if (modifiedValue == null || originalValue == null) continue;
 
                     // Get the display name from the mapping, if it exists; otherwise, use the property name
                     var displayName = displayNameMapping[property.Name];

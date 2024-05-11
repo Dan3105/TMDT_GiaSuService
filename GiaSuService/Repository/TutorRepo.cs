@@ -197,13 +197,15 @@ namespace GiaSuService.Repository
         public async Task<IEnumerable<TutorProfileStatusDetailHistoryViewModel>> GetTutorProfilesHistoryDetail(int tutorId)
         {
             return await _context.TutorStatusDetails.Where(p => p.TutorId == tutorId)
-                .OrderBy(p => p.CreateDate)
+                .OrderByDescending(p => p.CreateDate)
                 .Select(p => new TutorProfileStatusDetailHistoryViewModel   
                 {
                     HistoryId = p.Id,
                     StatusType = p.Status.Name,
                     Context = p.Context,
                     Date = p.CreateDate,
+                    StatusVNamese = p.Status.VietnameseName,
+
                 }).ToListAsync();
         }
 
