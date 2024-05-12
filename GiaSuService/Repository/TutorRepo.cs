@@ -219,23 +219,27 @@ namespace GiaSuService.Repository
             return getLatestStatus;
         }
 
-        public async Task<List<TutorApplyFormViewModel>> GetListTutorApplyForm(int tutorId)
+        public async Task<List<TutorApplyCardViewModel>> GetListTutorApplyForm(int tutorId)
         {
-            //Chua toi uu truy van
             return await _context.TutorApplyForms
                 .AsNoTracking()
                 .Select(p => new {
-                    TutorApply = new TutorApplyFormViewModel
+                    TutorApply = new TutorApplyCardViewModel
                     {
-                        AdditionalDetail = p.TutorRequest.AdditionalDetail,
-                        EnterDate = p.EnterDate,
-                        CreateDate = p.TutorRequest.CreateDate,
-                        ExpiredDate = p.TutorRequest.ExpiredDate,
-                        GradeName = p.TutorRequest.Grade.Name,
                         RequestId = p.TutorRequest.Id,
-                        StatusName = p.Status.Name,
-                        Students = p.TutorRequest.Students,
+
+                        EnterDate = p.EnterDate,
+                        ExpiredDate = p.TutorRequest.ExpiredDate,
+
                         SubjectName = p.TutorRequest.Subject.Name,
+                        GradeName = p.TutorRequest.Grade.Name,
+                        NStudents = p.TutorRequest.Students,
+                        Location = $"{p.TutorRequest.District.Name}, {p.TutorRequest.District.Province.Name}",
+
+                        RequestStatus = p.TutorRequest.Status.Name,
+                        RequestStatusDescription = p.TutorRequest.Status.VietnameseName,
+                        QueueStatus = p.Status.Name,
+                        QueueStatusDescription = p.Status.VietnameseName,
                     },
                     p.TutorId,
                 })
@@ -245,25 +249,31 @@ namespace GiaSuService.Repository
                 .ToListAsync();
         }
 
-        public async Task<RequestTutorApplyDetailViewModel?> GetTutorRequestProfile(int requestId)
+        public async Task<RequestTutorApplyDetailViewModel?> GetRequestTutorApplyDetail(int requestId, int tutorId)
         {
-            var result = await _context.RequestTutorForms
+            var result = await _context.TutorApplyForms
                 .AsNoTracking()
                 .Select(p => new RequestTutorApplyDetailViewModel
                 {
-                    RequestId = p.Id,
-                    NStudent = p.Students,
-                    CustomerFullName = p.Customer.FullName,
-                    Address = $"{p.AddressDetail}",
-                    Location = $"{p.District.Name}, {p.District.Province.Name}",
-                    AdditionalDetail = $"{p.AdditionalDetail}",
-                    CreatedDate = p.CreateDate,
-                    RequestStatus = p.Status.Name.ToString(),
-                    ExpiredDate = p.CreateDate,
-                    GradeName = p.Grade.Name,
-                    SubjectName = p.Subject.Name,
-                    Price = p.Grade.Fee,
-                }).FirstOrDefaultAsync(p => p.RequestId == requestId);
+                    RequestId = p.TutorRequest.Id,
+                    TutorId = p.TutorId,
+
+                    NStudent = p.TutorRequest.Students,
+                    CustomerFullName = p.TutorRequest.Customer.FullName,
+                    GradeName = p.TutorRequest.Grade.Name,
+                    SubjectName = p.TutorRequest.Subject.Name,
+
+                    Address = $"{p.TutorRequest.AddressDetail}",
+                    Location = $"{p.TutorRequest.District.Name}, {p.TutorRequest.District.Province.Name}",
+                    AdditionalDetail = $"{p.TutorRequest.AdditionalDetail}",
+                    
+                    Price = p.TutorRequest.Grade.Fee,
+
+                    RequestStatus = p.TutorRequest.Status.Name,
+                    RequestStatusDescription = p.TutorRequest.Status.VietnameseName,
+                    QueueStatus = p.Status.Name,
+                    QueueStatusDescription = p.Status.VietnameseName
+                }).FirstOrDefaultAsync(p => p.RequestId == requestId && p.TutorId == tutorId);
             return result;
         }
 

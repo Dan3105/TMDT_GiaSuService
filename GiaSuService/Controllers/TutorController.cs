@@ -34,10 +34,12 @@ namespace GiaSuService.Controllers
             _requestFormService = requestFormService;
         }
 
+
         public IActionResult Index()
         {
             return Ok();
         }
+
 
         [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpGet]
@@ -89,6 +91,7 @@ namespace GiaSuService.Controllers
             return View(model);
         }
 
+
         [Authorize(Policy = AppConfig.TUTORPOLICY)]
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(TutorUpdateRequestViewModel profile, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
@@ -104,6 +107,7 @@ namespace GiaSuService.Controllers
             }
             return RedirectToAction("Profile", "Identity");
         }
+
 
         [HttpGet]
         public async Task<IActionResult> TutorRequestList()
@@ -121,6 +125,7 @@ namespace GiaSuService.Controllers
 
             return View(result);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> TutorProfileStatusHistory()
@@ -141,6 +146,7 @@ namespace GiaSuService.Controllers
 
             return View(histories);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> TutorProfileStatusDetail(int historyId)
@@ -202,6 +208,7 @@ namespace GiaSuService.Controllers
             return View(listApplyForm);
         }
 
+
         [HttpGet]
         public async Task<IActionResult> TutorTransactionList()
         {
@@ -220,6 +227,7 @@ namespace GiaSuService.Controllers
             var results = await _transactionService.GetListTutorTransaction((int)tutorId);
             return View(results);   
         }
+
 
         [HttpGet]
         public async Task<IActionResult> CancelApplyRequest(int requestId, string queueStatus)
@@ -260,20 +268,32 @@ namespace GiaSuService.Controllers
             return RedirectToAction("ListTutorApplyForm", "Tutor");
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> TutorRequestProfile(int requestId, string queueStatus)
+        public async Task<IActionResult> TutorRequestProfile(int requestId)
         {
-            RequestTutorApplyDetailViewModel? thisForm = await _tutorService.GetTutorRequestProfileById(requestId);
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "") return RedirectToAction("Index", "Home");
+
+            int? tutorId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+            if (tutorId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            RequestTutorApplyDetailViewModel? thisForm = await _tutorService.GetRequestTutorApplyDetail(requestId, (int)tutorId);
             if (thisForm == null)
             {
                 TempData[AppConfig.MESSAGE_FAIL] = "Không tìm thấy thông tin đơn";
-                return RedirectToAction("TutorRequestList", "Tutor");
+                return RedirectToAction("ListTutorApplyForm", "Tutor");
             }
-
-            thisForm.QueueStatus = queueStatus;
 
             return View(thisForm);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> TutorTransactionDetail(int tutorId, int requestId)
@@ -281,6 +301,7 @@ namespace GiaSuService.Controllers
             var result = await _transactionService.GetDetailTutorQueueTransaction(tutorId, requestId);
             return View(result);
         }
+
 
         [HttpGet]
         [AllowAnonymous]

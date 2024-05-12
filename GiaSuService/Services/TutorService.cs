@@ -207,14 +207,14 @@ namespace GiaSuService.Services
             return new ResponseService { Success = false, Message = "Huỷ ứng tuyển thất bại" };
         }
 
-        public async Task<List<TutorApplyFormViewModel>> GetTutorApplyForm(int tutorId)
+        public async Task<List<TutorApplyCardViewModel>> GetTutorApplyForm(int tutorId)
         {
             return await _tutorRepository.GetListTutorApplyForm(tutorId);
         }
 
-        public async Task<RequestTutorApplyDetailViewModel?> GetTutorRequestProfileById(int requestId)
+        public async Task<RequestTutorApplyDetailViewModel?> GetRequestTutorApplyDetail(int requestId, int tutorId)
         {
-            return await _tutorRepository.GetTutorRequestProfile(requestId);
+            return await _tutorRepository.GetRequestTutorApplyDetail(requestId, tutorId);
         }
     }
 }

@@ -7,21 +7,20 @@
 
 <div class="container">
     <h1 class="pb-3">Chi tiết yêu cầu đơn tìm gia sư</h1>
-    <div class="form-group">
-        <label asp-for="CreatedDate">Ngày tạo:</label>
-        <input type="date" asp-for="CreatedDate" class="form-control customform-control"
-                value="@Model.CreatedDate.ToString("yyyy-MM-dd")" disabled />
-    </div>
 
     <div class="form-group">
-        <label asp-for="ExpiredDate">Ngày hết hạn:</label>
-        <input type="date" asp-for="ExpiredDate" class="form-control customform-control"
-                value="@Model.ExpiredDate.ToString("yyyy-MM-dd")" disabled />
+        <label asp-for="RequestId">Mã đơn tìm gia sư:</label>
+        <input type="number" asp-for="RequestId" class="form-control customform-control" disabled />
     </div>
 
     <div class="form-group">
         <label asp-for="RequestStatus">Trạng thái đơn tìm gia sư hiện tại:</label>
-        <input type="text" asp-for="RequestStatus" class="form-control customform-control" disabled/>
+        <input type="text" asp-for="RequestStatusDescription" class="form-control customform-control" disabled/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QueueStatus">Trạng thái ứng tuyển:</label>
+        <input type="text" asp-for="QueueStatusDescription" class="form-control customform-control" disabled />
     </div>
 
     <div class="form-group">
@@ -65,15 +64,12 @@
         <input type="text" asp-for="AdditionalDetail" class="form-control customform-control" disabled />
     </div>
 
-    <div class="form-group">
-        <label asp-for="QueueStatus">Trạng thái ứng tuyển:</label>
-        <input type="text" asp-for="QueueStatus" class="form-control customform-control" disabled />
-    </div>
+    
 
     @if (Model.QueueStatus == AppConfig.QueueStatus.APPROVAL.ToString().ToLower())
     {
         <div class="form-group">
-            <label asp-for="Price">Số tiền thế chân: @string.Format("{0:#,0} VNĐ", Model.Price)</label>
+            <label asp-for="Price">Số tiền ứng tuyển: @string.Format("{0:#,0} VNĐ", Model.Price)</label>
             @* <input type="number" class="form-control customform-control" value="@string.Format("{0:#,0} VNĐ", Model.Price)" disabled /> *@
         </div>
     }

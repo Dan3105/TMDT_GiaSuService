@@ -1,6 +1,6 @@
 ﻿@using GiaSuService.Configs;
 @using GiaSuService.Models.TutorViewModel;
-@model IEnumerable<TutorApplyFormViewModel>
+@model IEnumerable<TutorApplyCardViewModel>
 @{
     ViewData["Title"] = "Danh sách các đơn đã ứng tuyển";
 }
@@ -15,29 +15,57 @@
                     <li class="list-group-item d-flex m-3">
                         <div class="row w-100">
                             <div class="col-md-9">
-                                @* Khi release phai an ma don duoi dang input hidden *@
-                                @* <input type="hidden" asp-for="@item.RequestId" /> *@
-
                                 <h5 class="mb-1">@item.SubjectName - @item.GradeName</h5>
 
-                                <small>Mã yêu cầu: @item.RequestId</small>
+                                <p class="mb-1">Mã đơn tìm gia sư: @item.RequestId</p>
 
-                                <p class="mb-1">Ngày hết hạn: @item.ExpiredDate</p>
+                                @* Trạng thái đơn tìm gia sư *@
+                                <div style="display: flex; flex-direction:row; justify-content: left">
+                                    <p class="mb-1" style="margin-right: 4px;">Trạng thái đơn tìm gia sư:</p>
 
-                                <p class="mb-1">Số lượng học sinh: @item.Students</p>
+                                    @if (item.RequestStatus == AppConfig.FormStatus.DENY.ToString().ToLower() ||
+                                         item.RequestStatus == AppConfig.FormStatus.CANCEL.ToString().ToLower())
+                                    {
+                                        <p class="badge bg-danger rounded-pill" style="margin-top:2px">@item.RequestStatusDescription</p>
+                                    }
 
-                                @if (!string.IsNullOrEmpty(item.AdditionalDetail))
-                                {
-                                    <p class="mt-3 mb-0">Thông tin thêm: @item.AdditionalDetail</p>
-                                }
-                                else
-                                {
-                                    <p class="mt-3 mb-0">Thông tin thêm: Không có</p>
-                                }
+                                    @if (item.RequestStatus == AppConfig.FormStatus.APPROVAL.ToString().ToLower() ||
+                                         item.RequestStatus == AppConfig.FormStatus.HANDOVER.ToString().ToLower())
+                                    {
+                                        <p class="badge bg-success rounded-pill" style="margin-top:2px">@item.RequestStatusDescription</p>
+                                    }
+                                </div>
+
+                                @* Trạng thái đơn ứng tuyển *@
+                                <div style="display: flex; flex-direction:row; justify-content: left">
+                                    <p class="mb-1" style="margin-right: 4px;">Trạng thái ứng tuyển:  </p>
+                                    @if (item.QueueStatus == AppConfig.QueueStatus.DENY.ToString().ToLower() ||
+                                         item.QueueStatus == AppConfig.QueueStatus.CANCEL.ToString().ToLower())
+                                    {
+                                        <p class="badge bg-danger rounded-pill" style="margin-top:2px">@item.QueueStatusDescription</p>
+                                    }
+
+                                    @if (item.QueueStatus == AppConfig.QueueStatus.PENDING.ToString().ToLower())
+                                    {
+                                        <p class="badge bg-info rounded-pill" style="margin-top:2px">@item.QueueStatusDescription</p>
+                                    }
+
+                                    @if (item.QueueStatus == AppConfig.QueueStatus.APPROVAL.ToString().ToLower() ||
+                                         item.QueueStatus == AppConfig.QueueStatus.HANDOVER.ToString().ToLower() ||
+                                         item.QueueStatus == AppConfig.QueueStatus.REFUND.ToString().ToLower()  )
+                                    {
+                                        <p class="badge bg-success rounded-pill" style="margin-top:2px">@item.QueueStatusDescription</p>
+                                    }
+                                </div>
+
+                                <p class="mb-1">Số lượng học sinh: @item.NStudents</p>
+
+                                <p class="mb-1">Địa điểm: @item.Location</p>
+
                             </div>
                             <div class="col-md-3 row">
-                                <div class="col-md-7 d-flex justify-content-center align-items-center">
-                                    <a href="@Url.Action("TutorRequestProfile", "Tutor", new{requestId = item.RequestId, queueStatus = item.StatusName})" 
+                                <div class=" d-flex justify-content-center align-items-center">
+                                    <a href="@Url.Action("TutorRequestProfile", "Tutor", new{requestId = item.RequestId})" 
                                     class="btn btn-sm btn-outline-primary me-2 customstyle-button">Chi tiết</a>
                                     
                                     
@@ -47,22 +75,6 @@
                                         <a href="@Url.Action("CancelApplyRequest", "Tutor", new{requestId = item.RequestId})" class="btn btn-sm btn-outline-primary me-2">Cancel</a>
                                     } *@
                                    
-                                </div>
-                                <div class="col-md-5 d-flex justify-content-end align-items-center">
-                                    @if (item.StatusName == AppConfig.QueueStatus.DENY.ToString().ToLower() ||
-                                        item.StatusName == AppConfig.QueueStatus.CANCEL.ToString().ToLower())
-                                    {
-                                        <span class="badge bg-danger rounded-pill ms-auto">@item.StatusName</span>
-                                    }
-                                    @if (item.StatusName == AppConfig.QueueStatus.PENDING.ToString().ToLower())
-                                    {
-                                        <span class="badge bg-info rounded-pill ms-auto">@item.StatusName</span>
-                                    }
-                                    @if (item.StatusName == AppConfig.QueueStatus.APPROVAL.ToString().ToLower() ||
-                                         item.StatusName == AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
-                                    {
-                                        <span class="badge bg-success rounded-pill ms-auto">@item.StatusName</span>
-                                    }
                                 </div>
                             </div>
                         </div>
