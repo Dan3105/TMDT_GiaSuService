@@ -20,7 +20,7 @@
                 <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
                 @if (Model.TransactionRefund == null && string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate))
                 {
-                    <form class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
+                    <form id="myForm" class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
                         <input type="hidden" name="tutorId" value="@Model.TransactionDeposit.TutorId">
                         <input type="hidden" name="requestId" value="@Model.TransactionDeposit.RequestId">
                         <div class="form-group">
@@ -63,27 +63,87 @@
     }
 </div>
 
+<!-- Include the confirmation dialog -->
+<partial name="_ConfirmationDialog" />
+
 
 <script>
+    // Add event listener to the submit button
     document.addEventListener('DOMContentLoaded', function () {
-        var refundLink = document.getElementById('refundLink');
-        if (refundLink) {
-            refundLink.addEventListener('click', function (event) {
-                var confirmation = confirm("Bạn có chắc chắn hoàn tiền?");
-                if (!confirmation) {
-                    event.preventDefault(); // Prevent the default action (opening the link) if user cancels
-                }
+        var submitButton = document.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                confirmSubmission().then(function (confirmed) {
+                    if (confirmed) {
+                        // User confirmed, manually trigger form submission
+                        var form = document.getElementById('myForm');
+                        if (form) form.submit();
+                    } else {
+                        // User canceled
+                        document.getElementById('confirmationDialog').style.display = 'none';
+                    }
+                });
             });
         }
+    });
 
-        var paymentLink = document.getElementById('confirmPayment');
-        if (paymentLink) {
-            paymentLink.addEventListener('click', function (event) {
-                var confirmation = confirm("Xác nhận thanh toán?");
-                if (!confirmation) {
-                    event.preventDefault(); // Prevent the default action (opening the link) if user cancels
+    // Add event listener to the submit button
+    document.addEventListener('DOMContentLoaded', function () {
+        var refundLink = document.getElementById('refundLink');
+
+        if (refundLink) {
+            refundLink.addEventListener('click', async function (event) {
+                event.preventDefault(); // Prevent default link behavior
+
+                var confirmed = await refundSubmission(); // Wait for user confirmation
+                if (confirmed) {
+                    // User confirmed, proceed with link navigation
+                    window.location.href = this.href;
+                } else {
+                    // User canceled
+                    document.getElementById('confirmationDialog').style.display = 'none';
                 }
             });
         }
     });
+
+    // Function to display confirmation dialog and return a Promise
+    function confirmSubmission() {
+        return new Promise(function (resolve) {
+            showConfirmationDialog("Xác nhận thanh toán?", function (result) {
+                resolve(result); // Resolve the Promise with user's choice
+            });
+        });
+    }
+
+    // Function to display confirmation dialog and return a Promise
+    function refundSubmission() {
+        return new Promise(function (resolve) {
+            showConfirmationDialog("Xác nhận hoàn tiền?", function (result) {
+                resolve(result); // Resolve the Promise with user's choice
+            });
+        });
+    }
+
+    function showConfirmationDialog(message, callback) {
+        const confirmDialog = document.getElementById('confirmationDialog');
+        const confirmMsg = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYes');
+        const confirmNoBtn = document.getElementById('confirmNo');
+
+        confirmMsg.textContent = message; // Update message content
+
+        confirmYesBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(true); // Callback with true when user clicks 'Yes'
+        });
+
+        confirmNoBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(false); // Callback with false when user clicks 'No'
+        });
+
+        document.getElementById('confirmationDialog').style.display = 'flex';
+    }
 </script>
