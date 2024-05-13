@@ -154,7 +154,7 @@ namespace GiaSuService.Services
                     DetailOriginal = historyDetail.Original,
                     DetailModified = historyDetail.Modified,
                 };
-                    //historyDetail.DetailModified = data;
+                result.Date = historyDetail.CreateDate;
                 return result;
             }
 

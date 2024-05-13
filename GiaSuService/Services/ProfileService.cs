@@ -14,13 +14,15 @@ namespace GiaSuService.Services
         private readonly IProfileRepo _profileRepo;
         private readonly ITutorRepo _tutorRepo;
         private readonly IUploadFileService _uploadFileService;
+        private readonly IStatusRepo _statusRepo;
 
-        public ProfileService(IAuthService authService, IProfileRepo profileRepo, ITutorRepo tutorRepo, IUploadFileService uploadFileService)
+        public ProfileService(IAuthService authService, IProfileRepo profileRepo, ITutorRepo tutorRepo, IUploadFileService uploadFileService, IStatusRepo statusRepo)
         {
             _authService = authService;
             _profileRepo = profileRepo;
             _tutorRepo = tutorRepo;
             _uploadFileService = uploadFileService;
+            _statusRepo = statusRepo;
         }
 
         public async Task<int?> GetProfileId(int accountId, string roleName)
@@ -106,7 +108,18 @@ namespace GiaSuService.Services
             var origin = await _profileRepo.GetTutorFormUpdateProfile(profile.Form.TutorId);
             if(origin == null)
             {
-                return new ResponseService { Success = true, Message = "Không tìm thấy thông tin gia sư trong hệ thống" }; 
+                return new ResponseService { Success = false, Message = "Không tìm thấy thông tin gia sư trong hệ thống" }; 
+            }
+
+            var tutorStatus = await _tutorRepo.GetTutor(origin.TutorId);
+            if(tutorStatus == null)
+            {
+                return new ResponseService { Success = false, Message = "Không tìm thấy thông tin gia sư trong hệ thống" };
+            }
+            else if (tutorStatus.Status.Name.Equals(AppConfig.RegisterStatus.PENDING.ToString().ToLower()))
+            {
+                return new ResponseService { Success = false, Message = "Tài khoản đang chờ duyệt không thể yêu cầu thay đổi thông tin" };
+
             }
 
             if (avatar != null)
@@ -131,11 +144,19 @@ namespace GiaSuService.Services
             }
 
             TutorFormUpdateProfileViewModel? diff = TutorFormUpdateProfileViewModel.CompareDifference(origin, profile.Form);
+            bool isSuccess = false;
             if(diff == null && origin.IsActive == profile.Form.IsActive)
             {
                 return new ResponseService { Success = false, Message = "Bạn chưa thay đổi thông tin nào" };
             }
-            bool isSuccess = await _profileRepo.UpdateRequestTutorProfile(origin, profile.Form);
+            else if (diff == null && origin.IsActive  != profile.Form.IsActive)
+            {
+                isSuccess = await _profileRepo.UpdateActiveTutor(origin, profile.Form);
+            }
+            else
+            {
+                isSuccess = await _profileRepo.UpdateRequestTutorProfile(origin, profile.Form);
+            }
             if (isSuccess)
             {
                 return new ResponseService { Success = true, Message = "Cập nhật thành công" };

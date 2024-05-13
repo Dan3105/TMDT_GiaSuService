@@ -21,6 +21,8 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> UpdateAvatar(int accountId, string imageUrl);
         public Task<bool> UpdateRequestTutorProfile(TutorFormUpdateProfileViewModel original, TutorFormUpdateProfileViewModel modified);
 
+        public Task<bool> UpdateActiveTutor(TutorFormUpdateProfileViewModel modified, TutorFormUpdateProfileViewModel exitsTutor);
+
         public Task<DifferenceUpdateRequestFormViewModel?> GetTutorsDifferenceProfile(int historyId);
     }
 }

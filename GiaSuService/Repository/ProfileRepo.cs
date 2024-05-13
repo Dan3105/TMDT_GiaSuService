@@ -267,17 +267,17 @@ namespace GiaSuService.Repository
                 try
                 {
                     var exitsTutor = await GetTutorFormUpdateProfile(modified.TutorId);
-                    if(exitsTutor == null)
+                    if (exitsTutor == null)
                     {
                         return false;
                     }
-                    var status = await _context.Statuses.Select(p => new {p.Id, p.Name}).
+                    var status = await _context.Statuses.Select(p => new { p.Id, p.Name }).
                         FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.RegisterStatus.UPDATE.ToString().ToLower()));
-                    if(status == null)
+                    if (status == null)
                     {
                         throw new NullReferenceException();
                     }
-                    
+
                     string jsonContext = JsonConvert.SerializeObject(original);
                     TutorStatusDetail request = new TutorStatusDetail()
                     {
@@ -290,24 +290,13 @@ namespace GiaSuService.Repository
                     _context.TutorStatusDetails.Add(request);
                     await _context.SaveChangesAsync();
 
-                    if(modified.IsActive != exitsTutor.IsActive)
-                    {
-                        _context.Tutors
-                            .Where(p => p.Id == modified.TutorId)
-                            .ExecuteUpdate(x => x 
-                            .SetProperty(p => p.IsActive, modified.IsActive))
-                            ;
-
-                        await _context.SaveChangesAsync();
-                    }
-
                     var tutorChanged = await _context.Tutors.Include(p => p.Identity)
                                                 .Include(p => p.Account)
                                                 .Include(p => p.Status).FirstOrDefaultAsync(p => p.Id == original.TutorId);
-                    if(tutorChanged == null) { throw new NullReferenceException(); }
+                    if (tutorChanged == null) { throw new NullReferenceException(); }
                     tutorChanged.StatusId = status.Id;
                     await UpdateProperties(tutorChanged, modified);
-                    
+
                     _context.Tutors.Update(tutorChanged);
 
                     await _context.SaveChangesAsync();
@@ -319,6 +308,22 @@ namespace GiaSuService.Repository
                 {
                     transaction.Rollback();
                 }
+            }
+            return false;
+        }
+
+        public async Task<bool> UpdateActiveTutor(TutorFormUpdateProfileViewModel modified, TutorFormUpdateProfileViewModel exitsTutor)
+        {
+            if (modified.IsActive != exitsTutor.IsActive)
+            {
+                _context.Tutors
+                    .Where(p => p.Id == modified.TutorId)
+                    .ExecuteUpdate(x => x
+                    .SetProperty(p => p.IsActive, modified.IsActive))
+                    ;
+
+               bool isSuccess = await _context.SaveChangesAsync() > 0;
+                return isSuccess;
             }
             return false;
         }
@@ -399,6 +404,7 @@ namespace GiaSuService.Repository
                 var subjects = _context.Subjects.AsNoTracking().OrderBy(p => p.Value);
 
                 DifferenceUpdateRequestFormViewModel result = new DifferenceUpdateRequestFormViewModel();
+                result.CreateDate = getHistoryStatus.CreateDate;
                 #region original handler
                 result.Original = origin;
                 var district = await districts.FirstOrDefaultAsync(p => p.Id == result.Original.SelectedDistrictId);
@@ -463,7 +469,7 @@ namespace GiaSuService.Repository
         private async Task UpdateProperties(Tutor original, TutorFormUpdateProfileViewModel modified)
         {
             if (!string.IsNullOrEmpty(modified.Fullname))
-                original.FullName = modified.Fullname;
+                original.FullName = Utility.FormatToCamelCase(modified.Fullname);
 
             if (modified.Birth.HasValue)
                 original.Birth = modified.Birth.Value;
