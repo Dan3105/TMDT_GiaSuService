@@ -4,8 +4,8 @@
     ViewData["Title"] = "Đăng ký tài khoản nhân viên mới";
 }
 
-
 <h1>Tạo tài khoản nhân viên</h1>
+
 <form asp-action="Register" asp-controller="Admin" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="RegisterForm!.Avatar">
     <input type="hidden" asp-for="RegisterForm!.FrontIdentityCard" />
@@ -30,7 +30,8 @@
     </div>
     <div class="form-group">
         <label for="birthDate">Ngày sinh:</label>
-        <input type="date" class="form-control customform-control" id="birthDate" asp-for="RegisterForm!.BirthDate">
+        <input type="date" class="form-control customform-control" id="birthDate" min="1900-01-01"
+        asp-for="RegisterForm!.BirthDate">
         @Html.ValidationMessageFor(model => model.RegisterForm!.BirthDate, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -129,6 +130,9 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().toISOString().split('T')[0];   // Get today's date in YYYY-MM-DD format
+        document.getElementById('birthDate').setAttribute('max', today);
+
         getDistricts(); // Call the getDistricts function when the view is first loaded
     });
 

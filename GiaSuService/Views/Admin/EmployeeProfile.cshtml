@@ -7,9 +7,14 @@
     ViewData["Title"] = "Chi tiết thông tin nhân viên";
 }
 
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Admin/EmployeeList" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách nhân viên</a>
+</div>
+
+<h1>Thông tin tài khoản nhân viên</h1>
 <div class="container">
     <form method="post" asp-action="UpdateEmployeeProfile" asp-controller="Admin" enctype="multipart/form-data">
-        <h1>Thông tin tài khoản nhân viên</h1>
+        
         <div class="row">
             @* Avatar *@
             <div class="col-md-4">

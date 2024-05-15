@@ -33,12 +33,14 @@
     @* Name, Birthday, Gender *@
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
-        <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn" asp-for="AccountProfile!.FullName">
+        <input type="text" class="form-control customform-control" id="fullName"  placeholder="Nhập tên đầy đủ của bạn"
+               asp-for="AccountProfile!.FullName" data-val="true"   >
         @Html.ValidationMessageFor(model => model.AccountProfile!.FullName, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="birthDate">Ngày sinh:</label>
-        @Html.TextBoxFor(model => model.AccountProfile!.BirthDate, "{0:yyyy-MM-dd}", new { @type = "date", @class="form-control customform-control" })
+        <input type="date" class="form-control customform-control" id="birthDate" value="2000-01-01" min="1900-01-01"
+                asp-for="AccountProfile!.BirthDate" data-val="true" >
         @Html.ValidationMessageFor(model => model.AccountProfile!.BirthDate, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -53,21 +55,21 @@
     @* Email *@
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control customform-control" id="email" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
+        <input type="email" class="form-control customform-control" id="email" data-val="true" placeholder="Nhập địa chỉ email của bạn" asp-for="AccountProfile!.Email">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Email, "", new { @class = "text-danger" })
     </div>
     
     @* Phone *@
     <div class="form-group">
         <label for="phone">Số điện thoại:</label>
-        <input type="tel" class="form-control customform-control" id="phone" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
+        <input type="tel" class="form-control customform-control" id="phone" data-val="true" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Phone, "", new { @class = "text-danger" })
     </div>
 
     @* Identity card number *@
     <div class="form-group">
         <label for="identityCard">CCCD/CMND:</label>
-        <input type="text" class="form-control customform-control" id="identityCard" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
+        <input type="text" class="form-control customform-control" id="identityCard" data-val="true" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
         @Html.ValidationMessageFor(model => model.AccountProfile!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     
@@ -103,19 +105,19 @@
     @* Password *@
     <div class="form-group">
         <label for="password">Mật khẩu:</label>
-        <input type="password" class="form-control customform-control" id="password" placeholder="Nhập mật khẩu của bạn" asp-for="AccountProfile!.Password">
+        <input type="password" class="form-control customform-control" id="password" data-val="true" placeholder="Nhập mật khẩu của bạn" asp-for="AccountProfile!.Password">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Password, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="confirmPassword">Xác nhận lại mật khẩu:</label>
-        <input type="password" class="form-control customform-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" asp-for="AccountProfile!.ConfirmPassword">
+        <input type="password" class="form-control customform-control" id="confirmPassword" data-val="true" placeholder="Nhập lại mật khẩu" asp-for="AccountProfile!.ConfirmPassword">
         @Html.ValidationMessageFor(model => model.AccountProfile!.ConfirmPassword, "", new { @class = "text-danger" })
     </div>   
     
     @* Province, District, AddressDetail *@
     <div class="form-group">
         <label for="province">Tỉnh:</label>
-        <select class="form-select customform-control" id="province" onchange="getDistricts()">
+        <select class="form-select customform-control" id="province" data-val="true" onchange="getDistricts()">
             @if (Model.ListProvince != null)
             {
                 <option id="provincedefault">Chọn tỉnh</option>
@@ -128,13 +130,13 @@
     </div>
     <div class="form-group">
         <label for="district">Quận/ Huyện:</label>
-        <select class="form-select customform-control" id="districtSelectionContainer" asp-for="AccountProfile!.SelectedDistrictId">
+        <select class="form-select customform-control" id="districtSelectionContainer" data-val="true" asp-for="AccountProfile!.SelectedDistrictId">
             <option value="">Chọn quận</option>
         </select>
     </div>
     <div class="form-group">
         <label for="addressName">Địa chỉ:</label>
-        <input type="text" class="form-control customform-control" id="addressName" placeholder="Địa chỉ chi tiết" asp-for="AccountProfile!.AddressName">
+        <input type="text" class="form-control customform-control" id="addressName" data-val="true" placeholder="Địa chỉ chi tiết" asp-for="AccountProfile!.AddressName">
         @Html.ValidationMessageFor(model => model.AccountProfile!.AddressName, "", new { @class = "text-danger" })
     </div>
 
@@ -142,13 +144,13 @@
     @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
     <div class="form-group">
         <label for="addressName">Trường đào tạo:</label>
-        <input type="text" class="form-control customform-control" id="collegeName" placeholder="Nhập tên trường" asp-for="RegisterTutorProfile!.College">
+        <input type="text" class="form-control customform-control" id="collegeName" data-val="true" placeholder="Nhập tên trường" asp-for="RegisterTutorProfile!.College">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.College, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
         <label for="addressName">Chuyên ngành:</label>
-        <input type="text" class="form-control customform-control" id="areaName" placeholder="Nhập chuyên ngành bạn học" asp-for="RegisterTutorProfile!.Area">
+        <input type="text" class="form-control customform-control" id="areaName" data-val="true" placeholder="Nhập chuyên ngành bạn học" asp-for="RegisterTutorProfile!.Area">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.Area, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -156,20 +158,22 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="RegisterTutorProfile!.AcademicYearFrom">Từ năm:</label>
-                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearFrom" class="form-control customform-control" required>
+                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearFrom" class="form-control customform-control" value="2000"
+                    data-val="true" required>
                 <span asp-validation-for="RegisterTutorProfile!.AcademicYearFrom" class="text-danger"></span>
                 @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.AcademicYearFrom, "", new { @class = "text-danger" })
             </div>
             <div class="col-6">
                 <label asp-for="RegisterTutorProfile!.AcademicYearto">Đến năm:</label>
-                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearto" class="form-control customform-control" required>
+                <input type="number" asp-for="RegisterTutorProfile!.AcademicYearto" class="form-control customform-control" value="2004"
+                    data-val="true" required>
                 @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.AcademicYearto, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
     <div class="form-group">
         <label for="addressName">Loại gia sư:</label>
-        <select class="form-control customform-control" id="typeTutor" asp-for="RegisterTutorProfile!.TypeTutorId">
+        <select class="form-control customform-control" id="typeTutor" data-val="true" asp-for="RegisterTutorProfile!.TypeTutorId">
             @if (Model.ListTutorType != null)
             {
                 <option id="provincedefault">-Công việc hiện tại-</option>
@@ -244,8 +248,8 @@
     <hr/>
 
     <div class="form-group">
-            <label for="confirm-box">Đã đọc các <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="text-decoration-none">điều khoản</a> trước khi đăng ký</label>
-        <input class="form-check-input ms-1" id="confirm-box" type="checkbox" id="ConfirmBox" asp-for="ConfirmBox" required />
+        <label for="confirm-box">Đã đọc các <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="text-decoration-none">điều khoản</a> trước khi đăng ký</label>
+        <input class="form-check-input ms-1" id="confirm-box" type="checkbox" id="ConfirmBox" data-val="true" asp-for="ConfirmBox" required />
         <span asp-validation-for="ConfirmBox" class="text-danger"></span>
     </div>
     <div style="text-align: center !important;">
@@ -257,8 +261,10 @@
 <partial name="_LoadingPanel" />
 
 <script>
-
     document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().toISOString().split('T')[0];   // Get today's date in YYYY-MM-DD format
+        document.getElementById('birthDate').setAttribute('max', today);
+
         getDistricts(); // Call the getDistricts function when the view is first loaded
     });
 
@@ -322,18 +328,19 @@
                 canSubmit = false;
             }
 
-            if (!canSubmit) {
-                event.preventDefault(); // Prevent form submission
+            var unvalidInput = $('.field-validation-error').length;
+            console.log('Num of unvalidInput: ' + unvalidInput);
 
-                // Show an alert or message
-                alert('Vui lòng kiểm tra lại các dữ liệu đã nhập ở trên.'); 
-
-                return false; // Stop form submission
+            if (canSubmit && unvalidInput === 0) {
+                // The form is valid, proceed with submission
+                document.getElementById('loadingPanel').style.display = 'flex';
+                return true;
+            } else {
+                // The form is invalid, prevent submission
+                event.preventDefault();
+                alert('Vui lòng kiểm tra lại các dữ liệu đã nhập.');
+                return false;
             }
-
-            document.getElementById('loadingPanel').style.display = 'flex';
-            // Proceed with form submission if files are uploaded
-            return true;
         });
     });
 

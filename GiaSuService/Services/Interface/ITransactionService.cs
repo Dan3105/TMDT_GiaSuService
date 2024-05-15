@@ -6,6 +6,7 @@ namespace GiaSuService.Services.Interface
 {
     public interface ITransactionService
     {
+        public Task<TransactionDetailViewModel?> GetTransactionDetail(int transactionId);
         public Task<TutorTransactionDetailViewModel> GetDetailTutorQueueTransaction(int tutorId, int requestId);
         public Task<ResponseService> CreateRefundTransaction(int tutorId, int requestId, int empId);
 

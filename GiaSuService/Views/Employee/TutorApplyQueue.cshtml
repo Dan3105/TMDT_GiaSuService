@@ -5,23 +5,30 @@
 @model TutorRequestCardViewModel
 
 @{
-    ViewData["Title"] = "Hàng chờ đơn ứng tuyển của gia sư";
+    ViewData["Title"] = "Danh sách các đơn ứng tuyển của đơn tìm gia sư";
 }
 
-<h2>Hàng chờ đơn ứng tuyển của gia sư</h2>
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Employee/TutorRequestList" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách đơn tìm gia sư đã duyệt</a>
+</div>
+
+<h2>Danh sách các đơn ứng tuyển của đơn tìm gia sư #@Model.RequestId</h2>
 
 <div class="container pt-4">
-    <p class="card-text"><b>Tên lớp:</b> @Model.SubjectName</p>
+    @* <p class="card-text"><b>Trạng thái đơn tìm gia sư:</b> @Model.RequestStatus</p> *@
+    <p class="card-text"><b>Môn học:</b> @Model.SubjectName</p>
     <p class="card-text"><b>Khối lớp:</b> @Model.GradeName</p>
+    <p class="card-text"><b>Địa chỉ:</b> @Model.Address</p>
+    <p class="card-text"><b>Các khung giờ có thể dạy:</b> @Model.SessionsCanTeach</p>
     <p class="card-text"><b>Thông tin thêm:</b> @Model.AdditionalDetail</p>
-    <p class="card-text"><b>Địa điểm:</b> @Model.Address</p>
+    </br>
+
     <table class="table">
         <thead>
             <tr>
-                <th>Ảnh</th>
-                <th>Họ Tên</th>
-                <th>Thông tin</th>
-                <th class="border-end">Trạng thái</th>
+                <th class="text-center border-end">Ảnh đại diện</th>
+                <th class="text-center border-end">Thông tin gia sư</th>
+                <th class="text-center border-end">Trạng thái ứng tuyển</th>
                 <th class="text-center border-end">Hành động cập nhật</th>
                 <th class="text-center">Thông tin hóa đơn</th>
             </tr>
@@ -42,42 +49,53 @@
             data: { requestId: thisRequestId},
             success: function (response) {
                 $("#tutor_container").empty();
+                
+                var requestStatus = "@Model.RequestStatus";
+                console.log(requestStatus);
+                console.log(response);
+
                 $.each(response.tutors, function (index, item) {
-                    var currentStatus = item.statusQueue.toLowerCase(); 
+                   
+                    var currentStatus = item.statusQueue.toLowerCase();
                     var queueStatuses = response.queriesStatus;
                     var href = item.isHaveTransaction ? `/Employee/TutorTransactionDetail?tutorId=${item.tutorId}&requestId=${thisRequestId}` : "#";
-                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Chi tiết</a>`
 
-                    var itemHtml = `<tr>
-                                        <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
-                                        <td>
-                                            <div>
-                                                <strong>${item.fullName}</strong><br/>
-                                                <span>${item.tutorType}</span>
-                                            </div>
-                                        </td>
-                                        <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Chi tiết</a></td>
-                                        <td class="text-center text-capitalize border-end">${item.statusQueue}</td>
-                                        <td class="border-end">
-                                            <div class="row d-flex align-items-center">
-                                                <div class="col-md-12 col-lg-7">
-                                                           <select class="form-select customform-control" id="statusSelect_${item.tutorId}">
-                                                        ${queueStatuses.map(status => `<option value="${status.name}" ${currentStatus === status.name ? 'selected' : ''}>${status.vietnameseName}</option>`).join('')}
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-12 col-lg-5">
-                                                        <button type="button" class="btn btn-primary customstyle-button m-1" onclick="updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'statusSelect_${item.tutorId}')">
-                                                    Cập nhật
-                                                </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="h-100 d-flex align-items-center justify-content-center text-center">
-                                                    ${aTagTransaction}
-                                            </div>
-                                        </td>
-                                    </tr>`;
+                    var itemHtml = `
+                    <tr>
+                        <td class="border-end d-flex justify-content-center"> @* Avatar *@
+                            <img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" />
+                        </td>
+                        <td class="border-end"> @* FullName & TutorType *@
+                            <div style="display:flex; flex-direction: column;">
+                                <strong>${item.fullName}</strong>
+                                <span>${item.tutorType}</span>
+                                <span><a class="" href="/Employee/TutorProfile?id=${item.tutorId}">Xem chi tiết</a><span>
+                            </div>
+                        </td>
+                        <td class="text-center text-capitalize border-end"> @* Tutor Status Name in Queue *@
+                            ${item.statusQueue}
+                        </td>
+                        <td class="border-end">
+                            <div class="column d-flex justify-content-center">
+                                ${requestStatus === "handover" && item.statusQueueName === "handover"
+                                    ? ``
+                                    : `
+                                        ${item.statusQueueName === "pending"
+                                            ? `<button type= "button" class="btn btn-primary customstyle-button m-1" onclick = "updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'approval')" >
+                                                    Đồng ý duyệt
+                                                </button>`
+                                            : ``
+                                        }
+                                    `
+                                }
+                            </div>
+                        </td>
+                        <td>
+                                <div class="h-100 d-flex justify-content-center text-center">
+                                '<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Xem hoá đơn</a>'
+                            </div>
+                        </td>
+                    </tr>`;
                     $("#tutor_container").append(itemHtml);
                 })
             },
@@ -88,9 +106,9 @@
         })
     }
     getTutorsQueue();
-    function updateTutorStatus(tutorId, requestId, selectId) {
+    function updateTutorStatus(tutorId, requestId, newStatusName) {
         // Get the value of the selected option
-        var selectedValue = document.getElementById(selectId).value;
+        // var selectedValue = document.getElementById(selectId).value;
 
         // Use the selectedValue as needed (e.g., send it to the server via AJAX)
         //console.log("Selected value:", selectedValue);
@@ -99,7 +117,7 @@
         $.ajax({
             url: '/Employee/UpdateTutorStatus',
             method: 'POST',
-            data: { tutorId : tutorId, requestId: requestId, newStatus: selectedValue },
+            data: { tutorId: tutorId, requestId: requestId, newStatus: newStatusName },
             success: function(data){
                 console.log(data);
                 if (data.success) {

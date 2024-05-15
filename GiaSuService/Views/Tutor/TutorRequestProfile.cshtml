@@ -5,8 +5,17 @@
     ViewData["Title"] = "Chi tiết yêu cầu đơn tìm gia sư";
 }
 
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Tutor/ListTutorApplyForm" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách đơn đã ứng tuyển</a>
+</div>
+
 <div class="container">
     <h1 class="pb-3">Chi tiết yêu cầu đơn tìm gia sư</h1>
+
+    @if (Model.RequestStatus == "handover" && Model.QueueStatus != "handover")
+    {
+        <span class="text-danger">Đơn tìm gia sư này đã được giao cho gia sư khác.</span>
+    }
 
     <div class="form-group">
         <label asp-for="RequestId">Mã đơn tìm gia sư:</label>
@@ -14,7 +23,7 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="RequestStatus">Trạng thái đơn tìm gia sư hiện tại:</label>
+        <label asp-for="RequestStatus">Trạng thái đơn tìm gia sư:</label>
         <input type="text" asp-for="RequestStatusDescription" class="form-control customform-control" disabled/>
     </div>
 
@@ -116,7 +125,7 @@
             var requestStatus = "@Model.RequestStatus";
             var queueStatus = "@Model.QueueStatus";
 
-            if (queueStatus == "handover" && queueStatus == requestStatus) {
+            if (queueStatus == "handover" && queueStatus == "handover") {
                 showConfirmationDialog("Bạn có chắc muốn huỷ ứng tuyển? Bạn sẽ không được hoàn tiền và không thể ứng tuyển lại vào đơn này nữa.", function (result) {
                     resolve(result); // Resolve the Promise with user's choice
                 });

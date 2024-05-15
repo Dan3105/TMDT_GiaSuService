@@ -79,24 +79,49 @@ namespace GiaSuService.Repository
 
         public async Task<TransactionDetailViewModel?> GetTransactionDetailByTutorAndRequest(int tutorId, int requestId, bool isDeposit)
         {
-            return (await _context.TransactionHistories.AsNoTracking()
+            var result = (await _context.TransactionHistories.AsNoTracking()
                 .Select(p => new
                 {
                     Transaction = new TransactionDetailViewModel
                     {
-                        Context = p.Context ?? string.Empty,
+                        TutorId = p.TutorId,
+                        RequestId = p.FormId,
+
+                        EmployeeName = p.Employee.FullName,
+                        TutorName = p.Tutor.FullName,
+
                         CreateDate = p.CreateDate.ToString("HH:mm:ss dd/MM/yyyy"),
                         PaymentDate = ((DateTime)p.PaymentDate!).ToString("HH:mm:ss dd/MM/yyyy") ?? string.Empty,
                         Price = p.PaymentAmount,
-                        EmployeeName = p.Employee.FullName,
-                        TutorName = p.Tutor.FullName,
-                        TutorId = p.TutorId,
-                        RequestId = p.FormId
+
+                        Context = p.Context ?? string.Empty,
                     },
                     p.TypeTransaction
                 })
                 .FirstOrDefaultAsync(p => p.Transaction.TutorId == tutorId && p.Transaction.RequestId == requestId && p.TypeTransaction == isDeposit)
                 )?.Transaction;
+
+            if (result == null) return result;
+
+            if (isDeposit)
+            {
+                var tutorRequest = await _context.RequestTutorForms
+                .AsNoTracking()
+                .Include(p => p.Status)
+                .Select(p => new { p.Id, p.Status.Name })
+                .FirstOrDefaultAsync(p => p.Id == requestId);
+
+                var tutorApply = await _context.TutorApplyForms
+                .AsNoTracking()
+                .Include(p => p.Status)
+                .Select(p => new { p.TutorId, p.TutorRequestId, p.Status.Name })
+                .FirstOrDefaultAsync(p => p.TutorId == tutorId && p.TutorRequestId == requestId);
+
+                result.RequestStatus = tutorRequest != null ? tutorRequest.Name : string.Empty;
+                result.QueueStatus = tutorApply != null ? tutorApply.Name : string.Empty;
+            }
+            
+            return result;
         }
 
         public async Task<IEnumerable<TransactionDetailViewModel>> GetTransactionsTutor(int tutorid)
@@ -125,8 +150,10 @@ namespace GiaSuService.Repository
         {
             try {
 
-                var statusPaid = await _context.Statuses.FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower())
-                                                                    && p.StatusType.Type.ToLower().Equals(AppConfig.transaction_status.ToLower()));
+                var statusPaid = await _context.Statuses
+                    .FirstOrDefaultAsync(p => p.Name.Equals(AppConfig.TransactionStatus.PAID.ToString().ToLower())
+                                    && p.StatusType.Type.ToLower().Equals(AppConfig.transaction_status.ToLower()));
+                
                 if (statusPaid == null)
                 {
                     throw new NullReferenceException();
@@ -204,5 +231,36 @@ namespace GiaSuService.Repository
             return result;
         }
 
+
+        public async Task<TransactionDetailViewModel?> GetTransactionDetail(int transactionId)
+        {
+            var result = (await _context.TransactionHistories.AsNoTracking()
+                .Select(p => new
+                {
+                    Transaction = new TransactionDetailViewModel
+                    {
+                        TransactionId = p.Id,
+                        TutorId = p.TutorId,
+                        RequestId = p.FormId,
+
+                        EmployeeName = p.Employee.FullName,
+                        TutorName = p.Tutor.FullName,
+
+                        CreateDate = p.CreateDate.ToString("HH:mm:ss dd/MM/yyyy"),
+                        PaymentDate = ((DateTime)p.PaymentDate!).ToString("HH:mm:ss dd/MM/yyyy") ?? string.Empty,
+                        Price = p.PaymentAmount,
+
+                        Context = p.Context ?? string.Empty,
+
+                        TransactionType = (p.TypeTransaction ? AppConfig.TransactionFilterType.PAID.ToString()
+                                                                : AppConfig.TransactionFilterType.REFUND.ToString()),
+                    },
+                    p.Id
+                })
+                .FirstOrDefaultAsync(p => p.Id == transactionId)
+                )?.Transaction;
+
+            return result;
+        }
     }
 }

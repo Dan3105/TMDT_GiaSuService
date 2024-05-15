@@ -1,6 +1,7 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
+using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,15 @@ namespace GiaSuService.Controllers
         private readonly IAuthService _authService;
         private readonly IProfileService _profileService;
         private readonly ICatalogService _catalogService;
+        private readonly ITransactionService _transactionService;
         public AdminController(IAddressService addressService, IAuthService authService, IProfileService profileService, 
-            ICatalogService catalogService)
+            ICatalogService catalogService, ITransactionService transactionService)
         {
             _addressService = addressService;
             _authService = authService;
             _profileService = profileService;
             _catalogService = catalogService;
+            _transactionService = transactionService;
         }
 
         public IActionResult Index()
@@ -236,6 +239,13 @@ namespace GiaSuService.Controllers
         public IActionResult TransactionList()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TransactionDetail(int transactionId)
+        {
+            var result = await _transactionService.GetTransactionDetail(transactionId);
+            return View(result);
         }
 
         #endregion

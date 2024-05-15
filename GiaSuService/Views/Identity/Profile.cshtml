@@ -55,7 +55,8 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="BirthDate">Ngày sinh:</label>
-                    <input type="date" asp-for="BirthDate" class="form-control customform-control" style="margin-bottom: 10px;"
+                    <input type="date" asp-for="BirthDate" id="birthDate" min="1900-01-01"
+                        class="form-control customform-control" style="margin-bottom: 10px;"
                            value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
                     @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
                 </div>

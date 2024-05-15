@@ -132,14 +132,14 @@
 
                     var itemHtml = `
                             <tr>
-                                <td>${item.transactionId}</td>
+                                <td>#${item.transactionId}</td>
                                 <td>${item.createDate}</td>
                                 <td>${item.employeeName}</td>
                                 <td>${item.price}</td>
                                 <td>${transTransactionType}</td>
                                 <td>${transPayStatus}</td>
                                 <td>
-                                    <a href="#">Chi tiết</a>
+                                    <a href="/Admin/TransactionDetail?transactionId=${item.transactionId}">Chi tiết</a>
                                 </td>
                             </tr>
                     `;

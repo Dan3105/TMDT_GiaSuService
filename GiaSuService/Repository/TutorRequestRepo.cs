@@ -311,13 +311,27 @@ namespace GiaSuService.Repository
                         GradeName = p.Grade.Name,
                         SubjectName = p.Subject.Name,
                         AdditionalDetail = p.AdditionalDetail ?? string.Empty,
-                        Address = $"{p.District.Name}, {p.District.Name}, {p.AddressDetail}",
-                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
+                        Address = $"{p.AddressDetail}, {p.District.Name}, {p.District.Province.Name}",
+                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
+                        RequestStatus = p.Status.Name,
                     })
                 .FirstOrDefaultAsync(p => p.RequestId == requestId);
 
 
             return result;
+        }
+
+        public async Task<bool> UpdateTutorApplyStatus(int tutorId, int requestId, Status newStatus)
+        {
+            var tutorApply = await _context.TutorApplyForms
+                .FirstOrDefaultAsync(p => p.TutorId == tutorId && p.TutorRequestId == requestId);
+
+            if (tutorApply == null) return false;
+
+            tutorApply.Status = newStatus;
+            _context.TutorApplyForms.Update(tutorApply);
+
+            return _context.SaveChanges() > 0;
         }
     }
 }

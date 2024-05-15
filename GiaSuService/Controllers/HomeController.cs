@@ -74,9 +74,18 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int page)
+        public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int requestType, int page)
         {
-            var queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page);
+            PageTutorRequestListViewModel? queries = null;
+            if(requestType == 1) 
+            { 
+                queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.HANDOVER, page); 
+            }
+            else
+            {
+                queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page);
+            }
+
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries=queries.list, page, totalPages };
             return Json(response);

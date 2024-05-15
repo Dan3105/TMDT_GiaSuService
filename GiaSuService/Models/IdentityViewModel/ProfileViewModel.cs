@@ -21,6 +21,7 @@ namespace GiaSuService.Models.IdentityViewModel
 
         [Required(ErrorMessage = "Vui lòng không để trống số điện thoại.")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại chỉ bao gồm 10 chữ số.")]
+        
         public required string Phone { get; set; }
 
         [Required(ErrorMessage = "Vui lòng không để trống ngày sinh.")]

@@ -172,6 +172,25 @@ namespace GiaSuService.Services
             }
         }
 
+        public async Task<ResponseService> UpdateStatusTutorApply(int tutorId, int requestId, string status)
+        {
+            var dbStatus = await _statusRepo.GetStatus(status, AppConfig.form_status);
+            if (dbStatus == null)
+            {
+                return new ResponseService { Message = "Không cập nhật được trạng thái vui lòng làm lại ", Success = false };
+            }
+
+            bool isSuccess = await _tutorRequestRepo.UpdateTutorApplyStatus(tutorId, requestId, dbStatus);
+            if (isSuccess)
+            {
+                return new ResponseService { Success = true, Message = "Cập nhật thành công" };
+            }
+            else
+            {
+                return new ResponseService { Success = false, Message = "Lỗi hệ thống không cập nhật được" };
+            }
+        }
+
         public async Task<TutorRequestProfileEditViewModel?> GetTutorRequestProfileEdit(int id)
         {
             return await _tutorRequestRepo.GetTutorRequestProfileEdit(id);
