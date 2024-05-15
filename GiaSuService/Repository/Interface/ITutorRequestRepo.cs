@@ -24,5 +24,7 @@ namespace GiaSuService.Repository.Interface
         public Task<bool> UpdateTutorRequestProfileEdit(TutorRequestProfileEditViewModel model);
 
         public Task<List<CustomerTutorRequestViewModel>> GetListTutorRequestOfCustomer(int customerId);
+
+        public Task<bool> UpdateTutorApplyStatus(int tutorId, int requestId, Status status);
     }
 }

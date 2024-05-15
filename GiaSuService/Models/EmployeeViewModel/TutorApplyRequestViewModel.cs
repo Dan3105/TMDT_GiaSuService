@@ -24,6 +24,7 @@ namespace GiaSuService.Models.EmployeeViewModel
         public string FullName { get; set; } = string.Empty;
         public string TutorType { get; set; } = string.Empty;
         public string StatusQueue { get; set; } = string.Empty;
+        public string StatusQueueName { get; set; } = string.Empty;
         public bool IsHaveTransaction { get; set; } = false;
     }
 

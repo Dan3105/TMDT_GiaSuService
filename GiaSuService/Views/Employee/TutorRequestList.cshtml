@@ -4,8 +4,8 @@
     ViewData["Title"] = "Danh sách đơn tìm gia sư";
 }
 <div class="container">
-    <div class="row align-items-center justify-content-center">
-        <div class="col-sm-6 d-flex justify-content-center mb-2">
+    <div style="display:flex; flex-direction:row; justify-content:right; ">
+        <div class="filter-content">
             <select id="province" class="form-select customform-control" onchange="getDistricts()">
                 @if (Model.ProvinceList != null)
                 {
@@ -18,13 +18,13 @@
             </select>
         </div>
 
-        <div class="col-sm-6 d-flex justify-content-center mb-2">
+        <div class="filter-content">
             <select class="form-select customform-control" id="districtSelectionContainer">
                 <option value="0">Chọn quận</option>
             </select>
         </div>
         
-        <div class="col-sm-6 d-flex justify-content-center mb-2">
+        <div class="filter-content">
             <select class="form-select customform-control" id="subject">
                 @if (Model.SubjectList != null)
                 {
@@ -37,7 +37,7 @@
             </select>
         </div>
         
-        <div class="col-sm-6 d-flex justify-content-center mb-2">
+        <div class="filter-content">
             <select class="form-select customform-control" id="grade">
                 @if (Model.GradeList != null)
                 {
@@ -49,8 +49,15 @@
                 }
             </select>
         </div>
+
+        <div class="filter-content">
+            <select class="form-select customform-control" id="requestStatusType">
+                <option value="0" selected>Đơn chưa giao</option>
+                <option value="1">Đơn đã giao</option>
+            </select>
+        </div>
         
-        <div class="col-sm-4 d-flex justify-content-center mb-2">
+        <div class="filter-content">
             <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Tìm kiếm</button>
         </div>
     
@@ -107,8 +114,10 @@
         var selectedIdDistrict = $('#districtSelectionContainer').val();
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
+        var selectedRequestStatusType = $('#requestStatusType').val();
 
-        $.getJSON("/Home/GetTutorRequestBy", { districtId: selectedIdDistrict, subjectId: selectedIdSubject, gradeId: selectedIdGrade, page: pageNumber })
+        $.getJSON("/Home/GetTutorRequestBy", { districtId: selectedIdDistrict, subjectId: selectedIdSubject, gradeId: selectedIdGrade, 
+                                                requestType: selectedRequestStatusType, page: pageNumber })
             .done(function (data) {
                 $("#items-container").empty(); // Clear existing items
 

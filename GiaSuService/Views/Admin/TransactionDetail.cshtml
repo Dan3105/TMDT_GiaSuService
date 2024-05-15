@@ -1,0 +1,45 @@
+﻿@using GiaSuService.Models.UtilityViewModel;
+
+@model TransactionDetailViewModel
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+}
+
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Admin/TransactionList" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách hoá đơn</a>
+</div>
+
+<div class="container">
+    <div class="card">
+        @if (Model.TransactionType == "PAID")
+        {
+            <div class="card-header">
+                <h2>Hóa đơn thanh toán phí nhận lớp</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Nhân viên lập hoá đơn:</strong> @Model.EmployeeName</p>
+                <p><strong>Tên khách hàng (gia sư):</strong> @Model.TutorName</p>
+                <p><strong>Ngày tạo đơn:</strong> @Model.CreateDate</p>
+                <p><strong>Ngày thanh toán:</strong> @(string.IsNullOrEmpty(Model.PaymentDate) ? "Chưa thanh toán" : Model.PaymentDate)</p>
+                <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.Price)</p>
+                <p><strong>Nội dung:</strong> @Model.Context</p>
+            </div>
+        }
+
+        @if (Model.TransactionType == "REFUND")
+        {
+            <div class="card-header">
+                <h2>Hóa đơn hoàn trả phí nhận lớp</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Nhân viên lập hoá đơn:</strong> @Model.EmployeeName</p>
+                <p><strong>Tên khách hàng (gia sư):</strong> @Model.TutorName</p>
+                <p><strong>Ngày tạo đơn hoàn tiền:</strong> @Model.CreateDate</p>
+                <p><strong>Ngày hoàn trả:</strong> @(string.IsNullOrEmpty(Model.PaymentDate) ? "Chưa thanh toán" : Model.PaymentDate)</p>
+                <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.Price)</p>
+                <p><strong>Nội dung:</strong> @Model.Context</p>
+            </div>
+        }
+
+    </div>
+</div>

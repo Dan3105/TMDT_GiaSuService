@@ -140,18 +140,18 @@
                                         <h5 class="card-title">Lớp chưa giao</h5>
                                         </div>
                                         <div class="card-body">
-                                                <p class="card-text"><b>Tên lớp:</b> ${item.subjectName}</p>
-                                                <p class="card-text"><b>Khối lớp:</b> ${item.gradeName}</p>
-                                                    ${additional_detail}
-                                                <p class="card-text"><b>Địa điểm:</b> ${item.address}</p>
-                                                <p class="card-text"><b>Các khung giờ có thể dạy:</b> ${item.sessionsCanTeach}</p>
+                                            <p class="card-text"><b>Tên lớp:</b> ${item.subjectName}</p>
+                                            <p class="card-text"><b>Khối lớp:</b> ${item.gradeName}</p>
+                                                ${additional_detail}
+                                            <p class="card-text"><b>Địa điểm:</b> ${item.address}</p>
+                                            <p class="card-text"><b>Các khung giờ có thể dạy:</b> ${item.sessionsCanTeach}</p>
                                         </div>
 
                                         <div class="d-flex justify-content-end m-2">
-                                                ${isAuth === "False" || roleName === tutorRoleName
-                                                    ? `<a href="#" class="register-btn btn btn-primary customstyle-button" onclick="registerRequest(${item.requestId})">Đăng ký ứng tuyển</a>`
-                                                    : ``
-                                                }    
+                                            ${isAuth === "False" || roleName === tutorRoleName
+                                                ? `<a href="#" class="register-btn btn btn-primary customstyle-button" onclick="registerRequest(${item.requestId})">Đăng ký ứng tuyển</a>`
+                                                : ``
+                                            }    
                                         </div>
                                     </div>
 

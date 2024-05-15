@@ -5,6 +5,10 @@
 @{
     ViewData["Title"] = "Duyệt tài khoản gia sư";
 }
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Employee/TutorRegisterQueue" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách yêu cầu tạo tài khoản gia sư</a>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-6 border-end">
@@ -14,38 +18,38 @@
 
                 <dt class="col-sm-4">Ngày tạo:</dt>
                 <dd class="col-sm-8">
-                    @Model.TutorProfileVM.Createdate.ToString("dd-MM-yyyy")
+                    @Model.TutorProfileVM?.Createdate.ToString("dd-MM-yyyy")
                 </dd>
 
                 <dt class="col-sm-4">Họ và tên:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.Fullname</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.Fullname</dd>
 
                 <dt class="col-sm-4">Email:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.Email</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.Email</dd>
 
                 <dt class="col-sm-4">Số điện thoại:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.Phone</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.Phone</dd>
 
                 <dt class="col-sm-4">Ngày sinh:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.Birth.ToString("dd-MM-yyyy")</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.Birth.ToString("dd-MM-yyyy")</dd>
                 
                 <dt class="col-sm-4">Giới tính:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.Gender</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.Gender</dd>
 
                 <dt class="col-sm-4">Số CCCD/ CMND:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.IdentityCard</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.IdentityCard</dd>
 
                 <dt class="col-sm-4">Địa chỉ:</dt>
-                <dd class="col-sm-8">@Model.TutorProfileVM.AddressDetail</dd>
+                <dd class="col-sm-8">@Model.TutorProfileVM?.AddressDetail</dd>
 
                 <dt class="col-sm-4">CMND/CCCD mặt trước:</dt>
                 <dd class="col-sm-8">
-                    <img id="frontCard" src="@Model.TutorProfileVM.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
+                    <img id="frontCard" src="@Model.TutorProfileVM?.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
                 </dd>
 
                 <dt class="col-sm-4">CMND/CCCD mặt sau:</dt>
                 <dd class="col-sm-8">
-                    <img id="backCard" src="@Model.TutorProfileVM.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
+                    <img id="backCard" src="@Model.TutorProfileVM?.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
                 </dd>
                 
             </dl>
@@ -53,7 +57,7 @@
 
         <div class="col-md-6">
             <div class="d-flex justify-content-center">
-                <img src="@Model.TutorProfileVM.Avatar" style="width: 200px; height: 200px;" alt="Avatar" class="img-thumbnail" />
+                <img src="@Model.TutorProfileVM?.Avatar" style="width: 200px; height: 200px;" alt="Avatar" class="img-thumbnail" />
             </div>
 
             <h2>Thông tin gia sư</h2>
@@ -61,27 +65,27 @@
             <dl class="row">
 
                 <dt class="col-sm-5">Trường học:</dt>
-                <dd class="col-sm-7">@Model.TutorProfileVM.College</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM?.College</dd>
 
                 <dt class="col-sm-5">Chuyên ngành:</dt>
-                <dd class="col-sm-7">@Model.TutorProfileVM.Area</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM?.Area</dd>
 
                 <dt class="col-sm-5">Thông tin thêm:</dt>
-                <dd class="col-sm-7">@Model.TutorProfileVM.Additionalinfo</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM?.Additionalinfo</dd>
 
                 <dt class="col-sm-5">Năm nhập học:</dt>
-                <dd class="col-sm-7">@Model.TutorProfileVM.Academicyearfrom</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM?.Academicyearfrom</dd>
 
                 <dt class="col-sm-5">Năm tốt nghiệp:</dt>
-                <dd class="col-sm-7">@Model.TutorProfileVM.Academicyearto</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM?.Academicyearto</dd>
 
                 <dt class="col-sm-5">Trình độ gia sư:</dt>
 
-                <dd class="col-sm-7">@Model.TutorProfileVM.TutorType?.TypeName</dd>
+                <dd class="col-sm-7">@Model.TutorProfileVM?.TutorType?.TypeName</dd>
 
                 <dt class="col-sm-5">Trạng thái đơn:</dt>
                 <dd class="col-sm-7">
-                    <b>@Model.TutorProfileVM.FormVietnameseStatusName</b>
+                    <b>@Model.TutorProfileVM?.FormVietnameseStatusName</b>
                 </dd>
             </dl>
         </div>

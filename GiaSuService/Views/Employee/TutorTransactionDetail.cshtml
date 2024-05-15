@@ -4,6 +4,10 @@
     ViewData["Title"] = "Chi tiết hóa đơn";
 }
 
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Employee/TutorApplyQueue?requestId=@Model.TransactionDeposit?.RequestId" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách đơn ứng tuyển</a>
+</div>
+
 <div class="container">
     @if (Model.TransactionDeposit != null)
     {
@@ -12,19 +16,22 @@
                 <h2>Hóa đơn thanh toán phí nhận lớp</h2>
             </div>
             <div class="card-body">
-                <p><strong>Tên nhân viên:</strong> @Model.TransactionDeposit.EmployeeName</p>
-                <p><strong>Tên gia sư:</strong> @Model.TransactionDeposit.TutorName</p>
+                <p><strong>Nhân viên lập hoá đơn:</strong> @Model.TransactionDeposit.EmployeeName</p>
+                <p><strong>Tên khách hàng (gia sư):</strong> @Model.TransactionDeposit.TutorName</p>
                 <p><strong>Ngày tạo đơn:</strong> @Model.TransactionDeposit.CreateDate</p>
                 <p><strong>Ngày thanh toán:</strong> @(string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate) ? "Chưa thanh toán" : Model.TransactionDeposit.PaymentDate)</p>
-                <p><strong>Nội dung:</strong> @Model.TransactionDeposit.Context</p>
                 <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
-                @if (Model.TransactionRefund == null && string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate))
+                <p><strong>Nội dung:</strong> @Model.TransactionDeposit.Context</p>
+                
+                @* @if (Model.TransactionRefund == null && string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate)) *@
+                @if(Model.TransactionDeposit?.RequestStatus == "approval"
+                    && Model.TransactionDeposit?.QueueStatus == "approval")
                 {
                     <form id="myForm" class="needs-validation" asp-action="UpdateDepositTransaction" method="post">
                         <input type="hidden" name="tutorId" value="@Model.TransactionDeposit.TutorId">
                         <input type="hidden" name="requestId" value="@Model.TransactionDeposit.RequestId">
                         <div class="form-group">
-                            <label for="paymentDate">Ngày thanh toán:</label>
+                            <label for="paymentDate"><strong>Ngày thanh toán:</strong></label>
                             <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control customform-control" required>
                         </div>
                         <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Thanh toán</button>
@@ -41,8 +48,8 @@
                 <h2>Hóa đơn hoàn trả phí nhận lớp</h2>
             </div>
             <div class="card-body">
-                <p><strong>Tên nhân viên:</strong> @Model.TransactionRefund.EmployeeName</p>
-                <p><strong>Tên gia sư:</strong> @Model.TransactionRefund.TutorName</p>
+                <p><strong>Tên nhân viên lập hoá đơn:</strong> @Model.TransactionRefund.EmployeeName</p>
+                <p><strong>Tên khách hàng (gia sư):</strong> @Model.TransactionRefund.TutorName</p>
                 <p><strong>Ngày tạo đơn hoàn tiền:</strong> @Model.TransactionRefund.CreateDate</p>
                 <p><strong>Ngày hoàn tiền:</strong> @(string.IsNullOrEmpty(Model.TransactionRefund.PaymentDate) ? "Chưa thanh toán" : Model.TransactionRefund.PaymentDate)</p>
                 <p><strong>Nội dung:</strong> @Model.TransactionRefund.Context</p>
@@ -53,7 +60,8 @@
     else
     {
         <div class="mt-4 d-flex justify-content-center align-items-center">
-            @if (!string.IsNullOrEmpty(Model.TransactionDeposit?.PaymentDate))
+            @if (Model.TransactionDeposit?.RequestStatus == "handover" 
+                && Model.TransactionDeposit?.QueueStatus == "handover")
             {
                 <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit?.TutorId, requestId=Model.TransactionDeposit?.RequestId})" 
                 class="btn btn-outline-danger">Hoàn tiền</a>
@@ -68,6 +76,19 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        // Set the value of the datetime-local input to the current date and time
+        document.getElementById('paymentDate').value = formattedDateTime;
+    });
+
     // Add event listener to the submit button
     document.addEventListener('DOMContentLoaded', function () {
         var submitButton = document.querySelector('button[type="submit"]');
@@ -88,7 +109,7 @@
         }
     });
 
-    // Add event listener to the submit button
+    // Add event listener to the refund button
     document.addEventListener('DOMContentLoaded', function () {
         var refundLink = document.getElementById('refundLink');
 

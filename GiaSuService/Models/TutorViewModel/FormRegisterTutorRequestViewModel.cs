@@ -40,10 +40,10 @@ namespace GiaSuService.Models.TutorViewModel
 
         public string? AdditionalInfo { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Please")]
+        [Required(ErrorMessage = "Vui lòng nhập năm bắt đầu")]
         public short AcademicYearFrom { get; set; }
 
-        [Required(ErrorMessage = "Please")]
+        [Required(ErrorMessage = "Vui lòng nhập năm kết thúc")]
         public short AcademicYearto { get; set; }
 
         public RegisterTutorProfile() { }

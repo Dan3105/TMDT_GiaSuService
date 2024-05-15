@@ -16,5 +16,7 @@ namespace GiaSuService.Repository.Interface
             AppConfig.TransactionFilterStatus payStatus,
             AppConfig.TransactionFilterType transactionType, 
             int currPage);
+
+        public Task<TransactionDetailViewModel?> GetTransactionDetail(int transactionId);
     }
 }

@@ -316,6 +316,7 @@ namespace GiaSuService.Controllers
             return RedirectToAction("TutorUpdateQueue", "Employee");
         }
 
+
         [HttpGet]
         public async Task<IActionResult> TutorApplyQueue(int requestId)
         {
@@ -326,9 +327,9 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("TutorRequestList", "Employee");
             }
 
-
             return View(tutorCardInfo);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetTutorsOnQueue(int requestId)
@@ -364,12 +365,14 @@ namespace GiaSuService.Controllers
             return Ok(response);
         }
 
+
         [HttpGet]
         public async Task<IActionResult> TutorTransactionDetail(int tutorId, int requestId)
         {
             var result = await _transactionService.GetDetailTutorQueueTransaction(tutorId, requestId);
             return View(result);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> CreateRefundTransaction(int tutorId, int requestId)
