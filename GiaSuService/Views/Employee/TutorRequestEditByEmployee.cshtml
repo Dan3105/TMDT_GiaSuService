@@ -104,8 +104,10 @@
         </div>
 
         @* <button type="submit" class="btn btn-primary customstyle-button">Cập nhật</button> *@
-        <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-outline-danger">Hủy bỏ</button>
-        <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Employee")" class="btn btn-primary customstyle-button">Cập nhật</button>
+        <div style="text-align: center;">
+            <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-outline-danger w-25 mt-5">Hủy bỏ</button>
+            <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Employee")" class="btn btn-primary customstyle-button w-25 mt-5">Cập nhật</button>
+        </div>
     </form>
 </div>
 

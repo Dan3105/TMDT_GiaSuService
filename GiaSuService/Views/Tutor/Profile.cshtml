@@ -153,7 +153,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.SelectedTutorTypeId">Loại gia sư:</label>
-                    <select class="form-select" asp-for="Form.SelectedTutorTypeId" style="margin-bottom: 10px;">
+                    <select class="form-select customform-control" asp-for="Form.SelectedTutorTypeId" style="margin-bottom: 10px;">
                         @foreach(var tutortype in Model.TutorTypeList)
                         {
                             <option value="@tutortype.TutorTypeId">@tutortype.TypeName</option>

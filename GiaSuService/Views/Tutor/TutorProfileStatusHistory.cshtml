@@ -39,7 +39,7 @@
                     @if (item.StatusType == AppConfig.RegisterStatus.UPDATE.ToString().ToLower())
                     {
                         <a href="@Url.Action("TutorProfileStatusDetail", "Tutor", new {historyId = item.HistoryId})">
-                            <i class="fas fa-edit"></i>
+                            <i class="fa fa-info-circle"></i>
                         </a>
                     }
                 </td>

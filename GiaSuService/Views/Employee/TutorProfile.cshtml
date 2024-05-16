@@ -4,10 +4,11 @@
 @{
     ViewData["Title"] = "Thông tin gia sư";
 }
-
+<!--
 <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
     <a href="/Employee/TutorList" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách gia sư</a>
 </div>
+-->
 
 <div class="container">
     <div class="row">
@@ -115,10 +116,19 @@
                         }
                     </label>
                 </div>
-                <button type="submit" class="btn btn-primary customstyle-button">Cập nhật thông tin</button>
+               
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary customstyle-button w-25 mt-5">Cập nhật</button>
+                </div>
             </div>
-        </form>
 
+        </form>
+        <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+            <a href="/Employee/TutorList" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
+                <i class="fas fa-reply" aria-hidden="true"></i>
+                Về trang danh sách gia sư
+            </a>
+        </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 var checkbox = document.getElementById("lockCheckbox");
@@ -130,7 +140,7 @@
                         label.classList.add("text-danger");
                         label.classList.remove("text-success");
                     } else {
-                        label.textContent = "Đang hoat động";
+                        label.textContent = "Đang hoạt động";
                         label.classList.remove("text-danger");
                         label.classList.add("text-success");
                     }

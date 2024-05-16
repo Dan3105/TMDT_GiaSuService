@@ -4,10 +4,11 @@
 @{
     ViewData["Title"] = "Chi tiết yêu cầu";
 }
-
+<!--
 <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
     <a href="/Employee/TutorRequestQueue" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách đơn đăng ký tìm gia sư</a>
 </div>
+-->
 
 <div class="container">
     <h1>Chi tiết yêu cầu</h1>
@@ -68,9 +69,17 @@
         
     </div>
     <div class="d-flex justify-content-center">
-        <a class="btn btn-danger m-2" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formid=@Model.FormId, statusName=AppConfig.FormStatus.DENY.ToString()})">Từ chối duyệt</a>
-        <a class="btn btn-primary m-2 customstyle-button" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formId=@Model.FormId, statusName=AppConfig.FormStatus.APPROVAL.ToString()})">Chấp nhận</a>
+        <a class="btn btn-outline-danger m-2 w-25" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formid=@Model.FormId, statusName=AppConfig.FormStatus.DENY.ToString()})">Từ chối duyệt</a>
+        <a class="btn btn-primary m-2 customstyle-button w-25" href="@Url.Action("UpdateStatusTutorRequest", "Employee", new { formId=@Model.FormId, statusName=AppConfig.FormStatus.APPROVAL.ToString()})">Chấp nhận</a>
     </div>
 
 
+</div>
+
+
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Employee/TutorRequestQueue" class="text-decoration-none mt-5" style="padding: 5px 5px; display: inline-block;">
+        <i class="fas fa-reply" aria-hidden="true"></i>
+        Về trang danh sách đơn đăng ký tìm gia sư
+    </a>
 </div>

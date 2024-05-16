@@ -7,10 +7,11 @@
 @{
     ViewData["Title"] = "Danh sách các đơn ứng tuyển của đơn tìm gia sư";
 }
-
+<!--
 <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
     <a href="/Employee/TutorRequestList" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách đơn tìm gia sư đã duyệt</a>
 </div>
+-->
 
 <h2>Danh sách các đơn ứng tuyển của đơn tìm gia sư #@Model.RequestId</h2>
 
@@ -38,7 +39,12 @@
         </tbody>
     </table>
 </div>
-
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Employee/TutorRequestList" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
+        <i class="fas fa-reply" aria-hidden="true"></i>
+        Về trang danh sách đơn tìm gia sư đã duyệt
+    </a>
+</div>
 <script>
 
     function getTutorsQueue() {
@@ -67,9 +73,17 @@
                         </td>
                         <td class="border-end"> @* FullName & TutorType *@
                             <div style="display:flex; flex-direction: column;">
-                                <strong>${item.fullName}</strong>
+                                    <strong>${item.fullName} 
+                                    <span>
+                                        <a class="" href="/Employee/TutorProfile?id=${item.tutorId}">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                    </span>
+                                    </strong>
                                 <span>${item.tutorType}</span>
-                                <span><a class="" href="/Employee/TutorProfile?id=${item.tutorId}">Xem chi tiết</a><span>
+                              
+
+                               @* <span><a class="" href="/Employee/TutorProfile?id=${item.tutorId}">Xem chi tiết</a><span>*@
                             </div>
                         </td>
                         <td class="text-center text-capitalize border-end"> @* Tutor Status Name in Queue *@
@@ -92,7 +106,7 @@
                         </td>
                         <td>
                                 <div class="h-100 d-flex justify-content-center text-center">
-                                '<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Xem hoá đơn</a>'
+                                <a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Xem hoá đơn</a>
                             </div>
                         </td>
                     </tr>`;
