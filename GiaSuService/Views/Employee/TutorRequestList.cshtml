@@ -132,11 +132,13 @@
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
                     var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
+                    var cardHeader = selectedRequestStatusType === "0" ? "Lớp chưa giao" : "Lớp đã giao";
+
                     var itemHtml = `
                                     <div class="col-md-6 col-sm-12 col-lg-4 mb-3">
                                         <div class="card">
                                             <div class="card-header bg-light">
-                                            <h5 class="card-title">Lớp chưa giao</h5>
+                                            <h5 class="card-title">${cardHeader}</h5>
                                             </div>
                                             <div class="card-body">
                                                     <p class="card-text"><b>Tên lớp:</b> ${item.subjectName}</p>
