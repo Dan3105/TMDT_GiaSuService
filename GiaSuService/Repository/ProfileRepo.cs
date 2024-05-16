@@ -158,7 +158,7 @@ namespace GiaSuService.Repository
 
                     Fullname = tutor.FullName,
                     Gender = tutor.Gender == "M" ? "Nam" : "Nữ",
-                    AddressDetail = tutor.AddressDetail,
+                    AddressDetail = $"{tutor.AddressDetail}, {tutor.District.Name}, {tutor.District.Province.Name}",
                     SelectedDistrictId = tutor.DistrictId,
                     SelectedProvinceId = tutor.District.ProvinceId,
 
