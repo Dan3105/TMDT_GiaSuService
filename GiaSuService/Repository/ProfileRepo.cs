@@ -158,6 +158,7 @@ namespace GiaSuService.Repository
 
                     Fullname = tutor.FullName,
                     Gender = tutor.Gender == "M" ? "Nam" : "Nữ",
+                    Birth = tutor.Birth,
                     AddressDetail = $"{tutor.AddressDetail}, {tutor.District.Name}, {tutor.District.Province.Name}",
                     SelectedDistrictId = tutor.DistrictId,
                     SelectedProvinceId = tutor.District.ProvinceId,
@@ -167,8 +168,13 @@ namespace GiaSuService.Repository
                     Academicyearfrom = tutor.AcademicYearFrom,
                     Academicyearto = tutor.AcademicYearTo,
                     Additionalinfo = tutor.AdditionalInfo,
-                    Birth = tutor.Birth,
+                    
                     IsActive = tutor.IsActive ?? false,
+
+                    GradeList = string.Join(", ", tutor.Grades.Select(g => g.Name)),
+                    SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Name)),
+                    TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Name)),
+                    TeachingTime = string.Join(", ", tutor.Sessions.Select(d => d.Name)),
 
                     TutorType = new TutorTypeViewModel
                     {

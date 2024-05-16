@@ -9,7 +9,7 @@
             <select id="province" class="form-select customform-control" onchange="getDistricts()">
                 @if (Model.ProvinceList != null)
                 {
-                    <option value="0" id="provincedefault">Chọn tỉnh</option>
+                    <option value="0" id="provincedefault">Chọn tỉnh / thành phố</option>
                     @foreach (var province in Model.ProvinceList)
                     {
                         <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -20,7 +20,7 @@
 
         <div class="filter-content">
             <select class="form-select customform-control" id="districtSelectionContainer">
-                <option value="0">Chọn quận</option>
+                <option value="0">Chọn quận / huyện</option>
             </select>
         </div>
         
@@ -97,7 +97,12 @@
             data: { 'provinceId': selectedIdProvince },
             success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
-                $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận'));
+
+                if (selectedIdProvince == 0) {
+                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận / huyện'));
+                    $("#districtSelectionContainer").val(0);
+                }
+
                 for (var i = 0; i < data.length; i++) {
                     $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
                 }

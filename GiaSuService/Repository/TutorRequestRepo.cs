@@ -103,13 +103,15 @@ namespace GiaSuService.Repository
                 .Select(p => new TutorRequestProfileViewModel
                 {
                     FormId = p.Id,
-                    FullNameRequester = p.Customer.FullName,
-                    AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.AdditionalDetail}",
                     CreatedDate = p.CreateDate,
-                    CurrentStatus = p.Status.VietnameseName.ToString(),
-                    ExpiredDate = p.CreateDate,
+                    ExpiredDate = p.ExpiredDate,
+                    CurrentStatus = p.Status.VietnameseName,
+
+                    FullNameRequester = p.Customer.FullName,
+                    AddressName = $"{p.AddressDetail}, {p.District.Name}, {p.District.Province.Name}",
                     GradeName = p.Grade.Name,
                     SubjectName = p.Subject.Name,
+                    AdditionalDetail = p.AdditionalDetail == null ? "Không có" : p.AdditionalDetail,
 
                 }).FirstOrDefaultAsync(p => p.FormId == id);
             return result;

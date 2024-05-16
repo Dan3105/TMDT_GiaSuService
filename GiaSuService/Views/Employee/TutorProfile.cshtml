@@ -63,7 +63,23 @@
                     <h2>Thông tin gia sư</h2>
                     <hr />
                     <dl class="row">
-                        <dt class="col-sm-5">Trường học:</dt>
+                        <dt class="col-sm-5">Trạng thái duyệt:</dt>
+                        <dd class="col-sm-7">
+                            <b>@Model.FormVietnameseStatusName</b>
+                        </dd>
+                        <dt class="col-sm-5">Trạng thái dạy: </dt>
+                        <dd class="col-sm-7">
+                            @if (@Model.IsActive)
+                            {
+                                <b class="text-success">Đang hoạt động</b>
+                            }
+                            else
+                            {
+                                <b class="text-danger">Dừng hoạt động</b>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-5">Trường đào tạo:</dt>
                         <dd class="col-sm-7">@Model.College</dd>
 
                         <dt class="col-sm-5">Chuyên ngành:</dt>
@@ -81,21 +97,19 @@
                         <dt class="col-sm-5">Trình độ gia sư:</dt>
                         <dd class="col-sm-7">@Model.TutorType?.TypeName</dd>
 
-                        <dt class="col-sm-5">Trạng thái đơn:</dt>
-                        <dd class="col-sm-7">
-                            <b>@Model.FormVietnameseStatusName</b>
-                        </dd>
-                        <dt class="col-sm-5">Trạng thái: </dt>
-                        <dd class="col-sm-7">
-                            @if (@Model.IsActive)
-                            {
-                                <b class="text-success">Đang hoạt động</b>
-                            }
-                            else
-                            {
-                                <b class="text-danger">Dừng hoạt động</b>
-                            }
-                        </dd>
+                        <dt class="col-sm-5">Môn học có thể dạy:</dt>
+                        <dd class="col-sm-7">@Model.SubjectList</dd>
+
+                        <dt class="col-sm-5">Khối lớp có thể dạy:</dt>
+                        <dd class="col-sm-7">@Model.GradeList</dd>
+
+                        <dt class="col-sm-5">Khu vực có thể dạy:</dt>
+                        <dd class="col-sm-7">@Model.TeachingArea</dd>
+
+                        <dt class="col-sm-5">Thời gian có thể dạy:</dt>
+                        <dd class="col-sm-7">@Model.TeachingTime</dd>
+
+                        
                     </dl>
                 </div>
             </div>

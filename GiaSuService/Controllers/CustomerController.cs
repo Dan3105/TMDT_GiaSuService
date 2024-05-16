@@ -2,6 +2,7 @@
 using GiaSuService.EntityModel;
 using GiaSuService.Models.CustomerViewModel;
 using GiaSuService.Models.EmployeeViewModel;
+using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Services;
 using GiaSuService.Services.Interface;
@@ -38,6 +39,35 @@ namespace GiaSuService.Controllers
             return View();
         }
 
+        private async Task<ProfileViewModel?> GetCurrentCustomer()
+        {
+            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+
+            if (userRole == AppConfig.TUTORROLENAME) return null;
+
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+            //User not founded
+            if (accountId == null || accountId == "" || userRole == null) return null;
+
+            var profileId = await _profileService.GetProfileId(int.Parse(accountId), userRole);
+
+            if (profileId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return null;
+            }
+
+            var profile = await _profileService.GetProfile((int)profileId, userRole);
+            if (profile == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return null;
+            }
+
+            return profile;
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> TutorRequestForm(int? tutorId = null)
         {
@@ -60,32 +90,11 @@ namespace GiaSuService.Controllers
                 AddTutorSelected((int)tutorId);
             }
 
-            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+            var currProfile = await GetCurrentCustomer();
 
-            if (userRole == AppConfig.TUTORROLENAME) return RedirectToAction("Profile", "Tutor");
-
-            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
-            //User not founded
-            if (accountId == null || accountId == "" || userRole == null) return RedirectToAction("Index", "Home");
-
-            var profileId = await _profileService.GetProfileId(int.Parse(accountId), userRole);
-
-            if (profileId == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
-                return RedirectToAction("Index", "Home");
-            }
-
-            var profile = await _profileService.GetProfile((int)profileId, userRole);
-            if (profile == null)
-            {
-                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
-                return RedirectToAction("Index", "Home");
-            }
-
-            vm.Profile.Addressdetail = profile.AddressDetail;
-            vm.Profile.SelectedProvinceId = profile.SelectedProvinceId;
-            vm.Profile.DistrictId = profile.SelectedDistrictId;
+            vm.Profile.Addressdetail = currProfile == null ? "" : currProfile.AddressDetail;
+            vm.Profile.SelectedProvinceId = currProfile == null ? -1 : currProfile.SelectedProvinceId;
+            vm.Profile.DistrictId = currProfile == null ? -1 : currProfile.SelectedDistrictId;
 
             return View(vm);
         }

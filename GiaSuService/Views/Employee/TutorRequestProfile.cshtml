@@ -16,7 +16,13 @@
             <h6>Thông tin đơn đăng ký</h6>
             <hr />
             <dl>
-                <dt>Tên người yêu cầu:</dt>
+                <dt>Ngày tạo:</dt>
+                <dd>@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+                <dt>Ngày hết hạn:</dt>
+                <dd>@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
+                <dt>Trạng thái hiện tại:</dt>
+                <dd>@Model.CurrentStatus</dd>
+                <dt>Tên khách hàng yêu cầu:</dt>
                 <dd>@Model.FullNameRequester</dd>
                 <dt>Khối lớp:</dt>
                 <dd>@Model.GradeName</dd>
@@ -24,12 +30,8 @@
                 <dd>@Model.SubjectName</dd>
                 <dt>Địa chỉ:</dt>
                 <dd>@Model.AddressName</dd>
-                <dt>Ngày tạo:</dt>
-                <dd>@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
-                <dt>Ngày hết hạn:</dt>
-                <dd>@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
-                <dt>Trạng thái hiện tại:</dt>
-                <dd>@Model.CurrentStatus</dd>
+                <dt>Thông tin thêm:</dt>
+                <dd>@Model.AdditionalDetail</dd>
             </dl>
         </div>
         <div class="col-sm-7">
