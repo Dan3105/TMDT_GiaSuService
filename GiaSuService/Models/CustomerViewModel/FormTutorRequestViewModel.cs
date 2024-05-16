@@ -27,6 +27,7 @@ namespace GiaSuService.Models.CustomerViewModel
         [Required]
         public string Addressdetail { get; set; } = string.Empty;
 
+        public int SelectedProvinceId { get; set; } = -1;
         public int DistrictId { get; set; } = -1;
         public int SubjectId { get; set; } = -1;
         public int GradeId { get; set; } = -1;

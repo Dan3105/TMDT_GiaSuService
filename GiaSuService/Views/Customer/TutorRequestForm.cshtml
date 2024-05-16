@@ -28,13 +28,20 @@
         </div>
         <div class="form-group">
             <label for="province">Tỉnh/ Thành phố:</label>
-            <select class="form-select customform-control" id="province" onchange="getDistricts()">
+            <select class="form-select customform-control" id="province" onchange="getDistricts(0)">
                 @if (Model.Provinces != null)
                 {
                     <option id="provincedefault">Chọn tỉnh</option>
                     @foreach (var province in Model.Provinces)
                     {
-                        <option value="@province.ProvinceId">@province.ProvinceName</option>
+                        @if(Model.Profile.SelectedProvinceId == @province.ProvinceId)
+                        {
+                            <option value="@province.ProvinceId" selected>@province.ProvinceName</option>
+                        }
+                        else
+                        {
+                            <option value="@province.ProvinceId">@province.ProvinceName</option>
+                        }
                     }
                 }
             </select>
@@ -121,6 +128,9 @@
                 });
             });
         }
+
+        var selectedDistrictId = "@Model.Profile.DistrictId";
+        getDistricts(selectedDistrictId);
     });
 
     // Function to display confirmation dialog and return a Promise
@@ -153,10 +163,12 @@
         document.getElementById('confirmationDialog').style.display = 'flex';
     }
 
-    function getDistricts() {
+    function getDistricts(districtId) {
         $("#provincedefault").remove();
 
         var selectedIdProvince = $("#province").val();
+        var selectedDistrictId = districtId;
+
         $.ajax({
             url: `/Identity/Districts`,
             type: 'GET',
@@ -164,7 +176,11 @@
             success: function (data) {
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
                 for (var i = 0; i < data.length; i++) {
-                    $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
+                    var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                    if (data[i].districtId == selectedDistrictId) {
+                        option.prop('selected', true);
+                    }
+                    $("#districtSelectionContainer").append(option);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {

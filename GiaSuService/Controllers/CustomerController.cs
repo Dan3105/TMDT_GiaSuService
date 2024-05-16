@@ -53,7 +53,6 @@ namespace GiaSuService.Controllers
                 Subjects = subjects,
                 Provinces = provinces,
                 Sessions= sessions,
-                
             };
 
             if(tutorId != null)
@@ -61,7 +60,33 @@ namespace GiaSuService.Controllers
                 AddTutorSelected((int)tutorId);
             }
 
-           
+            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+
+            if (userRole == AppConfig.TUTORROLENAME) return RedirectToAction("Profile", "Tutor");
+
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+            //User not founded
+            if (accountId == null || accountId == "" || userRole == null) return RedirectToAction("Index", "Home");
+
+            var profileId = await _profileService.GetProfileId(int.Parse(accountId), userRole);
+
+            if (profileId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var profile = await _profileService.GetProfile((int)profileId, userRole);
+            if (profile == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return RedirectToAction("Index", "Home");
+            }
+
+            vm.Profile.Addressdetail = profile.AddressDetail;
+            vm.Profile.SelectedProvinceId = profile.SelectedProvinceId;
+            vm.Profile.DistrictId = profile.SelectedDistrictId;
+
             return View(vm);
         }
 
