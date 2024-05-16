@@ -34,7 +34,7 @@
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control customform-control" id="fullName"  placeholder="Nhập tên đầy đủ của bạn"
-               asp-for="AccountProfile!.FullName" data-val="true"   >
+               asp-for="AccountProfile!.FullName" data-val="true">
         @Html.ValidationMessageFor(model => model.AccountProfile!.FullName, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -62,14 +62,16 @@
     @* Phone *@
     <div class="form-group">
         <label for="phone">Số điện thoại:</label>
-        <input type="tel" class="form-control customform-control" id="phone" data-val="true" placeholder="Nhập số điện thoại của bạn" asp-for="AccountProfile!.Phone">
+        <input type="tel" class="form-control customform-control" id="phone" placeholder="Nhập số điện thoại của bạn" 
+               asp-for="AccountProfile!.Phone" data-val="true">
         @Html.ValidationMessageFor(model => model.AccountProfile!.Phone, "", new { @class = "text-danger" })
     </div>
 
     @* Identity card number *@
     <div class="form-group">
         <label for="identityCard">CCCD/CMND:</label>
-        <input type="text" class="form-control customform-control" id="identityCard" data-val="true" placeholder="Nhập số căn cước của bạn" asp-for="AccountProfile!.IdentityCard">
+        <input type="text" class="form-control customform-control" id="identityCard" data-val="true" placeholder="Nhập số căn cước của bạn"
+               asp-for="AccountProfile!.IdentityCard" data-val="true">
         @Html.ValidationMessageFor(model => model.AccountProfile!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     
@@ -144,13 +146,15 @@
     @* ----------------------------------------------Tutor Profile----------------------------------------------------------------- *@
     <div class="form-group">
         <label for="addressName">Trường đào tạo:</label>
-        <input type="text" class="form-control customform-control" id="collegeName" data-val="true" placeholder="Nhập tên trường" asp-for="RegisterTutorProfile!.College">
+        <input type="text" class="form-control customform-control" id="collegeName" placeholder="Nhập tên trường"
+               asp-for="RegisterTutorProfile!.College" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.College, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
         <label for="addressName">Chuyên ngành:</label>
-        <input type="text" class="form-control customform-control" id="areaName" data-val="true" placeholder="Nhập chuyên ngành bạn học" asp-for="RegisterTutorProfile!.Area">
+        <input type="text" class="form-control customform-control" id="areaName" placeholder="Nhập chuyên ngành bạn học" 
+               asp-for="RegisterTutorProfile!.Area" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterTutorProfile!.Area, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">

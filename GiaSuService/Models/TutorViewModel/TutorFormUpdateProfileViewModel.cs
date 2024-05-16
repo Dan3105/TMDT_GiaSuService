@@ -1,11 +1,13 @@
 ﻿using GiaSuService.Configs;
 using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.UtilityViewModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace GiaSuService.Models.TutorViewModel
 {
     public class TutorUpdateRequestViewModel
     {
+        [Required]
         public TutorFormUpdateProfileViewModel Form { get; set; } = new TutorFormUpdateProfileViewModel();
         public List<ProvinceViewModel> ProvinceList { get; set; } = new List<ProvinceViewModel>();
         public List<GradeViewModel> GradeList { get; set; } = new List<GradeViewModel>() { };
@@ -23,26 +25,55 @@ namespace GiaSuService.Models.TutorViewModel
     public class TutorFormUpdateProfileViewModel
     {
         public int TutorId { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng không để trống họ và tên.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Họ và tên chứa 5-100 ký tự.")]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Họ và tên chỉ được chứa ký tự.")]
         public string Fullname { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng không để trống ngày sinh.")]
         public DateOnly? Birth { get; set; } = null;
+
+        [Required(ErrorMessage = "Vui lòng không để trống email.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng không để trống số điện thoại.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại chỉ bao gồm 10 chữ số.")]
         public string Phone { get; set; } = string.Empty;
         public string Gender { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Vui lòng không để trống số nhà, tên đường.")]
+        [StringLength(255, ErrorMessage = "Số nhà, tên đường chứa không quá 255 ký tự.")]
         public string AddressDetail { get; set; } = string.Empty;
         public int SelectedProvinceId { get; set; }
         public int SelectedDistrictId { get; set; }
 
+
+        [Required(ErrorMessage = "Vui lòng không để trống CMND/CCCD.")]
+        [RegularExpression(@"^\d{9}$|^\d{12}$", ErrorMessage = "CMND chỉ gồm 9 chữ số hoặc CCCD chỉ gồm 12 chữ số.")]
         public string IdentityCard { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng tải ảnh mặt trước CMND/CCCD.")]
         public string FrontIdentityCard { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng tải ảnh mặt sau CMND/CCCD.")]
         public string BackIdentityCard { get; set; } = string.Empty;
 
+
+        [Required(ErrorMessage = "Vui lòng nhập tên trường")]
         public string College { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng nhập chuyên ngành")]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Chuyên ngành chỉ được chứa ký tự.")]
         public string Area { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public string? Additionalinfo { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập năm bắt đầu")]
         public short Academicyearfrom { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập năm kết thúc")]
         public short Academicyearto { get; set; }
         public int SelectedTutorTypeId { get; set; }
 

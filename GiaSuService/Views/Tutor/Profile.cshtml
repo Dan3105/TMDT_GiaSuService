@@ -50,19 +50,23 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Fullname">Họ tên:</label>
-                    <input type="text" asp-for="Form.Fullname" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.Fullname" class="form-control customform-control" style="margin-bottom: 10px;"/>
+                    @Html.ValidationMessageFor(model => model.Form.Fullname, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Email">Email:</label>
                     <input type="text" asp-for="Form.Email" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.Form.Email, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Phone">Số điện thoại:</label>
-                    <input type="text" asp-for="Form.Phone" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.Phone" class="form-control customform-control" style="margin-bottom: 10px;"/>
+                    @Html.ValidationMessageFor(model => model.Form.Phone, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Birth">Ngày sinh:</label>
                     <input type="date" asp-for="Form.Birth" class="form-control customform-control" style="margin-bottom: 10px;" value="@Model.Form.Birth?.ToString("yyyy-MM-dd")" />
+                    @Html.ValidationMessageFor(model => model.Form.Birth, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.Gender">Giới tính:</label>
@@ -70,6 +74,7 @@
                         <option value="M">Nam</option>
                         <option value="F">Nữ</option>
                     </select>
+                    @Html.ValidationMessageFor(model => model.Form.Gender, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <div class="form-group">
@@ -86,10 +91,12 @@
 
                     <label asp-for="Form.AddressDetail">Số nhà, tên đường:</label>
                     <input type="text" asp-for="Form.AddressDetail" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    @Html.ValidationMessageFor(model => model.Form.AddressDetail, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Form.IdentityCard">Số CMND/CCCD:</label>
-                    <input type="text" asp-for="Form.IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" />
+                    <input type="text" asp-for="Form.IdentityCard" class="form-control customform-control" style="margin-bottom: 10px;" >
+                    @Html.ValidationMessageFor(model => model.Form.IdentityCard, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group" style="display:flex; flex-direction: row; justify-content: space-evenly">
@@ -121,11 +128,13 @@
                 <div class="form-group">
                     <label asp-for="Form.College">Trường đào tạo:</label>
                     <input type="text" asp-for="Form.College" class="form-control customform-control" style="margin-bottom: 10px;">
+                    @Html.ValidationMessageFor(model => model.Form.College, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Form.Area">Chuyên ngành:</label>
-                    <input type="text" asp-for="Form.Area" class="form-control customform-control" style="margin-bottom: 10px;">
+                    <input type="text" asp-for="Form.Area" class="form-control customform-control" style="margin-bottom: 10px;"/>
+                    @Html.ValidationMessageFor(model => model.Form.Area, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     <label>Niên khóa:</label>
@@ -133,10 +142,12 @@
                         <div class="col-6">
                             <label asp-for="Form.Academicyearfrom">Từ năm:</label>
                             <input type="number" asp-for="Form.Academicyearfrom" class="form-control customform-control" style="margin-bottom: 10px;">
+                            @Html.ValidationMessageFor(model => model.Form.Academicyearfrom, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-6">
                             <label asp-for="Form.Academicyearto">Đến năm:</label>
                             <input type="number" asp-for="Form.Academicyearto" class="form-control customform-control" style="margin-bottom: 10px;">
+                            @Html.ValidationMessageFor(model => model.Form.Academicyearto, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
@@ -211,7 +222,7 @@
             </div>
 
             <div style="text-align: center;">
-                <button type="submit" class="btn btn-primary customstyle-button w-25 mt-5" style="margin-top: 5px;">Cập nhật</butto>
+                <button type="submit" class="btn btn-primary customstyle-button w-25 mt-5" style="margin-top: 5px;">Cập nhật</button>
             </div>
         </div>
     </form>

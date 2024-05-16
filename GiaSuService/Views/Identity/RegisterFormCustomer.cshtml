@@ -14,7 +14,7 @@
     <div class="form-group">
         <label for="fullName">Họ và tên:</label>
         <input type="text" class="form-control customform-control" id="fullName" placeholder="Nhập tên đầy đủ của bạn"
-               asp-for="RegisterForm!.FullName" data-val="true" >
+               asp-for="RegisterForm!.FullName" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterForm!.FullName, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -25,7 +25,8 @@
     </div>
     <div class="form-group">
         <label for="gender">Giới tính:</label>
-        <select class="form-control customform-control" id="gender" data-val="true" asp-for="RegisterForm!.Gender">
+        <select class="form-control customform-control" id="gender" 
+                asp-for="RegisterForm!.Gender" data-val="true" >
             <option value="M">Nam</option>
             <option value="F">Nữ</option>
         </select>
@@ -33,17 +34,20 @@
     </div>
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control customform-control" id="email" data-val="true" placeholder="Nhập email" asp-for="RegisterForm!.Email">
+        <input type="email" class="form-control customform-control" id="email" placeholder="Nhập email"
+               asp-for="RegisterForm!.Email" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterForm!.Email, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="phone">Số điện thoại:</label>
-        <input type="tel" class="form-control customform-control" id="phone" data-val="true" placeholder="Nhập số điện thoại" asp-for="RegisterForm!.Phone">
+        <input type="tel" class="form-control customform-control" id="phone" placeholder="Nhập số điện thoại"
+               asp-for="RegisterForm!.Phone" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterForm!.Phone, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         <label for="identityCard">Số CMND/ CCCD:</label>
-        <input type="text" class="form-control customform-control" id="identityCard" data-val="true" placeholder="Nhập số CCCD của bạn" asp-for="RegisterForm!.IdentityCard">
+        <input type="text" class="form-control customform-control" id="identityCard" placeholder="Nhập số CCCD của bạn"
+               asp-for="RegisterForm!.IdentityCard" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterForm!.IdentityCard, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -82,7 +86,8 @@
     
     <div class="form-group">
         <label for="password">Mật khẩu:</label>
-        <input type="password" class="form-control customform-control" id="password" data-val="true" placeholder="Nhập mật khẩu đăng ký" asp-for="RegisterForm!.Password">
+        <input type="password" class="form-control customform-control" id="password" placeholder="Nhập mật khẩu đăng ký"
+               asp-for="RegisterForm!.Password" data-val="true">
         @Html.ValidationMessageFor(model => model.RegisterForm!.Password, "", new { @class = "text-danger" })
     </div>
     
