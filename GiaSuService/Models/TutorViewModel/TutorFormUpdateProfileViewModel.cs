@@ -28,7 +28,7 @@ namespace GiaSuService.Models.TutorViewModel
 
         [Required(ErrorMessage = "Vui lòng không để trống họ và tên.")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Họ và tên chứa 5-100 ký tự.")]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Họ và tên chỉ được chứa ký tự.")]
+        [RegularExpression(@"^[^\d]*$", ErrorMessage = "Họ và tên không được chứa số.")]
         public string Fullname { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng không để trống ngày sinh.")]
@@ -66,7 +66,7 @@ namespace GiaSuService.Models.TutorViewModel
         public string College { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng nhập chuyên ngành")]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Chuyên ngành chỉ được chứa ký tự.")]
+        [RegularExpression(@"^[^\d]*$", ErrorMessage = "Chuyên ngành không được chứa số.")]
         public string Area { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public string? Additionalinfo { get; set; }

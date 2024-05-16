@@ -13,7 +13,7 @@ namespace GiaSuService.Models.IdentityViewModel
 
         [Required(ErrorMessage = "Vui lòng không để trống họ và tên.")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Họ và tên chứa 5-100 ký tự.")]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Họ và tên chỉ được chứa ký tự.")]
+        [RegularExpression(@"^[^\d]*$", ErrorMessage = "Họ và tên không được chứa số.")]
         public required string FullName { get; set; }
 
         [Required(ErrorMessage = "Vui lòng không để trống email.")]

@@ -34,7 +34,7 @@ namespace GiaSuService.Models.TutorViewModel
         public string College { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng nhập chuyên ngành")]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Chuyên ngành chỉ được chứa ký tự.")]
+        [RegularExpression(@"^[^\d]*$", ErrorMessage = "Chuyên ngành không được chứa số.")]
         public string Area { get; set; } = string.Empty;
 
         public int TypeTutorId { get; set; }
