@@ -130,7 +130,7 @@ namespace GiaSuService.Repository
                         GradeName = p.Grade.Name,
                         SubjectName = p.Subject.Name,
                         AdditionalDetail = p.AdditionalDetail ?? string.Empty,
-                        Address = $"{p.District.Name}, {p.District.Name}, {p.AddressDetail}",
+                        Address = $"{p.District.Name}, {p.District.Province.Name}",
                         SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
                         Price = p.Grade.Fee,
                     },
