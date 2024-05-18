@@ -264,6 +264,8 @@
 <!-- Include the loading panel -->
 <partial name="_LoadingPanel" />
 
+<partial name="_ConfirmationDialog" />
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const today = new Date().toISOString().split('T')[0];   // Get today's date in YYYY-MM-DD format
@@ -342,7 +344,9 @@
             } else {
                 // The form is invalid, prevent submission
                 event.preventDefault();
-                alert('Vui lòng kiểm tra lại các dữ liệu đã nhập.');
+
+                var confirmed = confirmDialog(); // Wait for user confirmation
+                // alert('Vui lòng kiểm tra lại các dữ liệu đã nhập.');
                 return false;
             }
         });
@@ -374,4 +378,35 @@
         }
     }
 
+    function confirmDialog() {
+        return new Promise(function (resolve) {
+            showDialog("Lỗi nhập liệu", "Vui lòng kiểm tra lại các thông tin nhập.", function (result) {
+                resolve(result); // Resolve the Promise with user's choice
+            });
+        });
+    }
+
+    function showDialog(title, message, callback) {
+        const dialogTitle = document.getElementById('dialogTitle');
+        const confirmDialog = document.getElementById('confirmationDialog');
+        const confirmMsg = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYes');
+        const confirmNoBtn = document.getElementById('confirmNo');
+
+        dialogTitle.textContent = title;
+        confirmMsg.textContent = message; // Update message content
+        confirmNoBtn.style.display = 'none';
+
+        confirmYesBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(true); // Callback with true when user clicks 'Yes'
+        });
+
+        confirmNoBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(false); // Callback with false when user clicks 'No'
+        });
+
+        document.getElementById('confirmationDialog').style.display = 'flex';
+    }
 </script>
