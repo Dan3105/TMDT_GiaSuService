@@ -131,7 +131,8 @@ namespace GiaSuService.Repository
                         SubjectName = p.Subject.Name,
                         AdditionalDetail = p.AdditionalDetail ?? string.Empty,
                         Address = $"{p.District.Name}, {p.District.Name}, {p.AddressDetail}",
-                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
+                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
+                        Price = p.Grade.Fee,
                     },
                     GradeId = p.GradeId,
                     SubjectId = p.SubjectId,
@@ -170,7 +171,8 @@ namespace GiaSuService.Repository
                         SubjectName = p.Subject.Name,
                         AdditionalDetail = p.AdditionalDetail ?? string.Empty,
                         Address = $"{p.District.Name}, {p.District.Province.Name}",
-                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name))
+                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
+                        Price = p.Grade.Fee,
                     },
                     GradeId = p.GradeId,
                     SubjectId = p.SubjectId,

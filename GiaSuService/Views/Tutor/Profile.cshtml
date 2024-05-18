@@ -32,6 +32,11 @@
                 <input type="hidden" asp-for="Form.BackIdentityCard" />
 
                 <div class="form-group">
+                    <label asp-for="Form.IsActive"><strong>Trạng thái duyệt hiện tại:</strong></label>
+                    <span>@Model.Form.TutorStatus</span>
+                </div>
+
+                <div class="form-group">
                     <label asp-for="Form.IsActive">Trạng thái dạy học:</label>
                     <div class="form-check form-switch">
                         <input class="form-check-input customformcheck-input" type="checkbox" asp-for="Form.IsActive"

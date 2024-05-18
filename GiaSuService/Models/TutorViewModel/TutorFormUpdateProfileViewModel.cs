@@ -68,8 +68,9 @@ namespace GiaSuService.Models.TutorViewModel
         [Required(ErrorMessage = "Vui lòng nhập chuyên ngành")]
         [RegularExpression(@"^[^\d]*$", ErrorMessage = "Chuyên ngành không được chứa số.")]
         public string Area { get; set; } = string.Empty;
-        public bool IsActive { get; set; }
         public string? Additionalinfo { get; set; }
+        public bool IsActive { get; set; }
+        public string TutorStatus { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng nhập năm bắt đầu")]
         public short Academicyearfrom { get; set; }

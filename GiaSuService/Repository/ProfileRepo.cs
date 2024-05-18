@@ -361,6 +361,7 @@ namespace GiaSuService.Repository
                     Academicyearto = p.AcademicYearTo,
                     Additionalinfo = p.AdditionalInfo,
                     IsActive = p.IsActive ?? false,
+                    TutorStatus = p.Status.VietnameseName,
 
                     SelectedTutorTypeId = p.TutorTypeId,
                     FormatTutorType = p.TutorType.Name,
