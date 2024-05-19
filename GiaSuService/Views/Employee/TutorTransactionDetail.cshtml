@@ -35,7 +35,9 @@
                             <label for="paymentDate"><strong>Ngày thanh toán:</strong></label>
                             <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-control customform-control" required>
                         </div>
-                        <button id="confirmPayment" type="submit" class="btn btn-outline-success mt-2" name="action" value="payment">Thanh toán</button>
+                        <div style="text-align:center">
+                        <button id="confirmPayment" type="submit" class="btn btn-outline-success w-25 mt-2" name="action" value="payment">Thanh toán</button>
+                        </div>
                     </form>
                 }
             </div>
@@ -65,7 +67,7 @@
                 && Model.TransactionDeposit?.QueueStatus == "handover")
             {
                 <a id="refundLink" href="@Url.Action("CreateRefundTransaction", "Employee", new { tutorId=Model.TransactionDeposit?.TutorId, requestId=Model.TransactionDeposit?.RequestId})" 
-                class="btn btn-outline-danger">Hoàn tiền</a>
+                class="btn btn-outline-danger w-25">Hoàn tiền</a>
             }
             @* else{<span class="text-danger">Hệ thống không tìm thấy bất cứ hóa đơn nào của gia sư tới đơn tìm này</span>} *@
         </div>
