@@ -50,7 +50,7 @@ namespace GiaSuService.Repository
                     var register = await query
                                             .Where(p => p.CreateDate >= start_date && p.CreateDate <= next_date)
                                             .Select(p => new {CreateDateOnly=DateOnly.FromDateTime(p.CreateDate), p.Name})
-                                            .GroupBy(p => p.CreateDateOnly)
+                                            .GroupBy(p => p.CreateDateOnly).OrderBy(p => p.Key)
                                             .Select(p => new
                                             {
                                                 CreatedDate = p.Key,
@@ -77,16 +77,15 @@ namespace GiaSuService.Repository
                 if (typeDate == "this_week")
                 {
                     var get_week = DateAndTime.Weekday(DateTime.Now); //Min: 0, Max: 6
-                    var diff_date_start = DateTime.Now.AddDays(- get_week + 1); // 4: -> 5
-                    var diff_date_end = DateTime.Now.AddDays(6 - get_week); // 
-
-                    var start_date = diff_date_start;
-                    var end_date = diff_date_end.AddDays(1).AddSeconds(-1);
+                    var start_date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0)
+                                            .AddDays(- get_week + 1); // 4: -> 5
+                    var end_date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0).AddDays(6 - get_week).AddDays(1).AddSeconds(-1); // 
 
                     var register = await query
                                             .Where(p => p.CreateDate >= start_date && p.CreateDate <= end_date)
                                             .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.Name })
                                             .GroupBy(p => p.CreateDateOnly)
+                                            .OrderBy(p => p.Key)
                                             .Select(p => new
                                             {
                                                 CreatedDate = p.Key,
@@ -135,7 +134,7 @@ namespace GiaSuService.Repository
                     var register = await query
                                         .Where(p => p.CreateDate >= start_fromDate && p.CreateDate <= next_toDate)
                                         .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.Name })
-                                        .GroupBy(p => p.CreateDateOnly)
+                                        .GroupBy(p => p.CreateDateOnly).OrderBy(p => p.Key)
                                         .Select(p => new
                                         {
                                             CreatedDate = p.Key,
@@ -275,7 +274,7 @@ namespace GiaSuService.Repository
                                             .Where(p => p.CreateDate >= start_date && p.CreateDate <= next_date);
 
                     var requestCreate = await queryThisMonth
-                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly).OrderBy(p => p.Key)
                                             .Select(p => new
                                             {
                                                 CreatedDate = p.Key,
@@ -316,11 +315,13 @@ namespace GiaSuService.Repository
                 if (type == "this_week")
                 {
                     var get_week = DateAndTime.Weekday(DateTime.Now); //Min: 0, Max: 6
-                    var diff_date_start = DateTime.Now.AddDays(-get_week + 1); // 4: -> 5
-                    var diff_date_end = DateTime.Now.AddDays(6 - get_week); // 
+                    var start_date = new DateTime(DateTime.Now.Year, 
+                                                DateTime.Now.Month,
+                                                DateTime.Now.Day, 0, 0, 0).AddDays(-get_week + 1); // 4: -> 5
+                    var end_date = new DateTime(DateTime.Now.Year,
+                                                DateTime.Now.Month,
+                                                DateTime.Now.Day, 0, 0, 0).AddDays(6 - get_week).AddDays(1).AddSeconds(-1); // 
 
-                    var start_date = diff_date_start;
-                    var end_date = diff_date_end.AddDays(1).AddSeconds(-1);
                     var queryThisMonth = query
                                             .Where(p => p.CreateDate >= start_date && p.CreateDate <= end_date);
 
@@ -391,7 +392,7 @@ namespace GiaSuService.Repository
                                         .Where(p => p.CreateDate >= start_fromDate && p.CreateDate <= next_toDate);
 
                     var requestCreate = await queryCustom
-                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly)
+                                            .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate) }).GroupBy(p => p.CreateDateOnly).OrderBy(p => p.Key)
                                             .Select(p => new
                                             {
                                                 CreatedDate = p.Key,
@@ -468,7 +469,7 @@ namespace GiaSuService.Repository
 
                     response.JsonTransaction = JsonConvert.SerializeObject(await queryPaided
                                                 .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.TypeTransaction, p.PaymentAmount })
-                                                .GroupBy(p =>p.CreateDateOnly )
+                                                .GroupBy(p =>p.CreateDateOnly).OrderBy(p => p.Key)
                                                 .Select(p => new
                                                 {
                                                     p.Key,
@@ -491,11 +492,12 @@ namespace GiaSuService.Repository
                 if (typeDate == "this_week")
                 {
                     var get_week = DateAndTime.Weekday(DateTime.Now); //Min: 0, Max: 6
-                    var diff_date_start = DateTime.Now.AddDays(-get_week + 1); // 4: -> 5
-                    var diff_date_end = DateTime.Now.AddDays(6 - get_week); // 
-
-                    var start_date = diff_date_start;
-                    var end_date = diff_date_end.AddDays(1).AddSeconds(-1);
+                    var start_date = new DateTime(DateTime.Now.Year,
+                                                DateTime.Now.Month,
+                                                DateTime.Now.Day, 0, 0, 0).AddDays(-get_week + 1); // 4: -> 5
+                    var end_date = new DateTime(DateTime.Now.Year,
+                                                DateTime.Now.Month,
+                                                DateTime.Now.Day, 0, 0, 0).AddDays(6 - get_week).AddDays(1).AddSeconds(-1); // 
 
                     var queryThisMonth = query
                                             .Where(p => p.CreateDate >= start_date && p.CreateDate <= end_date
@@ -516,7 +518,7 @@ namespace GiaSuService.Repository
 
                     var result = await queryPaided
                                                 .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.TypeTransaction, p.PaymentAmount })
-                                                .GroupBy(p => p.CreateDateOnly)
+                                                .GroupBy(p => p.CreateDateOnly).OrderBy(p => p.Key)
                                                 .Select(p => new
                                                 {
                                                     p.Key,
@@ -577,7 +579,7 @@ namespace GiaSuService.Repository
 
                     response.JsonTransaction = JsonConvert.SerializeObject(await queryPaided
                                                 .Select(p => new { CreateDateOnly = DateOnly.FromDateTime(p.CreateDate), p.TypeTransaction, p.PaymentAmount })
-                                                .GroupBy(p => p.CreateDateOnly)
+                                                .GroupBy(p => p.CreateDateOnly).OrderBy(p => p.Key)
                                                 .Select(p => new
                                                 {
                                                     p.Key,

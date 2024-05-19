@@ -94,7 +94,6 @@
                     <div class="col-12 mb-3 row">
                         <div class="col-3">
                             <select id="typeStatistic" class="form-select customform-control">
-                                <option value="this_week">Trong tuần này</option>
                                 <option selected value="this_month">Trong tháng này</option>
                                 <option value="custom">Chọn từ ngày</option>
                             </select>
@@ -177,7 +176,6 @@
                 let dataTutorRequest = JSON.parse(data.jsonTutorRequestCreate);
                 let dataTutorRequestStatus = JSON.parse(data.jsonTutorRequestStatus);
                 let dataTutorRequestSubject = JSON.parse(data.jsonTutorRequestSubject);
-
                 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
                 function generateLineChart(data, idChart, label = null) {
@@ -290,24 +288,13 @@
                 const total = Object.values(dataTutorRequest).reduce((acc, crr) => acc += crr, 0);
                 document.getElementById('totalQuery').innerHTML = `(Tổng số đơn được tạo: ${total})`;
                 
-                //Draw Line Chart and Pie Chart
-                if (type === "this_week") {
-                    let chartData = new Map();
-                    daysOfWeek.forEach(p => {
-                        chartData.set(p, dataTutorRequest.hasOwnProperty(p) ? dataTutorRequest[p] : 0);
-                    });
-                    generateLineChart(chartData, 'chartCreateRequest', daysOfWeek);
-                }
-                else {
-                    generateLineChart(dataTutorRequest, 'chartCreateRequest');
-                }
+                generateLineChart(dataTutorRequest, 'chartCreateRequest');
 
-                console.log(dataTutorRequestStatus);
                 drawPieChart(dataTutorRequestStatus, 'chartStatusRequest', 6);
                 drawPieChart(dataTutorRequestSubject, 'chartTopSubject', 5);
             }
         });
     }
 
-
+  
 </script>

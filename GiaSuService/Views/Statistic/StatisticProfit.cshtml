@@ -276,9 +276,7 @@
                 trueData.push(transactions.True || 0);
                 falseData.push(transactions.False || 0);
             });
-            console.log(labelsTransaction);
-            console.log(trueData);
-            console.log(falseData);
+ 
             createDoubleBarChart('chartTransaction', daysOfWeek, trueData, falseData, 'Transactions', 'Ngày', 'Số tiền');
 
         }
