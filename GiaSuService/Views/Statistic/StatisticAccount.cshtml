@@ -357,13 +357,13 @@
 
                 // Tạo HTML với các giá trị được gán
                 const htmlTemplate = `
-                          <p>Tổng số tài khoản: ${customerRegisters}</p>
+                          <p>Tổng số tài khoản khách hàng: ${customerRegisters}</p>
                                <p><i class="fas fa-chart-line p-2"></i>Tốc độ tăng trưởng khách hàng mới: ${customerCAR}%</p>
                       <hr />
-                          <p>Tổng số tài khoản: ${tutorRegisters}</p>
+                          <p>Tổng số tài khoản gia sư: ${tutorRegisters}</p>
                                  <p><i class="fas fa-chart-line p-2"></i>Tốc độ tăng trưởng gia sư: ${tutorCAR}%</p>
                       <hr />
-                          <p>Tổng số tài khoản: ${employeeRegisters}</p>
+                          <p>Tổng số tài khoản nhân viên: ${employeeRegisters}</p>
                               <p><i class="fas fa-chart-line p-2"></i>Tốc độ tăng trưởng nhân viên ${employeeCAR}%</p>
                     `;
 
@@ -416,7 +416,7 @@
 
                 function createChart() {
 
-                    console.log(`Label is ${daysOfWeek}\nData is ${histogramData}`);
+                    //console.log(`Label is ${daysOfWeek}\nData is ${histogramData}`);
                     const ctx = document.getElementById('chartRegister').getContext('2d');
                     const existingChart = Chart.getChart(ctx);
 
@@ -476,9 +476,8 @@
                 const entry = jsonData[date];
                 // Check if the role exists in the entry
                 if (role in entry) {
-                    console.log(role);
-                    //check entry count not this shit
-                    acquisitionCount += 1;
+                   
+                    acquisitionCount += jsonData[date][role];
                 }
             }
         }
