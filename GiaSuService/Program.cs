@@ -125,6 +125,7 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<DvgsDbContext>();
+    
     await GenSuperAdmin(context);
 }
 
@@ -143,7 +144,7 @@ static async Task GenSuperAdmin(DvgsDbContext context)
             Phone = "0868273914",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("superadmin"),
             LockEnable = false,
-            Avatar = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+            Avatar = "https://static.printler.com/cache/8/e/1/a/0/c/8e1a0c16bf0c2cfa3bc131c209051cf5b64a2c46.jpg",
             CreateDate = DateTime.Now,
             RoleId = 1,
             
@@ -157,8 +158,8 @@ static async Task GenSuperAdmin(DvgsDbContext context)
                 Identity = new GiaSuService.EntityModel.IdentityCard()
                 {
                     IdentityNumber = "123456789",
-                    FrontIdentityCard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
-                    BackIdentityCard = "https://media.tenor.com/RtmcggFXF04AAAAe/cat-kitten.png",
+                    FrontIdentityCard = "https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg?auto=compress&fm=pjpg",
+                    BackIdentityCard = "https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg?auto=compress&fm=pjpg",
 
                 }
             },

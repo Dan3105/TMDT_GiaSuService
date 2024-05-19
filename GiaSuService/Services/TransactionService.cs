@@ -104,7 +104,7 @@ namespace GiaSuService.Services
             {
                 DateTime createTimeConvert = DateTime.ParseExact(depositTransactionExits.CreateDate, "HH:mm:ss dd/MM/yyyy", CultureInfo.InvariantCulture);
                 bool createAndPay = DateTime.Compare(createTimeConvert, paymentDate) >= 0;
-                bool payAndNow = DateTime.Compare(paymentDate, DateTime.Now) > 0;
+                //bool payAndNow = DateTime.Compare(paymentDate, DateTime.Now) > 0;
                 
                 // Check paymentDate
                 if(createAndPay)
@@ -112,10 +112,10 @@ namespace GiaSuService.Services
                     return new ResponseService { Message = "Ngày trả tiền nhỏ hơn ngày tạo hóa đơn", Success = false };
                 }
 
-                if (payAndNow)
-                {
-                    return new ResponseService { Message = "Ngày trả tiền lớn hơn ngày hôm nay", Success = false };
-                }
+                //if (payAndNow)
+                //{
+                //    return new ResponseService { Message = "Ngày trả tiền lớn hơn ngày hôm nay", Success = false };
+                //}
 
                 bool success = true;
 

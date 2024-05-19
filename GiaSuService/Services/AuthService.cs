@@ -131,10 +131,10 @@ namespace GiaSuService.Services
 
                         Customer = new Customer()
                         {
-                            FullName = accountProfile.FullName,
+                            FullName = Utility.FormatToCamelCase(accountProfile.FullName),
                             Birth = accountProfile.BirthDate,
                             Gender = accountProfile.Gender,
-                            AddressDetail = accountProfile.AddressName,
+                            AddressDetail = Utility.FormatToCamelCase(accountProfile.AddressName),
                             DistrictId = accountProfile.SelectedDistrictId,
 
                             Identity = new IdentityCard()
@@ -163,7 +163,7 @@ namespace GiaSuService.Services
                             FullName = Utility.FormatToCamelCase(accountProfile.FullName),
                             Birth = accountProfile.BirthDate,
                             Gender = accountProfile.Gender,
-                            AddressDetail = accountProfile.AddressName,
+                            AddressDetail = Utility.FormatToCamelCase(accountProfile.AddressName),
                             DistrictId = accountProfile.SelectedDistrictId,
                             Identity = new IdentityCard()
                             {
@@ -258,7 +258,7 @@ namespace GiaSuService.Services
                     {
                         Birth = model.AccountProfile.BirthDate,
                         FullName = Utility.FormatToCamelCase(model.AccountProfile.FullName),
-                        AddressDetail = model.AccountProfile.AddressName,
+                        AddressDetail = Utility.FormatToCamelCase(model.AccountProfile.AddressName),
                         DistrictId = model.AccountProfile.SelectedDistrictId,
                         Gender = model.AccountProfile.Gender,
 
