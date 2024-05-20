@@ -48,11 +48,12 @@ namespace GiaSuService.Controllers
             return Json(response);
         }
 
+        #region EmployeeProfile Manager
         [HttpGet]
         public async Task<IActionResult> Register(RegisterAccountProfileViewModel view)
         {
             var provinces = await _addressService.GetProvinces();
-         
+
             RegisterFormViewModel registerFormViewModel = new RegisterFormViewModel()
             {
                 ProvinceList = provinces,
@@ -66,7 +67,6 @@ namespace GiaSuService.Controllers
             return View(registerFormViewModel);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterFormViewModel model, IFormFile avatar, IFormFile frontCard, IFormFile backCard)
         {
@@ -78,11 +78,11 @@ namespace GiaSuService.Controllers
             else
             {
                 TempData[AppConfig.MESSAGE_FAIL] = result.Message;
+                return RedirectToAction("Register", "Admin", model.RegisterForm);
             }
-            return RedirectToAction("EmployeeList", "Admin") ;
+            return RedirectToAction("EmployeeList", "Admin");
         }
 
-        #region EmployeeProfile Manager
         [HttpGet]
         public async Task<IActionResult> EmployeeProfile(int employeeId)
         {

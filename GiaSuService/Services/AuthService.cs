@@ -5,7 +5,9 @@ using GiaSuService.Models.IdentityViewModel;
 using GiaSuService.Models.TutorViewModel;
 using GiaSuService.Repository.Interface;
 using GiaSuService.Services.Interface;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace GiaSuService.Services
 {
@@ -27,6 +29,7 @@ namespace GiaSuService.Services
             _uploadFileService = uploadFileService;
         }
 
+        #region Function to check before creating account
         public async Task<ResponseService> CheckEmailExist(string email)
         {
             Account? acc = await _accountRepo.GetByEmailOrPhone(email);
@@ -46,6 +49,42 @@ namespace GiaSuService.Services
             }
             return new ResponseService { Success = true, Message = "Số điện thoại đã tồn tại" };
         }
+
+        public async Task<ResponseService> CheckIdentityCardExist(string identityNumber)
+        {
+            var identityCard = await _profileRepo.GetIdentitycard(identityNumber);
+            if (identityCard == null)
+            {
+                return new ResponseService { Success = false, Message = "Chứng minh thư chưa tồn tại trong hệ thống" };
+            }
+
+            return new ResponseService { Success = true, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
+        }
+
+        public async Task<ResponseService> CheckBeforeCreateAccount(string email, string phone, string identityNumber)
+        {
+            ResponseService rs = await CheckEmailExist(email);
+            if (rs.Success)
+            {
+                return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
+            }
+
+            rs = await CheckEmailExist(phone);
+            if (rs.Success)
+            {
+                return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
+            }
+
+            rs = await CheckIdentityCardExist(identityNumber);
+            if (rs.Success)
+            {
+                return new ResponseService { Success = false, Message = "CMND/CCCD này đã được sử dụng. Vui lòng thử CMND/CCCD khác" };
+            }
+
+            return new ResponseService { Success = true, Message = "" };
+        }
+
+        #endregion
 
         public async Task<ResponseService> CreateAccount(Account account)
         {
@@ -72,17 +111,11 @@ namespace GiaSuService.Services
                     return new ResponseService { Success = false, Message = "Lỗi form đăng ký rỗng" };
                 }
 
-                #region Check_email_or_phone_exist
-                ResponseService rs = await CheckEmailExist(accountProfile.Email);
-                if (rs.Success)
+                #region Check_email_or_phone_or_identity_card_exist
+                ResponseService rs = await CheckBeforeCreateAccount(accountProfile.Email, accountProfile.Phone, accountProfile.IdentityCard);
+                if (!rs.Success)
                 {
-                    return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
-                }
-
-                rs = await CheckEmailExist(accountProfile.Phone);
-                if (rs.Success)
-                {
-                    return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
+                    return new ResponseService { Success = false, Message = rs.Message };
                 }
                 #endregion
 
@@ -147,7 +180,7 @@ namespace GiaSuService.Services
                     };
                 }
                 else
-                {
+                {   // If creating account for new employee
                     account = new Account()
                     {
                         Email = accountProfile.Email,
@@ -198,16 +231,10 @@ namespace GiaSuService.Services
                 }
 
                 #region Check_email_or_phone_exist
-                ResponseService rs = await CheckEmailExist(model.AccountProfile.Email);
-                if (rs.Success)
+                ResponseService rs = await CheckBeforeCreateAccount(model.AccountProfile.Email, model.AccountProfile.Phone, model.AccountProfile.IdentityCard);
+                if (!rs.Success)
                 {
-                    return new ResponseService { Success = false, Message = "Email đã được sử dụng. Vui lòng thử email khác" };
-                }
-
-                rs = await CheckEmailExist(model.AccountProfile.Phone);
-                if (rs.Success)
-                {
-                    return new ResponseService { Success = false, Message = "Số điện thoại đã được sử dụng. Vui lòng thử số điện thoại khác" };
+                    return new ResponseService { Success = false, Message = rs.Message };
                 }
                 #endregion
 
@@ -300,12 +327,12 @@ namespace GiaSuService.Services
             {
                 try
                 {
-                    //Check
-                    var existsingIdentity = await _profileRepo.GetIdentitycard(account.Tutor!.Identity.IdentityNumber);
+                    //Check identity card
+                    /*var existsingIdentity = await _profileRepo.GetIdentitycard(account.Tutor!.Identity.IdentityNumber);
                     if (existsingIdentity != null)
                     {
                         return new ResponseService { Success = false, Message = "Chứng minh thư đã tồn tại trong hệ thống" };
-                    }
+                    }*/
                     var status = await _statusRepo.GetStatus(AppConfig.RegisterStatus.PENDING.ToString().ToLower(), AppConfig.register_status);
                     if (status == null)
                     {
