@@ -260,6 +260,8 @@ namespace GiaSuService.Repository
 
                     NStudent = p.TutorRequest.Students,
                     CustomerFullName = p.TutorRequest.Customer.FullName,
+                    CustomerEmail = p.TutorRequest.Customer.Account.Email,
+                    CustomerPhone = p.TutorRequest.Customer.Account.Phone,
                     GradeName = p.TutorRequest.Grade.Name,
                     SubjectName = p.TutorRequest.Subject.Name,
 

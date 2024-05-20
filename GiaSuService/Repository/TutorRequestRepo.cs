@@ -72,7 +72,7 @@ namespace GiaSuService.Repository
                 {
                     TutorRequest = new TutorRequestQueueViewModel
                     {
-                        AddressName = $"{p.District.Province.Name}, {p.District.Name}, {p.AdditionalDetail}",
+                        AddressName = $"{p.AddressDetail}, {p.District.Name}, {p.District.Province.Name}",
                         CreatedDate = ((DateTime)p.CreateDate!).ToString("dd-MM-yyyy HH:mm:ss"),
                         FormId = p.Id,
                         FullNameRequester = p.Customer.FullName,
@@ -106,6 +106,7 @@ namespace GiaSuService.Repository
                     CreatedDate = p.CreateDate,
                     ExpiredDate = p.ExpiredDate,
                     CurrentStatus = p.Status.VietnameseName,
+                    Status = p.Status.Name,
 
                     FullNameRequester = p.Customer.FullName,
                     AddressName = $"{p.AddressDetail}, {p.District.Name}, {p.District.Province.Name}",
@@ -192,6 +193,28 @@ namespace GiaSuService.Repository
             result.TotalElement = await queries.CountAsync();
             result.list = await queries.Skip(page * AppConfig.ROWS_ACCOUNT_LIST)
                         .Take(AppConfig.ROWS_ACCOUNT_LIST).Select(p => p.TutorCard).ToListAsync();
+            return result;
+        }
+
+        public async Task<TutorRequestCardViewModel?> GetTutorRequestCardById(int requestId)
+        {
+            var result = await _context.RequestTutorForms
+                .AsNoTracking()
+                .Select(p => new TutorRequestCardViewModel
+                {
+                    RequestId = p.Id,
+                    GradeName = p.Grade.Name,
+                    SubjectName = p.Subject.Name,
+                    AdditionalDetail = p.AdditionalDetail ?? string.Empty,
+                    Address = $"{p.District.Name}, {p.District.Province.Name}",
+                    AddressDetail = p.AddressDetail ?? string.Empty,
+                    SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
+                    Price = p.Grade.Fee,
+                    RequestStatus = p.Status.Name,
+                })
+                .FirstOrDefaultAsync(p => p.RequestId == requestId);
+
+
             return result;
         }
 
@@ -303,26 +326,6 @@ namespace GiaSuService.Repository
             }
 
             return false;
-        }
-
-        public async Task<TutorRequestCardViewModel?> GetTutorRequestCardById(int requestId)
-        {
-            var result = await _context.RequestTutorForms
-                .AsNoTracking()
-                .Select(p => new TutorRequestCardViewModel
-                    {
-                        RequestId = p.Id,
-                        GradeName = p.Grade.Name,
-                        SubjectName = p.Subject.Name,
-                        AdditionalDetail = p.AdditionalDetail ?? string.Empty,
-                        Address = $"{p.AddressDetail}, {p.District.Name}, {p.District.Province.Name}",
-                        SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
-                        RequestStatus = p.Status.Name,
-                    })
-                .FirstOrDefaultAsync(p => p.RequestId == requestId);
-
-
-            return result;
         }
 
         public async Task<bool> UpdateTutorApplyStatus(int tutorId, int requestId, Status newStatus)

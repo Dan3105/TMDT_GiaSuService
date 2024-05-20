@@ -8,6 +8,7 @@ using GiaSuService.Services;
 using GiaSuService.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
 
 namespace GiaSuService.Controllers
@@ -88,6 +89,23 @@ namespace GiaSuService.Controllers
 
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries=queries.list, page, totalPages };
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTutorRequestById(int requestId)
+        {
+            TutorRequestCardViewModel? queries = await _tutorRequestService.GetTutorrequestDetail(requestId);
+            if(queries != null && 
+            queries.RequestStatus != AppConfig.FormStatus.APPROVAL.ToString().ToLower() 
+            && queries.RequestStatus != AppConfig.FormStatus.HANDOVER.ToString().ToLower())
+            {
+                queries = null;
+            }
+
+            int page = 1;
+            int totalPages = (int)Math.Ceiling(1.0 / AppConfig.ROWS_ACCOUNT_LIST);
+            var response = new { queries = queries, page, totalPages };
             return Json(response);
         }
 

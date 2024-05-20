@@ -9,6 +9,9 @@ namespace GiaSuService.Models.TutorViewModel
 
         public int NStudent {  get; set; }
         public string CustomerFullName { get; set; } = string.Empty;
+        public string CustomerEmail {  get; set; } = string.Empty;
+        public string CustomerPhone { get; set; } = string.Empty;
+
         public string GradeName { get; set; } = string.Empty;
         public string SubjectName { get; set; } = string.Empty;
 

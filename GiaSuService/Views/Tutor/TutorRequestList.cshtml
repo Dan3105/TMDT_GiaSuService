@@ -15,6 +15,9 @@
 }
 
 <div class="container">
+    <partial name="SearchBar" />
+
+    @* Filter bar *@
     <div class="row align-items-center justify-content-center">
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select id="province" class="form-select customform-control" onchange="getDistricts()">
@@ -58,9 +61,11 @@
             </select>
         </div>
         <div class="col-sm-4 d-flex justify-content-center mb-2">
-            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Tìm kiếm</button>
+            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Lọc</button>
         </div>
     </div>
+
+    
     <hr />
 
     <div id="items-container" class="row">
@@ -136,16 +141,17 @@
 
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
-                    var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
+                    var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "Không có";
                 
                     var itemHtml = `
                                 <div class="col-md-4 col-sm-6 mb-3">
                                     <div class="card">
                                         <div class="card-header bg-light">
-                                        <h5 class="card-title">Lớp chưa giao</h5>
+                                        <h5 class="card-title">Đơn chưa giao</h5>
                                         </div>
                                         <div class="card-body">
-                                            <p class="card-text"><b>Tên lớp:</b> ${item.subjectName}</p>
+                                            <p class="card-text"><b>Mã đơn:</b> ${item.requestId}</p>
+                                            <p class="card-text"><b>Môn học:</b> ${item.subjectName}</p>
                                             <p class="card-text"><b>Khối lớp:</b> ${item.gradeName}</p>
                                                 ${additional_detail}
                                             <p class="card-text"><b>Địa điểm:</b> ${item.address}</p>
@@ -192,4 +198,61 @@
             loadItems(currentPage);
         }
     }
+
+    function findById() {
+        var requestId = document.getElementById('searchId').value;
+        var isAuth = "@isAuth";
+        var roleName = "@roleName";
+        var tutorRoleName = "@tutorRoleName";
+        // console.log('Searching for ID:', requestId);
+
+        $.getJSON("/Home/GetTutorRequestById", { requestId: requestId })
+            .done(function (data) {
+                $("#items-container").empty(); // Clear existing items
+
+                // Update page information
+                $("#current-page").text(`Trang 1`);
+                console.log(data);
+
+                // Disable "Next Page" button if at the last page
+                $("#next-page").prop("disabled", data.page + 1 === data.totalPages || data.totalPages === 0);
+                $("#prev-page").prop("disabled", data.page === 0);
+
+                // Dynamically add items to the view
+                var item = data.queries;
+                if (!item) {    //If there is no item, don't show anything
+                    return;
+                }
+
+                var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "Không có";
+
+                var itemHtml = `
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                        <h5 class="card-title">Đơn chưa giao</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text"><b>Mã đơn:</b> ${item.requestId}</p>
+                            <p class="card-text"><b>Môn học:</b> ${item.subjectName}</p>
+                            <p class="card-text"><b>Khối lớp:</b> ${item.gradeName}</p>
+                                ${additional_detail}
+                            <p class="card-text"><b>Địa điểm:</b> ${item.address}</p>
+                            <p class="card-text"><b>Các khung giờ có thể dạy:</b> ${item.sessionsCanTeach}</p>
+                            <p class="card-text"><b>Phí nhận lớp:</b> ${item.price.toLocaleString('vi-VN')} VNĐ VNĐ</p>
+                        </div>
+
+                        <div class="d-flex justify-content-end m-2">
+                            ${isAuth === "False" || roleName === tutorRoleName
+                                ? `<a href="#" class="register-btn btn btn-primary customstyle-button" onclick="registerRequest(${item.requestId})">Đăng ký ứng tuyển</a>`
+                                : ``
+                            }
+                        </div>
+                    </div>
+                </div>
+                        `;
+                $("#items-container").append(itemHtml);
+            });
+    }
+
 </script>

@@ -174,7 +174,7 @@ namespace GiaSuService.Services
 
         public async Task<ResponseService> UpdateStatusTutorApply(int tutorId, int requestId, string status)
         {
-            var dbStatus = await _statusRepo.GetStatus(status, AppConfig.form_status);
+            var dbStatus = await _statusRepo.GetStatus(status, AppConfig.queue_status);
             if (dbStatus == null)
             {
                 return new ResponseService { Message = "Không cập nhật được trạng thái vui lòng làm lại ", Success = false };

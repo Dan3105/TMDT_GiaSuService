@@ -26,18 +26,18 @@ namespace GiaSuService.Services
             var depositTransactionExits = await _transactionRepo.GetTransactionDetailByTutorAndRequest(tutorId, requestId, true);
             if(depositTransactionExits == null)
             {
-                return new ResponseService { Message = "Không tìm thấy hóa đơn nhận lớp để tạo một hóa đơn hoàn trả", Success = false };
+                return new ResponseService { Message = "Không tìm thấy hóa đơn nhận lớp để tạo một hóa đơn hoàn tiền", Success = false };
             }
 
             if (string.IsNullOrEmpty(depositTransactionExits.PaymentDate))
             {
-                return new ResponseService { Message = "Hóa đơn nhận lớp chưa được thanh toán", Success = false };
+                return new ResponseService { Message = "Hóa đơn nhận lớp chưa được thanh toán nên không thể hoàn tiền", Success = false };
             }
 
             var refundTransactionExits = await _transactionRepo.GetTransactionDetailByTutorAndRequest(tutorId, requestId, false);
             if (refundTransactionExits != null)
             {
-                return new ResponseService { Message = "Hóa đơn hoàn trả này đã tồn tại", Success = false };
+                return new ResponseService { Message = "Hóa đơn hoàn tiền này đã tồn tại", Success = false };
             }
 
             // Check if tutor request is currently not handover then cannot refund to tutor
@@ -47,9 +47,9 @@ namespace GiaSuService.Services
                 return new ResponseService { Message = "Không tìm thấy đơn tìm gia sư", Success = false };
             }
 
-            if (tutorRequest.CurrentStatus.ToLower() != AppConfig.FormStatus.HANDOVER.ToString().ToLower())
+            if (tutorRequest.Status.ToLower() != AppConfig.FormStatus.HANDOVER.ToString().ToLower())
             {
-                return new ResponseService { Message = "Đơn tìm gia sư chưa được giao cho gia sư này nên không thể hoàn tiền", Success = false };
+                return new ResponseService { Message = "Đơn tìm gia sư không được giao cho gia sư này nên không thể hoàn tiền", Success = false };
             }
 
             // Create refund transaction

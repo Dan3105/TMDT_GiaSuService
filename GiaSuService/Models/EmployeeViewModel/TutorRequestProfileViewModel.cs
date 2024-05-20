@@ -8,6 +8,7 @@ namespace GiaSuService.Models.EmployeeViewModel
         public DateTime CreatedDate { get; set; }
         public DateTime ExpiredDate { get; set; }
         public string CurrentStatus { get; set; } = string.Empty;
+        public string Status {  get; set; } = string.Empty;
 
         public string FullNameRequester { get; set; } = string.Empty;
         public string GradeName { get; set; } = string.Empty;

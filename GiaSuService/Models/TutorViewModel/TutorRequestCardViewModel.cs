@@ -7,6 +7,7 @@
         public string GradeName { get; set; } = string.Empty;
         public string AdditionalDetail { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public string AddressDetail {  get; set; } = string.Empty;
         public string SessionsCanTeach {  get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string RequestStatus {  get; set; } = string.Empty;
