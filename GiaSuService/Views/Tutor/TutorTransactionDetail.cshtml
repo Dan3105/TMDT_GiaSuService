@@ -4,6 +4,13 @@
     ViewData["Title"] = "Chi tiết giao dịch";
 }
 <div class="container">
+    <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+        <a href="/Tutor/TutorTransactionList" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
+            <i class="fas fa-reply" aria-hidden="true"></i>
+            Về lại lịch sử các giao dịch
+        </a>
+    </div>
+
     @if (Model.TransactionDeposit != null)
     {
         <div class="card">
