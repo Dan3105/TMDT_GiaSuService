@@ -125,34 +125,19 @@ namespace GiaSuService.Controllers
 
             // Get tutor profile
             var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (accountId == null || accountId == "")
-            {
-                result.SelectedDistrictId = 0;
-                result.SelectedProvinceId = 0;
-            }
-            else
+            
+            TutorFormUpdateProfileViewModel? profile = null;
+            if (accountId != null && accountId != "")
             {
                 int? profileId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
-
-                if (profileId == null)
+                if (profileId != null)
                 {
-                    TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
-                    return RedirectToAction("Index", "Home");
+                    profile = await _profileService.GetTutorFormUpdateById((int)profileId);
                 }
-
-                var profile = await _profileService.GetTutorFormUpdateById((int)profileId);
-
-                if (profile == null)
-                {
-                    TempData[AppConfig.MESSAGE_FAIL] = "Không lấy được thông tin tài khoản";
-                    return RedirectToAction("Index", "Home");
-                }
-
-                result.SelectedDistrictId = profile.SelectedDistrictId;
-                result.SelectedProvinceId = profile.SelectedProvinceId;
-
             }
+
+            result.SelectedDistrictId = profile == null ? 0 : profile.SelectedDistrictId;
+            result.SelectedProvinceId = profile == null ? 0 : profile.SelectedProvinceId;
 
             return View(result);
         }
