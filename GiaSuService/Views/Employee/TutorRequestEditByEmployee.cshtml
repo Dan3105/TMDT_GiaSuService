@@ -271,7 +271,7 @@
             event.preventDefault();
             if (confirmed) {
                 // Submit the form if confirmed
-                $(this).closest('form').attr('action', '@Url.Action("CancelTutorRequest", "Customer")').submit();
+                $(this).closest('form').attr('action', '@Url.Action("CancelTutorRequest", "Employee")').submit();
             }
         });
 
@@ -281,7 +281,7 @@
             var confirmed = await confirmDialog("Thông báo xác nhận", "Bạn có chắc muốn cập nhật đơn tìm gia sư này?"); // Wait for user confirmation
             if (confirmed) {
                 // Submit the form if confirmed
-                $(this).closest('form').attr('action', '@Url.Action("UpdateTutorRequestEdit", "Customer")').submit();
+                $(this).closest('form').attr('action', '@Url.Action("UpdateTutorRequestEdit", "Employee")').submit();
             }
         });
     });

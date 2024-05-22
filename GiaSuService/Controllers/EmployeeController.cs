@@ -262,7 +262,7 @@ namespace GiaSuService.Controllers
                 return RedirectToAction("TutorRequestList", "Employee");
             }
 
-            ResponseService response = await _tutorRequestService.UpdateStatusTutorRequest(model.RequestId, AppConfig.FormStatus.CANCEL.ToString().ToLower());
+            ResponseService response = await _tutorRequestService.UpdateStatusTutorRequest(model.RequestId, AppConfig.FormStatus.DENY.ToString().ToLower());
 
             if (response.Success)
             {
