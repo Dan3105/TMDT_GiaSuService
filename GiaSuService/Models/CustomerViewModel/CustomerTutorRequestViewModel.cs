@@ -13,5 +13,6 @@
         public string SubjectName { get; set; } = string.Empty;
         public string GradeName { get; set; } = string.Empty;
         public string StatusName { get; set; } = string.Empty;
+        public string StatusVietnamese {  get; set; } = string.Empty;
     }
 }

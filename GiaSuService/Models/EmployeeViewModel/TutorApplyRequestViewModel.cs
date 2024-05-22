@@ -19,6 +19,7 @@ namespace GiaSuService.Models.EmployeeViewModel
 
     public class TutorApplyRequestQueueViewModel
     {
+        public int RequestId { get; set; }
         public int TutorId { get; set; }    
         public string Avatar { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;

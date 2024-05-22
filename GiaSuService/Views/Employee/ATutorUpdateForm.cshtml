@@ -53,19 +53,44 @@
 
                     var displayName = displayNameMapping[property.Name];
 
-                    if(property.Name.Equals("Avatar")
-                    || property.Name.Equals("FrontIdentityCard")
+                    if (property.Name.Equals("FrontIdentityCard")
                     || property.Name.Equals("BackIdentityCard"))
                     {
-                        <li><strong>@displayName</strong>:<br /><img width="250" src="@originalValue" alt="image prepresent" /></li>
+                        <li><strong>@displayName</strong>: <br /> <img width="250" height="150" src="@originalValue" alt="image prepresent" /></li>
+                    }
+                    else if (property.Name.Equals("Avatar"))
+                    {
+                        <li><strong>@displayName</strong>: <br /> <img width="150" src="@originalValue" alt="image prepresent" /></li>
                     }
                     else if (!originalValue.Equals(modifiedValue))
                     {
-                        <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                        if (property.Name.Equals("Gender") && originalValue.Equals("F"))
+                        {
+                            <li><strong>@displayName</strong>: <s>Nữ</s></li>
+                        }
+                        else if (property.Name.Equals("Gender") && originalValue.Equals("M"))
+                        {
+                            <li><strong>@displayName</strong>: <s>Nam</s></li>
+                        }
+                        else
+                        {
+                            <li><strong>@displayName</strong>: <s>@originalValue</s></li>
+                        }
                     }
                     else
                     {
-                        <li><strong>@displayName</strong>: @originalValue</li>
+                        if (property.Name.Equals("Gender") && originalValue.Equals("F"))
+                        {
+                            <li><strong>@displayName</strong>: Nữ</li>
+                        }
+                        else if (property.Name.Equals("Gender") && originalValue.Equals("M"))
+                        {
+                            <li><strong>@displayName</strong>: Nam</li>
+                        }
+                        else
+                        {
+                            <li><strong>@displayName</strong>: @originalValue</li>
+                        }
                     }
                 }
 
@@ -86,19 +111,44 @@
                     // Get the display name from the mapping, if it exists; otherwise, use the property name
                     var displayName = displayNameMapping[property.Name];
 
-                    if (property.Name.Equals("Avatar")
-                    || property.Name.Equals("FrontIdentityCard")
+                    if (property.Name.Equals("FrontIdentityCard")
                     || property.Name.Equals("BackIdentityCard"))
                     {
-                        <li><strong>@displayName</strong>: <br/> <img width="250" src="@modifiedValue" alt="image prepresent" /></li>
+                        <li><strong>@displayName</strong>: <br/> <img width="250" height="150" src="@modifiedValue" alt="image prepresent" /></li>
+                    }
+                    else if (property.Name.Equals("Avatar"))
+                    {
+                        <li><strong>@displayName</strong>: <br /> <img width="150" src="@modifiedValue" alt="image prepresent" /></li>
                     }
                     else if (!modifiedValue.Equals(originalValue))
                     {
-                        <li><strong>@displayName</strong>: <b>@modifiedValue</b></li>
+                        if (property.Name.Equals("Gender") && modifiedValue.Equals("F"))
+                        {
+                            <li><strong>@displayName</strong>: <b>Nữ</b></li>
+                        }
+                        else if (property.Name.Equals("Gender") && modifiedValue.Equals("M"))
+                        {
+                            <li><strong>@displayName</strong>: <b>Nam</b></li>
+                        }
+                        else
+                        {
+                            <li><strong>@displayName</strong>: <b>@modifiedValue</b></li>
+                        }
                     }
                     else
                     {
-                        <li><strong>@displayName</strong>: @modifiedValue</li>
+                        if (property.Name.Equals("Gender") && modifiedValue.Equals("F"))
+                        {
+                            <li><strong>@displayName</strong>: Nữ</li>
+                        }
+                        else if (property.Name.Equals("Gender") && modifiedValue.Equals("M"))
+                        {
+                            <li><strong>@displayName</strong>: Nam</li>
+                        }
+                        else
+                        {
+                            <li><strong>@displayName</strong>: @modifiedValue</li>
+                        }
                     }
                 }
 

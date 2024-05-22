@@ -20,8 +20,10 @@
 
                                 <h5 class="mb-1">@item.SubjectName - @item.GradeName</h5>
 
-                                <small>Mã yêu cầu: @item.RequestId</small> 
-                                <p class="mb-1">Số lượng học sinh: @item.Students</p>
+                                <p class="mb-1">Mã đơn tìm gia sư: @item.RequestId</p>
+                                <p class="mb-1">Ngày tạo đơn: @item.CreateDate</p>
+                                <p class="mb-1">Ngày hết hạn: @item.ExpiredDate</p>
+                                @* <p class="mb-1">Số lượng học sinh: @item.Students</p> *@
                                 
                                 @if (!string.IsNullOrEmpty(item.AdditionalDetail))
                                 {
@@ -37,17 +39,17 @@
                                     <a href="@Url.Action("TutorRequestEdit", "Customer", new{id = item.RequestId})" class="btn btn-sm btn-outline-primary me-2 customstyle-button">Chi tiết</a>
                                 </div>
                                 <div class="col-md-5 d-flex justify-content-end align-items-center">
-                                    @if(item.StatusName == AppConfig.RegisterStatus.DENY.ToString().ToLower())
+                                    @if (item.StatusName == AppConfig.FormStatus.DENY.ToString().ToLower() || item.StatusName == AppConfig.FormStatus.CANCEL.ToString().ToLower())
                                     {
-                                        <span class="badge bg-danger rounded-pill ms-auto">@item.StatusName</span>
+                                        <span class="badge bg-danger rounded-pill ms-auto">@item.StatusVietnamese</span>
                                     }
-                                    @if (item.StatusName == AppConfig.RegisterStatus.PENDING.ToString().ToLower())
+                                    @if (item.StatusName == AppConfig.FormStatus.PENDING.ToString().ToLower())
                                     {
-                                        <span class="badge bg-info rounded-pill ms-auto">@item.StatusName</span>
+                                        <span class="badge bg-info rounded-pill ms-auto">@item.StatusVietnamese</span>
                                     }
-                                    @if (item.StatusName == AppConfig.RegisterStatus.APPROVAL.ToString().ToLower())
+                                    @if (item.StatusName == AppConfig.FormStatus.APPROVAL.ToString().ToLower() || item.StatusName == AppConfig.FormStatus.HANDOVER.ToString().ToLower())
                                     {
-                                        <span class="badge bg-success rounded-pill ms-auto">@item.StatusName</span>
+                                        <span class="badge bg-success rounded-pill ms-auto">@item.StatusVietnamese</span>
                                     }
                                 </div>
                             </div>

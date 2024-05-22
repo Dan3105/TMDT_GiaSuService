@@ -249,7 +249,7 @@ namespace GiaSuService.Repository
                     CustomerRequest = new CustomerTutorRequestViewModel
                     {
                         AdditionalDetail = p.AdditionalDetail,
-                        AddressDetail = $"{p.District.Province}, {p.District.Name}, {p.AddressDetail}",
+                        AddressDetail = $"{p.District.Province.Name}, {p.District.Name}, {p.AddressDetail}",
                         CreateDate = p.CreateDate,
                         ExpiredDate = p.ExpiredDate,
                         GradeName = p.Grade.Name,
@@ -257,6 +257,7 @@ namespace GiaSuService.Repository
                         StatusName = p.Status.Name,
                         Students = p.Students,
                         SubjectName = p.Subject.Name,
+                        StatusVietnamese = p.Status.VietnameseName,
                     },
                     p.CustomerId,
                 })

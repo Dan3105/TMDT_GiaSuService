@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace GiaSuService.Controllers
 {
@@ -20,15 +21,17 @@ namespace GiaSuService.Controllers
         private readonly IAddressService _addressService;
         private readonly ITutorRequestFormService _tutorRequestService;
         private readonly ITransactionService _transactionService;
+        private readonly IProfileService _profileService;
 
         public HomeController(ITutorService tutorService, ICatalogService catalogService, IAddressService addressService, 
-            ITutorRequestFormService tutorRequestService, ITransactionService transactionService)
+            ITutorRequestFormService tutorRequestService, ITransactionService transactionService, IProfileService profileService)
         {
             _tutorService = tutorService;
             _catalogService = catalogService;
             _addressService = addressService;
             _tutorRequestService = tutorRequestService;
             _transactionService = transactionService;
+            _profileService = profileService;
         }
 
         public IActionResult Index()
@@ -49,6 +52,34 @@ namespace GiaSuService.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        private async Task<ProfileViewModel?> GetCurrentCustomer()
+        {
+            var userRole = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value;
+
+            if (userRole == AppConfig.TUTORROLENAME) return null;
+
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+            //User not founded
+            if (accountId == null || accountId == "" || userRole == null) return null;
+
+            var profileId = await _profileService.GetProfileId(int.Parse(accountId), userRole);
+
+            if (profileId == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return null;
+            }
+
+            var profile = await _profileService.GetProfile((int)profileId, userRole);
+            if (profile == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                return null;
+            }
+
+            return profile;
+        }
+
         [HttpGet]
         public async Task<IActionResult> TutorList()
         {
@@ -61,6 +92,10 @@ namespace GiaSuService.Controllers
                 ProvinceList = provinceViews,
                 SubjectList = subjectViews,
             };
+
+            var currProfile = await GetCurrentCustomer();
+            result.SelectedDistrictId = currProfile == null ? 0 : currProfile.SelectedDistrictId;
+            result.SelectedProvinceId = currProfile == null ? 0 : currProfile.SelectedProvinceId;
 
             return View(result);
         }

@@ -15,20 +15,27 @@
 <div class="container">
     <div class="row align-items-center justify-content-center">
         <div class="col-sm-6 d-flex justify-content-center mb-2">
-            <select id="province" class="form-select customform-control" onchange="getDistricts()">
+            <select id="province" class="form-select customform-control" onchange="getDistricts(0)">
                 @if (Model.ProvinceList != null)
                 {
-                    <option value="0" id="provincedefault">Chọn tỉnh / thành phố</option>
+                    <option value="0" id="provincedefault">Chọn tỉnh/ thành phố</option>
                     @foreach (var province in Model.ProvinceList)
                     {
-                        <option value="@province.ProvinceId">@province.ProvinceName</option>
+                        @if (Model.SelectedProvinceId == @province.ProvinceId)
+                        {
+                            <option value="@province.ProvinceId" selected>@province.ProvinceName</option>
+                        }
+                        else
+                        {
+                            <option value="@province.ProvinceId">@province.ProvinceName</option>
+                        }
                     }
                 }
             </select>
         </div>
         <div class="col-sm-6 d-flex justify-content-center mb-2">
             <select class="form-select customform-control" id="districtSelectionContainer">
-                <option value="0">Chọn quận / huyện</option>
+                <option value="0">Chọn quận/ huyện</option>
             </select>
         </div>
         <div class="col-sm-6 d-flex justify-content-center mb-2">
@@ -56,7 +63,7 @@
             </select>
         </div>
         <div class="col-sm-4 d-flex justify-content-center mb-2">
-            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList()">Tìm kiếm</button>
+            <button type="button" class="btn btn-primary customstyle-button" onclick="updateNewList(false)">Tìm kiếm</button>
         </div>
     </div>
     <hr />
@@ -80,10 +87,13 @@
 <script>
     // First loading page
     document.addEventListener("DOMContentLoaded", function () {
-        updateNewList();
+        var selectedDistrictId = "@Model.SelectedDistrictId";
+        getDistricts(selectedDistrictId);
+
+        updateNewList(true);
     });
 
-    function getDistricts() {
+    function getDistricts(selectedDistrictId) {
 
         var selectedIdProvince = $("#province").val();
         $.ajax({
@@ -94,13 +104,19 @@
                 $("#districtSelectionContainer").empty(); // Replace the content with updated data
 
                 if (selectedIdProvince == 0) {
-                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận / huyện'));
+                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận/ huyện'));
                     $("#districtSelectionContainer").val(0);
                 }
 
                 for (var i = 0; i < data.length; i++) {
-                    $("#districtSelectionContainer").append($('<option></option>').val(data[i].districtId).text(data[i].districtName));
+                    var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
+                    if (data[i].districtId == selectedDistrictId) {
+                        option.prop('selected', true);
+                    }
+                    $("#districtSelectionContainer").append(option);
                 }
+
+                console.log($("#districtSelectionContainer").val());
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error("Error fetching districts:", textStatus, errorThrown);
@@ -109,10 +125,15 @@
     }
     
     var currentPage = 0;
-    function loadItems(pageNumber) {
+    function loadItems(pageNumber, firstTime) {
         var selectedIdDistrict = $('#districtSelectionContainer').val();
+        if (firstTime) {
+            selectedIdDistrict = "@Model.SelectedDistrictId"
+        }
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
+
+        console.log('district value ' + selectedIdDistrict);
 
         var isAuth = "@isAuth";
         var roleName = "@roleName";
@@ -172,9 +193,9 @@
             });
          }
 
-    function updateNewList() {
+    function updateNewList(firstTime) {
         currentPage = 0;
-        loadItems(currentPage);
+        loadItems(currentPage, firstTime);
     }
 
     function prevPage() {

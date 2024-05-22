@@ -120,6 +120,7 @@ namespace GiaSuService.Repository
                 {
                     Tutor = new TutorApplyRequestQueueViewModel
                     {
+                        RequestId = p.TutorRequestId,
                         TutorId = p.TutorId,
                         Avatar = p.Tutor.Account.Avatar,
                         FullName = p.Tutor.FullName,

@@ -8,5 +8,8 @@ namespace GiaSuService.Models.TutorViewModel
         public List<GradeViewModel> GradeList { get; set; } = new List<GradeViewModel>() { };
         public List<SubjectViewModel> SubjectList { get; set; } = new List<SubjectViewModel>() { };
         //public List<TutorCardViewModel> TutorList { get; set; } = new List<TutorCardViewModel>() { };
+
+        public int SelectedProvinceId { get; set; } = -1;
+        public int SelectedDistrictId { get; set; } = -1;
     }
 }

@@ -17,9 +17,10 @@
                 <h2>Hóa đơn thanh toán phí nhận lớp</h2>
             </div>
             <div class="card-body">
+                <p><strong>Mã hoá đơn:</strong> @Model.TransactionDeposit.TransactionId</p>
                 <p><strong>Nhân viên lập hoá đơn:</strong> @Model.TransactionDeposit.EmployeeName</p>
                 <p><strong>Tên khách hàng (gia sư):</strong> @Model.TransactionDeposit.TutorName</p>
-                <p><strong>Ngày tạo đơn:</strong> @Model.TransactionDeposit.CreateDate</p>
+                <p><strong>Ngày tạo hoá đơn:</strong> @Model.TransactionDeposit.CreateDate</p>
                 <p><strong>Ngày thanh toán:</strong> @(string.IsNullOrEmpty(Model.TransactionDeposit.PaymentDate) ? "Chưa thanh toán" : Model.TransactionDeposit.PaymentDate)</p>
                 <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionDeposit.Price)</p>
                 <p><strong>Nội dung:</strong> @Model.TransactionDeposit.Context</p>
@@ -51,9 +52,10 @@
                 <h2>Hóa đơn hoàn trả phí nhận lớp</h2>
             </div>
             <div class="card-body">
+                <p><strong>Mã hoá đơn:</strong> @Model.TransactionRefund.TransactionId</p>
                 <p><strong>Tên nhân viên lập hoá đơn:</strong> @Model.TransactionRefund.EmployeeName</p>
                 <p><strong>Tên khách hàng (gia sư):</strong> @Model.TransactionRefund.TutorName</p>
-                <p><strong>Ngày tạo đơn hoàn tiền:</strong> @Model.TransactionRefund.CreateDate</p>
+                <p><strong>Ngày tạo hoá đơn hoàn tiền:</strong> @Model.TransactionRefund.CreateDate</p>
                 <p><strong>Ngày hoàn tiền:</strong> @(string.IsNullOrEmpty(Model.TransactionRefund.PaymentDate) ? "Chưa thanh toán" : Model.TransactionRefund.PaymentDate)</p>
                 <p><strong>Nội dung:</strong> @Model.TransactionRefund.Context</p>
                 <p><strong>Số tiền:</strong> @string.Format("{0:#,0} VNĐ", Model.TransactionRefund.Price)</p>

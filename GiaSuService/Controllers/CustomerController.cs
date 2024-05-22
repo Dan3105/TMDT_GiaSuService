@@ -352,5 +352,19 @@ namespace GiaSuService.Controllers
             };
             return Ok(data);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> TutorProfile(int tutorId, int requestId)
+        {
+            TutorProfileViewModel? account = await _tutorService.GetTutorprofileById(tutorId);
+            if (account == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Mã gia sư không tồn tại";
+                return RedirectToAction("TutorList", "Employee");
+            }
+            TempData["RequestId"] = requestId;
+
+            return View(account);
+        }
     }
 }

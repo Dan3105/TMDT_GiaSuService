@@ -1,4 +1,5 @@
 ﻿@using GiaSuService.Models.EmployeeViewModel;
+@using GiaSuService.Configs;
 @model TutorRequestProfileEditViewModel;
 @{
     ViewData["Title"] = "Chỉnh sửa đơn tìm gia sư";
@@ -12,22 +13,37 @@
 <div class="container">
     <div id="list-tutor" class="row d-flex justify-content-center">
     </div>
-    @* @if (Model.CurrentStatus == "pending")
-    {
-        <div class="d-flex justify-content-center">
-            <a id="choose-tutor" class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
-        </div>
-        <hr />
-    } *@
 
-    <h1>Đơn tìm gia sư</h1>
+    <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+        <a href="/Customer/CustomerListTutorRequest" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
+            <i class="fas fa-reply" aria-hidden="true"></i>
+            Về lại danh sách các đơn tìm gia sư của tôi
+        </a>
+    </div>
+
+    <h1>Đơn tìm gia sư #@Model.RequestId</h1>
 
     <form asp-controller="Customer" method="post">
         <input type="hidden" asp-for="RequestId" />
 
-        @if(Model.CurrentStatus != "pending")
+        @if(Model.CurrentStatus == AppConfig.FormStatus.APPROVAL.ToString().ToLower())
         {
-            <span class="text-danger">Đơn tìm gia sư không thể chỉnh sửa vì đã được duyệt. Vui lòng liên hệ nhân viên trung tâm để chỉnh sửa.</span>
+            <span class="text-danger">Đơn tìm gia sư này không thể chỉnh sửa vì đã được duyệt. Vui lòng liên hệ nhân viên trung tâm để chỉnh sửa.</span>
+        }
+
+        @if (Model.CurrentStatus == AppConfig.FormStatus.CANCEL.ToString().ToLower())
+        {
+            <span class="text-danger">Đơn tìm gia sư này không thể chỉnh sửa vì đã bị huỷ bởi khách hàng.</span>
+        }
+
+        @if (Model.CurrentStatus == AppConfig.FormStatus.HANDOVER.ToString().ToLower())
+        {
+            <span class="text-danger">Đơn tìm gia sư này không thể chỉnh sửa vì đang được giao.</span>
+        }
+
+        @if (Model.CurrentStatus == AppConfig.FormStatus.DENY.ToString().ToLower())
+        {
+            <span class="text-danger">Đơn tìm gia sư này không thể chỉnh sửa vì đã bị từ chối.</span>
         }
 
         <div class="form-group">
@@ -54,7 +70,7 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Addressdetail">Địa chỉ chi tiết:</label>
+            <label asp-for="Addressdetail">Số nhà/ tên đường:</label>
             <input asp-for="Addressdetail" class="form-control customform-control" />
         </div>
 
@@ -116,8 +132,8 @@
         </div>
 
         <div class="form-group m-5" style="text-align:center">
-            <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Customer")" class="btn btn-outline-danger w-25 me-2">Hủy bỏ</button>
-            <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Customer")" class="btn btn-primary customstyle-button w-25">Cập nhật</button>
+            <button id="cancelRequest" type="submit" formaction="@Url.Action("CancelTutorRequest", "Customer")" class="btn btn-outline-danger w-25 me-2">Hủy bỏ</button>
+            <button id="updateRequest" type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Customer")" class="btn btn-primary customstyle-button w-25">Cập nhật</button>
         </div>
 
         <br/>
@@ -140,6 +156,8 @@
         </div>
     </form>
 </div>
+
+<partial name="_ConfirmationDialog" />
 
 <script>
     function getDistricts() {
@@ -293,25 +311,22 @@
             url: '/Customer/GetTutorsOnQueue',
             method: 'GET',
             data: { requestId: thisRequestId },
-            success: function (response) {
+            success: function (data) {
                 $("#tutor_container").empty();
-                $.each(response.tutors, function (index, item) {
-                    var currentStatus = item.statusQueue.toLowerCase();
-                    var queueStatuses = response.queriesStatus.map(status => status.toLowerCase());
-                    var href = item.isHaveTransaction ? `/Employee/TutorTransactionDetail?tutorId=${item.tutorId}&requestId=${thisRequestId}` : "#";
-                    var aTagTransaction = `<a href="${href}" class="btn btn-info ${item.isHaveTransaction ? '' : 'disabled'}">Chi tiết</a>`
-
-                    var itemHtml = `<tr>
-                                            <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
-                                            <td>
-                                                <div>
-                                                    <strong>${item.fullName}</strong><br/>
-                                                    <span>Hiện đang là ${item.tutorType}</span>
-                                                </div>
-                                            </td>
-                                            <td class="text-center"><a class="btn btn-info" href="/Employee/TutorProfile?id=${item.tutorId}">Chi tiết</a></td>
-                                            <td class="text-center text-capitalize border-end">${item.statusQueue}</td>
-                                    </tr>`;
+                $.each(data.tutors, function (index, item) {
+                     console.log(item);
+                    var itemHtml = `
+                    <tr>
+                        <td><img src="${item.avatar}" alt="Avatar" style="width: 100px; height: 100px;" /></td>
+                        <td>
+                            <div>
+                                <strong>${item.fullName}</strong><br/>
+                                <span>${item.tutorType}</span>
+                            </div>
+                        </td>
+                        <td class=""><a class="btn btn-info" href="/Customer/TutorProfile?tutorId=${item.tutorId}&requestId=${item.requestId}">Chi tiết</a></td>
+                        <td class=" text-capitalize border-end">${item.statusQueue}</td>
+                    </tr>`;
                     $("#tutor_container").append(itemHtml);
                 })
             },
@@ -327,7 +342,7 @@
         var selectedValue = document.getElementById(selectId).value;
 
         // Use the selectedValue as needed (e.g., send it to the server via AJAX)
-        //console.log("Selected value:", selectedValue);
+        // console.log("Selected value:", selectedValue);
 
         // Call your function to update the tutor status passing the selected value, tutorId, and requestId
         $.ajax({
@@ -350,4 +365,59 @@
             }
         })
     }
+
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("#cancelRequest").click(async function (event) {
+            event.preventDefault();
+            var confirmed = await confirmDialog("Thông báo xác nhận", "Bạn có chắc muốn huỷ đơn tìm gia sư này?"); // Wait for user confirmation
+            event.preventDefault();
+            if (confirmed) {
+                // Submit the form if confirmed
+                $(this).closest('form').attr('action', '@Url.Action("CancelTutorRequest", "Customer")').submit();
+            }
+        });
+
+        // Add a submit event listener to the form
+        $("#updateRequest").click(async function (event) {
+            event.preventDefault();
+            var confirmed = await confirmDialog("Thông báo xác nhận", "Bạn có chắc muốn cập nhật đơn tìm gia sư này?"); // Wait for user confirmation
+            if (confirmed) {
+                // Submit the form if confirmed
+                $(this).closest('form').attr('action', '@Url.Action("UpdateTutorRequestEdit", "Customer")').submit();
+            }
+        });
+    });
+
+    function confirmDialog(title, message) {
+        return new Promise(function (resolve) {
+            showDialog(title, message, function (result) {
+                resolve(result); // Resolve the Promise with user's choice
+            });
+        });
+    }
+
+    function showDialog(title, message, callback) {
+        const dialogTitle = document.getElementById('dialogTitle');
+        const confirmDialog = document.getElementById('confirmationDialog');
+        const confirmMsg = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYes');
+        const confirmNoBtn = document.getElementById('confirmNo');
+
+        dialogTitle.textContent = title;
+        confirmMsg.textContent = message; // Update message content
+
+        confirmYesBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(true); // Callback with true when user clicks 'Yes'
+        });
+
+        confirmNoBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(false); // Callback with false when user clicks 'No'
+        });
+
+        document.getElementById('confirmationDialog').style.display = 'flex';
+    }
+
 </script>

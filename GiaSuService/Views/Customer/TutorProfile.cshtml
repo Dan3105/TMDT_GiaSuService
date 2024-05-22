@@ -1,0 +1,152 @@
+﻿@using GiaSuService.Models.IdentityViewModel
+
+@model TutorProfileViewModel
+@{
+    ViewData["Title"] = "Thông tin gia sư";
+}
+<!--
+<div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+    <a href="/Employee/TutorList" class="btn btn-primary" style="padding: 5px 5px; display: inline-block;">Quay lại danh sách gia sư</a>
+</div>
+-->
+
+<div class="container">
+    <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+        <a href="/Customer/TutorRequestEdit?id=@TempData["RequestId"]" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
+            <i class="fas fa-reply" aria-hidden="true"></i>
+            Về lại đơn tìm gia sư
+        </a>
+    </div>
+
+    <h2>Thông tin gia sư ứng tuyển</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <br />
+            <br />
+            <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <img id="avatar" src="@Model.Avatar" style="width: 200px; height: 200px;  margin-bottom: 10px;" alt="Ảnh đại diện" />
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <br />
+            <br />
+            <div class="form-group">
+                <label asp-for="IsActive"><strong>Trạng thái dạy hiện tại:</strong></label>
+                @if (@Model.IsActive)
+                {
+                    <b class="text-success">Đang hoạt động</b>
+                }
+                else
+                {
+                    <b class="text-danger">Dừng hoạt động</b>
+                }
+            </div>
+                 
+            <div class="form-group">
+                <label asp-for="Fullname"><strong>Họ và tên:</strong></label>
+                <span>@Model.Fullname</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"><strong>Email:</strong></label>
+                <span>@Model.Email</span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Phone"><strong>Số điện thoại:</strong></label>
+                <span>@Model.Phone</span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Birth"><strong>Ngày sinh:</strong></label>
+                <span>@Model.Birth.ToString("dd-MM-yyyy")</span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Gender"><strong>Giới tính:</strong></label>
+                <span>@Model.Gender</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AddressDetail"><strong>Địa chỉ:</strong></label>
+                <span>@Model.AddressDetail</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdentityCard"><strong>Số CCCD/ CMND:</strong></label>
+                <span>@Model.IdentityCard</span>
+            </div>
+
+            
+
+            <div class="form-group">
+                <label asp-for="College"><strong>Trường đào tạo:</strong></label>
+                <span>@Model.College</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Area"><strong>Chuyên ngành:</strong></label>
+                <span>@Model.Area</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Additionalinfo"><strong>Thông tin thêm:</strong></label>
+                <span>@Model.Additionalinfo</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Academicyearfrom"><strong>Từ năm:</strong></label>
+                <span>@Model.Academicyearfrom</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Academicyearto"><strong>Đến năm:</strong></label>
+                <span>@Model.Academicyearto</span>
+            </div>
+
+            <div class="form-group">
+                <label for="TutorTypeName"><strong>Trình độ gia sư:</strong></label>
+                <span>@Model.TutorType?.TypeName</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SubjectList"><strong>Môn học có thể dạy:</strong></label>
+                <span>@Model.SubjectList</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GradeList"><strong>Khối lớp có thể dạy:</strong></label>
+                <span>@Model.GradeList</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TeachingArea"><strong>Khu vực có thể dạy:</strong></label>
+                <span>@Model.TeachingArea</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TeachingTime"><strong>Thời gian có thể dạy:</strong></label>
+                <span>@Model.TeachingTime</span>
+            </div>
+
+            @* 
+            <label asp-for=""><strong>CMND/CCCD mặt trước:</strong></label>
+            <span>
+                <img id="frontCard" src="@Model.FrontIdentityCard" width="250" height="150" alt="Mặt trước" />
+            </span>
+
+            <label asp-for=""><strong>CMND/CCCD mặt sau:</strong></label>
+            <span>
+                <img id="backCard" src="@Model.BackIdentityCard" width="250" height="150" alt="Mặt sau" />
+            </span>
+             *@
+
+        </div>
+    </div>
+
+    </div>
+</div>

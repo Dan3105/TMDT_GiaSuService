@@ -123,6 +123,37 @@ namespace GiaSuService.Controllers
                 SubjectList = subjectViews,
             };
 
+            // Get tutor profile
+            var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountId == null || accountId == "")
+            {
+                result.SelectedDistrictId = 0;
+                result.SelectedProvinceId = 0;
+            }
+            else
+            {
+                int? profileId = await _profileService.GetProfileId(int.Parse(accountId), AppConfig.TUTORROLENAME);
+
+                if (profileId == null)
+                {
+                    TempData[AppConfig.MESSAGE_FAIL] = "Mã tài khoản không tồn tại";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var profile = await _profileService.GetTutorFormUpdateById((int)profileId);
+
+                if (profile == null)
+                {
+                    TempData[AppConfig.MESSAGE_FAIL] = "Không lấy được thông tin tài khoản";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                result.SelectedDistrictId = profile.SelectedDistrictId;
+                result.SelectedProvinceId = profile.SelectedProvinceId;
+
+            }
+
             return View(result);
         }
 

@@ -84,6 +84,7 @@ namespace GiaSuService.Repository
                 {
                     Transaction = new TransactionDetailViewModel
                     {
+                        TransactionId = p.Id,
                         TutorId = p.TutorId,
                         RequestId = p.FormId,
 
