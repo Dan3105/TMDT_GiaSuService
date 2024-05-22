@@ -322,13 +322,13 @@ namespace GiaSuService.Repository
         {
             if (modified.IsActive != exitsTutor.IsActive)
             {
-                _context.Tutors
+                var test = await _context.Tutors
                     .Where(p => p.Id == modified.TutorId)
-                    .ExecuteUpdate(x => x
-                    .SetProperty(p => p.IsActive, modified.IsActive))
+                    .ExecuteUpdateAsync(x => x
+                    .SetProperty(p => p.IsActive, exitsTutor.IsActive))
                     ;
 
-               bool isSuccess = await _context.SaveChangesAsync() > 0;
+               bool isSuccess = test > 0;
                 return isSuccess;
             }
             return false;

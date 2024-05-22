@@ -273,7 +273,7 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = response.Message;
             }
 
-            return RedirectToAction("TutorRequestEditByEmployee", "Employee", new { id = model.RequestId });
+            return RedirectToAction("TutorRequestList", "Employee");
         }
 
         [HttpGet]

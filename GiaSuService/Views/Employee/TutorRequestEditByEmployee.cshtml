@@ -16,6 +16,12 @@
         <a id="choose-tutor" class="btn btn-primary" href="@Url.Action("TutorList", "Home")">Chọn Gia sư</a>
     </div> *@
     <hr />
+    <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
+        <a href="/Employee/TutorRequestList" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
+            <i class="fas fa-reply" aria-hidden="true"></i>
+            Về lại danh sách các đơn tìm đã duyệt
+        </a>
+    </div>
 
     <h1>Đơn tìm gia sư</h1>
 
@@ -105,11 +111,13 @@
 
         @* <button type="submit" class="btn btn-primary customstyle-button">Cập nhật</button> *@
         <div style="text-align: center;">
-            <button type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-outline-danger w-25 mt-5">Hủy bỏ</button>
-            <button type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Employee")" class="btn btn-primary customstyle-button w-25 mt-5">Cập nhật</button>
+            <button id="cancelRequest" type="submit" formaction="@Url.Action("CancelTutorRequest", "Employee")" class="btn btn-outline-danger w-25 mt-5">Hủy bỏ</button>
+            <button id="updateRequest" type="submit" formaction="@Url.Action("UpdateTutorRequestEdit", "Employee")" class="btn btn-primary customstyle-button w-25 mt-5">Cập nhật</button>
         </div>
     </form>
 </div>
+
+<partial name="_ConfirmationDialog" />
 
 <script>
     function getDistricts() {
@@ -253,5 +261,59 @@
                 alert("An error occurred while deleting the tutor.");
             }
         })
+    }
+
+    $(document).ready(function () {
+        // Add a submit event listener to the form
+        $("#cancelRequest").click(async function (event) {
+            event.preventDefault();
+            var confirmed = await confirmDialog("Thông báo xác nhận", "Bạn có chắc muốn huỷ đơn tìm gia sư này?"); // Wait for user confirmation
+            event.preventDefault();
+            if (confirmed) {
+                // Submit the form if confirmed
+                $(this).closest('form').attr('action', '@Url.Action("CancelTutorRequest", "Customer")').submit();
+            }
+        });
+
+        // Add a submit event listener to the form
+        $("#updateRequest").click(async function (event) {
+            event.preventDefault();
+            var confirmed = await confirmDialog("Thông báo xác nhận", "Bạn có chắc muốn cập nhật đơn tìm gia sư này?"); // Wait for user confirmation
+            if (confirmed) {
+                // Submit the form if confirmed
+                $(this).closest('form').attr('action', '@Url.Action("UpdateTutorRequestEdit", "Customer")').submit();
+            }
+        });
+    });
+
+    function confirmDialog(title, message) {
+        return new Promise(function (resolve) {
+            showDialog(title, message, function (result) {
+                resolve(result); // Resolve the Promise with user's choice
+            });
+        });
+    }
+
+    function showDialog(title, message, callback) {
+        const dialogTitle = document.getElementById('dialogTitle');
+        const confirmDialog = document.getElementById('confirmationDialog');
+        const confirmMsg = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYes');
+        const confirmNoBtn = document.getElementById('confirmNo');
+
+        dialogTitle.textContent = title;
+        confirmMsg.textContent = message; // Update message content
+
+        confirmYesBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(true); // Callback with true when user clicks 'Yes'
+        });
+
+        confirmNoBtn.addEventListener('click', function () {
+            confirmDialog.style.display = 'none'; // Hide dialog
+            callback(false); // Callback with false when user clicks 'No'
+        });
+
+        document.getElementById('confirmationDialog').style.display = 'flex';
     }
 </script>
