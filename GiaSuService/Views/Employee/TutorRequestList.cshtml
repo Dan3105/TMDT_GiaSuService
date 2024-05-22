@@ -139,7 +139,8 @@
 
                 // Dynamically add items to the view
                 $.each(data.queries, function (index, item) {
-                    var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "";
+                    var additional_detail = item.additionalDetail ? item.additionalDetail : "";
+                    // var additional_detail = item.additionalDetail ? `<p class="card-text"><b>Thông tin bổ sung:</b> ${item.additionalDetail}</p>` : "Không có";
                     var cardHeader = selectedRequestStatusType === "0" ? "Đơn chưa giao" : "Đơn đã giao";
 
                     var itemHtml = `
@@ -152,7 +153,7 @@
                                                 <p class="card-text"><b>Mã đơn:</b> ${item.requestId}</p>
                                                 <p class="card-text"><b>Môn học:</b> ${item.subjectName}</p>
                                                 <p class="card-text"><b>Khối lớp:</b> ${item.gradeName}</p>
-                                                    ${additional_detail}
+                                                <p class="card-text"><b>Thông tin thêm:</b> ${additional_detail}</p>
                                                 <p class="card-text"><b>Địa điểm:</b> ${item.address}</p>
                                                 <p class="card-text"><b>Các khung giờ có thể dạy:</b> ${item.sessionsCanTeach}</p>
                                             </div>
