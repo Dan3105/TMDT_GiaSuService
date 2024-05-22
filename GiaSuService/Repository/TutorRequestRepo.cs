@@ -141,7 +141,7 @@ namespace GiaSuService.Repository
                     Status = p.StatusId,
                     Expired = p.ExpiredDate
                 })
-                .OrderBy(p => p.Expired)
+                .OrderByDescending(p => p.Expired)
                 .Where(p => p.Status == statusId && p.Expired > DateTime.Now
                         && (districtId == 0 || p.DistrictId == districtId)
                         && (gradeId == 0 || p.GradeId == gradeId)
@@ -181,7 +181,7 @@ namespace GiaSuService.Repository
                     Status = p.StatusId,
                     Expired = p.ExpiredDate
                 })
-                .OrderBy(p => p.Expired)
+                .OrderByDescending(p => p.Expired)
                 .Where(p => p.Status == statusId && p.Expired > DateTime.Now
                         && (districtId == 0 || p.DistrictId == districtId)
                         && (gradeId == 0 || p.GradeId == gradeId)
