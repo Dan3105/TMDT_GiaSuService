@@ -95,9 +95,15 @@
                                     ? ``
                                     : `
                                         ${item.statusQueueName === "pending"
-                                            ? `<button type= "button" class="btn btn-primary customstyle-button m-1" onclick = "updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'approval')" >
+                                            ? `
+                                                <button type= "button" class="btn btn-outline-success m-1" onclick = "updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'approval')" >
                                                     Đồng ý duyệt
-                                                </button>`
+                                                </button>
+
+                                                <button type= "button" class="btn btn-outline-danger m-1" onclick = "updateTutorStatus(${item.tutorId}, ${thisRequestId}, 'deny')" >
+                                                    Từ chối duyệt
+                                                </button>
+                                            `
                                             : ``
                                         }
                                     `
