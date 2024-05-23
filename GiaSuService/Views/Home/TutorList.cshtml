@@ -34,7 +34,7 @@
             </select>
         </div>
         <div class="col-sm-6 d-flex justify-content-center mb-2">
-            <select class="form-select customform-control" id="districtSelectionContainer">
+            <select class="form-select customform-control" id="district">
                 <option value="0">Chọn quận/ huyện</option>
             </select>
         </div>
@@ -101,22 +101,20 @@
             type: 'GET',
             data: { 'provinceId': selectedIdProvince },
             success: function (data) {
-                $("#districtSelectionContainer").empty(); // Replace the content with updated data
+                $("#district").empty(); // Replace the content with updated data
 
-                if (selectedIdProvince == 0) {
-                    $("#districtSelectionContainer").append($('<option></option>').val(0).text('Chọn quận/ huyện'));
-                    $("#districtSelectionContainer").val(0);
-                }
+                $("#district").append($('<option></option>').val(0).text('Chọn quận/ huyện'));
+                $("#district").val(0);
 
                 for (var i = 0; i < data.length; i++) {
                     var option = $('<option></option>').val(data[i].districtId).text(data[i].districtName);
                     if (data[i].districtId == selectedDistrictId) {
                         option.prop('selected', true);
                     }
-                    $("#districtSelectionContainer").append(option);
+                    $("#district").append(option);
                 }
 
-                console.log($("#districtSelectionContainer").val());
+                // console.log($("#district").val());
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error("Error fetching districts:", textStatus, errorThrown);
@@ -126,20 +124,19 @@
     
     var currentPage = 0;
     function loadItems(pageNumber, firstTime) {
-        var selectedIdDistrict = $('#districtSelectionContainer').val();
+        var selectedProvinceId = $('#province').val();
+        var selectedDistrictId = $('#district').val();
         if (firstTime) {
-            selectedIdDistrict = "@Model.SelectedDistrictId"
+            selectedDistrictId = "@Model.SelectedDistrictId"
         }
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
-
-        console.log('district value ' + selectedIdDistrict);
 
         var isAuth = "@isAuth";
         var roleName = "@roleName";
         var customerRoleName = "@customerRoleName";
 
-        $.getJSON("/Home/GetTutorsBy", { districtId: selectedIdDistrict, gradeId: selectedIdGrade, subjectId: selectedIdSubject, page: pageNumber })
+        $.getJSON("/Home/GetTutorsBy", { provinceId: selectedProvinceId, districtId: selectedDistrictId, gradeId: selectedIdGrade, subjectId: selectedIdSubject, page: pageNumber })
             .done(function (data) {
                 $("#items-container").empty(); // Clear existing items
 

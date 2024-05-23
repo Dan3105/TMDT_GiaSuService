@@ -101,27 +101,24 @@ namespace GiaSuService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTutorsBy(int districtId, int gradeId, int subjectId, int page)
+        public async Task<IActionResult> GetTutorsBy(int provinceId, int districtId, int gradeId, int subjectId, int page)
         {
-            var queries = await _tutorService.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
+            var queries = await _tutorService.GetTutorCardsByFilter(provinceId, districtId, subjectId, gradeId, page);
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries=queries.list, page, totalPages };
             return Json(response);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int requestType, int page)
+        public async Task<IActionResult> GetTutorRequestBy(int provinceId, int districtId, int gradeId, int subjectId, int requestType, int page)
         {
-            PageTutorRequestListViewModel? queries = null;
+            AppConfig.FormStatus type = AppConfig.FormStatus.APPROVAL;  // requestType == 0
             if(requestType == 1) 
-            { 
-                queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.HANDOVER, page); 
-            }
-            else
             {
-                queries = await _tutorRequestService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page);
+                type = AppConfig.FormStatus.HANDOVER;
             }
 
+            PageTutorRequestListViewModel? queries = await _tutorRequestService.GetTutorrequestCard(provinceId, districtId, gradeId, subjectId, type, page);
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries=queries.list, page, totalPages };
             return Json(response);

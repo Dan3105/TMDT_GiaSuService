@@ -321,7 +321,7 @@ namespace GiaSuService.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetTutorRequestBy(int districtId, int gradeId, int subjectId, int page)
+        public async Task<IActionResult> GetTutorRequestBy(int provinceId, int districtId, int gradeId, int subjectId, int page)
         {
             var accountId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -335,7 +335,7 @@ namespace GiaSuService.Controllers
 
             if (tutorId == null) tutorId = 0;
 
-            var queries = await _requestFormService.GetTutorrequestCard(districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page, (int) tutorId);
+            var queries = await _requestFormService.GetTutorrequestCard(provinceId, districtId, gradeId, subjectId, AppConfig.FormStatus.APPROVAL, page, (int) tutorId);
             int totalPages = (int)Math.Ceiling((double)queries.TotalElement / AppConfig.ROWS_ACCOUNT_LIST);
             var response = new { queries=queries.list, page, totalPages };
             return Json(response);

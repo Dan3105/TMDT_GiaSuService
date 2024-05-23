@@ -119,7 +119,7 @@ namespace GiaSuService.Services
         }
 
         [AllowAnonymous]
-        public async Task<PageTutorRequestListViewModel> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+        public async Task<PageTutorRequestListViewModel> GetTutorrequestCard(int provinceId, int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page)
         {
             var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
@@ -127,10 +127,10 @@ namespace GiaSuService.Services
             {
                 return null!;
             }
-            return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page);
+            return await _tutorRequestRepo.GetTutorRequestCardByStatus(provinceId, districtId, subjectId, gradeId, status.Id, page);
         }
 
-        public async Task<PageTutorRequestListViewModel> GetTutorrequestCard(int districtId, int gradeId, int subjectId,
+        public async Task<PageTutorRequestListViewModel> GetTutorrequestCard(int provinceId, int districtId, int gradeId, int subjectId,
             AppConfig.FormStatus statusName, int page, int tutorId)
         {
             var status = await _statusRepo.GetStatus(statusName.ToString(), AppConfig.form_status);
@@ -140,9 +140,9 @@ namespace GiaSuService.Services
             }
             if(tutorId == 0)
             {
-                return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page);
+                return await _tutorRequestRepo.GetTutorRequestCardByStatus(provinceId, districtId, subjectId, gradeId, status.Id, page);
             }
-            return await _tutorRequestRepo.GetTutorRequestCardByStatus(districtId, subjectId, gradeId, status.Id, page, tutorId);
+            return await _tutorRequestRepo.GetTutorRequestCardByStatus(provinceId, districtId, subjectId, gradeId, status.Id, page, tutorId);
         }
 
         public async Task<ResponseService> UpdateStatusTutorRequest(int id, string status)

@@ -29,17 +29,18 @@ namespace GiaSuService.Services
             _profileRepository = profileRepository;
             _queueRepository = queueRepository;
         }
+
         public async Task<List<AccountListViewModel>> GetTutorAccountsByFilter(
-            int subjectId, int districtId, int gradeId, int page)
+            int provinceId, int districtId, int subjectId, int gradeId, int page)
         {
-            List<AccountListViewModel> tutorprofiles = (await _tutorRepository.GetTutorAccountsByFilter(subjectId, districtId, gradeId, page)).ToList();
+            List<AccountListViewModel> tutorprofiles = (await _tutorRepository.GetTutorAccountsByFilter(provinceId, districtId, subjectId, gradeId, page)).ToList();
             return tutorprofiles;
         }
 
         public async Task<PageCardListViewModel> GetTutorCardsByFilter(
-           int subjectId, int districtId, int gradeId, int page)
+           int provinceId, int districtId, int subjectId, int gradeId, int page)
         {
-            var tutorprofiles = await _tutorRepository.GetTutorCardsByFilter(subjectId, districtId, gradeId, page);
+            var tutorprofiles = await _tutorRepository.GetTutorCardsByFilter(provinceId, districtId, subjectId, gradeId, page);
             return tutorprofiles;
         }
 

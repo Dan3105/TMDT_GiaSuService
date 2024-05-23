@@ -20,7 +20,7 @@ namespace GiaSuService.Repository
             _context = context;
         }
         public async Task<IEnumerable<AccountListViewModel>> GetTutorAccountsByFilter(
-            int subjectId, int districtId, int gradeId, int page)
+            int provinceId, int districtId, int subjectId, int gradeId, int page)
         {
             var filteredTutors = _context.Tutors
                 .AsNoTracking()
@@ -38,9 +38,11 @@ namespace GiaSuService.Repository
                     StatusName = p.Status.Name,
                     Subjects = p.Subjects.Select(s => s.Id),
                     Districts = p.Districts.Select(d => d.Id),
+                    Provinces = p.Districts.Select(d => d.Province.Id),
                     Grades = p.Grades.Select(g => g.Id)
                 }).OrderByDescending(p => p.CreateDate)
                 .Where(p => (subjectId == 0 || p.Subjects.Contains(subjectId))
+                        && (provinceId == 0 || p.Provinces.Contains(provinceId))
                         && (districtId == 0 || p.Districts.Contains(districtId))
                         && (gradeId == 0 || p.Grades.Contains(gradeId))
                         && (p.StatusName == RegisterStatus.APPROVAL.ToString().ToLower()))
@@ -54,37 +56,51 @@ namespace GiaSuService.Repository
         }
 
 
-        public async Task<PageCardListViewModel> GetTutorCardsByFilter(int subjectId, int districtId, int gradeId, int page)
+        public async Task<PageCardListViewModel> GetTutorCardsByFilter(
+            int provinceId, int districtId, int subjectId, int gradeId, int page)
         {
             var query = _context.Tutors
                 .AsNoTracking()
-                .Where(tutor => (subjectId == 0 || tutor.Subjects.Any(s => s.Id == subjectId))
-                               && (districtId == 0 || tutor.Districts.Any(d => d.Id == districtId))
-                               && (gradeId == 0 || tutor.Grades.Any(g => g.Id == gradeId))
-                               && tutor.Status.Name == AppConfig.RegisterStatus.APPROVAL.ToString().ToLower())
-                .OrderByDescending(p => p.Account.CreateDate)
-                .Select(tutor => new TutorCardViewModel
+                .Select(p => new
                 {
-                    Id = tutor.Id,
-                    AdditionalProfile = tutor.AdditionalInfo ?? "",
-                    Area = tutor.Area,
-                    Avatar = tutor.Account.Avatar,
-                    Birth = tutor.Birth.ToString("dd/MM/yyyy"),
-                    College = tutor.College,
-                    TutorType = tutor.TutorType.Name,
-                    FullName = tutor.FullName,
-                    GraduateYear = tutor.AcademicYearTo,
-                    GradeList = string.Join(", ", tutor.Grades.Select(g => g.Name)),
-                    TeachingArea = string.Join(", ", tutor.Districts.Select(d => d.Name)),
-                    SubjectList = string.Join(", ", tutor.Subjects.Select(g => g.Name)),
-                    IsActive = tutor.IsActive ?? false,
-                    IsEnable = !tutor.Account.LockEnable,
-                    CreateDate = tutor.Account.CreateDate.ToString("dd/MM/yyyy")
-                });
+                    tutor = new TutorCardViewModel()
+                    {
+                        Id = p.Id,
+                        AdditionalProfile = p.AdditionalInfo ?? "",
+                        Area = p.Area,
+                        Avatar = p.Account.Avatar,
+                        Birth = p.Birth.ToString("dd/MM/yyyy"),
+                        College = p.College,
+                        TutorType = p.TutorType.Name,
+                        FullName = p.FullName,
+                        GraduateYear = p.AcademicYearTo,
+                        GradeList = string.Join(", ", p.Grades.Select(g => g.Name)),
+                        TeachingArea = string.Join(", ", p.Districts.Select(d => d.Name)),
+                        SubjectList = string.Join(", ", p.Subjects.Select(g => g.Name)),
+                        IsActive = p.IsActive ?? false,
+                        IsEnable = !p.Account.LockEnable,
+                        CreateDate = p.Account.CreateDate.ToString("dd/MM/yyyy")
+                    },
+                    CreateDate = p.Account.CreateDate,
+                    StatusName = p.Status.Name,
+                    Subjects = p.Subjects.Select(s => s.Id),
+                    Districts = p.Districts.Select(d => d.Id),
+                    Provinces = p.Districts.Select(d => d.Province.Id),
+                    Grades = p.Grades.Select(g => g.Id)
+                }).OrderByDescending(p => p.CreateDate)
+                .Where(p => (subjectId == 0 || p.Subjects.Contains(subjectId))
+                            && (provinceId == 0 || p.Provinces.Contains(provinceId))
+                            && (districtId == 0 || p.Districts.Contains(districtId))
+                            && (gradeId == 0 || p.Grades.Contains(gradeId))
+                            && (p.StatusName == RegisterStatus.APPROVAL.ToString().ToLower()));
+            
             var result = new PageCardListViewModel();
             result.TotalElement = await query.CountAsync();
-            result.list = await query.Skip(page * ROWS_ACCOUNT_LIST)
-                .Take(ROWS_ACCOUNT_LIST).ToListAsync(); 
+
+            query = query.Skip(page * ROWS_ACCOUNT_LIST)
+                            .Take(ROWS_ACCOUNT_LIST);
+
+            result.list = await query.Select(p => p.tutor).ToListAsync();
 
             return result;
         }

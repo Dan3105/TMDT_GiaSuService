@@ -11,10 +11,10 @@ namespace GiaSuService.Services.Interface
     {
         //if all id in param equal to 0 it will get all TutorProfiles
         public Task<List<AccountListViewModel>> GetTutorAccountsByFilter(
-            int subjectId, int districtId, int gradeId, int page);
+            int provinceId, int districtId, int subjectId, int gradeId, int page);
 
         public Task<PageCardListViewModel> GetTutorCardsByFilter(
-            int subjectId, int districtId, int gradeId, int page);
+            int provinceId, int districtId, int subjectId, int gradeId, int page);
 
         public Task<PageTutorRegisterListViewModel> GetRegisterTutoByStatus(int page, RegisterStatus status);
         public Task<TutorProfileViewModel?> GetTutorprofileById(int id);

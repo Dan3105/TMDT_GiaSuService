@@ -118,7 +118,8 @@ namespace GiaSuService.Repository
             return result;
         }
 
-        public async Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page)
+        public async Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(
+            int provinceId, int districtId, int subjectId, int gradeId, int statusId, int page)
         {
             var result = new PageTutorRequestListViewModel { };
             var queries = _context.RequestTutorForms
@@ -135,14 +136,16 @@ namespace GiaSuService.Repository
                         SessionsCanTeach = string.Join(", ", p.Sessions.Select(p => p.Name)),
                         Price = p.Grade.Fee,
                     },
+                    Expired = p.ExpiredDate,
                     GradeId = p.GradeId,
                     SubjectId = p.SubjectId,
                     DistrictId = p.DistrictId,
+                    ProvinceId = p.District.Province.Id,
                     Status = p.StatusId,
-                    Expired = p.ExpiredDate
                 })
                 .OrderByDescending(p => p.Expired)
                 .Where(p => p.Status == statusId && p.Expired > DateTime.Now
+                        && (provinceId == 0 || p.ProvinceId == provinceId)
                         && (districtId == 0 || p.DistrictId == districtId)
                         && (gradeId == 0 || p.GradeId == gradeId)
                         && (subjectId == 0 || p.SubjectId == subjectId)
@@ -157,7 +160,8 @@ namespace GiaSuService.Repository
             return result;
         }
 
-        public async Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId)
+        public async Task<PageTutorRequestListViewModel> GetTutorRequestCardByStatus(
+             int provinceId, int districtId, int subjectId, int gradeId, int statusId, int page, int tutorId)
         {
             var result = new PageTutorRequestListViewModel();
             var queries = _context.RequestTutorForms
@@ -178,11 +182,13 @@ namespace GiaSuService.Repository
                     GradeId = p.GradeId,
                     SubjectId = p.SubjectId,
                     DistrictId = p.DistrictId,
+                    ProvinceId = p.District.Province.Id,
                     Status = p.StatusId,
                     Expired = p.ExpiredDate
                 })
                 .OrderByDescending(p => p.Expired)
                 .Where(p => p.Status == statusId && p.Expired > DateTime.Now
+                        && (provinceId == 0 || p.ProvinceId == provinceId)
                         && (districtId == 0 || p.DistrictId == districtId)
                         && (gradeId == 0 || p.GradeId == gradeId)
                         && (subjectId == 0 || p.SubjectId == subjectId)
