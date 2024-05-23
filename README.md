@@ -87,4 +87,4 @@ If you prefer to use docker-compose to run this project, follow these steps:
     ![](src/tutor_view_list_invoice.png)
 
 ## References
-- <a href="https://docs.google.com/document/d/1nn7vYrfUdH3MobiiuX8TRcCclXq7-Mdo/edit">Report Project </a>
+- <a href="https://docs.google.com/document/d/1X0N2yA6C9T4QJeDXyyNrnt2laOWc0hum/edit?usp=sharing&ouid=101107901105800243767&rtpof=true&sd=true">Report Project </a>
