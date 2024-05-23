@@ -95,7 +95,7 @@
 <script>
     // First loading page
     document.addEventListener("DOMContentLoaded", function () {
-        var selectedDistrictId = "@Model.SelectedDistrictId";
+        var selectedDistrictId = 0;
         getDistricts(selectedDistrictId);
 
         updateNewList(true);
@@ -134,7 +134,7 @@
         var selectedProvinceId = $('#province').val();
         var selectedDistrictId = $('#district').val();
         if (firstTime) {
-            selectedDistrictId = "@Model.SelectedDistrictId"
+            selectedDistrictId = $('#district').val();
         }
         var selectedIdSubject = $('#subject').val();
         var selectedIdGrade = $('#grade').val();
