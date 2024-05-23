@@ -97,7 +97,7 @@ namespace GiaSuService.Configs
 
         public const int ROWS_ACCOUNT_LIST = 10;
         public static string ContextForApplyTutor(string empName, string empphone) 
-            => $"Đóng phí nhận lớp, nhân viên thực hiện: {empName}, nếu có thắc mắc vui lòng liên hệ qua số điện thoại: {empphone}";
+            => $"Gia sư đến đóng phí nhận lớp tại trung tâm";
 
         public static string ContextForRefundTransaction(string tutorName, string empphone, string empName, decimal price)
         {
