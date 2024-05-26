@@ -14,7 +14,7 @@
     <div class="d-flex" style="text-align: center; justify-content:left; margin-bottom: 10px;">
         <a href="/Customer/TutorRequestEdit?id=@TempData["RequestId"]" class="text-decoration-none" style="padding: 5px 5px; display: inline-block;">
             <i class="fas fa-reply" aria-hidden="true"></i>
-            Về lại đơn tìm gia sư
+            Về lại đơn tìm gia sư #@TempData["RequestId"]
         </a>
     </div>
 
@@ -42,23 +42,26 @@
                     <b class="text-danger">Dừng hoạt động</b>
                 }
             </div>
-                 
+            
             <div class="form-group">
                 <label asp-for="Fullname"><strong>Họ và tên:</strong></label>
                 <span>@Model.Fullname</span>
             </div>
+            @if (Model.Email != string.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="Email"><strong>Email:</strong></label>
+                    <span>@Model.Email</span>
+                </div>
+            }
 
-            <div class="form-group">
-                <label asp-for="Email"><strong>Email:</strong></label>
-                <span>@Model.Email</span>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="Phone"><strong>Số điện thoại:</strong></label>
-                <span>@Model.Phone</span>
-            </div>
-
+            @if (Model.Phone != string.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="Phone"><strong>Số điện thoại:</strong></label>
+                    <span>@Model.Phone</span>
+                </div>
+            }
 
             <div class="form-group">
                 <label asp-for="Birth"><strong>Ngày sinh:</strong></label>
@@ -72,16 +75,25 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="AddressDetail"><strong>Địa chỉ:</strong></label>
-                <span>@Model.AddressDetail</span>
+                <label for="TutorTypeName"><strong>Trình độ gia sư:</strong></label>
+                <span>@Model.TutorType?.TypeName</span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="IdentityCard"><strong>Số CCCD/ CMND:</strong></label>
-                <span>@Model.IdentityCard</span>
-            </div>
-
+            @if (Model.AddressDetail != string.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="AddressDetail"><strong>Địa chỉ:</strong></label>
+                    <span>@Model.AddressDetail</span>
+                </div>
+            }
             
+            @if (Model.IdentityCard != string.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="IdentityCard"><strong>Số CCCD/ CMND:</strong></label>
+                    <span>@Model.IdentityCard</span>
+                </div>
+            }
 
             <div class="form-group">
                 <label asp-for="College"><strong>Trường đào tạo:</strong></label>
@@ -106,11 +118,6 @@
             <div class="form-group">
                 <label asp-for="Academicyearto"><strong>Đến năm:</strong></label>
                 <span>@Model.Academicyearto</span>
-            </div>
-
-            <div class="form-group">
-                <label for="TutorTypeName"><strong>Trình độ gia sư:</strong></label>
-                <span>@Model.TutorType?.TypeName</span>
             </div>
 
             <div class="form-group">

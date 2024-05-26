@@ -362,8 +362,25 @@ namespace GiaSuService.Controllers
                 TempData[AppConfig.MESSAGE_FAIL] = "Mã gia sư không tồn tại";
                 return RedirectToAction("TutorList", "Employee");
             }
-            TempData["RequestId"] = requestId;
 
+            
+
+            RequestTutorApplyDetailViewModel? tutorApply = await _tutorService.GetRequestTutorApplyDetail(requestId, tutorId);
+            if (tutorApply == null)
+            {
+                TempData[AppConfig.MESSAGE_FAIL] = "Lỗi hệ thống";
+                return RedirectToAction("TutorList", "Employee");
+            }
+            //If tutor is not handover this request then hide some information of the tutor when customer look for detail
+            if (tutorApply.QueueStatus != AppConfig.QueueStatus.HANDOVER.ToString().ToLower())
+            {   
+                account.Email = string.Empty;
+                account.Phone = string.Empty;
+                account.IdentityCard = string.Empty;
+                account.AddressDetail = string.Empty;
+            }
+
+            TempData["RequestId"] = requestId;
             return View(account);
         }
     }
