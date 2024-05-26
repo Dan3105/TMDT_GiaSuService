@@ -30,8 +30,8 @@
                 <td>@transaction.Context</td>
                 <td>@transaction.Price</td>
                 <td>
-                    <a href="@Url.Action("TutorTransactionDetail", "Tutor", new{tutorId = transaction.TutorId, requestId = transaction.RequestId})"
-                        class="btn btn-outline-info">Thông tin</a></td>
+                <a href="@Url.Action("TutorTransactionDetail", "Tutor", new{tutorId = transaction.TutorId, requestId = transaction.RequestId})"><i class="fas fa-info-circle"></i></a>
+                </td>
             </tr>
         }
     </tbody>
